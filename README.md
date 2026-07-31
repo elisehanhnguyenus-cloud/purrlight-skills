@@ -106,9 +106,11 @@ purrlight-skills/
 
 ## Về người tạo
 
-<!-- TODO(Elise): 3–5 dòng của chính chị — vì sao một chủ shop handmade lại cần và xây công cụ phản biện này. Đây là phần duy nhất không ai sao chép được. Gợi ý chất liệu: quyết định kinh doanh nào từng khiến chị ước gì có người phản biện mình sớm hơn? -->
+Deep Critique được xây và dùng thật tại **PURRLIGHT STUDIO LLC** — studio thiết kế đồ chơi và kinh doanh hàng handmade tại Texas.
 
-Deep Critique được xây và dùng thật tại **PURRLIGHT STUDIO LLC** — studio đồ thủ công crochet tại Texas — nơi mỗi quyết định giảm giá, nhập nguyên liệu hay chạy quảng cáo đều là tiền thật của một đội 2 người. Phiên bản đầu tiên được kiểm nghiệm bằng chính kế hoạch Q4 của studio: nó tìm ra 36 điểm mù, trong đó có một mâu thuẫn ngân sách mà chính người viết kế hoạch không nhớ mình đã đặt ra.
+Mình là solo entrepreneur, xuất phát điểm là dân marketing & strategy trên sàn thương mại điện tử, khởi nghiệp từ 2018. Mình đã đi qua rất nhiều ngách: dịch vụ tổ chức sự kiện, workshop thủ công, bán hàng online, rồi đầu tư vào POD, dropshipping, hàng trademark... và **đốt hơn $20.000** vào những mô hình chưa bao giờ chuyển đổi tốt.
+
+Khi đó mình ước được biết sớm hơn về tư duy phản biện, và có nhiều thời gian nghiên cứu mô hình kinh doanh hơn — để không đổ tiền vào những ngách không đáng hoặc quá rủi ro. Deep Critique chính là công cụ mình ước mình có từ 2018: một hội đồng phản biện bắt mình kiểm chứng giả định *trước* khi xuống tiền, chứ không phải sau khi mất nó. Phiên bản đầu tiên được kiểm nghiệm bằng chính kế hoạch Q4 của studio — nó tìm ra 36 điểm mù, trong đó có một mâu thuẫn ngân sách mà chính mình không nhớ đã tự đặt ra.
 
 ## Roadmap
 

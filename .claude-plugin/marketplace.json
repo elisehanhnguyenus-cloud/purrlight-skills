@@ -1,0 +1,13 @@
+{
+  "name": "purrlight-skills",
+  "owner": {
+    "name": "PURRLIGHT STUDIO LLC"
+  },
+  "plugins": [
+    {
+      "name": "deep-critique",
+      "source": "./plugins/deep-critique",
+      "description": "Phản biện 10 vòng săn điểm mù — 10-round adversarial critique for business decisions. Skill /deep-critique + agent deep-critic: mỗi vòng một lăng kính, cấm lặp lại phát hiện cũ, mọi phát hiện kèm cách kiểm chứng rẻ nhất. Tiếng Việt."
+    }
+  ]
+}

@@ -3,6 +3,9 @@
   "owner": {
     "name": "PURRLIGHT STUDIO LLC"
   },
+  "metadata": {
+    "description": "Bộ skill tiếng Việt cho người kinh doanh từ PURRLIGHT STUDIO — mở màn với Deep Critique: phản biện 10 vòng săn điểm mù trước khi xuống tiền. Vietnamese-first business skills for Claude, starting with a 10-round adversarial decision critique."
+  },
   "plugins": [
     {
       "name": "deep-critique",

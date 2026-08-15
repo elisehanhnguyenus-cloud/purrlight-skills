@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img">
+<rect width="800" height="450" fill="#E6ECE1"/>
+<ellipse cx="400" cy="240" rx="330" ry="180" fill="#F1F5EC"/>
+<ellipse cx="540" cy="280" rx="110" ry="74" fill="#E8A87C" stroke="#4A423B" stroke-width="9" />
+<circle cx="444" cy="236" r="54" fill="#E8A87C" stroke="#4A423B" stroke-width="9"/>
+<path d="M406,200 l6,-32 l28,18 Z" fill="#E8A87C" stroke="#4A423B" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+<path d="M456,190 l14,-28 l20,24 Z" fill="#E8A87C" stroke="#4A423B" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+<path d="M424,238 q7,8 14,0 M456,238 q7,8 14,0" fill="none" stroke="#4A423B" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+<circle cx="414" cy="258" r="7" fill="#F0B9A4"/>
+<circle cx="478" cy="258" r="7" fill="#F0B9A4"/>
+<path d="M642,246 q30,-24 24,-56" fill="none" stroke="#D18A5B" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
+<ellipse cx="392" cy="320" rx="34" ry="22" fill="#E8A87C" stroke="#4A423B" stroke-width="8" />
+<ellipse cx="220" cy="250" rx="74" ry="46" fill="#A9BCA0" stroke="#4A423B" stroke-width="8" transform="rotate(-18 220 250)"/>
+<path d="M282,222 L330,190 Q322,222 336,248 Z" fill="#A9BCA0" stroke="#4A423B" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+<circle cx="182" cy="238" r="6" fill="#4A423B"/>
+<path d="M130,180 q-20,-14 -22,-34 M112,222 q-26,-6 -38,-24" fill="none" stroke="#8CA382" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+<path transform="translate(140,340) scale(0.8)" fill="#A9BCA0" opacity="0.9" d="M0,-16 Q2.5,-3.5 16,0 Q2.5,3.5 0,16 Q-2.5,3.5 -16,0 Q-2.5,-3.5 0,-16 Z"/>
+<path transform="translate(680,120) scale(0.8)" fill="#FFFFFF" opacity="0.9" d="M0,-16 Q2.5,-3.5 16,0 Q2.5,3.5 0,16 Q-2.5,3.5 -16,0 Q-2.5,-3.5 0,-16 Z"/>
+<path transform="translate(320,110) scale(0.7)" fill="#A9BCA0" opacity="0.7" d="M0,-16 Q2.5,-3.5 16,0 Q2.5,3.5 0,16 Q-2.5,3.5 -16,0 Q-2.5,-3.5 0,-16 Z"/>
+</svg>

@@ -8,10 +8,12 @@ khoảng trắng).
 
 ```
 website/
-├── index.html        # Trang chủ: hero, danh mục, sản phẩm yêu thích, câu chuyện
+├── index.html        # Trang chủ: hero, danh mục, favorites, video lifestyle,
+│                     #   Companion Club, testimonials, Purrks Points, social strip
 ├── shop.html         # Trang shop: lưới sản phẩm + lọc theo danh mục
 ├── product.html      # Trang chi tiết sản phẩm (đọc ?id=... từ URL)
 ├── about.html        # Câu chuyện thương hiệu
+├── partners.html     # Partner/affiliate program cho shopper curators
 ├── css/
 │   ├── fonts.css     # Font self-host: Fraunces (heading) + Figtree (body)
 │   └── style.css     # Toàn bộ style — design tokens ở đầu file (:root)
@@ -39,8 +41,24 @@ website/
 5. **Newsletter** — form chưa nối backend (hiện chỉ hiện thông báo trung
    thực). Khi sẵn sàng, nối Klaviyo/Mailchimp form action trong `main.js`
    (đã đánh dấu TODO).
-6. **Domain + hosting** — site tĩnh 100%, deploy được ngay lên GitHub
-   Pages / Netlify / Cloudflare Pages, không cần server.
+6. **Testimonials** — 3 quote trên trang chủ đang là SAMPLE có đánh dấu
+   `[SAMPLE — paste a real Etsy review here]`. BẮT BUỘC thay bằng review
+   Etsy thật (nguyên văn, kèm tên buyer viết tắt) trước khi publish.
+7. **Video lifestyle** — 3 card đang trỏ về TikTok profile với poster minh
+   họa. Khi có video thật: thay href bằng link video hoặc nhúng embed.
+8. **Social handles** — Instagram/Pinterest đang là placeholder
+   `purrlightstudio`. Đăng ký đúng handle rồi sửa link (6 chỗ ở section
+   social + 3 nút follow).
+9. **Purrks Points** — đang gắn badge "launching soon" (đúng sự thật vì
+   chưa có chương trình). Khi nào chạy thật (Shopify + Smile.io, hoặc thủ
+   công qua email) thì bỏ badge và cập nhật mô tả. KHÔNG bỏ badge trước đó.
+10. **Partner program** — trang partners.html hướng creators vào TikTok
+    Shop affiliate (kênh duy nhất đang khả thi vì bán qua Etsy không tự
+    chạy affiliate được). Cần: (a) bật Open Collaboration trong TikTok
+    Shop seller center và đặt commission rate, (b) sửa email
+    hello@purrlightstudio.com thành email thật.
+11. **Domain + hosting** — site tĩnh 100%, deploy được ngay lên GitHub
+    Pages / Netlify / Cloudflare Pages, không cần server.
 
 ## Nguyên tắc nội dung (đã tuân thủ, đừng phá khi sửa)
 

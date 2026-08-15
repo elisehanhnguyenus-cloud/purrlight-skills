@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img">
+<rect width="600" height="600" fill="#FAEFD8"/>
+<ellipse cx="300.0" cy="330.0" rx="240.0" ry="222.0" fill="#FCF5E6" opacity="1.0"/>
+<path d="M170,320 a130,130 0 0 1 260,0 q0,44 -130,44 q-130,0 -130,-44 Z" fill="#FFFDF9" stroke="#4A423B" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" /><path d="M212,354 q88,34 176,0" fill="none" stroke="#4A423B" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" /><path d="M214,362 q-30,34 -18,64" fill="none" stroke="#4A423B" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" /><path d="M386,362 q30,34 18,64" fill="none" stroke="#4A423B" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" /><circle cx="196" cy="434" r="12" fill="#F3D9A4" stroke="#4A423B" stroke-width="6"/><circle cx="404" cy="434" r="12" fill="#F3D9A4" stroke="#4A423B" stroke-width="6"/><path d="M254,262 q46,-28 92,0" fill="none" stroke="#F3D9A4" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+<path transform="translate(140,160) scale(1.0)" fill="#E8A87C" opacity="0.7" d="M0,-16 Q2.5,-3.5 16,0 Q2.5,3.5 0,16 Q-2.5,3.5 -16,0 Q-2.5,-3.5 0,-16 Z"/>
+<path transform="translate(460,150) scale(0.8)" fill="#FFFFFF" opacity="0.9" d="M0,-16 Q2.5,-3.5 16,0 Q2.5,3.5 0,16 Q-2.5,3.5 -16,0 Q-2.5,-3.5 0,-16 Z"/>
+</svg>

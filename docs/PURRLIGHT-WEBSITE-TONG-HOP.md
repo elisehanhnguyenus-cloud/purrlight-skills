@@ -202,6 +202,12 @@ phụ là Tâm/Bánh Mì/Mochi. Wizard framing còn dính rủi ro TOS Etsy.
 7. Strip "Personalization & corporate gifting" (ý tưởng ăn tiền từ Design)
 8. Token màu mới --beret #7FA3CC + badge "The Original"
 
+**Cấu trúc chapter (twist giữ lại theo yêu cầu Elise):** trang chủ đọc như
+cuốn sách của Merlin — Chapter One "a cat with a tiny suitcase" (hero) →
+Two "the collections" → Three "from the worktable" → Four "the making" →
+Five "two homes, one story" → Six "the studio family" → Seven "kind words"
+→ Epilogue "Letters from Merlin". Shop: "Every piece is a chapter."
+
 **Lỗi bản Design KHÔNG mang theo:** chữ trắng trên nền sáng 1.43:1, cart giả
 "Bag (0)", không có đường ra Etsy, "Anne of Green Gables" ×3, announce
 "Handcrafted with love in Texas" (FTC), "Free US shipping $75+" chưa xác minh.

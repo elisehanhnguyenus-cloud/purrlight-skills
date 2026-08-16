@@ -523,6 +523,17 @@ h1, h2, h3, h4 {
   .story-media { max-height: 340px; overflow: hidden; }
 }
 
+.story-kicker,
+.newsletter-kicker {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+  margin-bottom: 10px;
+}
+.newsletter-kicker { margin-bottom: 6px; }
+
 /* ---------- values row ---------- */
 
 .values {

@@ -158,6 +158,21 @@
     if (img) { img.src = p.img; img.alt = p.name; }
     var buy = pdp.querySelector("[data-pdp-buy]");
     if (buy) buy.href = buyHref(p);
+    /* bundle addons — "make it a set" */
+    var addonWrap = pdp.querySelector("[data-pdp-addons]");
+    if (addonWrap && p.addons && p.addons.length) {
+      var sel = addonWrap.querySelector("select");
+      sel.innerHTML = p.addons.map(function (a, i) {
+        var tag = a.delta ? " (+" + fmt(a.delta) + ")" : "";
+        return '<option value="' + i + '">' + a.label + tag + "</option>";
+      }).join("");
+      addonWrap.hidden = false;
+      sel.addEventListener("change", function () {
+        var a = p.addons[Number(sel.value)] || p.addons[0];
+        set("[data-pdp-price]", fmt(p.price + a.delta));
+      });
+    }
+
     var detailList = pdp.querySelector("[data-pdp-details]");
     if (detailList) {
       detailList.innerHTML = p.details.map(function (d) { return "<li>" + d + "</li>"; }).join("");

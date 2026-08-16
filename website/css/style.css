@@ -297,6 +297,65 @@ h1, h2, h3, h4 {
   .hero-art { order: -1; max-width: 420px; margin-inline: auto; }
 }
 
+/* ---------- trust bar ---------- */
+
+.trust-bar {
+  background: var(--cream-deep);
+  border-block: 1px solid var(--line);
+}
+.trust-inner {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(14px, 2.5vw, 32px);
+  padding-block: 20px;
+}
+@media (max-width: 760px) { .trust-inner { grid-template-columns: 1fr; gap: 12px; } }
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  justify-content: center;
+}
+@media (max-width: 760px) { .trust-item { justify-content: flex-start; } }
+.trust-item svg { flex: none; width: 30px; height: 30px; }
+.trust-item strong {
+  display: block;
+  font-size: 14.5px;
+  font-weight: 600;
+}
+.trust-item span {
+  display: block;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+/* ---------- pdp addons ---------- */
+
+.pdp-addons { margin-bottom: 24px; }
+.pdp-addons label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+  margin-bottom: 8px;
+}
+.pdp-addons select {
+  width: 100%;
+  max-width: 420px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--card);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-s);
+  padding: 12px 14px;
+  cursor: pointer;
+}
+.pdp-addons select:focus-visible { outline: 3px solid var(--glow); outline-offset: 1px; }
+.pdp-addons .addon-note { font-size: 13px; color: var(--ink-soft); margin-top: 7px; }
+
 /* ---------- section scaffolding ---------- */
 
 .section { padding-block: clamp(52px, 7vw, 92px); }

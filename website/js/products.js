@@ -10,6 +10,9 @@
      your photo files (put them in assets/img/), keep square crops.
    - `etsyUrl` per product: paste the listing URL so "Buy on Etsy"
      goes straight to that listing instead of the shop home.
+   - `addons` (optional): bundle options shown as a "make it a set"
+     dropdown on the product page. Each Etsy listing MUST have a matching
+     variation with the same price before publishing.
    ============================================================ */
 
 const ETSY_SHOP_URL = "https://www.etsy.com/shop/PurrlightStudio"; /* TODO: verify exact shop URL */
@@ -26,6 +29,7 @@ const PRODUCTS = [
     short: "A hand-crocheted heroine with rosy cheeks and long red braids, stitched loop by loop.",
     desc: "Every Storybook Doll begins as a sketch and a skein of soft cotton yarn. Our artisans crochet her face, braids, and pinafore entirely by hand — no two dolls are ever exactly alike. She stands about 12 inches tall and loves being read to.",
     details: ["Soft cotton yarn, polyester fill", "About 12\" / 30 cm tall", "Embroidered face — no small parts", "Spot clean with a damp cloth"],
+    addons: [{ label: "Doll only", delta: 0 }, { label: "Make it a set · + Matching mini doll keychain", delta: 15 }],
     etsyUrl: ""
   },
   {
@@ -38,6 +42,7 @@ const PRODUCTS = [
     short: "A soft heirloom outfit for baptism day — made to be kept long after.",
     desc: "Sewn in creamy white cotton with delicate detailing, this little outfit is made for the quiet, shining moments. Made to be folded away with the photographs and kept for the next generation.",
     details: ["Soft cotton fabric", "Sizes 0–3m, 3–6m, 6–12m", "Gentle hand wash recommended", "Arrives gift-folded in tissue"],
+    addons: [{ label: "Outfit only", delta: 0 }, { label: "Make it a set · + Bunny Lovey keepsake", delta: 25 }],
     etsyUrl: ""
   },
   {
@@ -74,6 +79,7 @@ const PRODUCTS = [
     short: "A drowsy little cat, crocheted in cloud-soft yarn, forever mid-nap.",
     desc: "Curled into a permanent nap, this hand-crocheted cat is our love letter to slow afternoons. Soft yarn, gentle weight, embroidered sleepy eyes — the calmest member of any shelf.",
     details: ["Soft acrylic-blend yarn, polyester fill", "About 8\" / 20 cm curled", "Embroidered face — no small parts", "Spot clean with a damp cloth"],
+    addons: [{ label: "Cat only", delta: 0 }, { label: "Make it a set · + Felt fish toy", delta: 12 }],
     etsyUrl: ""
   },
   {

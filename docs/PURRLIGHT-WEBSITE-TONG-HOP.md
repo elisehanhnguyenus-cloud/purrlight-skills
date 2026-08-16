@@ -179,6 +179,33 @@ bản Code thắng ở B–F (đã qua kiểm định). Chiến lược ghép: g
 (link/file/screenshot) vào phiên Claude Code để chạy đối chiếu tự động
 từng tiêu chí.
 
+## 8b. Đợt 5 — So sánh Claude Code vs Claude Design + graft Merlin canon
+
+**Kết quả chấm (thang 5):** Code 28/30 · Design 19.5/30 — nhưng Design thắng
+tuyệt đối ở "cảm xúc thương hiệu" nhờ xây trên brand world Merlin.
+
+**Phát hiện then chốt:** bản Claude Design dùng CANON V1 SAI ("Merlin the
+Wizard Cat" + 12 flower fairies tự chế). Canon v2 chuẩn (Elise đã sửa 5/2026):
+Merlin = Curious Tuxedo Cat, beret xanh, "the cat who takes notes"; nhân vật
+phụ là Tâm/Bánh Mì/Mochi. Wizard framing còn dính rủi ro TOS Etsy.
+
+**Đã graft vào khung Code (theo canon v2 chuẩn):**
+1. Mascot art đổi thành Merlin tuxedo + beret xanh (hero, Sleepy Merlin Plush,
+   Merlin Moon Keychain) — có single white whisker má trái (easter egg canon)
+2. Section "Meet Merlin & friends": Merlin + Tâm/Bánh Mì/Mochi (joining soon)
+3. Hero mới: "Where every stitch tells a story" + "Sketched by Merlin,
+   stitched by us"
+4. "Why Purrlight" + About viết lại theo origin story v2 (rainy October,
+   suitcase, notebook, đèn worktable; ký tên Mama Purr & Papa Purr)
+5. Journal "From Merlin's notebook" (3 bài — link TikTok đến khi có blog)
+6. Newsletter → "Letters from Merlin"
+7. Strip "Personalization & corporate gifting" (ý tưởng ăn tiền từ Design)
+8. Token màu mới --beret #7FA3CC + badge "The Original"
+
+**Lỗi bản Design KHÔNG mang theo:** chữ trắng trên nền sáng 1.43:1, cart giả
+"Bag (0)", không có đường ra Etsy, "Anne of Green Gables" ×3, announce
+"Handcrafted with love in Texas" (FTC), "Free US shipping $75+" chưa xác minh.
+
 ## 9. Link & tài nguyên
 
 - **Repo branch:** `claude/purrlight-studio-website-kcsuen` (GitHub:

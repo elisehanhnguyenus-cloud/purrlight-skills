@@ -4,6 +4,15 @@ Website tĩnh (static site) cho Purrlight Studio LLC, thiết kế theo cảm h�
 Jellycat (ấm áp, tinh nghịch, bo tròn) × Mushie (tối giản, pastel dịu, nhiều
 khoảng trắng).
 
+**Brand world: Merlin canon v2** (theo Brand Foundation Report v2, 5/2026):
+Merlin là CURIOUS TUXEDO CAT — beret xanh + romper xanh, "the cat who takes
+notes". KHÔNG phải wizard cat (canon v1 sai đã bị Elise sửa — đừng đưa wizard
+trở lại). Nhân vật: Merlin (live) + Tâm, Bánh Mì, Mochi (joining soon).
+Motif: beret xanh, single white whisker (má trái), suitcase nâu, notebook,
+đèn worktable ("purr" + "light"), trăng/sao chỉ dùng trang trí.
+Safe phrases: "From Merlin's notebook", "Sketched by Merlin, stitched by us",
+"the cat who takes notes". CẤM: magical/blessed/spell/manifest (TOS Etsy).
+
 ## Cấu trúc
 
 ```

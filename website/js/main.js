@@ -49,6 +49,7 @@
     var badge = "";
     if (p.badge === "made-to-order") badge = '<span class="badge made-to-order">Made to order</span>';
     if (p.badge === "new") badge = '<span class="badge new">New</span>';
+    if (p.badge === "the-original") badge = '<span class="badge original">The Original</span>';
     return (
       '<a class="product-card reveal" href="product.html?id=' + encodeURIComponent(p.id) + '">' +
       badge +

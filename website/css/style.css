@@ -25,6 +25,8 @@
   --butter-soft: #FAEFD8;
   --blush: #EFC5B9;
   --blush-soft: #F9E8E2;
+  --beret: #7FA3CC;         /* Merlin's blue beret */
+  --beret-soft: #DEE8F2;
   --line: #EBDFCF;
 
   /* type */
@@ -498,6 +500,7 @@ h1, h2, h3, h4 {
 }
 .badge.made-to-order { background: var(--sage-soft); color: #4E6346; }
 .badge.new { background: var(--butter-soft); color: #7A5C1E; }
+.badge.original { background: #DEE8F2; color: #3F607F; }
 
 /* ---------- story split ---------- */
 
@@ -939,6 +942,51 @@ h1, h2, h3, h4 {
   font-size: 15.5px;
   font-weight: 500;
 }
+
+.companion { position: relative; }
+.companion .soon-pill {
+  position: absolute;
+  top: 4px;
+  right: -2px;
+  background: var(--beret-soft);
+  color: #3F607F;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+/* ---------- journal ---------- */
+
+.journal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(14px, 2vw, 24px);
+}
+@media (max-width: 760px) { .journal-grid { grid-template-columns: 1fr; } }
+.journal-card {
+  display: block;
+  background: var(--card);
+  border-radius: var(--radius-m);
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(122, 96, 68, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.journal-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+.journal-card img { width: 100%; aspect-ratio: 16/10; object-fit: cover; }
+.journal-card .journal-body { padding: 18px 20px 22px; }
+.journal-card .journal-tag {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+  display: block;
+  margin-bottom: 6px;
+}
+.journal-card h3 { font-size: 18px; font-weight: 500; }
 
 /* ---------- purrks rewards ---------- */
 

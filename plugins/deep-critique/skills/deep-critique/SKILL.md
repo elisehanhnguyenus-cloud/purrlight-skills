@@ -43,7 +43,7 @@ Trước vòng 1, tạo sổ: trong Claude Code — file `Deep Critique/[YYYY-MM
 |---|---|---|
 | E-commerce / bán lẻ online | `references/lenses-ecommerce.md` | sàn (Etsy, TikTok Shop, Amazon, Shopee, Lazada), web riêng (Shopify, WooCommerce), POD, dropshipping, handmade, FBA, bán qua livestream/social |
 
-Cách dùng: ở vòng 0, nếu đề bài khớp một ngành trong bảng thì **đọc file đó ngay**; sau đó khi giao việc cho mỗi vòng, chèn **nguyên văn** phần "Mũi khoan ngành" của đúng vòng đó vào đề bài của agent — đừng tóm tắt thành một câu, vì giá trị nằm ở chi tiết cụ thể. Không khớp ngành nào thì chạy 10 vòng chuẩn, đừng nạp gì thêm.
+Cách dùng: ở vòng 0, nếu đề bài khớp một ngành trong bảng thì **đọc file đó ngay**; sau đó khi giao việc cho mỗi vòng, mở mục `## Mũi khoan theo từng vòng` trong file lăng kính và chèn **nguyên văn** tiểu mục `### Vòng N` tương ứng vào đề bài của agent — đừng tóm tắt thành một câu, vì giá trị nằm ở chi tiết cụ thể. Không khớp ngành nào thì chạy 10 vòng chuẩn, đừng nạp gì thêm.
 
 Thư viện là phần **bổ sung, không phải phần thay thế**: ba luật gốc — cấm lặp phát hiện cũ, không có chỉ tiêu số phát hiện, mọi phát hiện phải kèm cách kiểm chứng rẻ nhất — vẫn áp dụng nguyên vẹn, và mũi khoan ngành không được lấn sang lăng kính của vòng khác.
 
@@ -96,7 +96,7 @@ Kỷ luật chi phí (KHÔNG phải kỷ luật tư duy): web search định hư
 ## ❔ Câu hỏi ngược cho người ra đề (3–5 câu mà chỉ họ mới trả lời được)
 ```
 
-Sau khi ghi file, tóm tắt trong hội thoại: kết luận 1 dòng + top 3 điểm mù + 1 câu hỏi ngược quan trọng nhất. Bằng tiếng Việt, thẳng, không vòng vo.
+Sau khi ghi file, tóm tắt trong hội thoại: kết luận 1 dòng + top 3 điểm mù + 1 câu hỏi ngược quan trọng nhất. Bằng **đúng ngôn ngữ người dùng đang dùng** (xem đầu file), thẳng, không vòng vo.
 
 ## Khi nào chạy thêm chu kỳ
 

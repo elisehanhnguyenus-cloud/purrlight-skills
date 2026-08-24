@@ -4,7 +4,7 @@
 
 ## Cách dùng: bổ sung mũi khoan, KHÔNG thay thế lăng kính
 
-10 lăng kính gốc là **chỗ đứng** — chúng không đổi. File này chỉ đưa thêm **mũi khoan**: những chỗ mà kế hoạch e-commerce hay chết, gắn vào đúng vòng có nhiệm vụ bắt nó. Khi giao việc cho agent mỗi vòng, chèn thêm phần "Mũi khoan ngành" của vòng đó vào đề bài — chèn nguyên văn, đừng tóm tắt thành một câu.
+10 lăng kính gốc là **chỗ đứng** — chúng không đổi. File này chỉ đưa thêm **mũi khoan**: những chỗ mà kế hoạch e-commerce hay chết, gắn vào đúng vòng có nhiệm vụ bắt nó. Khi giao việc cho agent mỗi vòng, chèn thêm tiểu mục `### Vòng N` tương ứng trong mục `## Mũi khoan theo từng vòng` dưới đây vào đề bài — chèn nguyên văn, đừng tóm tắt thành một câu.
 
 Ba luật gốc vẫn áp dụng nguyên vẹn: **cấm lặp phát hiện cũ**, **không có chỉ tiêu số phát hiện**, **mọi phát hiện phải kèm cách kiểm chứng rẻ nhất**.
 

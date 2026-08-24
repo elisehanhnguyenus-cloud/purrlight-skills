@@ -35,6 +35,7 @@ built specifically to break that trap:
 | **Anti-repetition law** | Later rounds are **forbidden** from restating earlier findings. A round that turns up nothing must declare itself a **"dry round"** — honest emptiness beats recycled insight dressed up as diligence |
 | **Every finding must be testable** | A finding with no *"cheapest way to verify this in ≤1 week"* is just worry — it gets demoted or dropped |
 | **Round 8: the AI audits itself** | The round I haven't seen in any other skill: Claude lists its own biases across the previous seven rounds, and what it *cannot in principle know* (your real cash flow, health, family, relationships) |
+| **Industry lens libraries** | When the topic matches a shipped industry library (e-commerce today), every round also gets **industry-specific probes** — the places plans in that trade actually die, which practitioners know and plans forget. Loaded on demand; costs nothing when the topic doesn't match |
 | **Three grades of evidence** | Every finding is labelled certain (with source) / inference (with logic) / speculation — never blended to sound more confident than it is |
 
 **Measured result** (same prompt, same Claude model, auto-graded by a counting script):
@@ -100,6 +101,7 @@ savings. I've already viewed a location downtown. Tear it apart.
 - **Highest-leverage tip:** paste in the real numbers, budgets and planning files. In the
   benchmark run, the single most valuable finding came from the skill cross-checking the
   plan against *the planner's own internal file* and catching a 153% budget contradiction.
+- Selling online? The skill loads its **e-commerce lens library** automatically — cash conversion cycle, the real fee stack, return rates, IP exposure, platform dependency — each with a ready-made cheap verification.
 - The report ends with **questions back to you**. Answer them, then ask for
   *"another cycle focused on X"* to dig a layer deeper.
 
@@ -137,6 +139,7 @@ purrlight-skills/
 ├── AGENTS.md                            ← cross-agent contract (Codex & friends)
 ├── plugins/deep-critique/               ← full Claude Code plugin
 │   ├── skills/deep-critique/            ← the 10-round skill + critic persona
+│   │   └── references/                  ← persona + industry lens libraries (e-commerce)
 │   └── agents/deep-critic.md            ← standalone critique agent
 ├── dist/deep-critique-claude-ai.zip     ← installer for claude.ai web/mobile
 └── docs/BAO-CAO-MAU.md                  ← sample report (anonymized, from a real run)
@@ -161,7 +164,8 @@ I had set up myself and forgotten.
 
 ## Roadmap
 
-- [ ] v1.1 — Industry lens libraries (e-commerce, F&B, services)
+- [x] v1.1 — **E-commerce** industry lens library
+- [ ] F&B and services lens libraries
 - [x] Full Vietnamese–English bilingual docs
 - [ ] Beginner kit: illustrated guide + Vietnamese walkthrough video
 

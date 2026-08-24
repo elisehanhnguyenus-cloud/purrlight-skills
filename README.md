@@ -28,6 +28,7 @@ Hỏi AI phản biện một lần, bạn nhận về những rủi ro *dễ th�
 | **Luật chống lặp giả** | Vòng sau bị **cấm** nhắc lại phát hiện của vòng trước. Đào không ra thì phải khai "vòng khô" — trung thực hơn là tái chế ý cũ cho có vẻ chăm chỉ |
 | **Mọi phát hiện phải kiểm chứng được** | Phát hiện không kèm "cách kiểm chứng rẻ nhất trong ≤1 tuần" chỉ là lo lắng suông — bị hạ cấp hoặc loại |
 | **Vòng 8: AI tự soi chính mình** | Vòng duy nhất em chưa thấy ở skill nào khác: AI liệt kê thiên lệch của chính nó trong 7 vòng trước, và những gì nó *về nguyên tắc không thể biết* |
+| **Lăng kính theo ngành** | Đề bài thuộc ngành có sẵn thư viện (hiện có e-commerce) thì mỗi vòng được nạp thêm **mũi khoan riêng của ngành** — những chỗ hay chết mà người trong nghề biết còn kế hoạch thì hay quên. Nạp theo nhu cầu, không thuộc ngành thì không tốn gì |
 | **Tách 3 loại căn cứ** | Mỗi phát hiện ghi rõ: chắc chắn (có nguồn) / suy luận (nêu logic) / phỏng đoán — không trộn lẫn để ra vẻ chắc chắn |
 
 **Kết quả đo được** (cùng một đề bài, cùng model Claude, chấm bằng script đếm tự động):
@@ -82,6 +83,7 @@ Skill chỉ là file Markdown — không script, không runtime — nên chạy 
 - Nói tự nhiên cũng kích hoạt: *"phản biện giúp tôi..."*, *"tìm điểm mù..."*, *"kế hoạch này có gì sai không?"*
 - Việc nhỏ dùng bản nhẹ: *"**phản biện nhanh:** [vấn đề]"* → 5 vòng, ~1/3 chi phí.
 - **Mẹo ăn tiền nhất:** dán kèm số liệu, ngân sách, file kế hoạch thật. Trong ca chạy mẫu, phát hiện giá trị nhất đến từ việc skill đối chiếu kế hoạch với *chính file nội bộ của người hỏi* và bắt được mâu thuẫn ngân sách 153%.
+- Bán hàng online? Skill tự nạp **thư viện lăng kính e-commerce** — dòng tiền, phí sàn, tỷ lệ hoàn, rủi ro IP, phụ thuộc nền tảng — kèm công thức kiểm chứng sẵn cho từng nghi vấn.
 - Cuối báo cáo có mục **Câu hỏi ngược** — trả lời rồi yêu cầu *"chạy thêm chu kỳ tập trung vào X"* để đào tầng sâu hơn.
 
 Nhận về: báo cáo đầy đủ gồm kết luận 3 dòng → bảng Top điểm mù xếp hạng (nghiêm trọng × xác suất) → đề bài nên sửa lại thành gì → toàn bộ phát hiện 10 vòng → 3 kiểm chứng nên làm ngay tuần này → giới hạn của chính bản phản biện → 3–5 câu hỏi ngược.
@@ -108,6 +110,7 @@ purrlight-skills/
 ├── README.en.md                         ← bản tiếng Anh đầy đủ
 ├── plugins/deep-critique/               ← plugin đầy đủ cho Claude Code
 │   ├── skills/deep-critique/            ← skill 10 vòng + persona thợ săn điểm mù
+│   │   └── references/                  ← persona + thư viện lăng kính ngành (e-commerce)
 │   └── agents/deep-critic.md            ← agent phản biện độc lập
 ├── dist/deep-critique-claude-ai.zip     ← bản cài cho claude.ai web/mobile
 └── docs/BAO-CAO-MAU.md                  ← báo cáo mẫu (ẩn danh, từ ca chạy thật)
@@ -123,7 +126,8 @@ Khi đó mình ước được biết sớm hơn về tư duy phản biện, và
 
 ## Roadmap
 
-- [ ] v1.1 — Thư viện lăng kính theo ngành (e-commerce, F&B, dịch vụ)
+- [x] v1.1 — Thư viện lăng kính ngành **e-commerce**
+- [ ] Thư viện lăng kính ngành F&B và dịch vụ
 - [x] Bản song ngữ Việt–Anh hoàn chỉnh
 - [ ] Bộ kit người mới: hướng dẫn có hình + video tiếng Việt
 

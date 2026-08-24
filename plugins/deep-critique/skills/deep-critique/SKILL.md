@@ -33,10 +33,25 @@ Trước vòng 1, tạo sổ: trong Claude Code — file `Deep Critique/[YYYY-MM
 - Đọc lại đề bài, viết lại thành 1 đoạn "đề bài như tôi hiểu": quyết định cần ra, phạm vi, ràng buộc, tiêu chí thành công theo lời người ra đề.
 - Nếu vấn đề liên quan một dự án cụ thể, gom hết bối cảnh với tới được: trong Claude Code — đọc tài liệu dự án trong thư mục làm việc (hồ sơ, số liệu, kế hoạch cũ); trên claude.ai web/app — dùng tài liệu người dùng đính kèm, Project knowledge, và những gì họ dán vào hội thoại. Số liệu thật là mỏ vàng để bắt điểm mù.
 - KHÔNG hỏi lại người dùng trừ khi đề bài rỗng. Thiếu dữ kiện thì ghi rõ giả định đang dùng — chính các giả định đó cũng là mồi cho vòng 3.
+- **Nhận diện ngành**: đối chiếu đề bài với bảng ngành ở mục ngay dưới. Khớp ngành nào thì nạp file lăng kính của ngành đó ngay tại vòng 0.
+
+## Thư viện lăng kính theo ngành (nạp theo nhu cầu)
+
+10 lăng kính là **chỗ đứng** — chúng không đổi theo ngành. Nhưng *chỗ hay chết* thì có: mỗi ngành mang một bộ điểm gãy riêng mà người trong nghề biết còn đề bài thì hay quên. Thư viện ngành đưa thêm **mũi khoan** cho từng vòng, gắn vào đúng vòng có nhiệm vụ bắt nó.
+
+| Ngành | File | Nạp khi đề bài dính tới |
+|---|---|---|
+| E-commerce / bán lẻ online | `references/lenses-ecommerce.md` | sàn (Etsy, TikTok Shop, Amazon, Shopee, Lazada), web riêng (Shopify, WooCommerce), POD, dropshipping, handmade, FBA, bán qua livestream/social |
+
+Cách dùng: ở vòng 0, nếu đề bài khớp một ngành trong bảng thì **đọc file đó ngay**; sau đó khi giao việc cho mỗi vòng, chèn **nguyên văn** phần "Mũi khoan ngành" của đúng vòng đó vào đề bài của agent — đừng tóm tắt thành một câu, vì giá trị nằm ở chi tiết cụ thể. Không khớp ngành nào thì chạy 10 vòng chuẩn, đừng nạp gì thêm.
+
+Thư viện là phần **bổ sung, không phải phần thay thế**: ba luật gốc — cấm lặp phát hiện cũ, không có chỉ tiêu số phát hiện, mọi phát hiện phải kèm cách kiểm chứng rẻ nhất — vẫn áp dụng nguyên vẹn, và mũi khoan ngành không được lấn sang lăng kính của vòng khác.
+
+Ngành chưa có trong bảng (F&B, dịch vụ...) thì chạy 10 vòng chuẩn vẫn đúng phương pháp, chỉ là ít mũi khoan sẵn hơn.
 
 ## 10 vòng phản biện
 
-Mỗi vòng giao cho agent `deep-critic` (một vòng = một agent, truyền đủ 4 thứ: đề bài + bối cảnh vòng 0 + lăng kính của vòng + **danh sách cấm-lặp rút gọn kèm đường dẫn sổ đầy đủ**). Nếu môi trường không cho spawn agent (claude.ai web/app điện thoại), đọc `references/deep-critic-persona.md` và NHẬP VAI persona đó cho từng vòng, tự chạy tuần tự với đúng kỷ luật — tuyệt đối không gộp nhiều vòng vào một lượt nghĩ, vì gộp là cách nhanh nhất quay lại lặp giả.
+Mỗi vòng giao cho agent `deep-critic` (một vòng = một agent, truyền đủ: đề bài + bối cảnh vòng 0 + lăng kính của vòng + **danh sách cấm-lặp rút gọn kèm đường dẫn sổ đầy đủ** + **mũi khoan ngành của đúng vòng đó, nếu đề bài khớp một ngành có thư viện**). Nếu môi trường không cho spawn agent (claude.ai web/app điện thoại), đọc `references/deep-critic-persona.md` và NHẬP VAI persona đó cho từng vòng, tự chạy tuần tự với đúng kỷ luật — tuyệt đối không gộp nhiều vòng vào một lượt nghĩ, vì gộp là cách nhanh nhất quay lại lặp giả.
 
 **Thứ tự chạy**: vòng 1–2 chạy tuần tự trước (chúng định khung cho tất cả các vòng sau). Vòng 3–7 độc lập với nhau — spawn song song trong cùng một lượt để tiết kiệm thời gian, cả 5 đều nhận sổ phát hiện sau vòng 2. Vòng 8–10 bắt buộc tuần tự và chạy sau cùng, vì nguyên liệu của chúng là toàn bộ kết quả 7 vòng trước.
 

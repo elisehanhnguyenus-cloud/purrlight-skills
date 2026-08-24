@@ -33,6 +33,10 @@ Files that matter:
   the final report layout.
 - **`$SKILL_DIR/references/deep-critic-persona.md`** — the critic persona. Load this when
   the host cannot spawn sub-agents (§3).
+- **`$SKILL_DIR/references/lenses-ecommerce.md`** — industry lens library. Load it at round 0
+  **only** when the topic is online retail (marketplaces, own-store, POD, dropshipping, FBA,
+  live-selling); then pass that round's "Mũi khoan ngành" block verbatim alongside the lens.
+  It adds probes; it never replaces a lens or relaxes the rules in §4.
 - **`plugins/deep-critique/agents/deep-critic.md`** — the Claude Code sub-agent definition
   (read-only tools: Read, Glob, Grep, WebSearch, WebFetch).
 
@@ -80,7 +84,11 @@ Drop any of these and the host is no longer running Deep Critique:
    sessions get summarized; a notebook outside the context window does not.
 7. **Round 8 is mandatory.** The AI audits its own previous seven rounds — its biases, and
    what it *cannot in principle know* (real cash flow, health, family, relationships).
-8. **No flattery, no false balance.** "The plan is broadly sound, however…" is not part of
+8. **Industry numbers are never quoted from memory.** When an industry library is in play, any
+   platform fee, payout policy, tax rule or benchmark entering a finding needs a source with a
+   lookup date, or it is typed `phỏng đoán` (speculation). Model knowledge of marketplace fees
+   goes stale fast; a confidently wrong number *creates* a blind spot instead of catching one.
+9. **No flattery, no false balance.** "The plan is broadly sound, however…" is not part of
    this skill. Praise belongs elsewhere.
 
 Finding format, identical in every round and every host:

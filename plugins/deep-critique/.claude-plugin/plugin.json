@@ -1,9 +1,17 @@
 {
   "name": "deep-critique",
-  "version": "1.0.0",
-  "description": "Phản biện 10 vòng săn điểm mù — skill /deep-critique + agent deep-critic: nghiên cứu, phân tích, phản biện, hệ thống hóa và kiểm tra một vấn đề qua 10 lăng kính khác nhau để tìm điểm yếu và điểm mù mà cả AI lẫn người ra đề chưa nhìn thấy.",
+  "version": "1.1.0",
+  "description": "Phản biện 10 vòng săn điểm mù — 10-round adversarial critique for business decisions. Skill /deep-critique + agent deep-critic: mỗi vòng một lăng kính, cấm lặp lại phát hiện cũ, mọi phát hiện kèm cách kiểm chứng rẻ nhất. Có thư viện lăng kính ngành e-commerce nạp theo nhu cầu.",
   "author": {
     "name": "PURRLIGHT STUDIO LLC"
   },
-  "keywords": ["phản biện", "điểm mù", "red team", "critique", "pre-mortem", "ra quyết định"]
+  "keywords": [
+    "phản biện",
+    "điểm mù",
+    "red team",
+    "critique",
+    "pre-mortem",
+    "ra quyết định",
+    "e-commerce"
+  ]
 }

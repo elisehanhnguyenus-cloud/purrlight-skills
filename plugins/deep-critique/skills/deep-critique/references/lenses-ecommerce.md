@@ -8,6 +8,20 @@
 
 Ba luật gốc vẫn áp dụng nguyên vẹn: **cấm lặp phát hiện cũ**, **không có chỉ tiêu số phát hiện**, **mọi phát hiện phải kèm cách kiểm chứng rẻ nhất**.
 
+### Chạy bản nhanh 5 vòng
+
+Khi người dùng gọi bản rút gọn, lăng kính bị gộp thì mũi khoan gộp theo — dùng đúng bảng này, đừng tự chia lại:
+
+| Vòng nhanh | Lăng kính gộp | Gộp mũi khoan của |
+|---|---|---|
+| 1 | soi đề bài + mổ xẻ hệ thống | **Vòng 1 + Vòng 2** (kèm cả bảng ngăn kéo bị bỏ quên) |
+| 2 | giả định & dữ kiện | **Vòng 3** |
+| 3 | luật sư của quỷ + đảo ngược | **Vòng 4 + Vòng 5** |
+| 4 | góc nhìn bên ngoài + các bên liên quan | **Vòng 6 + Vòng 7** |
+| 5 | điểm mù của AI + pre-mortem + tổng hợp | **Vòng 8 + Vòng 9 + Vòng 10** |
+
+Bản nhanh có ít lượt đào hơn nên **phải chọn**: trong mỗi vòng gộp, ưu tiên mũi khoan chạm tới tiền và tới khả năng sống sót (dòng tiền, biên lãi thật, phụ thuộc nền tảng) trước mũi khoan chạm tới tối ưu. Phần bỏ qua thì ghi thẳng vào mục giới hạn của báo cáo — đừng lặng lẽ bỏ.
+
 > ⚠️ **Luật riêng của ngành này — cấm trích số từ trí nhớ.** Phí sàn, chính sách payout, ngưỡng chargeback, quy định thuế và chương trình quảng cáo **thay đổi liên tục**, và kiến thức trong đầu AI luôn cũ hơn thực tế. Mọi con số phí / chính sách / benchmark đưa vào phát hiện **phải** có nguồn kèm ngày tra cứu, hoặc phải khai `Loại căn cứ: phỏng đoán`. Ghi "Etsy thu X%" mà không tra là đã tạo ra một điểm mù mới thay vì bắt được điểm mù cũ.
 
 ---

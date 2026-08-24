@@ -20,11 +20,11 @@ Lặp lại cùng một câu hỏi "còn gì sai nữa không?" 10 lần chỉ c
 ## Hai chế độ chạy
 
 - **Đầy đủ (10 vòng) — MẶC ĐỊNH.** Luôn chạy chế độ này trừ khi người dùng nói rõ muốn nhanh. Không bao giờ tự hạ cấp xuống bản nhanh để tiết kiệm — người dùng gọi skill này chính vì muốn đào tận đáy.
-- **Nhanh (5 vòng)** — chỉ khi người dùng nói rõ "phản biện nhanh", "soi nhanh", "bản rút gọn": gộp lăng kính thành 5 vòng (1) soi đề bài + mổ xẻ hệ thống, (2) giả định & dữ kiện, (3) luật sư của quỷ + đảo ngược, (4) góc nhìn bên ngoài + các bên liên quan, (5) điểm mù của AI + pre-mortem + tổng hợp. Vẫn giữ nguyên luật chống lặp, định dạng phát hiện và báo cáo — chỉ ít lượt đào hơn. Ghi rõ ở đầu báo cáo: "Bản nhanh 5 vòng — quyết định lớn nên chạy bản đầy đủ."
+- **Nhanh (5 vòng)** — chỉ khi người dùng nói rõ "phản biện nhanh", "soi nhanh", "bản rút gọn": gộp lăng kính thành 5 vòng (1) soi đề bài + mổ xẻ hệ thống, (2) giả định & dữ kiện, (3) luật sư của quỷ + đảo ngược, (4) góc nhìn bên ngoài + các bên liên quan, (5) điểm mù của AI + pre-mortem + tổng hợp. Vẫn giữ nguyên luật chống lặp, định dạng phát hiện và báo cáo — chỉ ít lượt đào hơn. Ghi rõ ở đầu báo cáo: "Bản nhanh 5 vòng — quyết định lớn nên chạy bản đầy đủ." Nếu đề bài khớp một ngành có thư viện lăng kính, dùng **bảng gộp mũi khoan cho bản nhanh** nằm trong chính file lăng kính đó — đừng tự chia lại.
 
 ## Sổ phản biện (bắt buộc, ghi ngay từ đầu)
 
-Trước vòng 1, tạo sổ: trong Claude Code — file `Deep Critique/[YYYY-MM-DD]-[chủ đề ngắn].md` (tạo thư mục nếu chưa có); trên claude.ai web/app không có hệ thống file — một artifact/tài liệu duy nhất giữ vai trò sổ, cập nhật suốt phiên. Sau MỖI vòng, append phát hiện của vòng đó vào sổ ngay — đừng giữ trong đầu đến cuối. Lý do: phiên dài có thể bị tóm tắt bớt ngữ cảnh; sổ nằm ngoài đầu là bộ nhớ không bao giờ mất.
+Trước vòng 1, tạo sổ: trong Claude Code — file `Deep Critique/[YYYY-MM-DD]-[chủ đề ngắn].md` (tạo thư mục nếu chưa có). **Nếu tên file đó đã tồn tại — chạy lại cùng chủ đề trong ngày, hoặc chạy thêm một chu kỳ nữa — thì thêm hậu tố `-2`, `-3`… chứ TUYỆT ĐỐI không ghi đè: sổ cũ là bằng chứng đã đào những gì, mất nó là mất luôn khả năng chứng minh vòng nào khô thật.** Trên claude.ai web/app không có hệ thống file — một artifact/tài liệu duy nhất giữ vai trò sổ, cập nhật suốt phiên; chạy chu kỳ mới thì mở artifact mới, đừng ghi đè artifact cũ. Sau MỖI vòng, append phát hiện của vòng đó vào sổ ngay — đừng giữ trong đầu đến cuối. Lý do: phiên dài có thể bị tóm tắt bớt ngữ cảnh; sổ nằm ngoài đầu là bộ nhớ không bao giờ mất.
 
 **Danh sách cấm-lặp rút gọn**: ngay dưới tiêu đề sổ, duy trì một mục `## CẤM LẶP (rút gọn)` — mỗi phát hiện đúng 1 dòng: `[mã] tiêu đề — 1 câu tóm tắt`. Cập nhật nó cùng lúc với phần chi tiết. Khi giao việc cho các vòng sau, truyền **danh sách rút gọn này + đường dẫn sổ đầy đủ**, không dán cả sổ chi tiết vào đề bài của agent. Vì sao: chi phí đọc sổ phình theo cấp số qua từng vòng, trong khi để né trùng chỉ cần tiêu đề; còn khi agent phân vân "ý này có trùng không", nó có đường dẫn để tự mở sổ đầy đủ ra đối chiếu đúng phát hiện đó — tiết kiệm mà không mất một chút năng lực kiểm tra nào.
 
@@ -83,7 +83,7 @@ Kỷ luật chất lượng: một phát hiện không có "cách kiểm chứng
 
 Kỷ luật chi phí (KHÔNG phải kỷ luật tư duy): web search định hướng ~6 lượt/lần chạy, dồn cho vòng 3, 7, 9 — nơi dữ kiện ngoài đổi được kết luận. Đây là trần mềm: một claim then chốt (nghiêm trọng ≥4) cần nguồn thì cứ tìm tiếp, đừng bỏ kiểm chứng để tiết kiệm; thứ cần bỏ là tìm lan man cho claim phụ mà có nguồn hay không cũng chẳng đổi khuyến nghị.
 
-## Bản báo cáo cuối (ghi đè lên sổ phản biện, giữ nguyên tên file)
+## Bản báo cáo cuối (ghi đè lên sổ phản biện **của chính lượt chạy này**, giữ nguyên tên file — không đụng tới sổ của các lượt trước)
 
 ```
 # [Chủ đề] — Phản biện 10 vòng [ngày]

@@ -1,8 +1,10 @@
 # 🕳️ Deep Critique — Phản biện 10 vòng săn điểm mù cho Claude
 
+[🇻🇳 Tiếng Việt](README.md) · [🇬🇧 English](README.en.md)
+
 > **Skill phản biện chuyên sâu đầu tiên bằng tiếng Việt cho Claude.** Trước khi bạn xuống tiền, ký hợp đồng, đổi việc hay chốt một kế hoạch — Deep Critique đưa quyết định đó qua **10 vòng phản biện, mỗi vòng một lăng kính khác nhau**, để tìm ra điểm yếu và điểm mù mà cả bạn **lẫn chính AI** thường bỏ sót.
 >
-> *The first Vietnamese-language deep-critique skill for Claude: a 10-round, 10-lens adversarial review of any plan or decision. [English section below](#-english).*
+> *The first Vietnamese-language deep-critique skill for Claude: a 10-round, 10-lens adversarial review of any plan or decision. [Full English README](README.en.md).*
 
 **Cài trong 30 giây (Claude Code):**
 
@@ -12,6 +14,7 @@
 ```
 
 Dùng claude.ai (web/app điện thoại)? → [Tải file zip này](dist/deep-critique-claude-ai.zip) rồi xem [cách cài 4 bước](#cách-b--claudeai-web--app-điện-thoại).
+Dùng Codex hoặc agent khác? → xem [AGENTS.md](AGENTS.md).
 
 ---
 
@@ -66,6 +69,10 @@ Cập nhật sau này: `/plugin marketplace update purrlight-skills`.
 3. **Settings → Customize → Skills** → nút **+** → **Upload a skill** → chọn file zip vừa tải.
 4. Bật công tắc skill. App điện thoại cùng tài khoản tự có — không cài thêm gì.
 
+### Cách C — Codex, ChatGPT và các agent khác
+
+Skill chỉ là file Markdown — không script, không runtime — nên chạy được ở mọi agent biết đọc `AGENTS.md`. File [`AGENTS.md`](AGENTS.md) ở gốc repo là hợp đồng chạy chéo nền tảng: nó chỉ chỗ `$SKILL_DIR`, liệt kê từng phần cần năng lực gì của host, và quy định rõ skill phải hạ cấp thế nào khi host không spawn được sub-agent, không ghi được file, hoặc không có web search.
+
 ## Cách dùng
 
 ```
@@ -97,6 +104,8 @@ Nhận về: báo cáo đầy đủ gồm kết luận 3 dòng → bảng Top đ
 ```
 purrlight-skills/
 ├── .claude-plugin/marketplace.json      ← danh mục marketplace (cài qua /plugin)
+├── AGENTS.md                            ← hợp đồng chạy chéo agent (Codex, ChatGPT...)
+├── README.en.md                         ← bản tiếng Anh đầy đủ
 ├── plugins/deep-critique/               ← plugin đầy đủ cho Claude Code
 │   ├── skills/deep-critique/            ← skill 10 vòng + persona thợ săn điểm mù
 │   └── agents/deep-critic.md            ← agent phản biện độc lập
@@ -115,7 +124,7 @@ Khi đó mình ước được biết sớm hơn về tư duy phản biện, và
 ## Roadmap
 
 - [ ] v1.1 — Thư viện lăng kính theo ngành (e-commerce, F&B, dịch vụ)
-- [ ] Bản song ngữ Việt–Anh hoàn chỉnh
+- [x] Bản song ngữ Việt–Anh hoàn chỉnh
 - [ ] Bộ kit người mới: hướng dẫn có hình + video tiếng Việt
 
 Góp ý & báo lỗi: mở [Issue](../../issues) hoặc nhắn trực tiếp. Nếu skill bắt được điểm mù đáng giá cho bạn — kể lại trong Issues, đó là phần thưởng lớn nhất cho người làm.
@@ -124,9 +133,15 @@ Góp ý & báo lỗi: mở [Issue](../../issues) hoặc nhắn trực tiếp. N�
 
 ## 🇬🇧 English
 
-**Deep Critique** is a 10-round adversarial review skill for Claude (Claude Code plugin + claude.ai skill), written in Vietnamese. Each round attacks a plan from a different lens — problem reframing, systems decomposition, assumption audit, steelman, inversion, stakeholders & second-order effects, outside view (base rates, web-verified), **the AI's own blind spots**, pre-mortem & stress test, and final synthesis. Two hard rules make the iteration real: later rounds are *forbidden* from repeating earlier findings (honest "dry round" beats recycled insight), and every finding must ship with the cheapest ≤1-week verification or be demoted to speculation.
+**Deep Critique** is a 10-round adversarial review skill for Claude — a Claude Code plugin, a
+claude.ai skill, and portable to Codex and other agents via [`AGENTS.md`](AGENTS.md). Each round
+attacks a plan from a different lens (reframing, systems decomposition, assumption audit, steelman,
+inversion, stakeholders, outside view, **the AI's own blind spots**, pre-mortem, synthesis). Two hard
+rules make the iteration real: later rounds are *forbidden* from repeating earlier findings — an
+honest "dry round" beats recycled insight — and every finding ships with the cheapest ≤1-week
+verification or is demoted to speculation. Text-only package, read-only agent, MIT licensed.
 
-In a benchmarked head-to-head on the same prompt (auto-graded), it produced **36 findings vs 22** for vanilla Claude — and uniquely caught the highest-severity class: contradictions with the user's own internal documents, options hidden by the question's framing, and structural risk multiplication. Install: `/plugin marketplace add elisehanhnguyenus-cloud/purrlight-skills` → `/plugin install deep-critique@purrlight-skills`. Text-only package (no scripts, no hooks); the bundled agent is read-only + web search. MIT licensed.
+📖 **[Read the full English README →](README.en.md)**
 
 ---
 

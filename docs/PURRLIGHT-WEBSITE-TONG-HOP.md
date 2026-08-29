@@ -212,6 +212,34 @@ Five "two homes, one story" → Six "the studio family" → Seven "kind words"
 "Bag (0)", không có đường ra Etsy, "Anne of Green Gables" ×3, announce
 "Handcrafted with love in Texas" (FTC), "Free US shipping $75+" chưa xác minh.
 
+## 8c. Đợt 6 — Thực thi Website Brand Fix Brief (Brand Canon v2 — 17/08, Elise duyệt 24/08)
+
+Nguồn: Notion "🔧 Website Brand Fix Brief" + "🎨 Brand Canon v2" + Brand Book artifact.
+- **Logo master**: header dùng logo flat chính thức (trích từ Brand Book, không vẽ lại);
+  favicon = icon Merlin 32/64px. ⚠️ Ở 16px icon outline mỏng — chờ "bản filled"
+  từ designer (đã ghi nợ trong Canon).
+- **Merlin canon v2.1**: beret vàng nghệ #CA8D41 + sao thêu, yếm sage #93A898 +
+  tim đỏ gạch #A9503D, mũi #D29883, lông #2B2724/#F3EAD9; balo olive thay vali.
+- **About hai tầng**: Our Story (sự thật, ký Elise Hạnh Nguyễn — dùng elevator
+  ~50 từ đã duyệt + dữ kiện canon; TODO thay nguyên văn Part A 02.3 khi có) ·
+  Merlin's World (storybook, ký Mama Purr & Papa Purr, đóng khung là truyện).
+- **7 collections canon**: 5 active trên filter + Heritage & Celebration,
+  Patterns & Printables gắn tile "soon". Gỡ Cat Mom Club Tee (POD generic);
+  Whiskers & Moonlight giữ (merch Merlin).
+- **Language sweep**: toy/plush/nursery/small-hands → keepsake/heirloom;
+  "Ages 3+, with an adult nearby" (theo ngoại lệ CEO duyệt) + dòng an toàn
+  chuẩn nguyên văn trên PDP. Gỡ toàn bộ testimonials SAMPLE.
+- **Token mới**: --purr-pink #DB426B (nhận diện) · --purr-berry #B42249 (giá,
+  chữ nhấn — 6.33:1) · --beret #CA8D41. Taglines: "Made by hand. Made to be
+  kept." (footer) · "For one, and for thousands." (Partners) · hero mới
+  "A cat with a tiny backpack. A studio with two homes."
+- **Email** hello@purrlight.studio · domain đã chốt purrlight.studio.
+- **Acceptance checks của Morgan: PASS** (suitcase/7FA3CC/tên cũ/SAMPLE
+  reviews/email cũ = 0; "toy" chỉ còn trong dòng an toàn; ages 3+ luôn kèm
+  khung người lớn).
+- **Còn chờ**: nguyên văn Part A 02.3 · bản filled logo cho favicon 16px ·
+  review Etsy thật · minh hoạ storybook 5 pose từ hoạ sĩ.
+
 ## 9. Link & tài nguyên
 
 - **Repo branch:** `claude/purrlight-studio-website-kcsuen` (GitHub:

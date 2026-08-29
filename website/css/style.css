@@ -25,8 +25,10 @@
   --butter-soft: #FAEFD8;
   --blush: #EFC5B9;
   --blush-soft: #F9E8E2;
-  --beret: #7FA3CC;         /* Merlin's blue beret */
-  --beret-soft: #DEE8F2;
+  --beret: #CA8D41;         /* canon: beret vang nghe */
+  --beret-soft: #F4E6CC;
+  --purr-pink: #DB426B;     /* nhan dien — KHONG dung lam chu thuong */
+  --purr-berry: #B42249;    /* chu hong, link, gia — 6.43:1 */
   --line: #EBDFCF;
 
   /* type */
@@ -123,6 +125,7 @@ h1, h2, h3, h4 {
   white-space: nowrap;
 }
 .logo svg { width: 34px; height: 34px; }
+.logo img { height: 42px; width: auto; }
 .logo .light { color: var(--accent-large); }
 
 .main-nav { flex: 1; }
@@ -415,6 +418,22 @@ h1, h2, h3, h4 {
   transition: transform 0.2s ease;
 }
 .cat-tile:hover { transform: translateY(-4px); }
+.cat-tile { position: relative; }
+.cat-tile .soon-pill {
+  position: absolute;
+  top: 2px;
+  right: 6px;
+  background: var(--beret-soft);
+  color: #6E4A12;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 3px 10px;
+  border-radius: 999px;
+  z-index: 2;
+}
+.cat-tile.tile-soon:hover { transform: none; }
+.cat-tile.tile-soon { cursor: default; }
 .cat-tile .cat-art {
   width: 100%;
   aspect-ratio: 1;
@@ -482,7 +501,7 @@ h1, h2, h3, h4 {
 .product-card .price {
   font-weight: 600;
   font-size: 15.5px;
-  color: var(--accent-text);
+  color: var(--purr-berry);
 }
 
 .badge {
@@ -500,7 +519,7 @@ h1, h2, h3, h4 {
 }
 .badge.made-to-order { background: var(--sage-soft); color: #4E6346; }
 .badge.new { background: var(--butter-soft); color: #7A5C1E; }
-.badge.original { background: #DEE8F2; color: #3F607F; }
+.badge.original { background: var(--beret-soft); color: #6E4A12; }
 
 /* ---------- story split ---------- */
 
@@ -960,7 +979,7 @@ h1, h2, h3, h4 {
   top: 4px;
   right: -2px;
   background: var(--beret-soft);
-  color: #3F607F;
+  color: #6E4A12;
   font-family: var(--font-body);
   font-size: 11px;
   font-weight: 600;

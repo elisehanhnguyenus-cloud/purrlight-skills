@@ -95,6 +95,15 @@
         "<span>" + c.name + "</span></a>"
       );
     }).join("");
+    if (typeof UPCOMING_CATEGORIES !== "undefined") {
+      catGrid.innerHTML += UPCOMING_CATEGORIES.map(function (c) {
+        return (
+          '<span class="cat-tile tile-soon reveal"><span class="soon-pill">soon</span>' +
+          '<span class="cat-art"><img src="' + c.img + '" alt="" width="400" height="400"></span>' +
+          "<span>" + c.name + "</span></span>"
+        );
+      }).join("");
+    }
     catGrid.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("in"); });
   }
 

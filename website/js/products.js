@@ -22,7 +22,7 @@ const PRODUCTS = [
   {
     id: "storybook-doll",
     name: "Storybook Red-Braid Crochet Doll",
-    category: "Dolls & Plush",
+    category: "Storybook & Traditional Tales",
     price: 38,
     badge: "made-to-order",
     img: "assets/img/product-doll-redbraid.svg",
@@ -35,7 +35,7 @@ const PRODUCTS = [
   {
     id: "baptism-set",
     name: "Baptism Keepsake Outfit",
-    category: "Baby & Keepsake",
+    category: "Faith & Milestones",
     price: 42,
     badge: "made-to-order",
     img: "assets/img/product-baptism.svg",
@@ -48,19 +48,19 @@ const PRODUCTS = [
   {
     id: "mini-doll-keychain",
     name: "Mini Fabric Doll Keychain",
-    category: "Keychains",
+    category: "Little Things",
     price: 19,
     badge: "",
     img: "assets/img/product-keychain-doll.svg",
     short: "A tiny fabric friend for your keys, bag, or backpack zipper.",
     desc: "Small enough to ride along everywhere — each mini doll is cut, sewn, and finished by hand, then fitted with a sturdy ring. Pick one that looks like someone you love.",
-    details: ["Cotton fabric, embroidered details", "About 4\" / 10 cm", "Metal keyring hardware", "Not a toy — decorative accessory"],
+    details: ["Cotton fabric, embroidered details", "About 4\" / 10 cm", "Metal keyring hardware", "Decorative keepsake — not suitable for children under 3"],
     etsyUrl: ""
   },
   {
     id: "cat-pvc-keychain",
     name: "Merlin Moon Keychain",
-    category: "Keychains",
+    category: "Merlin's World & His Friends",
     price: 12,
     badge: "new",
     img: "assets/img/product-keychain-cat.svg",
@@ -71,45 +71,45 @@ const PRODUCTS = [
   },
   {
     id: "crochet-cat",
-    name: "Sleepy Merlin Plush",
-    category: "Dolls & Plush",
+    name: "Sleepy Merlin Crochet Doll",
+    category: "Merlin's World & His Friends",
     price: 34,
     badge: "the-original",
     img: "assets/img/product-cat-plush.svg",
-    short: "Our studio cat, mid-nap — tuxedo coat, little blue beret, one white whisker.",
-    desc: "This is Merlin, the curious tuxedo cat who supervises our worktable (when he isn't sleeping on the patterns). Hand-crocheted in his signature blue beret, with his single white whisker embroidered on the left — just like the real one. From the cat who takes notes.",
+    short: "Our studio cat, mid-nap — tuxedo coat, little yellow beret, one white whisker.",
+    desc: "This is Merlin, the curious tuxedo cat who supervises our worktable (when he isn't sleeping on the patterns). Hand-crocheted in his signature yellow beret, with his single white whisker embroidered on the left — just like the real one. From the cat who takes notes.",
     details: ["Soft acrylic-blend yarn, polyester fill", "About 8\" / 20 cm curled", "Embroidered face — no small parts", "Spot clean with a damp cloth"],
-    addons: [{ label: "Cat only", delta: 0 }, { label: "Make it a set · + Felt fish toy", delta: 12 }],
+    addons: [{ label: "Cat only", delta: 0 }, { label: "Make it a set · + Felt fish for cats", delta: 12 }],
     etsyUrl: ""
   },
   {
     id: "bunny-lovey",
     name: "Bunny Lovey Doll",
-    category: "Dolls & Plush",
+    category: "Feelings & Calm",
     price: 29,
     badge: "",
     img: "assets/img/product-bunny.svg",
     short: "A floppy-eared bunny sized for small arms and big feelings.",
     desc: "With long soft ears made for holding, this hand-finished bunny becomes the friend that goes everywhere. Sewn from soft fabric with an embroidered face.",
-    details: ["Soft plush fabric, embroidered face", "About 10\" / 25 cm", "Machine wash cold, air dry", "For ages 3+"],
+    details: ["Soft fabric, embroidered face", "About 10\" / 25 cm", "Machine wash cold, air dry", "Ages 3+, with an adult nearby"],
     etsyUrl: ""
   },
   {
     id: "flower-doll",
     name: "Little Blossom Fabric Doll",
-    category: "Dolls & Plush",
+    category: "Little Things",
     price: 22,
     badge: "",
     img: "assets/img/product-flower-doll.svg",
     short: "A pocket-sized fabric doll in a flower bonnet, sewn by hand.",
     desc: "She wears a petal bonnet and a permanent little smile. Hand-cut, hand-sewn, and small enough to live in a coat pocket or on a bedside shelf.",
-    details: ["Cotton fabric, embroidered details", "About 6\" / 15 cm", "Spot clean", "For ages 3+"],
+    details: ["Cotton fabric, embroidered details", "About 6\" / 15 cm", "Spot clean", "Ages 3+, with an adult nearby"],
     etsyUrl: ""
   },
   {
     id: "pet-bandana",
     name: "Handmade Pet Bandana",
-    category: "Pet Accessories",
+    category: "Merlin's World & His Friends",
     price: 16,
     badge: "",
     img: "assets/img/product-bandana.svg",
@@ -121,7 +121,7 @@ const PRODUCTS = [
   {
     id: "bow-collar",
     name: "Crochet Bow Pet Collar",
-    category: "Pet Accessories",
+    category: "Merlin's World & His Friends",
     price: 18,
     badge: "made-to-order",
     img: "assets/img/product-bow-collar.svg",
@@ -131,21 +131,9 @@ const PRODUCTS = [
     etsyUrl: ""
   },
   {
-    id: "cat-mom-tee",
-    name: "Cat Mom Club Tee",
-    category: "Apparel",
-    price: 24,
-    badge: "",
-    img: "assets/img/product-tee-catmom.svg",
-    short: "A soft everyday tee for the proudly cat-governed household.",
-    desc: "Our original Cat Mom Club design, printed on a soft unisex tee. Relaxed fit, holds up wash after wash — the unofficial uniform of snack-time negotiations.",
-    details: ["Soft cotton-blend tee", "Unisex sizes S–3XL — see size chart", "Printed to order", "Machine wash cold, inside out"],
-    etsyUrl: ""
-  },
-  {
     id: "whisker-tee",
     name: "Whiskers & Moonlight Tee",
-    category: "Apparel",
+    category: "Merlin's World & His Friends",
     price: 26,
     badge: "new",
     img: "assets/img/product-tee-whisker.svg",
@@ -155,12 +143,12 @@ const PRODUCTS = [
     etsyUrl: ""
   },
   {
-    id: "felt-fish-toy",
-    name: "Felt Fish Cat Toy",
-    category: "Pet Accessories",
+    id: "felt-fish",
+    name: "Felt Fish for Cats",
+    category: "Merlin's World & His Friends",
     price: 14,
     badge: "",
-    img: "assets/img/product-fish-toy.svg",
+    img: "assets/img/product-fish.svg",
     short: "A hand-sewn felt fish that has accepted its fate with dignity.",
     desc: "Sturdy felt, tight stitching, and a satisfying flip — this little fish is built for enthusiastic paws. No loose plastic parts.",
     details: ["Wool-blend felt, polyester fill", "About 5\" / 13 cm", "No small plastic parts", "Supervise play; replace if worn"],
@@ -169,9 +157,16 @@ const PRODUCTS = [
 ];
 
 const CATEGORIES = [
-  { name: "Dolls & Plush", img: "assets/img/cat-dolls.svg" },
-  { name: "Baby & Keepsake", img: "assets/img/cat-baby.svg" },
-  { name: "Keychains", img: "assets/img/cat-keychains.svg" },
-  { name: "Pet Accessories", img: "assets/img/cat-pet.svg" },
-  { name: "Apparel", img: "assets/img/cat-apparel.svg" }
+  { name: "Storybook & Traditional Tales", img: "assets/img/cat-dolls.svg" },
+  { name: "Feelings & Calm", img: "assets/img/product-bunny.svg" },
+  { name: "Faith & Milestones", img: "assets/img/cat-baby.svg" },
+  { name: "Little Things", img: "assets/img/cat-keychains.svg" },
+  { name: "Merlin's World & His Friends", img: "assets/img/product-cat-plush.svg" }
+];
+
+/* Canon co 7 collections — 2 collection duoi day RA MAT SAU, chi hien tile
+   "soon" tren trang chu, KHONG vao filter (tranh trang loc rong): */
+const UPCOMING_CATEGORIES = [
+  { name: "Heritage & Celebration", img: "assets/img/tile-heritage.svg" },
+  { name: "Patterns & Printables", img: "assets/img/tile-patterns.svg" }
 ];

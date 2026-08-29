@@ -17,8 +17,9 @@ Safe phrases: "From Merlin's notebook", "Sketched by Merlin, stitched by us",
 
 ```
 website/
-├── index.html        # Trang chủ: hero, danh mục, favorites, video lifestyle,
-│                     #   Companion Club, testimonials, Purrks Points, social strip
+├── index.html        # Trang chủ (cấu trúc chapter): hero, trust bar, danh mục,
+│                     #   favorites, video, story, Meet Merlin & friends,
+│                     #   testimonials, Purrks, journal, social, gifting, newsletter
 ├── shop.html         # Trang shop: lưới sản phẩm + lọc theo danh mục
 ├── product.html      # Trang chi tiết sản phẩm (đọc ?id=... từ URL)
 ├── about.html        # Câu chuyện thương hiệu

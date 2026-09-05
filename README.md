@@ -15,6 +15,7 @@
 
 Dùng claude.ai (web/app điện thoại)? → [Tải file zip này](dist/deep-critique-claude-ai.zip) rồi xem [cách cài 4 bước](#cách-b--claudeai-web--app-điện-thoại).
 Dùng Codex hoặc agent khác? → xem [AGENTS.md](AGENTS.md).
+Dùng AICoworker (app desktop chạy OpenClaw)? → xem [docs/AICOWORKER.md](docs/AICOWORKER.md): kiểm định bản v2026.6.27, cách cài từng máy, và cách nạp skill này vào đó.
 
 ---
 
@@ -74,6 +75,12 @@ Cập nhật sau này: `/plugin marketplace update purrlight-skills`.
 
 Skill chỉ là file Markdown — không script, không runtime — nên chạy được ở mọi agent biết đọc `AGENTS.md`. File [`AGENTS.md`](AGENTS.md) ở gốc repo là hợp đồng chạy chéo nền tảng: nó chỉ chỗ `$SKILL_DIR`, liệt kê từng phần cần năng lực gì của host, và quy định rõ skill phải hạ cấp thế nào khi host không spawn được sub-agent, không ghi được file, hoặc không có web search.
 
+### Cách D — AICoworker (app desktop chạy OpenClaw)
+
+AICoworker đọc skill theo chuẩn AgentSkills nên dùng được ngay file zip ở Cách B: trong app vào **Kỹ năng → Nhập kỹ năng** → chọn `dist/deep-critique-claude-ai.zip` → mở phiên chat mới. Không có sub-agent nên skill tự chạy chế độ nhập vai tuần tự như trên claude.ai.
+
+Chưa cài AICoworker? Đọc [docs/AICOWORKER.md](docs/AICOWORKER.md) trước: kết quả kiểm định độc lập bản v2026.6.27 (checksum, chữ ký số macOS/Windows, kết nối ra ngoài, các lưu ý an toàn) và hướng dẫn cài cho macOS / Windows / Linux.
+
 ## Cách dùng
 
 ```
@@ -112,8 +119,9 @@ purrlight-skills/
 │   ├── skills/deep-critique/            ← skill 10 vòng + persona thợ săn điểm mù
 │   │   └── references/                  ← persona + thư viện lăng kính ngành (e-commerce)
 │   └── agents/deep-critic.md            ← agent phản biện độc lập
-├── dist/deep-critique-claude-ai.zip     ← bản cài cho claude.ai web/mobile
-└── docs/BAO-CAO-MAU.md                  ← báo cáo mẫu (ẩn danh, từ ca chạy thật)
+├── dist/deep-critique-claude-ai.zip     ← bản cài cho claude.ai web/mobile (dùng được cho AICoworker)
+├── docs/BAO-CAO-MAU.md                  ← báo cáo mẫu (ẩn danh, từ ca chạy thật)
+└── docs/AICOWORKER.md                   ← kiểm định + hướng dẫn cài AICoworker, nạp skill vào đó
 ```
 
 ## Về người tạo

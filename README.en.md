@@ -17,6 +17,7 @@
 On claude.ai (web / mobile)? → [download this zip](dist/deep-critique-claude-ai.zip) and
 follow the [4-step install](#option-b--claudeai-web--mobile).
 Using Codex or another agent? → see [AGENTS.md](AGENTS.md).
+Using AICoworker (desktop app on OpenClaw)? → see [docs/AICOWORKER.md](docs/AICOWORKER.md) (VI): release check, install steps, and how to load this skill there.
 
 > The skill's instructions are written in Vietnamese, but Claude **answers in whatever
 > language you write in** — ask in English and the critique comes back in English.
@@ -88,6 +89,12 @@ The skill is plain Markdown with no scripts and no runtime, so it ports.
 host capabilities each part needs, and defines exactly how the method degrades when a host
 can't spawn sub-agents, can't write files, or has no web search.
 
+### Option D — AICoworker (desktop app running OpenClaw)
+
+AICoworker loads AgentSkills-format skills, so the zip from Option B works as-is: in the app go to **Skills → Import Skill**, pick `dist/deep-critique-claude-ai.zip`, then start a new chat. It has no sub-agents, so the skill runs its sequential persona mode, same as on claude.ai.
+
+Not installed yet? Read [docs/AICOWORKER.md](docs/AICOWORKER.md) (Vietnamese) first: an independent check of release v2026.6.27 (checksums, macOS/Windows code signatures, outbound connections, safety notes) plus install steps for macOS / Windows / Linux.
+
 ## How to use it
 
 ```
@@ -141,8 +148,9 @@ purrlight-skills/
 │   ├── skills/deep-critique/            ← the 10-round skill + critic persona
 │   │   └── references/                  ← persona + industry lens libraries (e-commerce)
 │   └── agents/deep-critic.md            ← standalone critique agent
-├── dist/deep-critique-claude-ai.zip     ← installer for claude.ai web/mobile
-└── docs/BAO-CAO-MAU.md                  ← sample report (anonymized, from a real run)
+├── dist/deep-critique-claude-ai.zip     ← installer for claude.ai web/mobile (also works in AICoworker)
+├── docs/BAO-CAO-MAU.md                  ← sample report (anonymized, from a real run)
+└── docs/AICOWORKER.md                   ← AICoworker audit + install guide + loading the skill there (VI)
 ```
 
 ## About the maker

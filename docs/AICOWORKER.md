@@ -10,6 +10,14 @@
 > đọc mã nguồn đính kèm release, bóc bộ cài để xem chữ ký số, và **cài + chạy thật**
 > bản Linux trên Ubuntu 24.04. Không có mối quan hệ nào với nhà phát hành.
 
+> **Nhân sự Purrlight Studio:** bản viết lại cho người mới — kèm quy tắc dùng nội bộ
+> bắt buộc và checklist tự soát sau khi cài — nằm trên Notion:
+> [🤖 AICoworker — Thẩm định & Hướng dẫn dùng nội bộ](https://app.notion.com/p/3d68ed608af9816eabf8fd2ddf6a77de)
+> (trong 🎯 Purrlight Command Center; cần quyền truy cập workspace nội bộ nên link này
+> không mở được từ bên ngoài). Công cụ cũng đã đăng ký ở database
+> [🔍 Radar Công cụ & Tham chiếu](https://app.notion.com/p/49e01b664f104863ad59233d5f681583).
+> File này vẫn là bản gốc đầy đủ — sửa ở đây trước, rồi cập nhật lại trang Notion.
+
 ## 1. Kết luận nhanh
 
 | Câu hỏi | Trả lời |

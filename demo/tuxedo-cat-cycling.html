@@ -365,7 +365,8 @@ body:has(#sp-stop:checked) .stage{ --play:paused; }
   <!-- ░░ HÌNH DÙNG LẠI ░░
        Không đặt fill ⇒ <use> tô được, và clipPath tái dùng đúng hình. -->
   <ellipse id="sHead"   cx="650" cy="290" rx="50" ry="46"/>
-  <ellipse id="sMuzzle" cx="672" cy="305" rx="25" ry="20"/>
+  <ellipse id="sMuzzle" cx="672" cy="316" rx="22" ry="15"/>
+  <ellipse id="sChin"   cx="658" cy="322" rx="14" ry="10"/>
   <path    id="sTorso"  d="M604 330 C630 335 643 352 640 370 C637 391 618 406 590 409
                            C560 412 536 401 529 379 C522 357 533 336 556 329 C572 324 590 326 604 330 Z"/>
   <ellipse id="sChest"  cx="612" cy="352" rx="19" ry="24" transform="rotate(-20 612 352)"/>
@@ -373,13 +374,13 @@ body:has(#sp-stop:checked) .stage{ --play:paused; }
   <rect    id="sBibCut" x="498" y="348" width="194" height="150" transform="rotate(-7 590 348)"/>
   <ellipse id="sBeret"  cx="630" cy="240" rx="51" ry="27" transform="rotate(-15 630 240)"/>
   <rect    id="sPack"   x="496" y="322" width="52" height="58" rx="17" transform="rotate(-20 522 351)"/>
-  <ellipse id="sCollar" cx="628" cy="330" rx="28" ry="17" transform="rotate(-16 628 330)"/>
+  <ellipse id="sCollar" cx="634" cy="342" rx="19" ry="13" transform="rotate(-26 634 342)"/>
 
   <!-- tấm hoạ tiết dùng chung, cắt theo từng clip -->
   <rect id="knitPlate" x="430" y="185" width="310" height="270"/>
 
   <clipPath id="cDark">  <use href="#sHead"/><use href="#sTorso"/></clipPath>
-  <clipPath id="cLight"> <use href="#sMuzzle"/><use href="#sChest"/></clipPath>
+  <clipPath id="cLight"> <use href="#sMuzzle"/><use href="#sChin"/><use href="#sChest"/></clipPath>
   <clipPath id="cTorso"> <use href="#sTorso"/></clipPath>
   <clipPath id="cBib">   <use href="#sBibCut"/></clipPath>
   <clipPath id="cHip">   <use href="#sHip"/></clipPath>
@@ -745,7 +746,7 @@ body:has(#sp-stop:checked) .stage{ --play:paused; }
     </g>
 
     <!-- ── ĐUÔI KHĂN BAY NGƯỢC GIÓ ── -->
-    <g transform="translate(584,328) rotate(214)">
+    <g transform="translate(597,338) rotate(208)">
       <g class="sc1">
         <path d="M0 -12 L30 -10 L30 10 L0 12 Z" fill="#2F6FD0"/>
         <g fill="#FFFFFF"><circle cx="10" cy="-4" r="3.1"/><circle cx="24" cy="4" r="3.1"/></g>
@@ -810,60 +811,58 @@ body:has(#sp-stop:checked) .stage{ --play:paused; }
     <use href="#sTorso" fill="none" stroke="#12121A" stroke-width="2.2"
          stroke-dasharray="6 5" stroke-linecap="round" opacity=".5"/>
     <!-- quai yếm vắt vai + cúc gỗ -->
-    <path d="M626 346 Q608 334 588 342" fill="none" stroke="#6FC7F2"
+    <path d="M624 348 Q600 334 574 342" fill="none" stroke="#6FC7F2"
           stroke-width="10" stroke-linecap="round"/>
-    <path d="M626 346 Q608 334 588 342" fill="none" stroke="#9BDCFA"
+    <path d="M624 348 Q600 334 574 342" fill="none" stroke="#9BDCFA"
           stroke-width="3.2" stroke-linecap="round" opacity=".85"/>
-    <g fill="#F2D291" stroke="#C9A96B" stroke-width="1.5">
-      <circle cx="628" cy="350" r="5"/><circle cx="588" cy="344" r="5"/>
-    </g>
-    <g fill="#B5915A"><circle cx="628" cy="350" r="1.1"/><circle cx="588" cy="344" r="1.1"/></g>
+    <g fill="#F2D291" stroke="#C9A96B" stroke-width="1.5"><circle cx="573" cy="345" r="5"/></g>
+    <g fill="#B5915A"><circle cx="573" cy="345" r="1.1"/></g>
 
     <!-- ── CỔ ── -->
     <path d="M612 338 L652 302 L668 324 L628 352 Z" fill="#23232E"/>
 
     <!-- ── ĐẦU ── -->
-    <path d="M612 260 L608 208 L636 246 Z" fill="#1B1B24"/>
-    <path d="M617 253 L613 220 L630 245 Z" fill="#C97F8E" opacity=".75"/>
+    <path d="M610 258 L600 200 L642 240 Z" fill="#1B1B24"/>
+    <path d="M615 250 L607 214 L632 241 Z" fill="#C97F8E" opacity=".75"/>
 
     <use href="#sHead" fill="#23232E"/>
     <use href="#sMuzzle" fill="#F7F5EC"/>
-    <ellipse cx="664" cy="318" rx="22" ry="13" fill="#F7F5EC"/>
+    <use href="#sChin" fill="#F7F5EC"/>
     <use href="#knitPlate" fill="url(#pKnit)" clip-path="url(#cDark)"/>
     <use href="#knitPlate" fill="url(#pKnit)" clip-path="url(#cLight)"/>
     <use href="#sHead" fill="none" stroke="#12121A" stroke-width="2.2"
          stroke-dasharray="6 5" stroke-linecap="round" opacity=".5"/>
 
-    <ellipse cx="640" cy="312" rx="15" ry="9" fill="#F2A0AE" opacity=".38"/>
-    <ellipse cx="694" cy="306" rx="11" ry="7" fill="#F2A0AE" opacity=".34"/>
+    <ellipse cx="657" cy="314" rx="9" ry="5.5" fill="#F2A0AE" opacity=".32"/>
+    <ellipse cx="689" cy="310" rx="9"  ry="6" fill="#F2A0AE" opacity=".30"/>
 
     <!-- mắt -->
-    <ellipse cx="630" cy="286" rx="8"   ry="9.5"  fill="#0E0E14"/>
-    <ellipse cx="630" cy="286" rx="6.4" ry="8"    fill="#8FDCAE"/>
-    <ellipse cx="630" cy="287" rx="2.6" ry="7"    fill="#15151C"/>
-    <circle  cx="627.6" cy="281.5" r="2.3" fill="#FFFFFF"/>
-    <circle  cx="632" cy="291" r="1.1" fill="#FFFFFF" opacity=".8"/>
-    <ellipse cx="676" cy="292" rx="9.6" ry="11.2" fill="#0E0E14"/>
-    <ellipse cx="676" cy="292" rx="7.8" ry="9.4"  fill="#8FDCAE"/>
-    <ellipse cx="676" cy="293" rx="3.1" ry="8.2"  fill="#15151C"/>
-    <circle  cx="673" cy="287" r="2.8" fill="#FFFFFF"/>
-    <circle  cx="678" cy="297.5" r="1.3" fill="#FFFFFF" opacity=".8"/>
+    <ellipse cx="633" cy="286" rx="8.2" ry="10"   fill="#0E0E14"/>
+    <ellipse cx="633" cy="286" rx="6.5" ry="8.3"  fill="#8FDCAE"/>
+    <ellipse cx="633" cy="287" rx="2.7" ry="7.2"  fill="#15151C"/>
+    <circle  cx="630.4" cy="281" r="2.3" fill="#FFFFFF"/>
+    <circle  cx="635" cy="291" r="1.1" fill="#FFFFFF" opacity=".8"/>
+    <ellipse cx="675" cy="288" rx="10"  ry="12"   fill="#0E0E14"/>
+    <ellipse cx="675" cy="288" rx="8.2" ry="10.1" fill="#8FDCAE"/>
+    <ellipse cx="675" cy="289" rx="3.2" ry="8.7"  fill="#15151C"/>
+    <circle  cx="671.8" cy="282.5" r="2.9" fill="#FFFFFF"/>
+    <circle  cx="677" cy="294" r="1.3" fill="#FFFFFF" opacity=".8"/>
 
     <!-- mũi + miệng thêu -->
-    <path d="M687 296 L699 295 L693 303 Z" fill="#EE93A5"/>
-    <path d="M687 296 L699 295 L693 303 Z" fill="none" stroke="#D4707F" stroke-width="1.2"/>
+    <path d="M675 304 L689 303 L682 312 Z" fill="#EE93A5"/>
+    <path d="M675 304 L689 303 L682 312 Z" fill="none" stroke="#D4707F" stroke-width="1.2"/>
     <g fill="none" stroke="#3A3A46" stroke-width="2.2" stroke-linecap="round">
-      <path d="M693 303 L693 309"/><path d="M693 309 q-7 7 -14 1"/><path d="M693 309 q7 6 13 0"/>
+      <path d="M682 312 L682 318"/><path d="M682 318 q-7 7 -14 1"/><path d="M682 318 q7 6 13 0"/>
     </g>
 
     <!-- râu -->
-    <g transform="translate(684,306)"><g class="whiskers"><g transform="translate(-684,-306)">
+    <g transform="translate(682,312)"><g class="whiskers"><g transform="translate(-682,-312)">
       <g fill="none" stroke="#FBF9F0" stroke-width="2" stroke-linecap="round" opacity=".92">
-        <path d="M700 300 q22 -7 36 -14"/><path d="M702 307 q24 -1 40 -2"/><path d="M700 313 q22 6 34 12"/>
+        <path d="M692 306 q22 -8 36 -15"/><path d="M694 313 q24 -2 40 -3"/><path d="M692 319 q22 6 34 12"/>
       </g>
     </g></g></g>
     <g fill="none" stroke="#FBF9F0" stroke-width="1.7" stroke-linecap="round" opacity=".55">
-      <path d="M654 304 q-22 -6 -34 -12"/><path d="M653 311 q-23 0 -36 3"/>
+      <path d="M646 309 q-20 -7 -30 -13"/><path d="M645 316 q-21 -1 -33 2"/>
     </g>
 
     <!-- ── BERET VÀNG ── -->
@@ -877,10 +876,11 @@ body:has(#sp-stop:checked) .stage{ --play:paused; }
     </g>
     <use href="#sBeret" fill="none" stroke="#D99820" stroke-width="2.3"
          stroke-dasharray="6 5" stroke-linecap="round" opacity=".85"/>
-    <g transform="translate(612,222)"><g class="pom"><g transform="translate(-612,-222)">
-      <circle cx="612" cy="222" r="8" fill="#FFD976"/>
-      <circle cx="612" cy="222" r="8" fill="url(#pKnit)" opacity=".6"/>
-      <circle cx="612" cy="222" r="8" fill="none" stroke="#E8A92B" stroke-width="1.6"
+    <g transform="translate(641,217)"><g class="pom"><g transform="translate(-641,-217)">
+      <circle cx="641" cy="217" r="8" fill="#EFB23A"/>
+      <circle cx="641" cy="217" r="8" fill="url(#pKnit)" opacity=".6"/>
+      <circle cx="638.5" cy="214" r="2.6" fill="#FFE9B4" opacity=".9"/>
+      <circle cx="641" cy="217" r="8" fill="none" stroke="#C98F1E" stroke-width="1.7"
               stroke-dasharray="3 2.8" stroke-linecap="round"/>
     </g></g></g>
 
@@ -896,27 +896,31 @@ body:has(#sp-stop:checked) .stage{ --play:paused; }
     <use href="#sCollar" fill="#2F6FD0"/>
     <use href="#knitPlate" fill="url(#pKnit)" clip-path="url(#cCollar)"/>
     <g clip-path="url(#cCollar)" fill="#FFFFFF">
-      <circle cx="610" cy="321" r="3.1"/><circle cx="627" cy="316" r="3.1"/>
-      <circle cx="644" cy="323" r="3.1"/><circle cx="617" cy="336" r="3.1"/>
-      <circle cx="636" cy="338" r="3.1"/><circle cx="650" cy="330" r="2.7"/>
+      <circle cx="625" cy="341" r="2.6"/><circle cx="637" cy="335" r="2.6"/>
+      <circle cx="646" cy="345" r="2.6"/><circle cx="630" cy="351" r="2.6"/>
+      <circle cx="643" cy="352" r="2.3"/>
     </g>
     <use href="#sCollar" fill="none" stroke="#1E4785" stroke-width="2.1"
          stroke-dasharray="5.5 4.5" stroke-linecap="round" opacity=".9"/>
 
     <!-- ── NƠ THẮT MỘT BÊN ── -->
-    <g transform="rotate(-14 598 330)">
-      <path d="M595 330 C588 320 572 321 572 330 C572 339 588 340 595 330 Z" fill="#3A7CDD"/>
-      <path d="M601 330 C608 320 624 321 624 330 C624 339 608 340 601 330 Z" fill="#3A7CDD"/>
+    <g transform="rotate(-14 614 342)">
+      <path d="M612 342 C606 334 599 331 596 334 C593 337 594 348 596 351
+               C599 354 606 350 612 342 Z" fill="#4A8AE6"/>
+      <path d="M617 342 C623 334 630 331 633 334 C636 337 635 348 633 351
+               C630 354 623 350 617 342 Z" fill="#4A8AE6"/>
       <g fill="#FFFFFF">
-        <circle cx="581" cy="327" r="2.2"/><circle cx="587" cy="334" r="1.9"/>
-        <circle cx="615" cy="327" r="2.2"/><circle cx="609" cy="334" r="1.9"/>
+        <circle cx="602" cy="338" r="1.9"/><circle cx="602" cy="347" r="1.7"/>
+        <circle cx="627" cy="338" r="1.9"/><circle cx="627" cy="347" r="1.7"/>
       </g>
-      <path d="M595 330 C588 320 572 321 572 330 C572 339 588 340 595 330 Z" fill="none"
-            stroke="#1E4785" stroke-width="1.7" stroke-dasharray="4 3.5" stroke-linecap="round"/>
-      <path d="M601 330 C608 320 624 321 624 330 C624 339 608 340 601 330 Z" fill="none"
-            stroke="#1E4785" stroke-width="1.7" stroke-dasharray="4 3.5" stroke-linecap="round"/>
-      <ellipse cx="598" cy="330" rx="6.5" ry="8" fill="#2455A6"/>
-      <ellipse cx="598" cy="330" rx="6.5" ry="8" fill="url(#pRib)"/>
+      <path d="M612 342 C606 334 599 331 596 334 C593 337 594 348 596 351
+               C599 354 606 350 612 342 Z" fill="none"
+            stroke="#1E4785" stroke-width="1.5" stroke-dasharray="3.5 3" stroke-linecap="round"/>
+      <path d="M617 342 C623 334 630 331 633 334 C636 337 635 348 633 351
+               C630 354 623 350 617 342 Z" fill="none"
+            stroke="#1E4785" stroke-width="1.5" stroke-dasharray="3.5 3" stroke-linecap="round"/>
+      <ellipse cx="614.5" cy="342" rx="5" ry="7" fill="#2455A6"/>
+      <ellipse cx="614.5" cy="342" rx="5" ry="7" fill="url(#pRib)"/>
     </g>
 
     <!-- ── TAY GẦN (nắm ghi đông) ── -->

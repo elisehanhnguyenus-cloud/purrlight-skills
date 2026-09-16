@@ -364,23 +364,28 @@ body:has(#sp-stop:checked) .stage{ --play:paused; }
 
   <!-- ░░ HÌNH DÙNG LẠI ░░
        Không đặt fill ⇒ <use> tô được, và clipPath tái dùng đúng hình. -->
-  <ellipse id="sHead"   cx="650" cy="290" rx="50" ry="46"/>
-  <ellipse id="sMuzzle" cx="672" cy="316" rx="22" ry="15"/>
-  <ellipse id="sChin"   cx="658" cy="322" rx="14" ry="10"/>
+  <path    id="sHead"   d="M600 296 C596 266 614 244 642 242 C666 240 680 248 686 262
+                           C690 271 691 277 697 283 C706 287 711 292 705 299
+                           C701 302 697 302 695 306 C699 312 702 318 696 325
+                           C688 333 670 337 653 336 C629 335 609 330 603 318
+                           C598 308 600 302 600 296 Z"/>
+  <path    id="sMuzzle" d="M708 288 C712 295 710 301 704 306 C708 313 706 321 698 328
+                           C686 336 668 338 654 334 C642 330 636 320 639 309
+                           C643 299 653 294 664 292 C680 288 700 282 708 288 Z"/>
   <path    id="sTorso"  d="M604 330 C630 335 643 352 640 370 C637 391 618 406 590 409
                            C560 412 536 401 529 379 C522 357 533 336 556 329 C572 324 590 326 604 330 Z"/>
   <ellipse id="sChest"  cx="612" cy="352" rx="19" ry="24" transform="rotate(-20 612 352)"/>
   <ellipse id="sHip"    cx="578" cy="392" rx="29" ry="25"/>
   <rect    id="sBibCut" x="498" y="348" width="194" height="150" transform="rotate(-7 590 348)"/>
-  <ellipse id="sBeret"  cx="630" cy="240" rx="51" ry="27" transform="rotate(-15 630 240)"/>
+  <ellipse id="sBeret"  cx="622" cy="248" rx="45" ry="25" transform="rotate(-16 622 248)"/>
   <rect    id="sPack"   x="496" y="322" width="52" height="58" rx="17" transform="rotate(-20 522 351)"/>
-  <ellipse id="sCollar" cx="634" cy="342" rx="19" ry="13" transform="rotate(-26 634 342)"/>
+  <ellipse id="sCollar" cx="632" cy="338" rx="20" ry="13" transform="rotate(-22 632 338)"/>
 
   <!-- tấm hoạ tiết dùng chung, cắt theo từng clip -->
   <rect id="knitPlate" x="430" y="185" width="310" height="270"/>
 
   <clipPath id="cDark">  <use href="#sHead"/><use href="#sTorso"/></clipPath>
-  <clipPath id="cLight"> <use href="#sMuzzle"/><use href="#sChin"/><use href="#sChest"/></clipPath>
+  <clipPath id="cLight"> <use href="#sMuzzle"/><use href="#sChest"/></clipPath>
   <clipPath id="cTorso"> <use href="#sTorso"/></clipPath>
   <clipPath id="cBib">   <use href="#sBibCut"/></clipPath>
   <clipPath id="cHip">   <use href="#sHip"/></clipPath>
@@ -746,7 +751,7 @@ body:has(#sp-stop:checked) .stage{ --play:paused; }
     </g>
 
     <!-- ── ĐUÔI KHĂN BAY NGƯỢC GIÓ ── -->
-    <g transform="translate(597,338) rotate(208)">
+    <g transform="translate(597,334) rotate(208)">
       <g class="sc1">
         <path d="M0 -12 L30 -10 L30 10 L0 12 Z" fill="#2F6FD0"/>
         <g fill="#FFFFFF"><circle cx="10" cy="-4" r="3.1"/><circle cx="24" cy="4" r="3.1"/></g>
@@ -819,76 +824,69 @@ body:has(#sp-stop:checked) .stage{ --play:paused; }
     <g fill="#B5915A"><circle cx="573" cy="345" r="1.1"/></g>
 
     <!-- ── CỔ ── -->
-    <path d="M612 338 L652 302 L668 324 L628 352 Z" fill="#23232E"/>
+    <path d="M604 316 L662 332 L654 358 L598 346 Z" fill="#23232E"/>
 
-    <!-- ── ĐẦU ── -->
-    <path d="M610 258 L600 200 L642 240 Z" fill="#1B1B24"/>
-    <path d="M615 250 L607 214 L632 241 Z" fill="#C97F8E" opacity=".75"/>
+    <!-- ══ ĐẦU — GÓC NGHIÊNG (profile) ══
+         Thân, chân, xe, đuôi đều là side view nên đầu phải cùng góc:
+         MỘT mắt, mũi nằm trên mép trước của mặt, tai xa chỉ ló sau tai gần.
+         Bóng ngoài là một đường liền: sọ → trán → sống mũi → mũi → môi
+         → cằm → hàm → gáy. Mảng trắng tuxedo nằm trong bóng đó. -->
 
-    <use href="#sHead" fill="#23232E"/>
+    <path d="M632 252 L650 210 L660 250 Z" fill="#15151C"/>
+
+    <use href="#sHead"   fill="#23232E"/>
     <use href="#sMuzzle" fill="#F7F5EC"/>
-    <use href="#sChin" fill="#F7F5EC"/>
     <use href="#knitPlate" fill="url(#pKnit)" clip-path="url(#cDark)"/>
     <use href="#knitPlate" fill="url(#pKnit)" clip-path="url(#cLight)"/>
-    <use href="#sHead" fill="none" stroke="#12121A" stroke-width="2.2"
+    <use href="#sHead"   fill="none" stroke="#12121A" stroke-width="2.2"
          stroke-dasharray="6 5" stroke-linecap="round" opacity=".5"/>
 
-    <ellipse cx="657" cy="314" rx="9" ry="5.5" fill="#F2A0AE" opacity=".32"/>
-    <ellipse cx="689" cy="310" rx="9"  ry="6" fill="#F2A0AE" opacity=".30"/>
+    <ellipse cx="669" cy="315" rx="8.5" ry="5.5" fill="#F2A0AE" opacity=".28"/>
 
-    <!-- mắt -->
-    <ellipse cx="633" cy="286" rx="8.2" ry="10"   fill="#0E0E14"/>
-    <ellipse cx="633" cy="286" rx="6.5" ry="8.3"  fill="#8FDCAE"/>
-    <ellipse cx="633" cy="287" rx="2.7" ry="7.2"  fill="#15151C"/>
-    <circle  cx="630.4" cy="281" r="2.3" fill="#FFFFFF"/>
-    <circle  cx="635" cy="291" r="1.1" fill="#FFFFFF" opacity=".8"/>
-    <ellipse cx="675" cy="288" rx="10"  ry="12"   fill="#0E0E14"/>
-    <ellipse cx="675" cy="288" rx="8.2" ry="10.1" fill="#8FDCAE"/>
-    <ellipse cx="675" cy="289" rx="3.2" ry="8.7"  fill="#15151C"/>
-    <circle  cx="671.8" cy="282.5" r="2.9" fill="#FFFFFF"/>
-    <circle  cx="677" cy="294" r="1.3" fill="#FFFFFF" opacity=".8"/>
+    <!-- MỘT mắt duy nhất -->
+    <ellipse cx="666" cy="277" rx="10"  ry="12.4" fill="#0E0E14"/>
+    <ellipse cx="666" cy="277" rx="8.1" ry="10.4" fill="#8FDCAE"/>
+    <ellipse cx="666" cy="278" rx="3.1" ry="8.9"  fill="#15151C"/>
+    <circle  cx="662.6" cy="271.5" r="2.8" fill="#FFFFFF"/>
+    <circle  cx="668" cy="283" r="1.2" fill="#FFFFFF" opacity=".8"/>
 
-    <!-- mũi + miệng thêu -->
-    <path d="M675 304 L689 303 L682 312 Z" fill="#EE93A5"/>
-    <path d="M675 304 L689 303 L682 312 Z" fill="none" stroke="#D4707F" stroke-width="1.2"/>
+    <!-- mũi ngay mép trước của mặt, miệng thêu một bên -->
+    <path d="M692 287 L707 292 L698 299 Z" fill="#EE93A5"/>
+    <path d="M692 287 L707 292 L698 299 Z" fill="none" stroke="#D4707F" stroke-width="1.2"/>
     <g fill="none" stroke="#3A3A46" stroke-width="2.2" stroke-linecap="round">
-      <path d="M682 312 L682 318"/><path d="M682 318 q-7 7 -14 1"/><path d="M682 318 q7 6 13 0"/>
+      <path d="M698 299 L697 306"/><path d="M697 306 q-10 8 -19 2"/>
     </g>
 
-    <!-- râu -->
-    <g transform="translate(682,312)"><g class="whiskers"><g transform="translate(-682,-312)">
+    <g transform="translate(700,304)"><g class="whiskers"><g transform="translate(-700,-304)">
       <g fill="none" stroke="#FBF9F0" stroke-width="2" stroke-linecap="round" opacity=".92">
-        <path d="M692 306 q22 -8 36 -15"/><path d="M694 313 q24 -2 40 -3"/><path d="M692 319 q22 6 34 12"/>
+        <path d="M704 298 q20 -9 33 -16"/><path d="M706 305 q22 -2 37 -3"/><path d="M704 311 q20 6 32 13"/>
       </g>
     </g></g></g>
-    <g fill="none" stroke="#FBF9F0" stroke-width="1.7" stroke-linecap="round" opacity=".55">
-      <path d="M646 309 q-20 -7 -30 -13"/><path d="M645 316 q-21 -1 -33 2"/>
-    </g>
 
-    <!-- ── BERET VÀNG ── -->
+    <!-- ── BERET VÀNG (đội lệch ra sau, tai chui lên phía trước) ── -->
     <use href="#sBeret" fill="#FFC94E"/>
     <use href="#knitPlate" fill="url(#pKnit)" clip-path="url(#cBeret)"/>
     <g clip-path="url(#cBeret)">
-      <rect x="570" y="248" width="124" height="30" fill="#E8A92B" transform="rotate(-15 630 258)"/>
-      <rect x="570" y="248" width="124" height="30" fill="url(#pRib)" transform="rotate(-15 630 258)"/>
-      <ellipse cx="616" cy="230" rx="26" ry="11" fill="#FFE09A" opacity=".7"
-               transform="rotate(-15 616 230)"/>
+      <rect x="564" y="256" width="118" height="30" fill="#E8A92B" transform="rotate(-16 622 266)"/>
+      <rect x="564" y="256" width="118" height="30" fill="url(#pRib)" transform="rotate(-16 622 266)"/>
+      <ellipse cx="610" cy="238" rx="24" ry="10" fill="#FFE09A" opacity=".7"
+               transform="rotate(-16 610 238)"/>
     </g>
     <use href="#sBeret" fill="none" stroke="#D99820" stroke-width="2.3"
          stroke-dasharray="6 5" stroke-linecap="round" opacity=".85"/>
-    <g transform="translate(641,217)"><g class="pom"><g transform="translate(-641,-217)">
-      <circle cx="641" cy="217" r="8" fill="#EFB23A"/>
-      <circle cx="641" cy="217" r="8" fill="url(#pKnit)" opacity=".6"/>
-      <circle cx="638.5" cy="214" r="2.6" fill="#FFE9B4" opacity=".9"/>
-      <circle cx="641" cy="217" r="8" fill="none" stroke="#C98F1E" stroke-width="1.7"
+    <g transform="translate(614,228)"><g class="pom"><g transform="translate(-614,-228)">
+      <circle cx="614" cy="228" r="8" fill="#EFB23A"/>
+      <circle cx="614" cy="228" r="8" fill="url(#pKnit)" opacity=".6"/>
+      <circle cx="611.5" cy="225" r="2.6" fill="#FFE9B4" opacity=".9"/>
+      <circle cx="614" cy="228" r="8" fill="none" stroke="#C98F1E" stroke-width="1.7"
               stroke-dasharray="3 2.8" stroke-linecap="round"/>
     </g></g></g>
 
     <!-- tai gần (đè lên beret) -->
-    <g transform="translate(678,258)"><g class="ear-near"><g transform="translate(-678,-258)">
-      <path d="M666 252 L696 208 L690 262 Z" fill="#23232E"/>
-      <path d="M672 252 L690 222 L686 256 Z" fill="#E195A3" opacity=".8"/>
-      <path d="M666 252 L696 208 L690 262 Z" fill="none" stroke="#12121A" stroke-width="1.8"
+    <g transform="translate(662,254)"><g class="ear-near"><g transform="translate(-662,-254)">
+      <path d="M648 250 L666 208 L676 256 Z" fill="#23232E"/>
+      <path d="M657 246 L665 221 L669 247 Z" fill="#DE9AA6" opacity=".7"/>
+      <path d="M648 250 L666 208 L676 256 Z" fill="none" stroke="#12121A" stroke-width="1.8"
             stroke-dasharray="4.5 4" stroke-linecap="round" opacity=".55"/>
     </g></g></g>
 
@@ -896,31 +894,31 @@ body:has(#sp-stop:checked) .stage{ --play:paused; }
     <use href="#sCollar" fill="#2F6FD0"/>
     <use href="#knitPlate" fill="url(#pKnit)" clip-path="url(#cCollar)"/>
     <g clip-path="url(#cCollar)" fill="#FFFFFF">
-      <circle cx="625" cy="341" r="2.6"/><circle cx="637" cy="335" r="2.6"/>
-      <circle cx="646" cy="345" r="2.6"/><circle cx="630" cy="351" r="2.6"/>
-      <circle cx="643" cy="352" r="2.3"/>
+      <circle cx="625" cy="333" r="2.6"/><circle cx="638" cy="327" r="2.6"/>
+      <circle cx="647" cy="337" r="2.6"/><circle cx="630" cy="344" r="2.6"/>
+      <circle cx="643" cy="344" r="2.3"/>
     </g>
     <use href="#sCollar" fill="none" stroke="#1E4785" stroke-width="2.1"
          stroke-dasharray="5.5 4.5" stroke-linecap="round" opacity=".9"/>
 
     <!-- ── NƠ THẮT MỘT BÊN ── -->
-    <g transform="rotate(-14 614 342)">
-      <path d="M612 342 C606 334 599 331 596 334 C593 337 594 348 596 351
-               C599 354 606 350 612 342 Z" fill="#4A8AE6"/>
-      <path d="M617 342 C623 334 630 331 633 334 C636 337 635 348 633 351
-               C630 354 623 350 617 342 Z" fill="#4A8AE6"/>
+    <g transform="translate(-2,-6) rotate(-14 616 344)">
+      <path d="M614 344 C608 336 601 333 598 336 C593 337 596 350 598 353
+               C601 356 608 352 614 344 Z" fill="#4A8AE6"/>
+      <path d="M619 344 C625 336 632 333 635 336 C636 337 637 350 635 353
+               C632 356 625 352 619 344 Z" fill="#4A8AE6"/>
       <g fill="#FFFFFF">
-        <circle cx="602" cy="338" r="1.9"/><circle cx="602" cy="347" r="1.7"/>
-        <circle cx="627" cy="338" r="1.9"/><circle cx="627" cy="347" r="1.7"/>
+        <circle cx="604" cy="340" r="1.9"/><circle cx="604" cy="349" r="1.7"/>
+        <circle cx="629" cy="340" r="1.9"/><circle cx="629" cy="349" r="1.7"/>
       </g>
-      <path d="M612 342 C606 334 599 331 596 334 C593 337 594 348 596 351
-               C599 354 606 350 612 342 Z" fill="none"
+      <path d="M614 344 C608 336 601 333 598 336 C593 337 596 350 598 353
+               C601 356 608 352 614 344 Z" fill="none"
             stroke="#1E4785" stroke-width="1.5" stroke-dasharray="3.5 3" stroke-linecap="round"/>
-      <path d="M617 342 C623 334 630 331 633 334 C636 337 635 348 633 351
-               C630 354 623 350 617 342 Z" fill="none"
+      <path d="M619 344 C625 336 632 333 635 336 C636 337 637 350 635 353
+               C632 356 625 352 619 344 Z" fill="none"
             stroke="#1E4785" stroke-width="1.5" stroke-dasharray="3.5 3" stroke-linecap="round"/>
-      <ellipse cx="614.5" cy="342" rx="5" ry="7" fill="#2455A6"/>
-      <ellipse cx="614.5" cy="342" rx="5" ry="7" fill="url(#pRib)"/>
+      <ellipse cx="616.5" cy="344" rx="5" ry="7" fill="#2455A6"/>
+      <ellipse cx="616.5" cy="344" rx="5" ry="7" fill="url(#pRib)"/>
     </g>
 
     <!-- ── TAY GẦN (nắm ghi đông) ── -->

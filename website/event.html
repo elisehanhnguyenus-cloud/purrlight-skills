@@ -83,12 +83,12 @@
           </div>
           <div class="picker" data-picker></div>
           <ul class="lines" data-lines></ul>
-          <div class="money" aria-live="polite">
+          <div class="money">
             <div class="row"><span>Subtotal</span><strong data-subtotal>$0</strong></div>
             <div class="row" data-disc-row><span class="lbl"><label for="m-discount">Discount</label> <span class="tiny">$ off</span></span><input id="m-discount" type="text" inputmode="decimal" placeholder="0"></div>
             <p class="err" data-disc-note hidden>Over the 15% cap. Studio rule: offer a smaller size, not a lower price.</p>
             <div class="row" data-tax-row><span data-tax-label>Sales tax</span><span data-tax>$0</span></div>
-            <div class="row total"><span>Total</span><span data-total>$0</span></div>
+            <div class="row total"><span>Total</span><span data-total aria-live="polite" aria-atomic="true">$0</span></div>
           </div>
         </section>
 
@@ -140,7 +140,7 @@
     </div>
 
     <div class="out-col">
-      <section class="out" data-out aria-live="polite" aria-label="Message for the customer">
+      <section class="out" data-out aria-label="Message for the customer">
         <p class="out-empty">Save an order to write its message here.</p>
       </section>
     </div>
@@ -207,10 +207,10 @@
     </div>
   </div>
 
-  <div class="handover" data-handover hidden>
+  <div class="handover" data-handover role="dialog" aria-modal="true" aria-labelledby="handover-title" hidden>
     <div class="handover-inner">
       <p class="handover-kicker">Purrlight Studio</p>
-      <h2 class="handover-title">Hi! Pop in your details — it takes about twenty seconds.</h2>
+      <h2 class="handover-title" id="handover-title">Hi! Pop in your details — it takes about twenty seconds.</h2>
       <div class="field">
         <label for="h-name">Your name</label>
         <input id="h-name" type="text" autocapitalize="words" autocomplete="name">

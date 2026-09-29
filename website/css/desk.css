@@ -11,6 +11,8 @@
 
 /* the hidden attribute must beat any display rule below (e.g. .money .row is flex) */
 [hidden] { display: none !important; }
+/* booth sunlight: control boundaries need 3:1 on cream (--line is 1.2:1) */
+:root { --line-strong: #968979; }
 
 body.desk { background: var(--cream); padding-bottom: 88px; }
 
@@ -28,17 +30,19 @@ body.desk { background: var(--cream); padding-bottom: 88px; }
   white-space: nowrap;
 }
 .desk-bar .spacer { flex: 1; }
+@media (max-width: 420px) { .desk-bar .desk-title { display: none; } }
 .event-pill {
   display: inline-flex; align-items: center; gap: 6px;
-  max-width: 46vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  max-width: 46vw; min-width: 0; min-height: 44px;
   font-size: 13px; font-weight: 600; color: var(--accent-text);
   background: var(--butter-soft); border-radius: 999px; padding: 6px 12px;
   border: 0; font-family: inherit; cursor: pointer;
 }
+.event-pill span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .event-pill:hover { background: var(--butter); }
 .icon-btn {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 42px; height: 42px; border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: 44px; height: 44px; border-radius: 999px;
   border: 1.5px solid var(--line); background: var(--card); color: var(--ink);
   cursor: pointer; font-family: inherit; font-weight: 600; font-size: 14px;
   position: relative;
@@ -51,10 +55,11 @@ body.desk { background: var(--cream); padding-bottom: 88px; }
 }
 
 .desk-main {
-  display: grid; gap: 20px;
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px;
   padding: 18px var(--pad) 0;
   max-width: 1100px; margin: 0 auto;
 }
+.form-col, .out-col { min-width: 0; }
 @media (min-width: 900px) {
   .desk-main { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); align-items: start; }
   .desk-main .out-col { position: sticky; top: 72px; }
@@ -100,31 +105,32 @@ body.desk { background: var(--cream); padding-bottom: 88px; }
   font-family: var(--font-body); color: var(--accent-text); margin-bottom: 12px;
   display: flex; align-items: center; justify-content: space-between; gap: 10px;
 }
-.block > h2 .hint { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--ink-faint); font-size: 13px; }
+.block > h2 .hint { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--ink-soft); font-size: 13px; }
 
 .field { margin-bottom: 12px; }
 .field:last-child { margin-bottom: 0; }
 .field label, .field .lbl {
   display: block; font-size: 13px; font-weight: 600; color: var(--ink-soft); margin-bottom: 6px;
 }
-.field label .opt { font-weight: 400; color: var(--ink-faint); }
+.field label .opt { font-weight: 400; color: var(--ink-soft); }
 .field input, .field select, .field textarea {
   width: 100%; font-family: var(--font-body); font-size: 16px; /* 16px = no iOS zoom */
-  color: var(--ink); background: var(--cream); border: 1.5px solid var(--line);
+  color: var(--ink); background: var(--cream); border: 1.5px solid var(--line-strong);
   border-radius: var(--radius-s); padding: 12px 14px; min-height: 48px;
 }
 .field textarea { min-height: 72px; resize: vertical; line-height: 1.45; }
-.field input:focus, .field select:focus, .field textarea:focus {
-  outline: 3px solid var(--glow); outline-offset: 1px; border-color: transparent;
+.field input:focus, .field select:focus, .field textarea:focus,
+.line select:focus, .line input:focus, .money .row input:focus {
+  outline: 3px solid var(--ink); outline-offset: 2px; border-color: var(--accent-text);
 }
 .field input[aria-invalid="true"] { border-color: var(--purr-berry); }
 .field .err { color: var(--purr-berry); font-size: 13px; margin-top: 5px; }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 @media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
-.field .help { font-size: 13px; color: var(--ink-faint); margin-top: 5px; }
+.field .help { font-size: 13px; color: var(--ink-soft); margin-top: 5px; }
 .check { display: flex; gap: 10px; align-items: flex-start; font-size: 14.5px; color: var(--ink); margin-top: 12px; cursor: pointer; }
 .check input { width: 22px; height: 22px; flex: none; margin-top: 1px; accent-color: var(--accent-large); }
-.check .opt { color: var(--ink-faint); }
+.check .opt { color: var(--ink-soft); }
 .money .err[hidden] { display: none; }
 .money .err { font-size: 13px; color: var(--purr-berry); padding: 2px 0 6px; }
 
@@ -134,7 +140,7 @@ body.desk { background: var(--cream); padding-bottom: 88px; }
 .line.line-custom { grid-template-columns: 1fr; }            /* the brief needs the full width */
 .line.line-custom .line-controls { justify-content: flex-end; }
 .custom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 6px; }
-.custom-grid input, .custom-grid select { min-height: 42px; font-size: 15px; min-width: 0; }
+.custom-grid input, .custom-grid select { min-height: 44px; font-size: 16px; min-width: 0; }
 @media (max-width: 340px) { .custom-grid { grid-template-columns: 1fr; } }
 .line-custom .line-sub { margin-top: 6px; font-weight: 500; color: var(--accent-text); }
 
@@ -149,7 +155,9 @@ body.desk { background: var(--cream); padding-bottom: 88px; }
 .chips input { position: absolute; opacity: 0; width: 1px; height: 1px; }
 .chips input:checked + span { color: var(--cream); }
 .chips label:has(input:checked) { background: var(--ink); border-color: var(--ink); color: var(--cream); }
-.chips label:has(input:focus-visible) { outline: 3px solid var(--glow); outline-offset: 2px; }
+.chips label:has(input:focus-visible) { outline: 3px solid var(--ink); outline-offset: 2px; }
+.chips input:focus-visible + span { outline: 3px solid var(--ink); outline-offset: 10px; border-radius: 999px; }
+.chips label { border-color: var(--line-strong); }
 
 /* ---------- catalog picker ---------- */
 
@@ -183,25 +191,25 @@ body.desk { background: var(--cream); padding-bottom: 88px; }
 .line .line-name { font-weight: 600; font-size: 15px; }
 .line .line-sub { font-size: 13px; color: var(--ink-soft); }
 .line select, .line input {
-  font-family: inherit; font-size: 15px; color: var(--ink); background: var(--cream);
-  border: 1.5px solid var(--line); border-radius: 10px; padding: 8px 10px; min-height: 40px;
-  width: 100%;
+  font-family: inherit; font-size: 16px; color: var(--ink); background: var(--cream);
+  border: 1.5px solid var(--line-strong); border-radius: 10px; padding: 8px 10px; min-height: 44px;
+  width: 100%; min-width: 0;
 }
 .line .line-controls { display: flex; align-items: center; gap: 8px; }
 .stepper { display: inline-flex; align-items: center; border: 1.5px solid var(--line); border-radius: 999px; background: var(--cream); }
 .stepper button {
-  width: 40px; height: 40px; border: 0; background: transparent; cursor: pointer;
+  width: 44px; height: 44px; border: 0; background: transparent; cursor: pointer;
   font-family: var(--font-head); font-size: 20px; color: var(--accent-text); border-radius: 999px;
 }
 .stepper output { min-width: 26px; text-align: center; font-weight: 600; font-size: 15px; }
 .line .line-total { font-weight: 600; min-width: 62px; text-align: right; }
 .line .rm {
-  width: 40px; height: 40px; border-radius: 999px; border: 0; background: transparent;
-  color: var(--ink-faint); font-size: 22px; cursor: pointer; line-height: 1;
+  width: 44px; height: 44px; border-radius: 999px; border: 0; background: transparent;
+  color: var(--ink-soft); font-size: 22px; cursor: pointer; line-height: 1;
 }
 .line .rm:hover { color: var(--purr-berry); background: var(--blush-soft); }
 .line .line-price { max-width: 120px; }
-.empty-lines { color: var(--ink-faint); font-size: 14.5px; padding: 10px 0 2px; }
+.empty-lines { color: var(--ink-soft); font-size: 14.5px; padding: 10px 0 2px; }
 
 /* ---------- money ---------- */
 
@@ -211,12 +219,12 @@ body.desk { background: var(--cream); padding-bottom: 88px; }
 .money .row.balance strong { color: var(--purr-berry); }
 .money .row.balance.zero strong { color: #4E6346; }
 .money .row input {
-  width: 120px; text-align: right; font-family: inherit; font-size: 16px; color: var(--ink);
-  background: var(--cream); border: 1.5px solid var(--line); border-radius: 10px; padding: 8px 10px; min-height: 42px;
+  width: 110px; flex: none; text-align: right; font-family: inherit; font-size: 16px; color: var(--ink);
+  background: var(--cream); border: 1.5px solid var(--line-strong); border-radius: 10px; padding: 8px 10px; min-height: 44px;
 }
-.money .row .lbl { display: inline-flex; align-items: center; gap: 8px; }
-.money .tiny { font-size: 12.5px; color: var(--ink-faint); }
-.paid-quick { display: flex; gap: 6px; }
+.money .row .lbl { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0; }
+.money .tiny { font-size: 12.5px; color: var(--ink-soft); }
+.paid-quick { display: flex; gap: 6px; flex-wrap: wrap; min-width: 0; }
 .paid-quick button {
   font-family: inherit; font-size: 12.5px; font-weight: 600; padding: 4px 10px; border-radius: 999px;
   border: 1.5px solid var(--line); background: var(--cream); color: var(--ink-soft); cursor: pointer;
@@ -229,9 +237,10 @@ body.desk { background: var(--cream); padding-bottom: 88px; }
 .btn-wide { width: 100%; justify-content: center; }
 
 /* ---------- output panel ---------- */
+.out, .log { scroll-margin-top: calc(76px + env(safe-area-inset-top, 0px)); }
 
 .out { background: var(--card); border: 1.5px solid var(--line); border-radius: var(--radius-m); padding: 18px 16px; }
-.out-empty { color: var(--ink-faint); font-size: 15px; text-align: center; padding: 26px 8px; }
+.out-empty { color: var(--ink-soft); font-size: 15px; text-align: center; padding: 26px 8px; }
 .out-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
 .out-head h2 { font-size: 22px; }
 .out-head .oid { font-family: var(--font-body); font-size: 13px; font-weight: 600; letter-spacing: 0.06em; color: var(--accent-text); }
@@ -288,10 +297,10 @@ body.desk { background: var(--cream); padding-bottom: 88px; }
 .log-item .li-amt { font-weight: 600; text-align: right; }
 .log-item .li-body { padding: 0 14px 14px; font-size: 14px; color: var(--ink-soft); border-top: 1px solid var(--line); }
 .log-item .li-body dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 10px 0; }
-.log-item .li-body dt { color: var(--ink-faint); }
+.log-item .li-body dt { color: var(--ink-soft); }
 .log-item .li-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
 .log-item .li-actions .btn { min-height: 38px; padding: 5px 12px; font-size: 13px; }
-.log-empty { color: var(--ink-faint); font-size: 14.5px; }
+.log-empty { color: var(--ink-soft); font-size: 14.5px; }
 .btn-danger { background: transparent; border: 1.5px solid var(--blush); color: var(--purr-berry); }
 .btn-danger:hover { background: var(--blush-soft); }
 
@@ -308,7 +317,7 @@ body.desk { background: var(--cream); padding-bottom: 88px; }
 }
 .panel h2 { font-size: 22px; margin-bottom: 12px; }
 .panel .panel-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; }
-.panel .muted { font-size: 13px; color: var(--ink-faint); }
+.panel .muted { font-size: 13px; color: var(--ink-soft); }
 
 /* ---------- hand-over sheet (customer types on the staff phone) ---------- */
 
@@ -321,13 +330,16 @@ body.desk { background: var(--cream); padding-bottom: 88px; }
 .handover .field input { font-size: 19px; min-height: 56px; }
 .handover .check { font-size: 16px; margin: 16px 0 20px; }
 .handover .btn-wide { min-height: 60px; font-size: 18px; }
-.handover-foot { font-size: 13.5px; color: var(--ink-faint); margin-top: 14px; text-align: center; }
+.handover-foot { font-size: 13.5px; color: var(--ink-soft); margin-top: 14px; text-align: center; }
 
 /* log extras */
 .cashbox { font-size: 14.5px; color: var(--ink-soft); margin: -2px 0 10px; font-variant-numeric: tabular-nums; }
 .cashbox:empty { display: none; }
 .log-filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
 .log-filters .filter-chip { min-height: 38px; }
+
+/* dialogs open: the page behind is frozen (iOS ignores overflow:hidden on body) */
+body.dialog-open { position: fixed; width: 100%; overflow: hidden; }
 
 /* ---------- toast ---------- */
 
@@ -353,7 +365,7 @@ body.desk { background: var(--cream); padding-bottom: 88px; }
 .confirm-card .oid { font-size: 14px; color: var(--ink-soft); margin-bottom: 18px; }
 .confirm-card .oid strong { color: var(--ink); letter-spacing: 0.04em; }
 .confirm-items { width: 100%; border-collapse: collapse; margin: 6px 0 4px; }
-.confirm-items th { text-align: left; font-size: 12.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); padding: 0 0 8px; }
+.confirm-items th { text-align: left; font-size: 12.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); padding: 0 0 8px; }
 .confirm-items th:last-child, .confirm-items td:last-child { text-align: right; }
 .confirm-items td { padding: 10px 0; border-top: 1px solid var(--line); vertical-align: top; font-size: 15.5px; }
 .confirm-items td .sub { display: block; font-size: 13.5px; color: var(--ink-soft); }
@@ -366,13 +378,14 @@ body.desk { background: var(--cream); padding-bottom: 88px; }
 .confirm-section h2 { font-size: 15px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; font-family: var(--font-body); color: var(--accent-text); margin-bottom: 8px; }
 .confirm-section p { color: var(--ink-soft); font-size: 15.5px; }
 .confirm-section p + p { margin-top: 8px; }
+.confirm-section a, .confirm-blank a { color: var(--purr-berry); text-decoration: underline; text-underline-offset: 2px; display: inline-block; padding: 8px 0; }
 .confirm-note {
   display: flex; gap: 12px; align-items: flex-start; background: var(--butter-soft);
   border-radius: var(--radius-s); padding: 14px 16px; margin-top: 22px; font-size: 14.5px; color: var(--ink-soft);
 }
 .confirm-note svg { flex: none; width: 20px; height: 20px; margin-top: 2px; }
 .confirm-sign { margin-top: 28px; font-family: var(--font-head); font-style: italic; font-size: 19px; color: var(--ink); }
-.confirm-sign small { display: block; font-family: var(--font-body); font-style: normal; font-size: 13.5px; color: var(--ink-faint); margin-top: 4px; }
+.confirm-sign small { display: block; font-family: var(--font-body); font-style: normal; font-size: 13.5px; color: var(--ink-soft); margin-top: 4px; }
 .confirm-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 26px; }
 .confirm-actions .btn { min-height: 48px; }
 .confirm-blank { text-align: center; padding: 40px 0; color: var(--ink-soft); }

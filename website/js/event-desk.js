@@ -162,13 +162,6 @@ var DESK_CONFIG = {
   /* ---------- tiny helpers ---------- */
   var pad2 = function (n) { return ("0" + n).slice(-2); };
   var $ = function (sel, root) { return (root || document).querySelector(sel); };
-  /* two-tap confirmation built into the button itself (no dialogs — some
-     hosts swallow confirm() entirely, and a second tap is faster at a booth) */
-  function armed(btn, fn, label) {
-    if (btn.getAttribute("data-armed") === "1") { btn.removeAttribute("data-armed"); btn.textContent = btn.getAttribute("data-label"); fn(); return; }
-    btn.setAttribute("data-label", btn.textContent); btn.setAttribute("data-armed", "1"); btn.textContent = label || "Tap again to confirm";
-    setTimeout(function () { if (btn.getAttribute("data-armed") === "1") { btn.removeAttribute("data-armed"); btn.textContent = btn.getAttribute("data-label"); } }, 4000);
-  }
   var $$ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
   var esc = function (s) {
     return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
@@ -195,7 +188,28 @@ var DESK_CONFIG = {
     return new Date(iso).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
   };
   var digits = function (s) { return String(s || "").replace(/[^0-9+]/g, ""); };
-  var isEmail = function (s) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(s || "").trim()); };
+  /* also rejects the adjacent-key typos (# ? % & / \) that would break a mailto: link */
+  var isEmail = function (s) { return /^[^\s@#?%&\/\\]+@[^\s@#?%&\/\\]+\.[^\s@#?%&\/\\]+$/.test(String(s || "").trim()); };
+  /* only rows in the desk's own shape are trusted — from a backup file, a
+     shared store, or this device's own storage after a config change */
+  function validOrder(o) {
+    if (!(o && typeof o === "object" && typeof o.id === "string" && typeof o.createdAt === "string" && o.customer && typeof o.customer.name === "string" &&
+      Array.isArray(o.items) && o.totals && typeof o.totals.total === "number" && (o.type === "thanks" || o.type === "order"))) return false;
+    if (o.payMethod != null && typeof o.payMethod !== "string") return false;
+    if (o.timeline != null && typeof o.timeline !== "string") return false;
+    for (var i = 0; i < o.items.length; i++) {
+      var it = o.items[i];
+      if (!(it && typeof it === "object" && typeof it.name === "string" && typeof it.qty === "number" && typeof it.unit === "number")) return false;
+    }
+    return true;
+  }
+  /* two-tap confirmation: one timer per button, so a stale timer never disarms the next one */
+  function armed(btn, fn, label) {
+    if (btn.getAttribute("data-armed") === "1") { clearTimeout(btn._armTimer); btn.removeAttribute("data-armed"); btn.textContent = btn.getAttribute("data-label"); fn(); return; }
+    btn.setAttribute("data-label", btn.textContent); btn.setAttribute("data-armed", "1"); btn.textContent = label || "Tap again to confirm";
+    clearTimeout(btn._armTimer);
+    btn._armTimer = setTimeout(function () { if (btn.getAttribute("data-armed") === "1") { btn.removeAttribute("data-armed"); btn.textContent = btn.getAttribute("data-label"); } }, 4000);
+  }
 
   /* base64url of UTF-8 JSON — the customer link carries the confirmation itself */
   function encodePayload(obj) {
@@ -220,7 +234,7 @@ var DESK_CONFIG = {
 
   var listeners = [];
   var LocalStore = {
-    orders: lsGet(LS.orders, []),
+    orders: (function () { var l = lsGet(LS.orders, []); return Array.isArray(l) ? l.filter(validOrder) : []; })(),
     all: function () { return this.orders.slice(); },
     put: function (o) {
       var i = indexOfId(this.orders, o.id);
@@ -244,14 +258,16 @@ var DESK_CONFIG = {
   var Store = (typeof window.PurrlightRemoteStore === "function") ? window.PurrlightRemoteStore(LocalStore) : LocalStore;
 
   var settings = lsGet(LS.settings, {});
+  if (typeof settings !== "object" || !settings) settings = {};
   if (!settings.device) settings.device = randomTag();
   if (!settings.taxMode) settings.taxMode = CFG.tax.mode;
   if (typeof settings.taxRate !== "number") settings.taxRate = CFG.tax.rate;
-  saveSettings();
+  /* (written back to storage once the console boots — never at module load,
+     so a blocked localStorage cannot take confirm.html down with it) */
   function saveSettings() { lsSet(LS.settings, settings); }
   function randomTag() {
-    var chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789", s = "";
-    for (var i = 0; i < 2; i++) s += chars.charAt(Math.floor(Math.random() * chars.length));
+    var chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789", s = "", seed = Date.now();
+    for (var i = 0; i < 3; i++) { s += chars.charAt(Math.floor((Math.random() * chars.length + seed) % chars.length)); seed = Math.floor(seed / 7); }
     return s;
   }
 
@@ -417,6 +433,13 @@ var DESK_CONFIG = {
     return s + " — " + CFG.signName + ", " + CFG.studioName + " · " + CFG.studioEmail;
   }
 
+  /* free text that would reach a customer is checked against the banned list */
+  function lintText(s) {
+    if (!s) return "";
+    for (var i = 0; i < (CFG.bannedInNote || []).length; i++) { var m = String(s).match(CFG.bannedInNote[i]); if (m) return m[0]; }
+    return "";
+  }
+
   /* what goes into the customer link: no email, no phone, no street address.
      Kept compact on purpose — every byte makes the QR denser. */
   function payloadFor(o) {
@@ -508,7 +531,7 @@ var DESK_CONFIG = {
     document.title = (isOrder ? "Order " + p.id : "Thank you, " + p.n) + " — " + CFG.studioName;
   }
 
-  window.PurrlightDesk = { renderConfirm: renderConfirm, decodePayload: decodePayload, encodePayload: encodePayload, payloadFor: payloadFor, normalizePayload: normalizePayload, buildThanks: buildThanks, buildOrder: buildOrder, computeTotals: computeTotals };
+  window.PurrlightDesk = { renderConfirm: renderConfirm, decodePayload: decodePayload, encodePayload: encodePayload, payloadFor: payloadFor, normalizePayload: normalizePayload, buildThanks: buildThanks, buildOrder: buildOrder, computeTotals: computeTotals, validOrder: validOrder, lintText: lintText };
 
   var confirmRoot = $("[data-confirm]");
   if (confirmRoot) {
@@ -525,6 +548,7 @@ var DESK_CONFIG = {
      ============================================================ */
   var form = $("[data-desk-form]");
   if (!form) return;
+  saveSettings();
 
   var mode = "thanks";          /* "thanks" | "order" */
   var lines = [];               /* [{ pid, name, addons, addonIndex, addon, qty, unit, custom }] */
@@ -582,13 +606,14 @@ var DESK_CONFIG = {
   }
   var pickerList = pickerItems();
   function renderPicker(filter) {
-    var q = (filter || "").trim().toLowerCase();
+    var q = (filter || "").trim().toLowerCase(), mem = rememberFocus(el.picker);
     el.picker.innerHTML = pickerList.filter(function (p) { return !q || p.name.toLowerCase().indexOf(q) > -1; }).map(function (p) {
       var n = countInLines(p.name);
       return '<button type="button" class="item-chip' + (p.kind !== "catalog" ? ' custom' : '') + (p.kind === "cat" || p.kind === "doll" ? ' grid' : '') + (n ? ' added' : '') + '" data-add="' + esc(p.name) + '">' +
         '<strong>' + esc(p.name) + '</strong><span>' + (p.price == null ? esc(p.hint || '') : money(cents(p.price))) + '</span>' +
         (n ? '<span class="n">' + n + '</span>' : '') + '</button>';
     }).join("") + '<button type="button" class="item-chip custom" data-add-custom><strong>+ Something else</strong><span>name &amp; price</span></button>';
+    restoreFocus(el.picker, mem);
   }
   function countInLines(name) { var n = 0; lines.forEach(function (l) { if (l.name === name) n += l.qty; }); return n; }
   el.picker.addEventListener("click", function (e) {
@@ -645,7 +670,23 @@ var DESK_CONFIG = {
   function opts(list, sel, labelOf) {
     return list.map(function (x, j) { var v = labelOf ? j : x; return '<option value="' + esc(v) + '"' + (String(v) === String(sel) ? ' selected' : '') + '>' + esc(labelOf ? labelOf(x) : x) + '</option>'; }).join("");
   }
+  /* innerHTML re-renders would drop keyboard focus — remember which control had it and give it back */
+  var FOCUS_ATTRS = ["data-inc", "data-dec", "data-rm", "data-la", "data-cs", "data-ct", "data-cy", "data-cp", "data-cpose", "data-ceyes", "data-cpet", "data-ccode", "data-ln", "data-lp", "data-add"];
+  function rememberFocus(root) {
+    var a = document.activeElement;
+    if (!a || !root.contains(a)) return null;
+    for (var i = 0; i < FOCUS_ATTRS.length; i++) if (a.hasAttribute(FOCUS_ATTRS[i])) return { attr: FOCUS_ATTRS[i], val: a.getAttribute(FOCUS_ATTRS[i]), pos: a.selectionStart };
+    return null;
+  }
+  function restoreFocus(root, mem) {
+    if (!mem) return;
+    var els = $$("[" + mem.attr + "]", root), t = null;
+    els.forEach(function (x) { if (x.getAttribute(mem.attr) === mem.val) t = x; });
+    if (!t) return;
+    try { t.focus({ preventScroll: true }); if (typeof mem.pos === "number" && t.setSelectionRange) t.setSelectionRange(mem.pos, mem.pos); } catch (e) { /* not focusable */ }
+  }
   function renderLines() {
+    var mem = rememberFocus(el.linesEl);
     if (!lines.length) { el.linesEl.innerHTML = '<li class="empty-lines">Nothing added yet — tap a piece above.</li>'; }
     else el.linesEl.innerHTML = lines.map(function (l, i) {
       var head;
@@ -679,6 +720,7 @@ var DESK_CONFIG = {
     renderPicker(el.search ? el.search.value : "");
     renderMoney();
     saveDraft();
+    restoreFocus(el.linesEl, mem);
   }
   el.linesEl.addEventListener("click", function (e) {
     var b = e.target.closest("button"); if (!b) return;
@@ -780,8 +822,9 @@ var DESK_CONFIG = {
     el.name.value = f.name || ""; el.email.value = f.email || ""; el.phone.value = f.phone || ""; el.note.value = f.note || "";
     if (el.optIn) el.optIn.checked = !!f.optIn;
     el.discount.value = f.discount || ""; el.paid.value = f.paid || "";
-    if (f.pay) { var c = $('input[value="' + f.pay.replace(/"/g, '\\"') + '"]', el.payChips); if (c) c.checked = true; }
-    if (f.timeline) { var t = $('input[value="' + f.timeline + '"]', el.tlChips); if (t) t.checked = true; }
+    /* compare values, never build a selector from stored text */
+    if (f.pay != null) $$("input", el.payChips).forEach(function (r) { if (r.value === String(f.pay)) r.checked = true; });
+    if (f.timeline != null) $$("input", el.tlChips).forEach(function (r) { if (r.value === String(f.timeline)) r.checked = true; });
     el.shName.value = f.shName || ""; el.shLine1.value = f.shLine1 || ""; el.shLine2.value = f.shLine2 || "";
     el.shCity.value = f.shCity || ""; el.shState.value = f.shState || ""; el.shZip.value = f.shZip || "";
   }
@@ -789,11 +832,6 @@ var DESK_CONFIG = {
   form.addEventListener("change", saveDraft);
 
   /* ---------- validation + save ---------- */
-  function lintText(s) {
-    if (!s) return "";
-    for (var i = 0; i < (CFG.bannedInNote || []).length; i++) { var m = String(s).match(CFG.bannedInNote[i]); if (m) return m[0]; }
-    return "";
-  }
   function setErr(input, msg) {
     var wrap = input.closest(".field"); var e = wrap && $(".err", wrap);
     input.setAttribute("aria-invalid", msg ? "true" : "false");
@@ -821,6 +859,8 @@ var DESK_CONFIG = {
       texts.forEach(function (s) { var b = lintText(s); if (b && !badLine) badLine = b; });
     });
     if (badLine) { toast("A piece name or pet name contains \"" + badLine + "\" — that can't go to a customer."); ok = false; }
+    var badShip = lintText(f.shName);
+    if (badShip) { setErr(el.shName, "That can't go to a customer (" + badShip + ")."); ok = false; firstBad = firstBad || el.shName; } else setErr(el.shName, "");
     /* THANKS = took it home = paid in full. A balance means it is an ORDER. */
     var tt = computeTotals(items, f.discount, f.paid);
     if (mode === "thanks" && tt.balance > 0) { toast("Took home today means paid in full — tap \"full\", or switch to Order if a balance remains."); ok = false; }
@@ -857,8 +897,9 @@ var DESK_CONFIG = {
     showOrder(order);
     resetForm();
     toast("Saved · " + order.id);
-    if (window.innerWidth < 900) el.out.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (window.innerWidth < 900) el.out.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
   });
+  function scrollBehavior() { return (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) ? "auto" : "smooth"; }
   function findOrder(id) { var r = null; Store.all().forEach(function (o) { if (o.id === id) r = o; }); return r; }
   function resetForm() {
     lines = [];
@@ -905,8 +946,9 @@ var DESK_CONFIG = {
     var sms = buildSms(o, link);
     var email = o.customer.email;
     var phone = digits(o.customer.phone);
-    /* cc the studio: replies and pet photos must not die in a helper's personal inbox, and the studio keeps a copy */
-    var mailHref = "mailto:" + (email || "") + "?cc=" + encodeURIComponent(CFG.studioEmail) + "&subject=" + encodeURIComponent(msg.subject) + "&body=" + encodeURIComponent(msg.body.replace(/\n/g, "\r\n"));
+    /* cc the studio: replies and pet photos must not die in a helper's personal inbox, and the studio keeps a copy.
+       The address is percent-encoded (RFC 6068) so a stray # or ? can never swallow the body. */
+    var mailHref = "mailto:" + encodeURIComponent(email || "") + "?cc=" + encodeURIComponent(CFG.studioEmail) + "&subject=" + encodeURIComponent(msg.subject) + "&body=" + encodeURIComponent(msg.body.replace(/\n/g, "\r\n"));
     var smsHref = "sms:" + (phone || "") + "?&body=" + encodeURIComponent(sms);
     var st = o.status === "paid" ? '<span class="status-pill">paid in full</span>' : (o.status === "deposit" ? '<span class="status-pill owe">balance ' + money(o.totals.balance) + '</span>' : '<span class="status-pill owe">unpaid</span>');
     /* CS Hard Rule 1: event orders of more than 5 pieces go to Elise before anything is promised */
@@ -1006,8 +1048,11 @@ var DESK_CONFIG = {
       (Object.keys(by).length ? " (" + Object.keys(by).map(function (k) { return k + " " + money(by[k]); }).join(" · ") + ")" : "") +
       (owed ? " · balances outstanding " + money(owed) : "");
   }
+  var logRerender = null;
   function renderLog() {
-    var all = Store.all().slice().sort(function (a, b) { return a.createdAt < b.createdAt ? 1 : -1; });
+    /* a two-tap delete in progress must not be wiped by a background refresh */
+    if ($('[data-armed="1"]', el.logList)) { clearTimeout(logRerender); logRerender = setTimeout(renderLog, 4200); return; }
+    var all = Store.all().filter(validOrder).sort(function (a, b) { return a.createdAt < b.createdAt ? 1 : -1; });
     el.logCount.forEach(function (c) { c.textContent = all.length; });
     var cb = $("[data-cashbox]"); if (cb) cb.textContent = cashBox(all);
     var list = all.filter(function (o) {
@@ -1112,6 +1157,32 @@ var DESK_CONFIG = {
     armed(b, function () { Store.replaceAll([]); toast("Log cleared — " + n + " orders removed"); }, "Tap again to delete all " + n);
   }); });
 
+  /* ---------- dialogs: focus stays inside, the page behind is inert, focus returns ---------- */
+  var dialogState = null;
+  var FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  function openDialog(root, first) {
+    dialogState = { root: root, last: document.activeElement, scrollY: window.scrollY };
+    $$("header.desk-bar, main, [data-log]").forEach(function (x) { x.setAttribute("inert", ""); x.setAttribute("aria-hidden", "true"); });
+    root.hidden = false;
+    document.body.classList.add("dialog-open"); document.body.style.top = -dialogState.scrollY + "px";
+    var f = first ? $(first, root) : null; (f || $(FOCUSABLE, root) || root).focus();
+  }
+  function closeDialog(root) {
+    root.hidden = true;
+    $$("header.desk-bar, main, [data-log]").forEach(function (x) { x.removeAttribute("inert"); x.removeAttribute("aria-hidden"); });
+    document.body.classList.remove("dialog-open"); document.body.style.top = "";
+    if (dialogState) { window.scrollTo(0, dialogState.scrollY); if (dialogState.last && dialogState.last.focus) dialogState.last.focus(); }
+    dialogState = null;
+  }
+  document.addEventListener("keydown", function (e) {
+    if (!dialogState || e.key !== "Tab") return;
+    var items = $$(FOCUSABLE, dialogState.root).filter(function (x) { return x.offsetParent !== null; });
+    if (!items.length) return;
+    var first = items[0], last = items[items.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+
   /* ---------- settings ---------- */
   var panel = $("[data-settings]");
   function openSettings() {
@@ -1120,15 +1191,17 @@ var DESK_CONFIG = {
     $("#st-device", panel).value = settings.device;
     $("#st-taxmode", panel).value = settings.taxMode;
     $("#st-taxrate", panel).value = (settings.taxRate * 100).toFixed(3).replace(/\.?0+$/, "");
-    panel.hidden = false; $("#st-event", panel).focus();
+    openDialog(panel, "#st-event");
   }
-  function closeSettings() { panel.hidden = true; }
+  function closeSettings() { closeDialog(panel); }
   $$("[data-open-settings]").forEach(function (b) { b.addEventListener("click", openSettings); });
   $$("[data-close-settings]").forEach(function (b) { b.addEventListener("click", closeSettings); });
   $("[data-save-settings]", panel).addEventListener("click", function () {
-    settings.event = $("#st-event", panel).value.trim();
+    var ev = $("#st-event", panel).value.trim(), badEv = lintText(ev);
+    if (badEv) { toast("The event name goes into every message — \"" + badEv + "\" can't be in it."); $("#st-event", panel).focus(); return; }
+    settings.event = ev;
     settings.staff = $("#st-staff", panel).value.trim();
-    var dev = $("#st-device", panel).value.trim().toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 3);
+    var dev = $("#st-device", panel).value.trim().toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 4);
     if (dev) settings.device = dev;
     var tm = $("#st-taxmode", panel).value; settings.taxMode = (tm === "included" || tm === "added") ? tm : "none";
     var rate = parseFloat($("#st-taxrate", panel).value); if (!isNaN(rate) && rate >= 0 && rate < 30) settings.taxRate = Math.round(rate * 100000) / 10000000;
@@ -1146,14 +1219,13 @@ var DESK_CONFIG = {
       H("h-name").value = f.name; H("h-email").value = f.email; H("h-phone").value = f.phone; H("h-optin").checked = f.optIn;
       H("h-line1").value = f.shLine1; H("h-line2").value = f.shLine2; H("h-city").value = f.shCity; H("h-state").value = f.shState; H("h-zip").value = f.shZip;
       $("[data-handover-ship]", handover).hidden = mode !== "order";
-      handover.hidden = false; document.body.style.overflow = "hidden";
-      H(f.name ? "h-email" : "h-name").focus();
+      openDialog(handover, f.name ? "#h-email" : "#h-name");
     }); });
     $("[data-handover-done]", handover).addEventListener("click", function () {
       el.name.value = H("h-name").value.trim(); el.email.value = H("h-email").value.trim(); el.phone.value = H("h-phone").value.trim();
       if (el.optIn) el.optIn.checked = H("h-optin").checked;
       if (mode === "order") { el.shLine1.value = H("h-line1").value.trim(); el.shLine2.value = H("h-line2").value.trim(); el.shCity.value = H("h-city").value.trim(); el.shState.value = H("h-state").value.trim().toUpperCase(); el.shZip.value = H("h-zip").value.trim(); }
-      handover.hidden = true; document.body.style.overflow = "";
+      closeDialog(handover);
       saveDraft(); toast("Got it — thanks, " + (firstName(el.name.value) !== "there" ? firstName(el.name.value) : "friend") + ". Hand it back.");
       el.submit.focus();
     });
@@ -1161,7 +1233,7 @@ var DESK_CONFIG = {
 
   /* ---------- status + toast ---------- */
   function updateStatus() {
-    if (!el.status) return;
+    if (typeof el === "undefined" || !el || !el.status) return;   /* may be called before boot (a failed write) */
     var off = ("onLine" in navigator) && !navigator.onLine;
     el.status.classList.toggle("offline", off || !storageOk);
     $("span:last-child", el.status).textContent = !storageOk
@@ -1180,26 +1252,38 @@ var DESK_CONFIG = {
   applyEventName();
   updateStatus();
   renderLog();
-  var draft = lsGet(LS.draft, null);
-  if (draft && draft.fields) {
-    editingId = draft.editingId || null;
-    paidTouched = !!draft.paidTouched;
-    timelineTouched = !!draft.timelineTouched;
-    setMode(draft.mode || "thanks");
-    lines = (draft.lines || []).map(function (l) {
-      /* re-attach catalog addons and prices from the live catalog */
-      var p = null; catalog.forEach(function (c) { if (c.id === l.pid) p = c; });
-      if (p) { l.addons = p.addons || null; l.unit = p.price; l.kind = "catalog"; }
-      if (!l.kind) l.kind = l.custom ? "cat" : "other";
-      return l;
-    });
-    writeFields(draft.fields);
-    renderLines();
-    if (editingId) el.submit.textContent = "Update " + editingId;
-    if (lines.length || draft.fields.name) toast("Picked up where you left off");
-  } else {
-    setMode("thanks");
-    resetForm();
+  var draft = lsGet(LS.draft, null), restored = false;
+  if (draft && typeof draft === "object" && draft.fields && typeof draft.fields === "object") {
+    try {
+      editingId = draft.editingId || null;
+      paidTouched = !!draft.paidTouched;
+      timelineTouched = !!draft.timelineTouched;
+      setMode(draft.mode === "order" ? "order" : "thanks");
+      lines = (Array.isArray(draft.lines) ? draft.lines : []).map(function (l) {
+        if (!l || typeof l !== "object") throw new Error("bad line");
+        /* re-attach catalog addons and prices from the live catalog */
+        var p = null; catalog.forEach(function (c) { if (c.id === l.pid) p = c; });
+        if (p) { l.addons = p.addons || null; l.unit = p.price; l.kind = "catalog"; }
+        if (!l.kind) l.kind = l.custom ? "cat" : "other";
+        if (l.custom) {
+          /* a size or yarn that no longer exists in the grid falls back rather than crashing */
+          if (GRID.sizes.indexOf(l.custom.size) === -1) l.custom.size = "Classic";
+          if (!GRID.yarns[l.custom.yarn]) l.custom.yarn = 0;
+          l.custom.pair = l.custom.pair ? 1 : 0;
+        }
+        l.qty = Math.max(1, parseInt(l.qty, 10) || 1);
+        return l;
+      });
+      writeFields(draft.fields);
+      renderLines();
+      if (editingId) el.submit.textContent = "Update " + editingId;
+      if (lines.length || draft.fields.name) toast("Picked up where you left off");
+      restored = true;
+    } catch (e) {
+      lsDel(LS.draft); lines = []; editingId = null;
+      toast("Couldn't restore the half-typed order — starting fresh");
+    }
   }
+  if (!restored) { setMode("thanks"); resetForm(); }
   if (!settings.event) setTimeout(openSettings, 400);
 })();

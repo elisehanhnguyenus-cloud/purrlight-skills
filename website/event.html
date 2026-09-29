@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Event Desk — Purrlight Studio</title>
+  <meta name="description" content="Purrlight Studio booth console — thank-you notes and order confirmations for customers at events.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#FBF6EE">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Event Desk">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="64x64" href="assets/brand/favicon-64.png">
+  <link rel="apple-touch-icon" href="assets/brand/favicon-64.png">
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/desk.css">
+</head>
+<body class="desk">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="desk-bar">
+    <a class="logo" href="index.html" aria-label="Purrlight Studio home">
+      <img src="assets/brand/logo-flat.png" alt="Purrlight Studio" width="360" height="119">
+    </a>
+    <span class="desk-title">Event Desk</span>
+    <span class="spacer"></span>
+    <button type="button" class="event-pill" data-open-settings aria-label="Event settings">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+      <span data-event-name>Set event name</span>
+    </button>
+    <button type="button" class="icon-btn" data-scroll-log aria-label="Jump to order log">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14v17l-3-2-2 2-2-2-2 2-2-2-3 2z"/><path d="M9 9h6M9 13h6"/></svg>
+      <span class="count" data-log-count>0</span>
+    </button>
+  </header>
+
+  <main id="main" class="desk-main">
+    <div class="form-col">
+      <p class="status-strip" data-status><span class="dot" aria-hidden="true"></span><span>Saved on this device · works offline</span></p>
+
+      <div class="mode-switch" role="tablist" aria-label="Which message">
+        <button type="button" role="tab" aria-selected="true" data-mode="thanks"><strong>Thank you</strong><span>bought &amp; took home today</span></button>
+        <button type="button" role="tab" aria-selected="false" data-mode="order"><strong>Order</strong><span>to be made &amp; shipped</span></button>
+      </div>
+
+      <form data-desk-form novalidate autocomplete="off" style="margin-top:14px">
+        <section class="block">
+          <h2>Customer</h2>
+          <div class="field">
+            <label for="c-name">Name</label>
+            <input id="c-name" type="text" autocomplete="off" autocapitalize="words" placeholder="First name is enough">
+            <p class="err" aria-live="polite"></p>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="c-email">Email <span class="opt">— for the message</span></label>
+              <input id="c-email" type="email" inputmode="email" autocapitalize="none" spellcheck="false" placeholder="name@example.com">
+              <p class="err" aria-live="polite"></p>
+            </div>
+            <div class="field">
+              <label for="c-phone">Phone <span class="opt">— optional, for a text</span></label>
+              <input id="c-phone" type="tel" inputmode="tel" placeholder="(713) 555-0123">
+              <p class="err" aria-live="polite"></p>
+            </div>
+          </div>
+          <div class="field">
+            <label for="c-note">A personal line <span class="opt">— optional, goes into the message as written</span></label>
+            <input id="c-note" type="text" placeholder="e.g. Hope your niece loves her bunny.">
+            <p class="err" aria-live="polite"></p>
+          </div>
+          <label class="check"><input id="c-optin" type="checkbox"><span>They said yes to hearing about new pieces by email <span class="opt">— asked out loud, not assumed</span></span></label>
+          <button type="button" class="btn btn-ghost btn-wide handover-btn" data-open-handover>Hand them the phone to type their details</button>
+        </section>
+
+        <section class="block">
+          <h2>Pieces <span class="hint">tap to add · tap again for one more</span></h2>
+          <div class="field picker-search">
+            <label for="pick-search" class="visually-hidden">Find a piece</label>
+            <input id="pick-search" type="search" placeholder="Find a piece…">
+          </div>
+          <div class="picker" data-picker></div>
+          <ul class="lines" data-lines></ul>
+          <div class="money" aria-live="polite">
+            <div class="row"><span>Subtotal</span><strong data-subtotal>$0</strong></div>
+            <div class="row" data-disc-row><span class="lbl"><label for="m-discount">Discount</label> <span class="tiny">$ off</span></span><input id="m-discount" type="text" inputmode="decimal" placeholder="0"></div>
+            <p class="err" data-disc-note hidden>Over the 15% cap. Studio rule: offer a smaller size, not a lower price.</p>
+            <div class="row" data-tax-row><span data-tax-label>Sales tax</span><span data-tax>$0</span></div>
+            <div class="row total"><span>Total</span><span data-total>$0</span></div>
+          </div>
+        </section>
+
+        <section class="block" data-only="order" hidden>
+          <h2>Ship to</h2>
+          <div class="field">
+            <label for="s-name">Name on the parcel <span class="opt">— blank = same as above</span></label>
+            <input id="s-name" type="text" autocapitalize="words">
+          </div>
+          <div class="field">
+            <label for="s-line1">Street address</label>
+            <input id="s-line1" type="text" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="s-line2">Apt / unit <span class="opt">— optional</span></label>
+            <input id="s-line2" type="text">
+          </div>
+          <div class="field-row">
+            <div class="field"><label for="s-city">City</label><input id="s-city" type="text" autocapitalize="words"></div>
+            <div class="field-row">
+              <div class="field"><label for="s-state">State</label><input id="s-state" type="text" maxlength="2" autocapitalize="characters" placeholder="TX"></div>
+              <div class="field"><label for="s-zip">ZIP</label><input id="s-zip" type="text" inputmode="numeric" maxlength="10"></div>
+            </div>
+          </div>
+          <p class="help">Leave the address blank if they'd rather send it later — the confirmation says we'll confirm it by message.</p>
+        </section>
+
+        <section class="block" data-only="order" hidden>
+          <h2>Timeline <span class="hint">ranges only — never a date</span></h2>
+          <div class="chips" data-timelines role="radiogroup" aria-label="Timeline"></div>
+        </section>
+
+        <section class="block">
+          <h2>Payment</h2>
+          <div class="field">
+            <span class="lbl" id="pay-lbl">Paid by</span>
+            <div class="chips" data-pay role="radiogroup" aria-labelledby="pay-lbl"></div>
+          </div>
+          <div class="money">
+            <div class="row"><span class="lbl"><label for="m-paid">Paid today</label> <span class="paid-quick"><button type="button" data-paid-full>full</button><button type="button" data-paid-half>50% deposit</button><button type="button" data-paid-none>none</button></span></span><input id="m-paid" type="text" inputmode="decimal" placeholder="0"></div>
+            <div class="row balance" data-bal-row><span>Balance</span><strong data-balance>$0</strong></div>
+          </div>
+        </section>
+
+        <div class="desk-cta">
+          <button class="btn btn-glow" type="submit" data-submit>Save &amp; write the thank-you</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="out-col">
+      <section class="out" data-out aria-live="polite" aria-label="Message for the customer">
+        <p class="out-empty">Save an order to write its message here.</p>
+      </section>
+    </div>
+  </main>
+
+  <section class="log wrap" data-log aria-labelledby="log-h">
+    <div class="log-head">
+      <h2 id="log-h">Order log <span class="status-pill" data-log-count>0</span></h2>
+      <div class="log-tools">
+        <button type="button" class="btn btn-ghost" data-export-csv>Export CSV</button>
+        <button type="button" class="btn btn-ghost" data-export-json>Backup JSON</button>
+        <label class="btn btn-ghost" for="import-json">Merge backup<input id="import-json" type="file" accept="application/json,.json" data-import-json class="visually-hidden"></label>
+        <button type="button" class="btn btn-danger" data-clear-all>Clear all</button>
+      </div>
+    </div>
+    <p class="cashbox" data-cashbox></p>
+    <div class="log-filters" role="group" aria-label="Filter the log">
+      <button type="button" class="filter-chip" data-log-filter="all" aria-pressed="true">All</button>
+      <button type="button" class="filter-chip" data-log-filter="owed" aria-pressed="false">Balance due</button>
+      <button type="button" class="filter-chip" data-log-filter="unsent" aria-pressed="false">Not sent</button>
+    </div>
+    <ul class="log-list" data-log-list></ul>
+  </section>
+
+  <div data-settings hidden>
+    <div class="panel-backdrop" data-close-settings></div>
+    <div class="panel" role="dialog" aria-modal="true" aria-labelledby="st-h">
+      <h2 id="st-h">This event</h2>
+      <div class="field">
+        <label for="st-event">Event name <span class="opt">— appears in every message</span></label>
+        <input id="st-event" type="text" placeholder="e.g. Pearland Market">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="st-staff">Your name <span class="opt">— for the log</span></label>
+          <input id="st-staff" type="text" autocapitalize="words">
+        </div>
+        <div class="field">
+          <label for="st-device">Device tag</label>
+          <input id="st-device" type="text" maxlength="3" autocapitalize="characters">
+          <p class="help">Part of every order number, so two phones never clash.</p>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="st-taxmode">Sales tax</label>
+          <select id="st-taxmode">
+            <option value="none">No tax line (no permit yet)</option>
+            <option value="included">Included in booth prices</option>
+            <option value="added">Added on top of the price</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="st-taxrate">Rate %</label>
+          <input id="st-taxrate" type="text" inputmode="decimal">
+          <p class="help">Only once the Texas Sales and Use Permit is in hand.</p>
+        </div>
+      </div>
+      <p class="muted">Orders stay on this device (export a backup before clearing the browser). To combine two phones, back up one and merge it on the other.</p>
+      <div class="panel-actions">
+        <button type="button" class="btn btn-ghost" data-close-settings>Cancel</button>
+        <button type="button" class="btn btn-primary" data-save-settings>Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="handover" data-handover hidden>
+    <div class="handover-inner">
+      <p class="handover-kicker">Purrlight Studio</p>
+      <h2 class="handover-title">Hi! Pop in your details — it takes about twenty seconds.</h2>
+      <div class="field">
+        <label for="h-name">Your name</label>
+        <input id="h-name" type="text" autocapitalize="words" autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="h-email">Email <span class="opt">— for your note from us</span></label>
+        <input id="h-email" type="email" inputmode="email" autocapitalize="none" spellcheck="false" autocomplete="email">
+      </div>
+      <div class="field">
+        <label for="h-phone">Phone <span class="opt">— optional, if you'd rather get a text</span></label>
+        <input id="h-phone" type="tel" inputmode="tel" autocomplete="tel">
+      </div>
+      <div data-handover-ship hidden>
+        <div class="field"><label for="h-line1">Street address</label><input id="h-line1" type="text" autocomplete="address-line1"></div>
+        <div class="field"><label for="h-line2">Apt / unit <span class="opt">— optional</span></label><input id="h-line2" type="text" autocomplete="address-line2"></div>
+        <div class="field-row">
+          <div class="field"><label for="h-city">City</label><input id="h-city" type="text" autocomplete="address-level2"></div>
+          <div class="field-row">
+            <div class="field"><label for="h-state">State</label><input id="h-state" type="text" maxlength="2" autocapitalize="characters" autocomplete="address-level1"></div>
+            <div class="field"><label for="h-zip">ZIP</label><input id="h-zip" type="text" inputmode="numeric" autocomplete="postal-code"></div>
+          </div>
+        </div>
+      </div>
+      <label class="check"><input id="h-optin" type="checkbox"><span>Yes, send me a note now and then when new pieces are ready <span class="opt">— never often, unsubscribe anytime</span></span></label>
+      <button type="button" class="btn btn-glow btn-wide" data-handover-done>Done — hand it back</button>
+      <p class="handover-foot">We only use this to send you today's note and, if you tick the box, our occasional letters.</p>
+    </div>
+  </div>
+
+  <div class="toast" data-toast role="status" aria-live="polite"></div>
+
+  <script src="js/products.js"></script>
+  <script src="js/vendor/qrcode.min.js"></script>
+  <script src="js/event-desk.js"></script>
+</body>
+</html>

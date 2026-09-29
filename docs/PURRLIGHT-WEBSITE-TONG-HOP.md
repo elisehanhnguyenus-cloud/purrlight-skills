@@ -240,11 +240,73 @@ Nguồn: Notion "🔧 Website Brand Fix Brief" + "🎨 Brand Canon v2" + Brand B
 - **Còn chờ**: nguyên văn Part A 02.3 · bản filled logo cho favicon 16px ·
   review Etsy thật · minh hoạ storybook 5 pose từ hoạ sĩ.
 
+## 8d. Đợt 7 — Event Order Desk (29/09/2026): "thank you for your purchase" + "personalized order confirmation" cho khách tại sự kiện
+
+**Yêu cầu của Elise:** "tạo nhanh 1 tool theo workflow: thank you for your
+purchase và purchase online personalized order confirmation, dành cho khách
+đặt hàng tại sự kiện. Ưu tiên tính năng này sau đó có thể gắn vào website
+chính."
+
+**Cách làm:** workflow 3 pha — (1) 3 reader đọc repo / skill CSKH + ecommerce
+/ Notion (67 finding: Booth Kit Cat Show 26–27/09, bảng giá custom duyệt
+25/09, điều khoản cọc, lead time thật, Square/Zelle/cash, permit thuế "chưa
+có", SOP CS 2027, CS Log có kênh Event); (2) 3 bản thiết kế độc lập (tốc độ
+booth · trải nghiệm khách · dữ liệu & bền vững) → 3 giám khảo → tổng hợp;
+(3) review đối kháng 4 chiều (canon/luật · tiền & trạng thái · mobile a11y ·
+offline/privacy) rồi mới chốt.
+
+**Sản phẩm:** `website/event.html` + `js/event-desk.js` + `css/desk.css`
+(bàn bán hàng cho nhân sự đứng booth, offline-first, log trên máy) và
+`website/confirm.html` (trang khách mở từ link/QR — nội dung nằm trong hash,
+không có email/phone/địa chỉ đường). Bản hosted dùng ngay trên điện thoại:
+https://claude.ai/artifact/JDd4fYwxtDvRmpf1UGs5rW — kho đơn dùng chung cho
+mọi máy được share (db), xuất CSV/JSON.
+
+**Hai luồng, hai lá thư** (giọng Elise, ký "Elise · Purrlight Studio",
+hello@purrlight.studio):
+- *Thank you* — khách mua cầm về: tên khách, đúng món (+ dòng story của món
+  từ products.js), dòng cá nhân do nhân sự gõ, care line + safety line nguyên
+  văn, số tiền đã trả. Không xin review, không nhắc Purrks, không code.
+- *Order confirmation* — custom cat/doll hoặc made-to-order: mã đơn
+  `E<yymmdd>-<máy>-<số>`, món + size/len/pose/mắt/mã màu, subtotal / giảm /
+  "US shipping included" / total / cọc / còn lại, ship-to, timeline dạng
+  khoảng + điều kiện, câu xin ảnh thú cưng, điều khoản cọc 50% đúng bản
+  Elise duyệt 25/09.
+
+**Số liệu và câu chữ có nguồn** (ghi ngay trong `DESK_CONFIG`): bảng giá
+custom cat Petite 40/48/55 · Classic 55/67/79 · Grand 90/105/120 (Yaoh
+Cotton / Chenille Velvet / Rabbit Fluff Fur), doll Petite 45/85 · Classic
+85/160 · Grand 130/245 (Elise 25/09/2026); lead time 2 tuần, +3 tuần mùa
+Tạ ơn–Giáng sinh (Elise 25/09); "typically 10–14 days once it leaves our
+workshop, though customs can add time" (skill CSKH); thuế 8.25% (P&L hội
+chợ 05/09) nhưng **mặc định không ghi thuế** vì permit chưa có (Booth Kit
+18/09); thanh toán Cash / Card (Square) / Zelle (Booth Kit 25/09).
+
+**Luật cài cứng:** không có ô ngày giao; lint chặn dòng cá nhân có từ cấm
+(safe/non-toxic/hypoallergenic, shipped, before Christmas…, magic, made in
+USA); giảm giá > 15% bị cảnh báo; Purrks vắng mặt; "toy" chỉ trong safety
+line; email cũ .com = 0. Bản hosted không có nút Print (host chặn) và không
+có QR (trang private, khách không mở được) — hai thứ này chỉ có trên site.
+
+**Việc Elise phải chốt trước sự kiện 11/10 (Vianney):** hộp thư
+hello@purrlight.studio hoạt động + app Mail trên máy booth đăng nhập bằng
+hộp đó · permit thuế Texas → chọn chế độ thuế · gửi thử 2 lá thư từ điện
+thoại thật · giá 4 món tồn kho Pearland (stress ball set, linen doll bag
+charm, Americana doll, catnip ball) nếu muốn điền sẵn.
+
+**Phát hiện ngoài phạm vi (website hiện tại lệch sự thật vận hành):**
+(a) `product.html` mục Shipping ghi "Everything ships from our Texas studio"
+và announce bar "Ships from Pearland, Texas" — theo skill CSKH, phần lớn SKU
+ship thẳng từ Nha Trang (DDP); (b) `products.js` ghi "Embroidered face" cho
+búp bê — skill CSKH ghi mặt búp bê hand-PAINTED; (c) README cũ còn beret
+xanh/suitcase (đã sửa đợt này). (a)(b) cần Elise xác nhận rồi sửa copy.
+
 ## 9. Link & tài nguyên
 
 - **Repo branch:** `claude/purrlight-studio-website-kcsuen` (GitHub:
   elisehanhnguyenus-cloud/purrlight-skills)
 - **Preview 5 trang:** https://claude.ai/code/artifact/d5b2cc94-195e-4f79-a85a-e7ff791a605b
+- **Event Desk (hosted, dùng tại booth):** https://claude.ai/artifact/JDd4fYwxtDvRmpf1UGs5rW
 - **README kỹ thuật:** `website/README.md`
 - Tài liệu này: `docs/PURRLIGHT-WEBSITE-TONG-HOP.md` (bản Notion đồng bộ
   cùng nội dung)

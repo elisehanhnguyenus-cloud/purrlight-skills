@@ -294,6 +294,26 @@ hộp đó · permit thuế Texas → chọn chế độ thuế · gửi thử 2
 thoại thật · giá 4 món tồn kho Pearland (stress ball set, linen doll bag
 charm, Americana doll, catnip ball) nếu muốn điền sẵn.
 
+**Review đối kháng đã chạy (4 chiều, 45 phát hiện, tất cả đã đọc và sửa
+cái nào thật, mỗi fix có smoke test Playwright):**
+- *Canon/luật (12)*: thư cảm ơn ghi tổng thay vì đã trả → sửa + chặn lưu
+  Thank-you khi còn balance; điều khoản cọc in cứng "50% now" → lắp từ số
+  thật; dòng balance là chính sách chưa duyệt → bỏ; reply rơi vào hộp cá
+  nhân → cc hello@purrlight.studio; safety line dán lên áo baptism 0–3m /
+  tee POD / PVC → chỉ keepsake handmade; lint mở rộng theo Canon.
+- *Tiền/trạng thái (12)*: ngày lệch múi giờ (UTC) ở confirm, két tiền, log
+  line → local; số đơn tràn ở 100; sửa đơn mất dấu đã gửi; import JSON xấu
+  treo trang; qty trong hash chưa escape; kho chung hồi sinh đơn đã xoá →
+  tombstones; offline edit không đẩy lại → dirty set.
+- *Mobile/a11y (12)*: tràn 360px; header bóp nút; --ink-faint 2.49:1; focus
+  ring/viền input dưới 3:1; ô 15px làm iOS zoom; settings & hand-over không
+  phải dialog thật (khách cầm máy vuốt được vào log khách khác); mất focus
+  sau mỗi lần render; aria-live quá rộng.
+- *Offline/privacy (9)*: boot chết khi localStorage bị chặn (kéo theo
+  confirm.html); Clear all hosted xoá cho mọi máy; draft/log restore không
+  guard; kho chung nhận doc không validate; lint bỏ sót tên sự kiện; mailto
+  không encode địa chỉ; armed() timer chồng.
+
 **Phát hiện ngoài phạm vi (website hiện tại lệch sự thật vận hành):**
 (a) `product.html` mục Shipping ghi "Everything ships from our Texas studio"
 và announce bar "Ships from Pearland, Texas" — theo skill CSKH, phần lớn SKU

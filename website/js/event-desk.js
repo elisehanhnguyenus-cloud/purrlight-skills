@@ -1062,7 +1062,11 @@ var DESK_CONFIG = {
     return !!(o && typeof o === "object" && typeof o.id === "string" && typeof o.createdAt === "string" && o.customer && typeof o.customer.name === "string" &&
       Array.isArray(o.items) && o.totals && typeof o.totals.total === "number" && (o.type === "thanks" || o.type === "order"));
   }
-  function csvCell(v) { v = v == null ? "" : String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+  function csvCell(v) {
+    v = v == null ? "" : String(v);
+    if (/^[=+\-@\t\r]/.test(v)) v = "'" + v;   /* a typed "=SUM(...)" must open as text in Excel/Sheets, never run */
+    return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v;
+  }
   function toCsv(list) {
     var head = ["id", "type", "created_at", "event", "staff", "customer_name", "email", "phone", "email_optin", "items", "custom_details", "subtotal", "discount", "tax", "tax_mode", "total", "paid", "balance", "status", "pay_method", "ship_name", "ship_address", "timeline", "note"];
     var rows = list.map(function (o) {

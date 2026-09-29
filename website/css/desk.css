@@ -9,6 +9,9 @@
 
 /* ---------- desk shell ---------- */
 
+/* the hidden attribute must beat any display rule below (e.g. .money .row is flex) */
+[hidden] { display: none !important; }
+
 body.desk { background: var(--cream); padding-bottom: 88px; }
 
 .desk-bar {
@@ -128,9 +131,11 @@ body.desk { background: var(--cream); padding-bottom: 88px; }
 /* custom piece line (size × yarn grid, name, pose, eyes, colour code) */
 .item-chip.grid { background: var(--butter-soft); border-color: var(--butter); border-style: solid; }
 .item-chip.grid.added { background: var(--glow-soft); border-color: var(--glow); }
+.line.line-custom { grid-template-columns: 1fr; }            /* the brief needs the full width */
+.line.line-custom .line-controls { justify-content: flex-end; }
 .custom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 6px; }
-.custom-grid input, .custom-grid select { min-height: 42px; font-size: 15px; }
-@media (max-width: 420px) { .custom-grid { grid-template-columns: 1fr; } }
+.custom-grid input, .custom-grid select { min-height: 42px; font-size: 15px; min-width: 0; }
+@media (max-width: 340px) { .custom-grid { grid-template-columns: 1fr; } }
 .line-custom .line-sub { margin-top: 6px; font-weight: 500; color: var(--accent-text); }
 
 /* radio-chip group (pay method, timeline) */

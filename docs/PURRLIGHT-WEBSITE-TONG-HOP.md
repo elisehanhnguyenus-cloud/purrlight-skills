@@ -307,6 +307,7 @@ xanh/suitcase (đã sửa đợt này). (a)(b) cần Elise xác nhận rồi s�
   elisehanhnguyenus-cloud/purrlight-skills)
 - **Preview 5 trang:** https://claude.ai/code/artifact/d5b2cc94-195e-4f79-a85a-e7ff791a605b
 - **Event Desk (hosted, dùng tại booth):** https://claude.ai/artifact/JDd4fYwxtDvRmpf1UGs5rW
+- **Event Desk — hướng dẫn cho nhân sự (Notion):** https://app.notion.com/p/3ea8ed608af981fca71ee10c1128a543
 - **README kỹ thuật:** `website/README.md`
 - Tài liệu này: `docs/PURRLIGHT-WEBSITE-TONG-HOP.md` (bản Notion đồng bộ
   cùng nội dung)

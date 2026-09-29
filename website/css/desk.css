@@ -256,6 +256,8 @@ body.desk { background: var(--cream); padding-bottom: 88px; }
 .out-to .sel { color: var(--ink); user-select: all; -webkit-user-select: all; word-break: break-all; }
 .out-to .btn-small { min-height: 30px; padding: 3px 12px; font-size: 12.5px; }
 .btn[data-armed="1"] { background: var(--purr-berry); color: #fff; border-color: var(--purr-berry); }
+.sent-ask { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px; color: var(--ink); font-weight: 500; }
+.sent-ask .btn-small { min-height: 34px; padding: 4px 14px; font-size: 13px; }
 .status-pill {
   display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
   padding: 3px 10px; border-radius: 999px; background: var(--sage-soft); color: #4E6346;

@@ -61,18 +61,34 @@ var DESK_CONFIG = {
      (dates promised, safety claims, "shipped" before a scan). The desk
      refuses to save while one is present. */
   bannedInNote: [
-    /\b(safe|non-?toxic|hypoallergenic|cpsia|astm|en71|suitable from birth)\b/i,
-    /\b(shipped|has shipped|on its way)\b/i,
-    /\b(by|before|arrives?( on)?|in time for) (christmas|thanksgiving|halloween|easter|mother'?s day|father'?s day|jan(uary)?|feb(ruary)?|mar(ch)?|apr(il)?|may|june?|july?|aug(ust)?|sep(t|tember)?|oct(ober)?|nov(ember)?|dec(ember)?)\b/i,
+    /\b(safe|safely|non-?toxic|hypoallergenic|cpsia|astm|en ?71|suitable from birth|tested)\b/i,
+    /\b(shipped|has shipped|on its way|will arrive|arrives?|arriving|deliver(ed|y)? (by|on|before))\b/i,
+    /\b(by|before|in time for) (christmas|xmas|thanksgiving|halloween|easter|valentine'?s?|mother'?s day|father'?s day|birthday|the weekend|(next )?(mon|tues|wednes|thurs|fri|satur|sun)day|jan(uary)?|feb(ruary)?|mar(ch)?|apr(il)?|may|june?|july?|aug(ust)?|sep(t|tember)?|oct(ober)?|nov(ember)?|dec(ember)?|the \d{1,2}(st|nd|rd|th)?|\d{1,2}\/\d{1,2})\b/i,
     /\b(magic|magical|blessed|spell|manifest|wizard)\b/i,
-    /\b(handmade|made) in (the )?(usa|texas|america)\b/i
+    /\b(handmade|hand-?crafted|made|crafted) in (the )?(usa|texas|america|us)\b/i,
+    /\b(toys?|plush|plushie|nursery|for kids|babies|baby|toddlers?|newborns?)\b/i,
+    /\b(luxe|luxury|premium|artisanal|bespoke|curated|elevated|exclusive|perfect gift|the best|#1|no\.? ?1)\b/i,
+    /\bfree shipping\b/i,
+    /\b(purrks|points|rewards? code|discount code|promo code|leave (us )?a review|review us)\b/i
   ],
   /* mail clients start truncating around here — the desk suggests Copy above it */
   mailtoSoftLimit: 1900,
 
   /* Order-form terms approved by Elise 25/09/2026 (Booth Kit) — shown on
-     every confirmation that contains a custom piece. Wording kept plain. */
-  customTerms: "What we agreed at the booth: 50% deposit now, and the balance when you approve a photo of the finished piece. US shipping is included. Custom pieces can't be returned, but anything wrong or damaged is on us, 100%. Your deposit is refundable until work begins.",
+     every confirmation that contains a custom piece. The deposit/balance
+     sentence is assembled from what was ACTUALLY paid (see customTermsFor);
+     this is the fixed part. */
+  customTermsFixed: "US shipping is included. Custom pieces can't be returned, but anything wrong or damaged is on us, 100%.",
+
+  /* Items that are NOT handmade keepsakes (printed to order / molded PVC):
+     a purchase of only these gets no "made by hand", no care line and no
+     safety line — the product page carries their own wash/care notes. */
+  notHandmade: ["whisker-tee", "cat-pvc-keychain"],
+  /* Items the safety line must never follow: an infant garment cannot carry
+     "Not suitable for children under 3", and pet accessories are not
+     children's items. Only the verbatim line is permitted, so nothing
+     replaces it here. */
+  safetyLineSkip: ["baptism-set", "pet-bandana", "bow-collar", "felt-fish"],
 
   /* Shown in the money lines of an order (free US shipping is on — per Elise;
      wording per the misleading-claims rule: "included", never "free" when
@@ -103,15 +119,17 @@ var DESK_CONFIG = {
       text: "Custom pieces are usually ready in about two weeks — about five weeks in the Thanksgiving–Christmas season — and I'll send you a photo to approve before anything ships. From there, delivery typically takes 10–14 days once it leaves our workshop, though customs can add time, especially toward the end of the year." }
   ],
 
-  /* Shown when a balance remains on an order WITHOUT a custom piece (custom
-     orders carry the approved terms below instead). Operational wording,
-     not a policy — VERIFY it matches how Elise collects balances. */
-  balanceLine: "I'll message you before it ships to settle the balance — nothing is due until then.",
+  /* Shown when a balance remains on an order WITHOUT a custom piece. There is
+     no approved policy for non-custom balances (only the custom terms
+     exist), so this says nothing about WHEN it is due — the "Balance $X"
+     money line stands on its own. */
+  balanceLine: "I'll be in touch about the balance before anything ships.",
 
-  /* Custom pieces are made from the customer's photo. The address below is
-     the studio email — CONFIRM the mailbox works before the first event
-     (Notion Booth Kit 18/09: not yet confirmed). */
-  photoLine: "If you haven't already, reply with the clearest photo you have of {pet} — front-on, in daylight if you can. That photo is what we work from.",
+  /* Custom pieces are made from the customer's photo. Replies go to whatever
+     mailbox the booth phone sends from, so the studio address is named too
+     (and cc'd on every email) — CONFIRM hello@purrlight.studio works before
+     the first event (Notion Booth Kit 18/09: not yet confirmed). */
+  photoLine: "If you haven't already, reply with the clearest photo you have of {pet} — front-on, in daylight if you can — or send it to {email}. That photo is what we work from.",
 
   /* Approved promise line (The Purrlight Promise on the product page),
      with the contact channel changed from Etsy to this email. */
@@ -142,6 +160,7 @@ var DESK_CONFIG = {
   var CFG = DESK_CONFIG;
 
   /* ---------- tiny helpers ---------- */
+  var pad2 = function (n) { return ("0" + n).slice(-2); };
   var $ = function (sel, root) { return (root || document).querySelector(sel); };
   /* two-tap confirmation built into the button itself (no dialogs — some
      hosts swallow confirm() entirely, and a second tap is faster at a booth) */
@@ -162,12 +181,16 @@ var DESK_CONFIG = {
     var s = "$" + Math.floor(c / 100) + "." + ("0" + (c % 100)).slice(-2);
     return (neg ? "−" : "") + s.replace(/\.00$/, "");
   };
-  var pad2 = function (n) { return ("0" + n).slice(-2); };
   var firstName = function (n) { return (n || "").trim().split(/\s+/)[0] || "there"; };
+  /* a bare YYYY-MM-DD is parsed as LOCAL (new Date("2026-09-27") would be UTC and
+     print one day early for every daytime booth order in Texas) */
   var fmtDate = function (iso) {
-    var d = iso ? new Date(iso) : new Date();
+    var d;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(iso || "")) { var q = iso.split("-"); d = new Date(+q[0], q[1] - 1, +q[2]); }
+    else d = iso ? new Date(iso) : new Date();
     return d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
   };
+  var localYmd = function (v) { var d = v ? new Date(v) : new Date(); return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()); };
   var fmtTime = function (iso) {
     return new Date(iso).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
   };
@@ -187,8 +210,12 @@ var DESK_CONFIG = {
 
   /* ---------- storage ---------- */
   var LS = { orders: "purrlight.desk.orders", settings: "purrlight.desk.settings", draft: "purrlight.desk.draft" };
+  var storageOk = true;   /* flips false the first time a write fails (private mode, full quota) */
   function lsGet(k, fallback) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : fallback; } catch (e) { return fallback; } }
-  function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
+  function lsSet(k, v) {
+    try { localStorage.setItem(k, JSON.stringify(v)); return true; }
+    catch (e) { if (storageOk) { storageOk = false; if (typeof updateStatus === "function") updateStatus(); } return false; }
+  }
   function lsDel(k) { try { localStorage.removeItem(k); } catch (e) { /* private mode */ } }
 
   var listeners = [];
@@ -233,11 +260,16 @@ var DESK_CONFIG = {
     var d = new Date(now);
     var stamp = String(d.getFullYear()).slice(-2) + pad2(d.getMonth() + 1) + pad2(d.getDate());
     var prefix = "E" + stamp + "-" + settings.device + "-";
-    var max = 0;
+    /* highest number ever handed out for this prefix — kept in settings so a
+       deleted order's number is never reused (paper forms CS-001… work the same way) */
+    settings.seq = settings.seq || {};
+    var max = settings.seq[prefix] || 0;
     Store.all().forEach(function (o) {
       if (o.id && o.id.indexOf(prefix) === 0) max = Math.max(max, parseInt(o.id.slice(prefix.length), 10) || 0);
     });
-    return prefix + pad2(max + 1);
+    var n = max + 1;
+    settings.seq[prefix] = n; saveSettings();
+    return prefix + (n < 10 ? "0" + n : String(n));   /* never truncated: 100 stays 100 */
   }
 
   /* ---------- money ---------- */
@@ -281,6 +313,27 @@ var DESK_CONFIG = {
     var n = []; o.items.forEach(function (i) { if (i.custom && i.custom.pet && n.indexOf(i.custom.pet) === -1) n.push(i.custom.pet); });
     return n;
   }
+  /* which lines are handmade keepsakes (custom + typed-at-booth count as handmade) */
+  function isKeepsake(it) { return !it.pid || (CFG.notHandmade || []).indexOf(it.pid) === -1; }
+  function hasKeepsake(o) { for (var i = 0; i < o.items.length; i++) if (isKeepsake(o.items[i])) return true; return false; }
+  function needsSafety(o) {
+    for (var i = 0; i < o.items.length; i++) {
+      var it = o.items[i];
+      if (!isKeepsake(it)) continue;
+      if (it.pid && (CFG.safetyLineSkip || []).indexOf(it.pid) > -1) continue;
+      return true;
+    }
+    return false;
+  }
+  function qtyTotal(o) { var n = 0; o.items.forEach(function (i) { n += Number(i.qty) || 0; }); return n; }
+  /* the approved 25/09 terms, said about what was ACTUALLY paid */
+  function customTermsFor(t) {
+    var s = t.balance > 0
+      ? "What we agreed at the booth: " + money(t.paid) + " deposit today, and the balance of " + money(t.balance) + " when you approve a photo of the finished piece."
+      : "What we agreed at the booth: paid in full today — I'll send you a photo of the finished piece to approve before it ships.";
+    return s + " " + CFG.customTermsFixed + (t.balance > 0 ? " Your deposit is refundable until work begins." : " It's refundable in full until work begins.");
+  }
+  function replyLine() { return "A question, or a change of heart? Just reply to this email, or write to " + CFG.studioEmail + "."; }
   function shipLines(sh) {
     if (!sh || !(sh.line1 || sh.city)) return "";
     return [sh.name, sh.line1, sh.line2, [sh.city, sh.state].filter(Boolean).join(", ") + (sh.zip ? " " + sh.zip : "")]
@@ -295,11 +348,15 @@ var DESK_CONFIG = {
      action that touches a customer or money — paste into Notion */
   function logLine(o) {
     var t = o.totals;
-    return [o.createdAt.slice(0, 10), o.id, "event" + (o.event ? ": " + o.event : ""), o.type === "order" ? "order confirmation" : "thank-you",
+    return [localYmd(o.createdAt), o.id, "event" + (o.event ? ": " + o.event : ""), o.type === "order" ? "order confirmation" : "thank-you",
       o.customer.name, money(t.total) + " · paid " + money(t.paid) + (o.payMethod ? " " + o.payMethod : "") + (t.balance > 0 ? " · balance " + money(t.balance) : ""),
       "staff: " + (o.staff || "—"), "message written"].join(" · ");
   }
-  function whereToday(o) { return o.event ? "at " + o.event + " today" : "today"; }
+  /* "today" only if it still is — a message re-sent on Sunday for a Saturday order says the date */
+  function whereToday(o) {
+    var when = localYmd(o.createdAt) === localYmd() ? "today" : "on " + fmtDate(o.createdAt);
+    return o.event ? "at " + o.event + " " + when : when;
+  }
 
   /* the one-line story from products.js, so the note names the piece the way the site does */
   function shortFor(it) {
@@ -315,9 +372,10 @@ var DESK_CONFIG = {
     p.push("Thank you for finding us " + whereToday(o) + " — and for taking home " + (many ? "these pieces" : "this piece") + ":\n" +
       o.items.map(function (it) { var s = o.items.length <= 2 ? shortFor(it) : ""; return itemText(it) + (s ? "\n   " + s : ""); }).join("\n"));
     if (o.note) p.push(o.note);
-    p.push(CFG.careLine + " Because each piece is made by hand, yours is one of a kind — that's the point.");
-    p.push(CFG.safetyLine);
-    p.push("For your records: " + money(o.totals.total) + " paid" + (o.payMethod ? " by " + o.payMethod : "") + (o.totals.taxMode === "added" ? " (includes " + money(o.totals.tax) + " sales tax)" : (o.totals.taxMode === "included" ? " (Texas sales tax included)" : "")) + ".");
+    if (hasKeepsake(o)) p.push(CFG.careLine + " Because each piece is made by hand, yours is one of a kind — that's the point.");
+    if (needsSafety(o)) p.push(CFG.safetyLine);
+    p.push("For your records: " + money(o.totals.paid) + " paid" + (o.payMethod ? " by " + o.payMethod : "") + (o.totals.taxMode === "added" ? " (includes " + money(o.totals.tax) + " sales tax)" : (o.totals.taxMode === "included" ? " (Texas sales tax included)" : "")) + (o.totals.balance > 0 ? " · balance " + money(o.totals.balance) : "") + ".");
+    p.push("If anything is ever less than you hoped, just reply to this email, or write to " + CFG.studioEmail + " — we'll make it right.");
     var f = followOnText(); if (f) p.push(f);
     p.push(CFG.tagline);
     p.push(signOff());
@@ -338,13 +396,13 @@ var DESK_CONFIG = {
     p.push(tl.text);
     if (hasCustom(o)) {
       var pets = petNames(o);
-      p.push(CFG.photoLine.replace("{pet}", pets.length ? pets.join(" and ") : "the one we're making"));
-      p.push(CFG.customTerms);
+      p.push(CFG.photoLine.replace("{pet}", pets.length ? pets.join(" and ") : "the one we're making").replace("{email}", CFG.studioEmail));
+      p.push(customTermsFor(o.totals));
     }
     if (o.note) p.push(o.note);
-    p.push(CFG.promiseLine + " " + CFG.careLine);
-    p.push(CFG.safetyLine);
-    p.push("A question, or a change of heart? Just reply to this email.");
+    p.push(CFG.promiseLine + (hasKeepsake(o) ? " " + CFG.careLine : ""));
+    if (needsSafety(o)) p.push(CFG.safetyLine);
+    p.push(replyLine());
     p.push(CFG.tagline);
     p.push(signOff());
     return { subject: "Your " + CFG.studioName + " order " + o.id + " — confirmed", body: p.join("\n\n") };
@@ -354,9 +412,9 @@ var DESK_CONFIG = {
     var first = firstName(o.customer.name), t = o.totals;
     var s = o.type === "order"
       ? "Hi " + first + " — thank you for your " + CFG.studioName + " order " + o.id + ". Total " + money(t.total) + ", paid " + money(t.paid) + (t.balance > 0 ? ", balance " + money(t.balance) : "") + ". " + (o.timeline === "stock" ? "I'll text you the tracking number when it ships." : "I'll message you when it leaves our workshop.")
-      : "Hi " + first + " — thank you for taking home " + o.items.map(function (i) { return i.qty + "× " + i.name; }).join(", ") + " " + whereToday(o) + ". " + money(t.total) + " paid" + (o.payMethod ? " by " + o.payMethod : "") + ".";
+      : "Hi " + first + " — thank you for taking home " + o.items.map(function (i) { return i.qty + "× " + i.name; }).join(", ") + " " + whereToday(o) + ". " + money(t.paid) + " paid" + (o.payMethod ? " by " + o.payMethod : "") + (t.balance > 0 ? ", balance " + money(t.balance) : "") + ".";
     if (link) s += " Details: " + link;
-    return s + " — " + CFG.signName + ", " + CFG.studioName;
+    return s + " — " + CFG.signName + ", " + CFG.studioName + " · " + CFG.studioEmail;
   }
 
   /* what goes into the customer link: no email, no phone, no street address.
@@ -365,20 +423,28 @@ var DESK_CONFIG = {
     var sh = o.ship && (o.ship.city || o.ship.state) ? [o.ship.city, o.ship.state].filter(Boolean).join(", ") : "";
     var t = o.totals;
     return {
-      v: 2, t: o.type === "order" ? "o" : "t", id: o.id, n: firstName(o.customer.name), ev: o.event || "", d: o.createdAt.slice(0, 10),
+      v: 2, t: o.type === "order" ? "o" : "t", id: o.id, n: firstName(o.customer.name), ev: o.event || "", d: localYmd(o.createdAt),
       it: o.items.map(function (i) { return [i.name + (i.addon ? " — " + i.addon : ""), i.qty, cents(i.unit)]; }),
       m: [t.subtotal, t.discount, t.tax, t.total, t.paid, t.balance, t.taxMode === "added" ? "a" : (t.taxMode === "included" ? "i" : "n")],
       pm: o.payMethod || "", sh: sh, tl: o.timeline || "", nt: o.note || "",
-      cu: hasCustom(o) ? (petNames(o).join(" and ") || 1) : 0
+      cu: hasCustom(o) ? (petNames(o).join(" and ") || 1) : 0,
+      k: hasKeepsake(o) ? 1 : 0, s: needsSafety(o) ? 1 : 0
     };
   }
   /* normalize any payload version into what renderConfirm reads */
   function normalizePayload(p) {
+    if (!p || typeof p !== "object") throw new Error("bad payload");
+    var num = function (x) { var n = Number(x); return isFinite(n) ? n : 0; };
     if (p.v === 2) {
       var m = p.m || [];
       p.t = p.t === "o" ? "order" : "thanks";
-      p.tt = { subtotal: m[0] || 0, discount: m[1] || 0, tax: m[2] || 0, total: m[3] || 0, paid: m[4] || 0, balance: m[5] || 0, taxMode: m[6] === "i" ? "included" : (m[6] === "a" ? "added" : "none") };
+      p.tt = { subtotal: num(m[0]), discount: num(m[1]), tax: num(m[2]), total: num(m[3]), paid: num(m[4]), balance: num(m[5]), taxMode: m[6] === "i" ? "included" : (m[6] === "a" ? "added" : "none") };
     }
+    /* everything numeric is coerced — the hash is attacker-controlled text, never trusted markup */
+    p.it = (p.it || []).map(function (i) { return [String((i && i[0]) || ""), num(i && i[1]), num(i && i[2])]; });
+    if (!p.tt || typeof p.tt.total !== "number") throw new Error("bad payload");
+    ["n", "id", "ev", "d", "pm", "sh", "tl", "nt"].forEach(function (k) { p[k] = p[k] == null ? "" : String(p[k]); });
+    if (typeof p.cu !== "number") p.cu = p.cu ? String(p.cu) : 0;
     return p;
   }
   function baseUrl() {
@@ -410,7 +476,8 @@ var DESK_CONFIG = {
       '<p class="oid">' + (isOrder ? 'Order <strong>' + esc(p.id) + '</strong> · ' : '') + esc(fmtDate(p.d)) + '</p>' +
       '<table class="confirm-items"><thead><tr><th>Piece</th><th>Amount</th></tr></thead><tbody>' +
       (p.it || []).map(function (i) {
-        return '<tr><td>' + esc(i[0]) + '<span class="sub">' + i[1] + ' × ' + money(i[2]) + '</span></td><td>' + money(i[1] * i[2]) + '</td></tr>';
+        var qty = Number(i[1]) || 0, unit = Number(i[2]) || 0;
+        return '<tr><td>' + esc(i[0]) + '<span class="sub">' + qty + ' × ' + money(unit) + '</span></td><td>' + money(qty * unit) + '</td></tr>';
       }).join('') +
       '</tbody></table>' +
       '<div class="confirm-rows">' +
@@ -424,12 +491,13 @@ var DESK_CONFIG = {
       var tl = timelineFor(p.tl);
       html += '<div class="confirm-section"><h2>What happens next</h2><p>' + esc(tl.text) + '</p>' +
         (t.balance > 0 && !p.cu ? '<p>' + esc(CFG.balanceLine) + '</p>' : '') +
-        (p.sh ? '<p>Shipping to ' + esc(p.sh) + ' — the full address is in your email.</p>' : '') + '</div>';
-      if (p.cu) html += '<div class="confirm-section"><h2>Your custom piece</h2><p>' + esc(CFG.photoLine.replace("{pet}", p.cu === 1 ? "the one we're making" : p.cu)) + '</p><p>' + esc(CFG.customTerms) + '</p></div>';
+        (p.sh ? '<p>Shipping to ' + esc(p.sh) + ' — I\'ll confirm the full address with you by message.</p>' : '') + '</div>';
+      if (p.cu) html += '<div class="confirm-section"><h2>Your custom piece</h2><p>' + esc(CFG.photoLine.replace("{pet}", p.cu === 1 ? "the one we're making" : p.cu).replace("{email}", CFG.studioEmail)) + '</p><p>' + esc(customTermsFor(t)) + '</p></div>';
     }
     if (p.nt) html += '<div class="confirm-section"><h2>A note from us</h2><p>' + esc(p.nt) + '</p></div>';
-    html += '<div class="confirm-section"><h2>Care</h2><p>' + esc(CFG.careLine) + ' Because each piece is made by hand, yours is one of a kind — that\'s the point.</p></div>' +
-      '<div class="confirm-note"><svg viewBox="0 0 24 24" fill="none" stroke="#A9812F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.6L20 10l-6.1 1.4L12 17l-1.9-5.6L4 10l6.1-1.4Z"/></svg><span>' + esc(CFG.safetyLine) + '</span></div>' +
+    if (p.k !== 0) html += '<div class="confirm-section"><h2>Care</h2><p>' + esc(CFG.careLine) + ' Because each piece is made by hand, yours is one of a kind — that\'s the point.</p></div>';
+    if (p.s !== 0) html += '<div class="confirm-note"><svg viewBox="0 0 24 24" fill="none" stroke="#A9812F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.6L20 10l-6.1 1.4L12 17l-1.9-5.6L4 10l6.1-1.4Z"/></svg><span>' + esc(CFG.safetyLine) + '</span></div>';
+    html +=
       '<div class="confirm-section"><h2>Questions</h2><p>Write to us anytime at <a href="mailto:' + esc(CFG.studioEmail) + '">' + esc(CFG.studioEmail) + '</a>' + (isOrder ? ' — mention order ' + esc(p.id) + '.' : '.') + '</p></div>' +
       '<p class="confirm-sign">' + esc(CFG.tagline) + '<small>— ' + esc(CFG.signName) + ', ' + esc(CFG.studioName) + ' · ' + esc(CFG.studioCity) + '</small></p>' +
       '<div class="confirm-actions"><button class="btn btn-ghost" type="button" data-print>Print / save as PDF</button>' +
@@ -700,7 +768,7 @@ var DESK_CONFIG = {
   function saveDraft() {
     clearTimeout(draftTimer);
     draftTimer = setTimeout(function () {
-      lsSet(LS.draft, { mode: mode, editingId: editingId, paidTouched: paidTouched, lines: lines, fields: readFields() });
+      lsSet(LS.draft, { mode: mode, editingId: editingId, paidTouched: paidTouched, timelineTouched: timelineTouched, lines: lines, fields: readFields() });
     }, 250);
   }
   function readFields() {
@@ -744,8 +812,20 @@ var DESK_CONFIG = {
     var unnamed = lines.filter(function (l) { return l.kind === "cat" && !l.custom.pet; });
     if (unnamed.length) { toast("What's their name? It goes into the confirmation."); ok = false; }
     var bad = lintText(f.note);
-    if (bad) { setErr(el.note, "That line can't go to a customer (" + bad + "). No promised dates, no safety claims, no \"shipped\"."); ok = false; firstBad = firstBad || el.note; }
+    if (bad) { setErr(el.note, "That line can't go to a customer (" + bad + "). No promised dates, no safety claims, no \"shipped\", no banned words."); ok = false; firstBad = firstBad || el.note; }
     else setErr(el.note, "");
+    /* the other free text that reaches the customer: item names typed at the booth, pet names, yarn codes */
+    var badLine = "";
+    lines.forEach(function (l) {
+      var texts = l.kind === "other" ? [l.name] : (l.custom ? [l.custom.pet, l.custom.code] : []);
+      texts.forEach(function (s) { var b = lintText(s); if (b && !badLine) badLine = b; });
+    });
+    if (badLine) { toast("A piece name or pet name contains \"" + badLine + "\" — that can't go to a customer."); ok = false; }
+    /* THANKS = took it home = paid in full. A balance means it is an ORDER. */
+    var tt = computeTotals(items, f.discount, f.paid);
+    if (mode === "thanks" && tt.balance > 0) { toast("Took home today means paid in full — tap \"full\", or switch to Order if a balance remains."); ok = false; }
+    /* studio rule: no custom piece without a deposit at the booth (SOP CS 2027) */
+    if (mode === "order" && tt.paid === 0 && lines.some(function (l) { return !!l.custom; })) { toast("Custom pieces need a deposit at the booth — tap \"50% deposit\"."); ok = false; }
     if (!ok) { if (firstBad) firstBad.focus(); return; }
 
     var now = new Date().toISOString();
@@ -755,6 +835,7 @@ var DESK_CONFIG = {
       type: mode,
       createdAt: existing ? existing.createdAt : now,
       updatedAt: now,
+      sent: existing ? existing.sent : undefined,   /* an edit must not erase "emailed 2:14 pm" */
       event: settings.event || "",
       staff: settings.staff || "",
       device: settings.device,
@@ -790,7 +871,8 @@ var DESK_CONFIG = {
   }
   function loadForEdit(o) {
     editingId = o.id;
-    paidTouched = true;   /* keep what was actually paid */
+    paidTouched = true;       /* keep what was actually paid */
+    timelineTouched = true;   /* and the timeline that was promised */
     setMode(o.type);
     lines = o.items.map(function (i) {
       if (i.custom) {
@@ -823,13 +905,16 @@ var DESK_CONFIG = {
     var sms = buildSms(o, link);
     var email = o.customer.email;
     var phone = digits(o.customer.phone);
-    var mailHref = "mailto:" + (email || "") + "?subject=" + encodeURIComponent(msg.subject) + "&body=" + encodeURIComponent(msg.body.replace(/\n/g, "\r\n"));
+    /* cc the studio: replies and pet photos must not die in a helper's personal inbox, and the studio keeps a copy */
+    var mailHref = "mailto:" + (email || "") + "?cc=" + encodeURIComponent(CFG.studioEmail) + "&subject=" + encodeURIComponent(msg.subject) + "&body=" + encodeURIComponent(msg.body.replace(/\n/g, "\r\n"));
     var smsHref = "sms:" + (phone || "") + "?&body=" + encodeURIComponent(sms);
     var st = o.status === "paid" ? '<span class="status-pill">paid in full</span>' : (o.status === "deposit" ? '<span class="status-pill owe">balance ' + money(o.totals.balance) + '</span>' : '<span class="status-pill owe">unpaid</span>');
+    /* CS Hard Rule 1: event orders of more than 5 pieces go to Elise before anything is promised */
+    var big = qtyTotal(o) > 5;
     el.out.innerHTML =
       '<div class="out-head"><h2>' + (o.type === "order" ? "Confirmation" : "Thank-you") + ' for ' + esc(firstName(o.customer.name)) + '</h2>' +
       '<span class="oid">' + esc(o.id) + '</span></div>' +
-      '<p>' + st + (o.type === "thanks" ? ' <span class="status-pill thanks">took home today</span>' : '') + '</p>' +
+      '<p>' + st + (o.type === "thanks" ? ' <span class="status-pill thanks">took home today</span>' : '') + (big ? ' <span class="status-pill owe">6+ pieces — Elise confirms before sending</span>' : '') + '</p>' +
       '<div class="msg-tabs" role="tablist"><button type="button" role="tab" data-tab="email" aria-selected="' + (outTab === "email") + '">Email</button><button type="button" role="tab" data-tab="sms" aria-selected="' + (outTab === "sms") + '">Text</button></div>' +
       '<p class="msg-subject" data-subj><span>Subject:</span> <strong>' + esc(msg.subject) + '</strong></p>' +
       '<pre class="msg" data-msg tabindex="0"></pre>' +
@@ -851,8 +936,9 @@ var DESK_CONFIG = {
     renderTab(msg, sms);
     $$("[data-tab]", el.out).forEach(function (b) { b.addEventListener("click", function () { outTab = b.getAttribute("data-tab"); $$("[data-tab]", el.out).forEach(function (x) { x.setAttribute("aria-selected", x === b ? "true" : "false"); }); renderTab(msg, sms); }); });
     $("[data-copy]", el.out).addEventListener("click", function () { copyText(outTab === "sms" ? sms : "Subject: " + msg.subject + "\n\n" + msg.body, "Message copied"); markSent(o, "copied"); });
-    var ml = $("[data-mail]", el.out); if (email) ml.addEventListener("click", function () { markSent(o, "emailed"); });
-    var sm = $("[data-sms]", el.out); if (phone) sm.addEventListener("click", function () { markSent(o, "texted"); });
+    /* a tap opens the mail/text app; only the person knows whether Send was pressed — ask */
+    var ml = $("[data-mail]", el.out); if (email) ml.addEventListener("click", function () { askSent(o, "emailed", "Did the email go out?"); });
+    var sm = $("[data-sms]", el.out); if (phone) sm.addEventListener("click", function () { askSent(o, "texted", "Did the text go out?"); });
     var pr = $("[data-print]", el.out); if (pr) pr.addEventListener("click", function () { window.print(); markSent(o, "printed"); });
     $$("[data-copy-to]", el.out).forEach(function (b) { b.addEventListener("click", function () { copyText(b.getAttribute("data-copy-to"), "Copied"); }); });
     var cl = $("[data-copy-link]", el.out); if (cl) cl.addEventListener("click", function () { copyText(link, "Link copied"); });
@@ -873,6 +959,12 @@ var DESK_CONFIG = {
     o.updatedAt = o.sent[how];
     Store.put(o);
     var m = $("[data-sent-marks]", el.out); if (m) m.innerHTML = sentMarks(o);
+  }
+  function askSent(o, how, question) {
+    var m = $("[data-sent-marks]", el.out); if (!m) return;
+    m.innerHTML = '<span class="sent-ask">' + esc(question) + ' <button type="button" class="btn btn-primary btn-small" data-sent-yes>Yes, sent</button> <button type="button" class="btn btn-ghost btn-small" data-sent-no>Not yet</button></span>';
+    $("[data-sent-yes]", m).addEventListener("click", function () { markSent(o, how); });
+    $("[data-sent-no]", m).addEventListener("click", function () { m.innerHTML = sentMarks(o); });
   }
   function sentMarks(o) {
     var s = o.sent || {}, keys = Object.keys(s);
@@ -902,11 +994,12 @@ var DESK_CONFIG = {
     renderLog();
   }); });
   function cashBox(all) {
-    var today = new Date().toISOString().slice(0, 10), n = 0, paid = 0, owed = 0, by = {};
+    var today = localYmd(), n = 0, paid = 0, owed = 0, by = {};
     all.forEach(function (o) {
-      if (o.createdAt.slice(0, 10) !== today) return;
-      n++; paid += o.totals.paid; owed += o.totals.balance;
-      if (o.totals.paid) by[o.payMethod || "—"] = (by[o.payMethod || "—"] || 0) + o.totals.paid;
+      if (localYmd(o.createdAt) !== today) return;
+      var t = o.totals || {};
+      n++; paid += t.paid || 0; owed += t.balance || 0;
+      if (t.paid) by[o.payMethod || "—"] = (by[o.payMethod || "—"] || 0) + t.paid;
     });
     if (!n) return "";
     return "Today: " + n + (n === 1 ? " order" : " orders") + " · collected " + money(paid) +
@@ -925,17 +1018,18 @@ var DESK_CONFIG = {
     if (!all.length) { el.logList.innerHTML = '<li class="log-empty">No orders yet on this device.</li>'; return; }
     if (!list.length) { el.logList.innerHTML = '<li class="log-empty">Nothing matches this filter.</li>'; return; }
     el.logList.innerHTML = list.map(function (o) {
-      var st = o.status === "paid" ? "paid" : (o.status === "deposit" ? "balance " + money(o.totals.balance) : "unpaid");
+      var t = o.totals || {}, c = o.customer || {}, items = o.items || [];
+      var st = o.status === "paid" ? "paid" : (o.status === "deposit" ? "balance " + money(t.balance || 0) : "unpaid");
       var sentKeys = Object.keys(o.sent || {});
       return '<li><details class="log-item" data-id="' + esc(o.id) + '"><summary>' +
-        '<span class="li-name">' + esc(o.customer.name) + ' <span class="status-pill' + (o.type === "thanks" ? ' thanks' : (o.status === "paid" ? '' : ' owe')) + '">' + (o.type === "thanks" ? "thank-you" : st) + '</span>' +
+        '<span class="li-name">' + esc(c.name) + ' <span class="status-pill' + (o.type === "thanks" ? ' thanks' : (o.status === "paid" ? '' : ' owe')) + '">' + (o.type === "thanks" ? "thank-you" : st) + '</span>' +
         (sentKeys.length ? '' : ' <span class="status-pill owe">not sent</span>') + '</span>' +
-        '<span class="li-amt">' + money(o.totals.total) + '</span>' +
-        '<span class="li-sub">' + esc(o.id) + ' · ' + esc(fmtTime(o.createdAt)) + (o.event ? ' · ' + esc(o.event) : '') + ' · ' + o.items.map(function (i) { return i.qty + "× " + i.name; }).join(", ") + (sentKeys.length ? ' · ' + sentKeys.join(", ") : '') + '</span>' +
+        '<span class="li-amt">' + money(t.total || 0) + '</span>' +
+        '<span class="li-sub">' + esc(o.id) + ' · ' + esc(fmtTime(o.createdAt)) + (o.event ? ' · ' + esc(o.event) : '') + ' · ' + esc(items.map(function (i) { return i.qty + "× " + i.name; }).join(", ")) + (sentKeys.length ? ' · ' + esc(sentKeys.join(", ")) : '') + '</span>' +
         '</summary><div class="li-body"><dl>' +
-        '<dt>Contact</dt><dd>' + esc([o.customer.email, o.customer.phone].filter(Boolean).join(" · ") || "—") + '</dd>' +
+        '<dt>Contact</dt><dd>' + esc([c.email, c.phone].filter(Boolean).join(" · ") || "—") + '</dd>' +
         (o.ship && shipLines(o.ship) ? '<dt>Ship to</dt><dd>' + esc(shipLines(o.ship)).replace(/\n/g, "<br>") + '</dd>' : '') +
-        '<dt>Paid</dt><dd>' + money(o.totals.paid) + (o.payMethod ? ' · ' + esc(o.payMethod) : '') + '</dd>' +
+        '<dt>Paid</dt><dd>' + money(t.paid || 0) + (o.payMethod ? ' · ' + esc(o.payMethod) : '') + '</dd>' +
         (o.note ? '<dt>Note</dt><dd>' + esc(o.note) + '</dd>' : '') +
         '</dl><div class="li-actions"><button type="button" class="btn btn-primary" data-open="' + esc(o.id) + '">Open message</button><button type="button" class="btn btn-ghost" data-edit="' + esc(o.id) + '">Edit</button><button type="button" class="btn btn-danger" data-del="' + esc(o.id) + '">Delete</button></div></div></details></li>';
     }).join("");
@@ -963,6 +1057,11 @@ var DESK_CONFIG = {
       setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
     } catch (e) { fallback(); }
   };
+  /* only rows in the desk's own shape are merged — a stray file must never brick the log */
+  function validOrder(o) {
+    return !!(o && typeof o === "object" && typeof o.id === "string" && typeof o.createdAt === "string" && o.customer && typeof o.customer.name === "string" &&
+      Array.isArray(o.items) && o.totals && typeof o.totals.total === "number" && (o.type === "thanks" || o.type === "order"));
+  }
   function csvCell(v) { v = v == null ? "" : String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
   function toCsv(list) {
     var head = ["id", "type", "created_at", "event", "staff", "customer_name", "email", "phone", "email_optin", "items", "custom_details", "subtotal", "discount", "tax", "tax_mode", "total", "paid", "balance", "status", "pay_method", "ship_name", "ship_address", "timeline", "note"];
@@ -991,10 +1090,14 @@ var DESK_CONFIG = {
     var r = new FileReader();
     r.onload = function () {
       try {
-        var data = JSON.parse(r.result), list = data.orders || data, mine = Store.all(), added = 0;
+        var data = JSON.parse(r.result), list = data.orders || data, mine = Store.all(), added = 0, skipped = 0;
         if (!Array.isArray(list)) throw new Error("bad");
-        list.forEach(function (o) { if (o && o.id && indexOfId(mine, o.id) === -1) { mine.push(o); added++; } });
-        Store.replaceAll(mine); toast("Merged " + added + " new order" + (added === 1 ? "" : "s"));
+        list.forEach(function (o) {
+          if (!validOrder(o)) { skipped++; return; }
+          if (indexOfId(mine, o.id) === -1) { mine.push(o); added++; }
+        });
+        if (added) Store.replaceAll(mine);
+        toast("Merged " + added + " new order" + (added === 1 ? "" : "s") + (skipped ? " · skipped " + skipped + " that weren't desk orders" : ""));
       } catch (e) { toast("That file isn't a Purrlight backup."); }
       importInput.value = "";
     };
@@ -1054,9 +1157,12 @@ var DESK_CONFIG = {
 
   /* ---------- status + toast ---------- */
   function updateStatus() {
+    if (!el.status) return;
     var off = ("onLine" in navigator) && !navigator.onLine;
-    el.status.classList.toggle("offline", off);
-    $("span:last-child", el.status).textContent = (Store.label || LocalStore.label) + (off ? " · offline right now — everything still saves here" : "");
+    el.status.classList.toggle("offline", off || !storageOk);
+    $("span:last-child", el.status).textContent = !storageOk
+      ? "NOT SAVING on this device (private mode or storage full) — Copy or Print each message before moving on"
+      : (Store.label || LocalStore.label) + (off ? " · offline right now — everything still saves here" : "");
   }
   window.addEventListener("online", updateStatus); window.addEventListener("offline", updateStatus);
   var toastTimer = null;
@@ -1074,6 +1180,7 @@ var DESK_CONFIG = {
   if (draft && draft.fields) {
     editingId = draft.editingId || null;
     paidTouched = !!draft.paidTouched;
+    timelineTouched = !!draft.timelineTouched;
     setMode(draft.mode || "thanks");
     lines = (draft.lines || []).map(function (l) {
       /* re-attach catalog addons and prices from the live catalog */

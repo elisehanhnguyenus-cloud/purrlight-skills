@@ -189,14 +189,14 @@
           <label for="st-taxmode">Sales tax</label>
           <select id="st-taxmode">
             <option value="none">No tax line (no permit yet)</option>
-            <option value="included">Included in booth prices</option>
-            <option value="added">Added on top of the price</option>
+            <option value="included">Included in booth prices — permit in hand</option>
+            <option value="added">Added on top of the price — permit in hand</option>
           </select>
+          <p class="help">Leave on "No tax line" until the Texas Sales and Use Permit is in hand — both other modes tell the customer tax was collected.</p>
         </div>
         <div class="field">
           <label for="st-taxrate">Rate %</label>
           <input id="st-taxrate" type="text" inputmode="decimal">
-          <p class="help">Only once the Texas Sales and Use Permit is in hand.</p>
         </div>
       </div>
       <p class="muted">Orders stay on this device (export a backup before clearing the browser). To combine two phones, back up one and merge it on the other.</p>

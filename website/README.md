@@ -144,8 +144,12 @@ iOS Mail có thể cắt thư quá dài — tool đã nhắc dùng Copy khi > 1.
   (Printful/Printify) thì mới được thêm "in the USA".
 - Trang About có câu "paid fairly and never rushed" về artisan partners —
   giữ được vì là cam kết thật của nhà, nhưng chị xác nhận lại trước khi publish.
-- Các chi tiết an toàn sản phẩm ("no small parts", "breakaway buckle") lấy theo
-  listing hiện tại — đối chiếu từng sản phẩm thật trước khi publish.
+- Mặt búp bê ghi **hand-painted** (sự thật sản phẩm theo skill CSKH, 8/2026);
+  đã bỏ claim "no small parts" (chưa kiểm chứng). "Breakaway buckle" ở collar
+  vẫn lấy theo listing — đối chiếu sản phẩm thật trước khi publish.
+- Vận chuyển: phần lớn SKU ship thẳng từ xưởng Nha Trang (DDP), một số món
+  tồn kho ship từ Pearland — copy trên site đã ghi đúng như vậy (30/09);
+  KHÔNG ghi "ships from Texas" cho toàn bộ.
 
 ## Design tokens
 

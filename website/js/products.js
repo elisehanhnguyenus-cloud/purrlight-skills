@@ -28,7 +28,7 @@ const PRODUCTS = [
     img: "assets/img/product-doll-redbraid.svg",
     short: "A hand-crocheted heroine with rosy cheeks and long red braids, stitched loop by loop.",
     desc: "Every Storybook Doll begins as a sketch and a skein of soft cotton yarn. Our artisans crochet her face, braids, and pinafore entirely by hand — no two dolls are ever exactly alike. She stands about 12 inches tall and loves being read to.",
-    details: ["Soft cotton yarn, polyester fill", "About 12\" / 30 cm tall", "Embroidered face — no small parts", "Spot clean with a damp cloth"],
+    details: ["Soft cotton yarn, polyester fill", "About 12\" / 30 cm tall", "Hand-painted face", "Spot clean with a damp cloth"],
     addons: [{ label: "Doll only", delta: 0 }, { label: "Make it a set · + Matching mini doll keychain", delta: 15 }],
     etsyUrl: ""
   },
@@ -78,7 +78,7 @@ const PRODUCTS = [
     img: "assets/img/product-cat-plush.svg",
     short: "Our studio cat, mid-nap — tuxedo coat, little yellow beret, one white whisker.",
     desc: "This is Merlin, the curious tuxedo cat who supervises our worktable (when he isn't sleeping on the patterns). Hand-crocheted in his signature yellow beret, with his single white whisker embroidered on the left — just like the real one. From the cat who takes notes.",
-    details: ["Soft acrylic-blend yarn, polyester fill", "About 8\" / 20 cm curled", "Embroidered face — no small parts", "Spot clean with a damp cloth"],
+    details: ["Soft acrylic-blend yarn, polyester fill", "About 8\" / 20 cm curled", "Hand-finished face, embroidered whisker", "Spot clean with a damp cloth"],
     addons: [{ label: "Cat only", delta: 0 }, { label: "Make it a set · + Felt fish for cats", delta: 12 }],
     etsyUrl: ""
   },
@@ -90,8 +90,8 @@ const PRODUCTS = [
     badge: "",
     img: "assets/img/product-bunny.svg",
     short: "A floppy-eared bunny sized for small arms and big feelings.",
-    desc: "With long soft ears made for holding, this hand-finished bunny becomes the friend that goes everywhere. Sewn from soft fabric with an embroidered face.",
-    details: ["Soft fabric, embroidered face", "About 10\" / 25 cm", "Machine wash cold, air dry", "Ages 3+, with an adult nearby"],
+    desc: "With long soft ears made for holding, this hand-finished bunny becomes the friend that goes everywhere. Sewn from soft fabric with a hand-painted face.",
+    details: ["Soft fabric, hand-painted face", "About 10\" / 25 cm", "Machine wash cold, air dry", "Ages 3+, with an adult nearby"],
     etsyUrl: ""
   },
   {

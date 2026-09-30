@@ -319,7 +319,13 @@ cái nào thật, mỗi fix có smoke test Playwright):**
 và announce bar "Ships from Pearland, Texas" — theo skill CSKH, phần lớn SKU
 ship thẳng từ Nha Trang (DDP); (b) `products.js` ghi "Embroidered face" cho
 búp bê — skill CSKH ghi mặt búp bê hand-PAINTED; (c) README cũ còn beret
-xanh/suitcase (đã sửa đợt này). (a)(b) cần Elise xác nhận rồi sửa copy.
+xanh/suitcase. **Cả ba đã sửa (Elise yêu cầu 30/09):** announce bar 5 trang →
+"Designed in Texas, made in Vietnam"; trust bar + Shipping accordion → "most
+pieces ship straight from our Vietnam workshop, duties included; a few
+ready-made pieces ship from our Texas studio" + khoảng 10–14 ngày có điều
+kiện; mặt búp bê → "Hand-painted face", bỏ "no small parts" (chưa kiểm
+chứng). Dòng origin canon "Designed in Pearland, Texas · Handmade in Vietnam ·
+Finished in Texas" giữ nguyên vì là copy Canon v2.
 
 ## 9. Link & tài nguyên
 

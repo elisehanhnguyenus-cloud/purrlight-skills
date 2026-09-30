@@ -324,8 +324,10 @@ xanh/suitcase. **Cả ba đã sửa (Elise yêu cầu 30/09):** announce bar 5 t
 pieces ship straight from our Vietnam workshop, duties included; a few
 ready-made pieces ship from our Texas studio" + khoảng 10–14 ngày có điều
 kiện; mặt búp bê → "Hand-painted face", bỏ "no small parts" (chưa kiểm
-chứng). Dòng origin canon "Designed in Pearland, Texas · Handmade in Vietnam ·
-Finished in Texas" giữ nguyên vì là copy Canon v2.
+chứng). Dòng origin rút thành "Designed in Pearland, Texas · Handmade in
+Vietnam" ở 8 chỗ (footer 6 trang, Shipping accordion, About) — Elise quyết
+30/09 bỏ "Finished in Texas" vì vênh với việc ship thẳng từ Nha Trang; cần
+báo Morgan cập nhật Brand Canon v2 cho khớp.
 
 ## 9. Link & tài nguyên
 

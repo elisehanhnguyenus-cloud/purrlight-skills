@@ -329,6 +329,47 @@ Vietnam" ở 8 chỗ (footer 6 trang, Shipping accordion, About) — Elise quy�
 30/09 bỏ "Finished in Texas" vì vênh với việc ship thẳng từ Nha Trang; cần
 báo Morgan cập nhật Brand Canon v2 cho khớp.
 
+## 8e. Đợt 8 — Review release-readiness toàn site (09/10/2026): "hoàn tất chưa?"
+
+**Cách làm:** audit máy (8 trang × desktop/mobile: lỗi console, ảnh hỏng, link
+hỏng, tràn màn, quét từ cấm) + workflow 4 reviewer (copy nhất quán · canon
+hình ảnh · link/luồng · checklist launch đối chiếu code) → 48 phát hiện, tất
+cả đã đọc; cái nào là code thì sửa ngay (commit "Website: sửa theo review
+release-readiness"), cái nào cần Elise thì liệt kê dưới.
+
+**Đã sửa trong code:** meta description trang chủ + About prose còn
+"finished in Texas"; announce bar về đúng dòng origin canon; footer dùng
+`logo-flat.png` thật; care/safety line gắn theo từng món (`NOT_HANDMADE`,
+`SAFETY_LINE_SKIP` trong products.js, Event Desk dùng chung); 4 link
+Instagram gỡ (handle IG không phải của mình) → TikTok/Facebook; Purrks không
+hứa thưởng review; nút "join the waitlist" → "follow along on Etsy" (form
+chưa nối backend); journal là thẻ "coming soon", bỏ số bịa; desc Storybook
+doll khớp hand-painted; bỏ "no plastic parts" ở felt fish; `?id` lạ → trang
+"không tìm thấy"; giá PDP màu berry; Contact us → mailto; TikTok link lấy từ
+một hằng số.
+
+**Kết luận trạng thái (09/10):** *code-complete, chưa launch-complete.* Trang
+chạy sạch (0 lỗi, 0 link hỏng, 0 tràn, 0 từ cấm) nhưng còn các mục chỉ Elise
+làm được — xem checklist mục 6 (đánh dấu lại bên dưới).
+
+**Checklist launch còn mở (theo thứ tự chặn):**
+1. 🔴 `ETSY_SHOP_URL` chưa xác minh + 11 `etsyUrl` trống → mọi nút mua có thể 404.
+2. 🔴 Giá + addon "make it a set" là placeholder → đối chiếu từng listing.
+3. 🔴 Ảnh sản phẩm: 100% SVG minh hoạ, chưa có ảnh chụp.
+4. 🔴 Chưa deploy (domain purrlight.studio đã chốt, chưa host); Event Desk
+   Link + QR chờ `publicBaseUrl`.
+5. 🟡 Newsletter chưa nối Klaviyo (form chỉ hiện thông báo trung thực).
+6. 🟡 TikTok Shop: handle chưa xác minh; Open Collaboration chưa bật → trang
+   Partners mô tả chương trình chưa chạy.
+7. 🟡 Claim chưa kiểm chứng: "Breakaway-style buckle" (collar), "paid fairly"
+   (About), kỹ thuật mặt Sleepy Merlin ("hand-finished" — hỏi Elise).
+8. 🟡 Hộp thư hello@purrlight.studio chưa xác nhận hoạt động.
+9. 🟡 Nghệ thuật Merlin: canon nói trăng/sao chỉ trang trí nhưng hero/keychain
+   lấy trăng làm chủ thể; hero nói "tiny backpack" mà không hình nào có ba lô
+   → hoạ sĩ vẽ lại theo canon (đã nằm trong brief Dribbble).
+10. ⚪ Favicon bản filled (16px); Part A §02.3 nguyên văn cho About; Pinterest/
+    Facebook handle xác nhận; "feeling-balls" nhắc trong About nhưng chưa bán.
+
 ## 9. Link & tài nguyên
 
 - **Repo branch:** `claude/purrlight-studio-website-kcsuen` (GitHub:

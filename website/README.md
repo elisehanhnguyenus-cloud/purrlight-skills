@@ -112,9 +112,11 @@ iOS Mail có thể cắt thư quá dài — tool đã nhắc dùng Copy khi > 1.
    Chỉ đưa lại khi có review Etsy thật (nguyên văn, kèm tên buyer viết tắt).
 7. **Video lifestyle** — 3 card đang trỏ về TikTok profile với poster minh
    họa. Khi có video thật: thay href bằng link video hoặc nhúng embed.
-8. **Social handles** — Instagram/Pinterest đang là placeholder
-   `purrlightstudio`. Đăng ký đúng handle rồi sửa link (6 chỗ ở section
-   social + 3 nút follow).
+8. **Social handles** — @purrlightstudio là của mình trên TikTok / Facebook /
+   Pinterest (Canon v2); handle Instagram thuộc người khác nên site KHÔNG
+   link Instagram. TikTok lấy từ `TIKTOK_SHOP_URL` (attribute `data-tiktok`);
+   Pinterest/Facebook đang hard-code 4+1 chỗ ở section social — xác nhận tài
+   khoản tồn tại trước khi publish.
 9. **Purrks Points** — đang gắn badge "launching soon" (đúng sự thật vì
    chưa có chương trình). Khi nào chạy thật (Shopify + Smile.io, hoặc thủ
    công qua email) thì bỏ badge và cập nhật mô tả. KHÔNG bỏ badge trước đó.

@@ -648,7 +648,8 @@ h1, h2, h3, h4 {
 @media (max-width: 860px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 520px) { .footer-grid { grid-template-columns: 1fr; } }
 
-.footer-brand .logo { color: var(--cream); font-size: 22px; margin-bottom: 14px; }
+.footer-brand .footer-logo { display: inline-block; background: var(--cream); border-radius: 999px; padding: 8px 18px; margin-bottom: 14px; }
+.footer-brand .footer-logo img { height: 36px; width: auto; }
 .footer-brand p { font-size: 14.5px; color: #BAAE9F; max-width: 34ch; }
 
 .site-footer .footer-grid h2 {
@@ -776,7 +777,7 @@ h1, h2, h3, h4 {
   margin-bottom: 10px;
 }
 .pdp-info h1 { font-size: clamp(28px, 3.6vw, 42px); margin-bottom: 14px; }
-.pdp-info .price { font-size: 24px; font-weight: 600; color: var(--ink); margin-bottom: 20px; }
+.pdp-info .price { font-size: 24px; font-weight: 600; color: var(--purr-berry); margin-bottom: 20px; }
 .pdp-info .pdp-desc { color: var(--ink-soft); margin-bottom: 24px; max-width: 56ch; }
 
 .pdp-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 30px; }

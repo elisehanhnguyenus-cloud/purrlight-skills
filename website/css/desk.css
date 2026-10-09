@@ -30,7 +30,7 @@ body.desk { background: var(--cream); padding-bottom: 88px; }
   white-space: nowrap;
 }
 .desk-bar .spacer { flex: 1; }
-@media (max-width: 420px) { .desk-bar .desk-title { display: none; } }
+@media (max-width: 420px) { .desk-bar .desk-title { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } }
 .event-pill {
   display: inline-flex; align-items: center; gap: 6px;
   max-width: 46vw; min-width: 0; min-height: 44px;

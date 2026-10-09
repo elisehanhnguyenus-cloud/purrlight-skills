@@ -150,15 +150,30 @@
   var pdp = document.querySelector("[data-pdp]");
   if (pdp && typeof PRODUCTS !== "undefined") {
     var id = new URLSearchParams(location.search).get("id");
-    var p = PRODUCTS.find(function (x) { return x.id === id; }) || PRODUCTS[0];
-
-    document.title = p.name + " — Purrlight Studio";
+    var p = PRODUCTS.find(function (x) { return x.id === id; });
     var set = function (sel, val, attr) {
       var el = pdp.querySelector(sel);
       if (!el) return;
       if (attr) el.setAttribute(attr, val);
       else el.textContent = val;
     };
+    var hide = function (sel) { var el = pdp.querySelector(sel); if (el) el.hidden = true; };
+
+    /* a shared link to a retired or mistyped id must not quietly show a different piece at a different price */
+    if (id && !p) {
+      document.title = "Piece not found — Purrlight Studio";
+      set("[data-pdp-crumb]", "Not found");
+      set("[data-pdp-cat]", "");
+      set("[data-pdp-name]", "We couldn't find that piece");
+      set("[data-pdp-desc]", "It may have sold out or moved. Everything currently on our hooks is in the shop.");
+      [".price", ".pdp-addons", "[data-pdp-buy]", ".pdp-details", ".pdp-note", ".pdp-media"].forEach(hide);
+      var relGrid0 = document.querySelector("[data-related]");
+      if (relGrid0) renderGrid(relGrid0, PRODUCTS.slice(0, 4));
+      return;
+    }
+    p = p || PRODUCTS[0];
+
+    document.title = p.name + " — Purrlight Studio";
     set("[data-pdp-crumb]", p.name);
     set("[data-pdp-cat]", p.category);
     set("[data-pdp-name]", p.name);
@@ -188,6 +203,16 @@
       detailList.innerHTML = p.details.map(function (d) { return "<li>" + d + "</li>"; }).join("");
     }
 
+    /* the standard care/safety copy only where it is true for THIS piece (lists live in products.js):
+       - no safety line on an infant garment or pet accessories, nor on printed/molded items
+       - the spot-clean sentence only when the piece's own details say spot clean
+       - the "made by hand, may differ" note only on handmade pieces */
+    var notHandmade = (typeof NOT_HANDMADE !== "undefined" ? NOT_HANDMADE : []).indexOf(p.id) > -1;
+    var skipSafety = notHandmade || (typeof SAFETY_LINE_SKIP !== "undefined" ? SAFETY_LINE_SKIP : []).indexOf(p.id) > -1;
+    if (skipSafety) hide("[data-pdp-safety]");
+    if (!p.details.some(function (d) { return /spot clean/i.test(d); })) hide("[data-pdp-care]");
+    if (notHandmade) hide(".pdp-note");
+
     /* related: same category first, then others */
     var relGrid = document.querySelector("[data-related]");
     if (relGrid) {
@@ -199,10 +224,13 @@
     }
   }
 
-  /* ---------- etsy links ---------- */
+  /* ---------- etsy / tiktok links (one constant each, in products.js) ---------- */
   document.querySelectorAll("[data-etsy]").forEach(function (el) {
     el.href = ETSY_SHOP_URL;
   });
+  if (typeof TIKTOK_SHOP_URL !== "undefined") {
+    document.querySelectorAll("[data-tiktok]").forEach(function (el) { el.href = TIKTOK_SHOP_URL; });
+  }
 
   /* ---------- newsletter (no backend yet — honest placeholder) ---------- */
   var form = document.querySelector("[data-newsletter]");

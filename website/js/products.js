@@ -27,7 +27,7 @@ const PRODUCTS = [
     badge: "made-to-order",
     img: "assets/img/product-doll-redbraid.svg",
     short: "A hand-crocheted heroine with rosy cheeks and long red braids, stitched loop by loop.",
-    desc: "Every Storybook Doll begins as a sketch and a skein of soft cotton yarn. Our artisans crochet her face, braids, and pinafore entirely by hand — no two dolls are ever exactly alike. She stands about 12 inches tall and loves being read to.",
+    desc: "Every Storybook Doll begins as a sketch and a skein of soft cotton yarn. Our artisans crochet her body, braids, and pinafore entirely by hand and paint her face one at a time — no two dolls are ever exactly alike. She stands about 12 inches tall and loves being read to.",
     details: ["Soft cotton yarn, polyester fill", "About 12\" / 30 cm tall", "Hand-painted face", "Spot clean with a damp cloth"],
     addons: [{ label: "Doll only", delta: 0 }, { label: "Make it a set · + Matching mini doll keychain", delta: 15 }],
     etsyUrl: ""
@@ -54,7 +54,7 @@ const PRODUCTS = [
     img: "assets/img/product-keychain-doll.svg",
     short: "A tiny fabric friend for your keys, bag, or backpack zipper.",
     desc: "Small enough to ride along everywhere — each mini doll is cut, sewn, and finished by hand, then fitted with a sturdy ring. Pick one that looks like someone you love.",
-    details: ["Cotton fabric, embroidered details", "About 4\" / 10 cm", "Metal keyring hardware", "Decorative keepsake — not suitable for children under 3"],
+    details: ["Cotton fabric, embroidered details", "About 4\" / 10 cm", "Metal keyring hardware", "Decorative keepsake"],
     etsyUrl: ""
   },
   {
@@ -150,11 +150,18 @@ const PRODUCTS = [
     badge: "",
     img: "assets/img/product-fish.svg",
     short: "A hand-sewn felt fish that has accepted its fate with dignity.",
-    desc: "Sturdy felt, tight stitching, and a satisfying flip — this little fish is built for enthusiastic paws. No loose plastic parts.",
-    details: ["Wool-blend felt, polyester fill", "About 5\" / 13 cm", "No small plastic parts", "Supervise play; replace if worn"],
+    desc: "Sturdy felt, tight stitching, and a satisfying flip — this little fish is built for enthusiastic paws.",
+    details: ["Wool-blend felt, polyester fill", "About 5\" / 13 cm", "Wool-blend felt, stitched closed", "Supervise play; replace if worn"],
     etsyUrl: ""
   }
 ];
+
+/* Which pieces the standard care/safety copy applies to (shared by product.html and the Event Desk):
+   NOT_HANDMADE     — printed to order / molded PVC: no "made by hand", no spot-clean care, no safety line.
+   SAFETY_LINE_SKIP — an infant garment cannot carry "Not suitable for children under 3", and pet
+   accessories are not children's items. Only the verbatim safety line is ever shown; nothing replaces it. */
+const NOT_HANDMADE = ["whisker-tee", "cat-pvc-keychain"];
+const SAFETY_LINE_SKIP = ["baptism-set", "pet-bandana", "bow-collar", "felt-fish"];
 
 const CATEGORIES = [
   { name: "Storybook & Traditional Tales", img: "assets/img/cat-dolls.svg" },

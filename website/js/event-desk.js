@@ -83,12 +83,12 @@ var DESK_CONFIG = {
   /* Items that are NOT handmade keepsakes (printed to order / molded PVC):
      a purchase of only these gets no "made by hand", no care line and no
      safety line — the product page carries their own wash/care notes. */
-  notHandmade: ["whisker-tee", "cat-pvc-keychain"],
+  notHandmade: (typeof NOT_HANDMADE !== "undefined") ? NOT_HANDMADE : ["whisker-tee", "cat-pvc-keychain"],
   /* Items the safety line must never follow: an infant garment cannot carry
      "Not suitable for children under 3", and pet accessories are not
      children's items. Only the verbatim line is permitted, so nothing
      replaces it here. */
-  safetyLineSkip: ["baptism-set", "pet-bandana", "bow-collar", "felt-fish"],
+  safetyLineSkip: (typeof SAFETY_LINE_SKIP !== "undefined") ? SAFETY_LINE_SKIP : ["baptism-set", "pet-bandana", "bow-collar", "felt-fish"],
 
   /* Shown in the money lines of an order (free US shipping is on — per Elise;
      wording per the misleading-claims rule: "included", never "free" when
@@ -466,6 +466,7 @@ var DESK_CONFIG = {
     /* everything numeric is coerced — the hash is attacker-controlled text, never trusted markup */
     p.it = (p.it || []).map(function (i) { return [String((i && i[0]) || ""), num(i && i[1]), num(i && i[2])]; });
     if (!p.tt || typeof p.tt.total !== "number") throw new Error("bad payload");
+    if (!p.n || !Array.isArray(p.it) || !p.it.length || (p.t === "order" && !p.id)) throw new Error("bad payload");
     ["n", "id", "ev", "d", "pm", "sh", "tl", "nt"].forEach(function (k) { p[k] = p[k] == null ? "" : String(p[k]); });
     if (typeof p.cu !== "number") p.cu = p.cu ? String(p.cu) : 0;
     return p;

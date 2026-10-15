@@ -1,11 +1,12 @@
 /* ============================================================
    Purrlight Custom Orders — page behavior
    - every "Place your order" link → ORDER_FORM_URL (prices.js), utm passed through
-   - inline estimators ("Build your piece"): chips / the pet price table → live estimate from prices.js
+   - gift studio (the OREOiD idea): pick one piece (tabs) → options on the left, and on the right
+     what's inside + a live estimate from prices.js; added items fade in, the photo follows the choice
    - the customer's pick reaches the form as a copied summary line (or a prefilled field when
      ORDER_FORM_PREFILL_ENTRY is set) — the page never invents a price: every number is prices.js = brief §3
-   - site nav drawer, sticky order bar on phones, picks remembered on this device
-   No framework, ES5, works without JS (copy, prices and the mailto links are plain HTML).
+   - site nav drawer, sticky order bar on phones, picks remembered on this device, #piece deep links
+   No framework, ES5. Without JS every piece shows in full (copy, prices, options and mailto links are HTML).
    ============================================================ */
 (function () {
   "use strict";
@@ -37,7 +38,7 @@
   if (yr) yr.textContent = new Date().getFullYear();
 
   /* ---------- order link: one constant + utm passthrough (brief §5) ---------- */
-  var lastPick = null;   /* { product, total, text } — the last pick the customer touched */
+  var lastPick = null;   /* { product, total, text } — the pick the customer is building */
   function orderUrl() {
     var url = ORDER_FORM_URL;
     if (/^mailto:/i.test(url)) {   /* the stopgap email link: the pick travels in the message body */
@@ -90,322 +91,347 @@
       if (ok) onDone(); else onFail();
     } catch (e) { onFail(); }
   }
+  function isDisabled(inp) { try { return inp.matches(":disabled"); } catch (e) { return inp.disabled; } }   /* counts a disabled <fieldset> too */
+  /* data-when="format!=digital&paper=do" — every condition must hold; "name=a,b" (one of), "name!=a" (none of), "name~a" (checkbox list holds a) */
+  function holds(expr, v) {
+    var conds = expr.split("&");
+    for (var i = 0; i < conds.length; i++) {
+      var m = conds[i].match(/^([\w-]+)(!=|=|~)(.*)$/);
+      if (!m) continue;
+      var val = v[m[1]], ok;
+      if (m[2] === "~") ok = Array.isArray(val) && val.indexOf(m[3]) > -1;
+      else { var hit = m[3].split(",").indexOf(String(val)) > -1; ok = m[2] === "=" ? hit : !hit; }
+      if (!ok) return false;
+    }
+    return true;
+  }
 
   /* ---------- sticky order bar (phones) ---------- */
+  var BAR_CAP = "Free U.S. shipping on every custom order";
   var bar = el("div", { "class": "order-bar", hidden: "", role: "region", "aria-label": "Order" });
-  var barCap = el("span", { "class": "order-bar-cap", text: "Free U.S. shipping on every custom order" });
+  var barCap = el("span", { "class": "order-bar-cap", text: BAR_CAP });
   var barText = el("span", { "class": "order-bar-text", text: "Custom Orders" });
   var barBtn = el("a", { "class": "btn btn-primary btn-small", "data-order": "", href: orderUrl() }, [
     el("span", { "class": "long", text: "Place your order" }), el("span", { "class": "short", text: "Order" })
   ]);
   bar.appendChild(el("span", { "class": "order-bar-col" }, [barCap, barText])); bar.appendChild(barBtn);
   document.body.appendChild(bar);
-  var sectionInView = "";
-  function updateBar() {
-    if (lastPick) barText.textContent = lastPick.product + " · estimate " + money(lastPick.total);
-    else if (sectionInView) barText.textContent = sectionInView;
+  var capTimer = null;
+  function barAdded(label) {   /* a short "Added: …" in the bar — the phone's view of the box filling up */
+    barCap.textContent = "Added: " + label.replace(/\s*\(.*\)$/, "").replace(/^Add or swap: /, ""); barCap.classList.add("is-added");
+    clearTimeout(capTimer);
+    capTimer = setTimeout(function () { barCap.textContent = BAR_CAP; barCap.classList.remove("is-added"); }, 2600);
   }
 
-  /* ---------- builder definitions ----------
-     Each option group renders as chips (native radio/checkbox inside a label) or uses the section's own
-     price table (pet). `read(values)` turns the chosen values into the estimator's input. */
-  var BUILDERS = {
+  /* ---------- the seven pieces ----------
+     Options are plain inputs in index.html; `read(values)` turns them into the estimator's input.
+     `item` names the main line in the box when the estimator's label is only the option (e.g. "Classic · Cotton"). */
+  var GIFTS = {
     portraitDoll: {
       product: "Custom Portrait Crochet Doll",
-      groups: [
-        { name: "shadowbox", legend: "Display", type: "radio", options: [
-          { value: "no", label: "Doll only", price: "$80", checked: true },
-          { value: "yes", label: "Add a wooden shadowbox display case", price: "+$10" }
-        ] }
-      ],
       read: function (v) { return { shadowbox: v.shadowbox === "yes" }; },
       est: function (o) { return estPortraitDoll(o); }
     },
     pet: {
-      product: "Custom Cat / Dog / Pet Crochet",
-      table: true,   /* size × yarn come from the price table above (tap a price) */
-      groups: [
-        { name: "pets", legend: "How many pets", type: "radio", options: [
-          { value: "1", label: "One pet", checked: true },
-          { value: "2", label: "Two pets", note: "Second pet on the same order −$10" }
-        ], note: "A second pet is priced at the same size and yarn — tell us when you order if they differ." }
-      ],
-      read: function (v) { return { size: v.size || "Classic", yarn: v.yarn || "Cotton", pets: Number(v.pets) }; },
+      product: "Custom Cat / Dog / Pet Crochet", item: "Your pet, in yarn",
+      read: function (v) { return { size: v.size, yarn: v.yarn, pets: Number(v.pets) }; },
       est: function (o) { return estPet(o); }
     },
     watercolor: {
-      product: "Custom Digital Watercolor Painting",
-      groups: [
-        { name: "format", legend: "Format", type: "radio", options: [
-          { value: "digital", label: "Digital file", price: "$10", checked: true },
-          { value: "4x6", label: "Print 4×6", price: "$12" },
-          { value: "5x7", label: "Print 5×7", price: "$15" },
-          { value: "8x10", label: "Print 8×10", price: "$20" }
-        ] },
-        { name: "paper", legend: "Paper", type: "radio", printOnly: true, options: [
-          { value: "fine", label: "Fine-art paper", checked: true },
-          { value: "do", label: "Handmade Vietnamese Dó papyrus", price: "+$5" }
-        ], detail: { src: "../assets/img/custom/do-paper-print-detail.webp", w: 560, h: 747, alt: "Watercolor cat print held up to the light on handmade Vietnamese Dó papyrus, showing the paper's fibers", caption: "Printed on handmade Vietnamese Dó papyrus" } },
-        { name: "frame", legend: "Frame", type: "radio", printOnly: true, options: [
-          { value: "no", label: "No frame", checked: true },
-          { value: "yes", label: "Add a frame", priceBy: { "4x6": "+$8", "5x7": "+$16", "8x10": "+$24" } }
-        ] },
-        { name: "extras", legend: "Extras", type: "checkbox", options: [
-          { value: "giftBox", label: "Gift box", price: "+$5", printOnly: true },
-          { value: "rosary", label: "Crochet rosary add-on", price: "+$15" }
-        ] }
-      ],
-      read: function (v) { var print = v.format !== "digital"; return { format: v.format, doPaper: print && v.paper === "do", frame: print && v.frame === "yes", giftBox: print && v.extras.indexOf("giftBox") > -1, rosary: v.extras.indexOf("rosary") > -1 }; },
+      product: "Custom Digital Watercolor Painting", item: "Watercolor painting",
+      read: function (v) {
+        var print = v.format !== "digital", x = v.extras || [];
+        return { format: v.format, doPaper: print && v.paper === "do", frame: print && v.frame === "yes", giftBox: print && x.indexOf("giftBox") > -1, rosary: x.indexOf("rosary") > -1 };
+      },
       est: function (o) { return estWatercolor(o); }
     },
     housewarming: {
       product: "Housewarming & Closing Gift Box",
-      groups: [
-        { name: "addons", legend: "Add or swap, +$10 each", type: "checkbox", options: [
-          { value: "succulent", label: "Small succulent or aloe vera", price: "+$10" },
-          { value: "coldcut", label: "Cold cut box", price: "+$10" },
-          { value: "berry", label: "3-berry fruit box", price: "+$10" }
-        ] }
-      ],
-      read: function (v) { return { addons: v.extras.length }; },
+      read: function (v, form) {
+        var names = [], boxes = form ? form.querySelectorAll('input[name="addons"]') : [];
+        for (var i = 0; i < boxes.length; i++) if (boxes[i].checked) names.push("Add or swap: " + (boxes[i].getAttribute("data-label") || boxes[i].value));
+        return { addons: names };
+      },
       est: function (o) { return estHousewarming(o); }
     },
+    christening: {   /* the Confirmation gift box is "coming soon": shown as information, not orderable */
+      product: "Christening & Confirmation Gifts",
+      read: function () { return {}; },
+      est: function () { return estChristeningGown(); }
+    },
+    godparent: {
+      product: "Godparent Gift Set",
+      read: function () { return {}; },
+      est: function () { return estGodparent(); }
+    },
     calendar: {
-      product: "Custom Watercolor Pet Calendar 2027",
-      groups: [
-        { name: "kind", legend: "Format", type: "radio", options: [
-          { value: "print", label: "Design + print", checked: true },
-          { value: "digital", label: "Digital files only" }
-        ] },
-        { name: "pages", legend: "Pages", type: "radio", options: [
-          { value: "1", label: "1 page", priceBy: { print: "$20", digital: "$15" }, checked: true },
-          { value: "6", label: "6 pages", priceBy: { print: "$50", digital: "$25" } }
-        ] }
-      ],
+      product: "Custom Watercolor Pet Calendar 2027", item: "2027 pet calendar",
       read: function (v) { return { kind: v.kind, pages: Number(v.pages) }; },
       est: function (o) { return estCalendar(o); }
     }
   };
 
-  /* ---------- render one builder ---------- */
-  var builderCount = 0;
+  var studio = document.getElementById("studio");
+  var live = el("p", { "class": "sr-only", role: "status" });   /* one quiet announcement per change */
+  if (studio) studio.appendChild(live);
 
-  function renderBuilder(host, key) {
-    var def = BUILDERS[key];
-    if (!def) return;
-    var id = "b" + (++builderCount);
-    var storeKey = "purrlight-custom-pick:" + key;
-    var section = host.closest ? host.closest("section") : null;
-    var form = el("form", { "class": "pick", "data-pick": key, "aria-labelledby": id + "-h", novalidate: "" });
-    form.addEventListener("submit", function (e) { e.preventDefault(); });
-
-    form.appendChild(el("h3", { "class": "pick-title", id: id + "-h", text: "Build your piece" }));
-    form.appendChild(el("p", { "class": "pick-hint", text: def.table
-      ? "Tap a price in the table, then your options — the estimate updates as you go."
-      : "Tap your options — the estimate updates as you go." }));
-
-    /* pet: the price table IS the size × yarn picker (one radio group, arrow keys move) */
-    var tableState = { size: "Classic", yarn: "Cotton" };
-    var cells = [];
-    var sizeLine = null;
-    if (def.table && section) {
-      var tds = section.querySelectorAll("[data-pet-table] td[data-size]");
-      for (var c = 0; c < tds.length; c++) (function (td, idx) {
-        var b = el("button", { type: "button", "class": "cell-btn", role: "radio", "aria-checked": "false", tabindex: "-1", text: td.textContent.trim() });
-        b.setAttribute("aria-label", td.getAttribute("data-size") + " · " + td.getAttribute("data-yarn") + " " + td.textContent.trim());
-        td.textContent = ""; td.appendChild(b);
-        var choose = function () { tableState.size = td.getAttribute("data-size"); tableState.yarn = td.getAttribute("data-yarn"); update(); };
-        b.addEventListener("click", choose);
-        b.addEventListener("keydown", function (e) {
-          var step = { ArrowRight: 1, ArrowDown: 3, ArrowLeft: -1, ArrowUp: -3 }[e.key];
-          if (step === undefined) return;
-          e.preventDefault();
-          var next = cells[(idx + step + cells.length) % cells.length];
-          next.btn.focus(); next.btn.click();
-        });
-        cells.push({ btn: b, size: td.getAttribute("data-size"), yarn: td.getAttribute("data-yarn") });
-      })(tds[c], c);
-      sizeLine = el("p", { "class": "pick-chosen" });
-      form.appendChild(sizeLine);
+  function readValues(form) {
+    var v = {};
+    if (!form) return v;
+    var inputs = form.querySelectorAll("input");
+    for (var i = 0; i < inputs.length; i++) {
+      var inp = inputs[i];
+      if (inp.type === "radio") { if (inp.checked) v[inp.name] = inp.value; }
+      else if (inp.type === "checkbox") { v[inp.name] = v[inp.name] || []; if (inp.checked && !inp.disabled) v[inp.name].push(inp.value); }
     }
+    return v;
+  }
 
-    def.groups.forEach(function (g) {
-      var fs = el("fieldset", { "class": "pick-group", "data-group": g.name });
-      if (g.printOnly) fs.setAttribute("data-print-only", "");
-      fs.appendChild(el("legend", { text: g.legend }));
-      var chips = el("div", { "class": "chips", role: g.type === "radio" ? "radiogroup" : "group" });
-      g.options.forEach(function (o, oi) {
-        var inputId = id + "-" + g.name + "-" + oi;
-        var input = el("input", { type: g.type, name: g.name, value: o.value, id: inputId });
-        if (o.checked) input.setAttribute("checked", "");   /* defaultChecked → form.reset() restores it */
-        var lab = el("label", { "class": "chip", "for": inputId });
-        if (o.printOnly) lab.setAttribute("data-print-only", "");
-        lab.appendChild(input);
-        lab.appendChild(el("span", { "class": "chip-text", text: o.label }));
-        if (o.price) lab.appendChild(el("span", { "class": "chip-price", text: o.price }));
-        if (o.priceBy) lab.appendChild(el("span", { "class": "chip-price", "data-price-by": JSON.stringify(o.priceBy) }));
-        if (o.note) lab.appendChild(el("span", { "class": "chip-note", text: o.note }));
-        chips.appendChild(lab);
-      });
-      fs.appendChild(chips);
-      if (g.detail) {
-        var fig = el("figure", { "class": "pick-detail", hidden: "" });
-        fig.appendChild(el("img", { src: g.detail.src, width: String(g.detail.w), height: String(g.detail.h), alt: g.detail.alt, loading: "lazy", decoding: "async" }));
-        fig.appendChild(el("figcaption", { text: g.detail.caption }));
-        fs.appendChild(fig);
-      }
-      if (g.note) fs.appendChild(el("p", { "class": "group-note", text: g.note }));
-      form.appendChild(fs);
-    });
+  /* ---------- one piece: options → box + estimate ---------- */
+  function setupGift(art) {
+    var key = art.getAttribute("data-gift"), def = GIFTS[key];
+    if (!def) return null;
+    var form = art.querySelector(".gift-steps");
+    var box = art.querySelector(".box");
+    var end = art.querySelector(".box-end");
+    var storeKey = "purrlight-custom-pick:" + key;
+    var g = { id: art.id, key: key, def: def, art: art, est: null, text: "" };
 
-    /* summary ("now making") */
-    var sum = el("div", { "class": "pick-summary", "aria-live": "polite", "aria-atomic": "true" });
-    var lines = el("ul", { "class": "pick-lines" });
-    var totalRow = el("p", { "class": "pick-total" });
-    var noteRow = el("p", { "class": "pick-note" });
-    sum.appendChild(lines); sum.appendChild(totalRow); sum.appendChild(noteRow);
-    form.appendChild(sum);
-
-    var actions = el("div", { "class": "pick-actions" });
+    var totalRow = el("p", { "class": "box-total" });
+    var noteRow = el("p", { "class": "box-note" });
+    end.insertBefore(noteRow, end.firstChild); end.insertBefore(totalRow, noteRow);
     var copyBtn = el("button", { type: "button", "class": "link-btn pick-copy", text: "Copy my pick" });
     var resetBtn = el("button", { type: "button", "class": "link-btn pick-reset", text: "Start over" });
-    actions.appendChild(copyBtn); actions.appendChild(resetBtn);
-    form.appendChild(actions);
+    var actions = el("div", { "class": "pick-actions" }, [copyBtn, form ? resetBtn : null, el("a", { "class": "pick-how", href: "#how", text: "How it works" })]);
     var copied = el("p", { "class": "pick-copied", role: "status" });
-    form.appendChild(copied);
+    end.appendChild(actions); end.appendChild(copied);
+    if (form) form.addEventListener("submit", function (e) { e.preventDefault(); });
+    var table = art.querySelector("details.all-prices");
+    if (table) table.open = false;   /* open without JS; with the tiles doing the work it folds away */
 
-    function values() {
-      var v = { extras: [] };
-      var inputs = form.querySelectorAll("input");
-      for (var i = 0; i < inputs.length; i++) {
-        var inp = inputs[i];
-        if (inp.type === "radio") { if (inp.checked) v[inp.name] = inp.value; }
-        else if (inp.type === "checkbox") { if (inp.checked && !inp.disabled) v.extras.push(inp.value); }
-      }
-      if (def.table) { v.size = tableState.size; v.yarn = tableState.yarn; }
-      return v;
-    }
-
-    var current = null, currentText = "";
-    function update(silent) {
-      var v = values();
+    var prevLabels = null, prevTotal = null;
+    function update(fromUser) {
+      var v = readValues(form);
+      /* print-only steps / tiles (paper, frame, gift box) only apply to printed paintings */
       var isDigital = v.format === "digital";
-      /* print-only groups / chips (paper, frame, gift box) only apply to printed paintings */
-      var printOnly = form.querySelectorAll("[data-print-only]");
+      var printOnly = art.querySelectorAll("[data-print-only]");
       for (var i = 0; i < printOnly.length; i++) {
         var node = printOnly[i];
-        if (node.tagName === "FIELDSET") node.disabled = isDigital;
+        if (node.tagName === "FIELDSET") {
+          node.disabled = isDigital;
+          /* back to its defaults (fine-art, no frame) — the same as the gift box below, so a later print starts clean */
+          if (isDigital) { var rs = node.querySelectorAll('input[type="radio"]'); for (var k = 0; k < rs.length; k++) rs[k].checked = rs[k].defaultChecked; }
+        }
         else { var inp = node.querySelector("input"); if (inp) { inp.disabled = isDigital; if (isDigital) inp.checked = false; } }
         node.classList.toggle("is-off", isDigital);
-        if (node.tagName === "FIELDSET") node.setAttribute("aria-disabled", isDigital ? "true" : "false");   /* labels carry no role: the input's disabled state is enough */
+        var why = node.querySelector(".step-off");
+        if (why) { why.hidden = !isDigital; if (isDigital) node.setAttribute("aria-describedby", why.id); else node.removeAttribute("aria-describedby"); }
       }
-      v = values();   /* re-read: disabled extras drop out */
+      v = readValues(form);   /* re-read: disabled extras drop out */
       /* browsers without :has(): mirror the checked state as a class */
-      var cin = form.querySelectorAll(".chip input");
-      for (var q = 0; q < cin.length; q++) cin[q].parentNode.classList.toggle("is-checked", cin[q].checked && !cin[q].disabled);
-      /* price labels that follow another choice (frame by print size, calendar pages by format) */
-      var dyn = form.querySelectorAll("[data-price-by]");
+      var tin = art.querySelectorAll(".tile input");
+      for (var q = 0; q < tin.length; q++) tin[q].parentNode.classList.toggle("is-checked", tin[q].checked && !isDisabled(tin[q]));
+      /* prices that follow another choice (yarn by size, frame by print size, pages by format) */
+      var dyn = art.querySelectorAll("[data-price-by]");
       for (var d = 0; d < dyn.length; d++) {
-        var map = JSON.parse(dyn[d].getAttribute("data-price-by"));
-        dyn[d].textContent = map[v.format] || map[v.kind] || "";
+        var spec = JSON.parse(dyn[d].getAttribute("data-price-by"));
+        dyn[d].textContent = spec.map[v[spec.key]] || "";
       }
-      /* "now showing": the Dó paper photo appears when that paper is chosen */
-      var details = form.querySelectorAll(".pick-detail");
-      for (var f = 0; f < details.length; f++) details[f].hidden = !(v.paper === "do" && !isDigital);
-      /* pet table highlight + chosen line */
-      if (def.table) {
-        for (var k = 0; k < cells.length; k++) {
-          var on = cells[k].size === tableState.size && cells[k].yarn === tableState.yarn;
-          cells[k].btn.setAttribute("aria-checked", on ? "true" : "false");
-          cells[k].btn.setAttribute("tabindex", on ? "0" : "-1");   /* roving tabindex: one tab stop */
-          cells[k].btn.classList.toggle("is-on", on);
-        }
-        if (sizeLine) sizeLine.textContent = "Chosen in the table: " + tableState.size + " · " + tableState.yarn;
+      /* conditional rows, captions and photos */
+      var whens = art.querySelectorAll("[data-when]");
+      for (var w = 0; w < whens.length; w++) {
+        var show = holds(whens[w].getAttribute("data-when"), v);
+        if (show && whens[w].hidden && fromUser) whens[w].classList.add("is-new");
+        whens[w].hidden = !show;
       }
-      var est = def.est(def.read(v));
-      current = est;
-      currentText = summaryLine(def.product, est);
-      lines.innerHTML = "";
-      est.lines.forEach(function (l) {
-        var li = el("li");
-        li.appendChild(el("span", { text: l.label }));
-        li.appendChild(el("span", { "class": "amt", text: money(l.amount) }));
-        lines.appendChild(li);
+      var shots = art.querySelectorAll(".gift-photo .shot"), alt = false;
+      for (var s = 0; s < shots.length; s++) if (shots[s].hasAttribute("data-when") && !shots[s].hidden) alt = true;
+      for (var s2 = 0; s2 < shots.length; s2++) if (!shots[s2].hasAttribute("data-when")) {
+        if (!alt && shots[s2].hidden && fromUser) shots[s2].classList.add("is-new");
+        shots[s2].hidden = alt;
+      }
+
+      var est = def.est(def.read(v, form));
+      g.est = est; g.text = summaryLine(def.product, est);
+      /* the box: main line first, the included rows (static HTML), then each add-on */
+      var old = box.querySelectorAll("li.line");
+      for (var o = 0; o < old.length; o++) box.removeChild(old[o]);
+      var added = [], oldLabels = prevLabels || [];
+      est.lines.forEach(function (l, idx) {
+        var li = el("li", { "class": "line " + (idx === 0 ? "line-main" : "line-add") });
+        var name = el("span", { "class": "line-name" });
+        if (idx === 0 && def.item) { name.appendChild(el("span", { "class": "line-item", text: def.item })); name.appendChild(el("span", { "class": "line-sub", text: l.label })); }
+        else name.textContent = l.label;
+        li.appendChild(name);
+        li.appendChild(el("span", { "class": "amt", text: (idx === 0 ? "" : "+") + money(l.amount) }));
+        if (prevLabels && prevLabels.indexOf(l.label) === -1) { added.push(l.label); if (fromUser) li.classList.add("is-new"); }
+        if (idx === 0) box.insertBefore(li, box.firstChild); else box.appendChild(li);
       });
+      prevLabels = est.lines.map(function (l) { return l.label; });
       totalRow.innerHTML = "";
       totalRow.appendChild(el("span", { text: "Estimate" }));
-      totalRow.appendChild(el("strong", { "class": "amt", text: money(est.total) }));
-      noteRow.textContent = est.note || "";
-      noteRow.hidden = !est.note;
+      var amt = el("strong", { "class": "amt", text: money(est.total) });
+      if (fromUser && prevTotal !== null && prevTotal !== est.total) amt.classList.add("is-new");
+      totalRow.appendChild(amt);
+      prevTotal = est.total;
+      noteRow.textContent = (est.note ? est.note + " · " : "") + "Free U.S. shipping";
       copied.textContent = "";
-      store(storeKey, { v: v, t: tableState });
-      if (!silent) {
-        lastPick = { product: def.product, total: est.total, text: currentText };
-        updateBar();
-        applyOrderLinks();   /* carries the pick into the form when a prefill field is configured */
+      store(storeKey, { v: v });
+      if (fromUser) {
+        var removed = oldLabels.filter(function (lab, ix) { return ix > 0 && prevLabels.indexOf(lab) === -1; });   /* a swapped main line is not a removal */
+        live.textContent = (added.length ? added.join(", ") + ". " : "") + (removed.length ? "Removed: " + removed.join(", ") + ". " : "") + "Estimate " + money(est.total) + ".";
+        var addOn = added.filter(function (a) { return a !== prevLabels[0]; });
+        if (addOn.length) barAdded(addOn[addOn.length - 1]);
+        pick(g);
       }
     }
-    form.addEventListener("change", function () { update(false); });
-    form.addEventListener("focusin", function (e) { if (e.target && e.target.parentNode && e.target.parentNode.classList && e.target.parentNode.classList.contains("chip")) { try { e.target.parentNode.classList.toggle("is-focus", e.target.matches(":focus-visible")); } catch (err) { /* no :focus-visible */ } } });
-    form.addEventListener("focusout", function (e) { if (e.target && e.target.parentNode && e.target.parentNode.classList) e.target.parentNode.classList.remove("is-focus"); });
+    g.update = update;
+    if (form) {
+      form.addEventListener("change", function () { update(true); });
+      form.addEventListener("focusin", function (e) { var t = e.target, lab = t && t.parentNode; if (lab && lab.classList && lab.classList.contains("tile")) { try { lab.classList.toggle("is-focus", t.matches(":focus-visible")); } catch (err) { /* no :focus-visible */ } } });
+      form.addEventListener("focusout", function (e) { var lab = e.target && e.target.parentNode; if (lab && lab.classList) lab.classList.remove("is-focus"); });
+    }
 
     var copiedTimer = null;
     copyBtn.addEventListener("click", function () {
-      copyText(currentText, function () {
+      copyText(g.text, function () {
         copied.textContent = "Copied — paste it into your order.";
         clearTimeout(copiedTimer); copiedTimer = setTimeout(function () { copied.textContent = ""; }, 4000);
-      }, function () { copied.textContent = "Copy not available here — note your pick when you order: " + currentText; });
+      }, function () { copied.textContent = "Copy not available here — note your pick when you order: " + g.text; });
     });
-    resetBtn.addEventListener("click", function () {
-      form.reset(); tableState.size = "Classic"; tableState.yarn = "Cotton";
-      store(storeKey, null); update(false);
-    });
+    resetBtn.addEventListener("click", function () { if (form) form.reset(); store(storeKey, null); update(true); });
 
-    /* remember the pick on this device (restoring is not a fresh pick — the bar waits for a real tap) */
+    /* remember the pick on this device (restoring is not a fresh pick — the links wait for a real tap) */
     var saved = load(storeKey);
-    if (saved && saved.v && typeof saved.v === "object") {
+    if (form && saved && saved.v && typeof saved.v === "object") {
+      g.restored = true;
       var inputs = form.querySelectorAll("input");
-      for (var s = 0; s < inputs.length; s++) {
-        var inp2 = inputs[s];
+      for (var r = 0; r < inputs.length; r++) {
+        var inp2 = inputs[r];
         if (inp2.type === "radio") { if (Object.prototype.hasOwnProperty.call(saved.v, inp2.name)) inp2.checked = saved.v[inp2.name] === inp2.value; }
-        else if (inp2.type === "checkbox") inp2.checked = Array.isArray(saved.v.extras) && saved.v.extras.indexOf(inp2.value) > -1;
+        else if (inp2.type === "checkbox") inp2.checked = Array.isArray(saved.v[inp2.name]) && saved.v[inp2.name].indexOf(inp2.value) > -1;
       }
-      if (saved.t && def.table && PRICES.pet.sizes.indexOf(saved.t.size) > -1 && PRICES.pet.yarns.indexOf(saved.t.yarn) > -1) tableState = { size: saved.t.size, yarn: saved.t.yarn };
+      /* a stored radio value that no longer exists would leave a group empty: fall back to the default */
+      var groups = {};
+      for (var r2 = 0; r2 < inputs.length; r2++) if (inputs[r2].type === "radio") groups[inputs[r2].name] = groups[inputs[r2].name] || inputs[r2].checked;
+      for (var gname in groups) if (!groups[gname]) {
+        var defs = form.querySelectorAll('input[type="radio"][name="' + gname + '"]');
+        for (var r3 = 0; r3 < defs.length; r3++) defs[r3].checked = defs[r3].defaultChecked;
+      }
     }
-
-    host.appendChild(form);
-    update(true);
+    update(false);
+    return g;
   }
 
-  var hosts = document.querySelectorAll("[data-builder]");
-  for (var h = 0; h < hosts.length; h++) renderBuilder(hosts[h], hosts[h].getAttribute("data-builder"));
+  var gifts = [], byId = {};
+  var arts = document.querySelectorAll("article.gift[data-gift]");
+  for (var a = 0; a < arts.length; a++) { var gg = setupGift(arts[a]); if (gg) { gifts.push(gg); byId[gg.id] = gg; } }
+  var current = null;
 
-  /* ---------- sticky bar visibility + "where am I" label ---------- */
+  function updateBar() {
+    if (current && current.est) barText.textContent = "Estimate " + money(current.est.total) + " · " + current.def.product;   /* the number first: phones cut the end */
+  }
+  function pick(g) {   /* the customer is now building this piece: it is what the order links carry */
+    lastPick = { product: g.def.product, total: g.est.total, text: g.text };
+    if (g === current) updateBar();
+    applyOrderLinks();
+  }
+
+  /* ---------- step 1: choose your gift (tabs over the seven pieces) ---------- */
+  var picker = document.querySelector(".picker");
+  var tabs = picker ? picker.querySelectorAll("a[data-tab]") : [];
+  var CURRENT_KEY = "purrlight-custom-pick:_current";
+  function activate(id, opts) {
+    var g = byId[id];
+    if (!g) return;
+    opts = opts || {};
+    current = g;
+    for (var i = 0; i < gifts.length; i++) {
+      var on = gifts[i] === g;
+      if (on && gifts[i].art.hidden && opts.user) gifts[i].art.classList.add("is-new");
+      gifts[i].art.hidden = !on;
+    }
+    for (var t = 0; t < tabs.length; t++) {
+      var sel = tabs[t].getAttribute("data-tab") === id;
+      tabs[t].setAttribute("aria-selected", sel ? "true" : "false");
+      tabs[t].setAttribute("tabindex", sel ? "0" : "-1");
+      tabs[t].classList.toggle("is-on", sel);
+      if (sel && picker.scrollWidth > picker.clientWidth) {   /* phones: keep the chosen tile in view without moving the page */
+        var li = tabs[t].parentNode, left = li.getBoundingClientRect().left - picker.getBoundingClientRect().left + picker.scrollLeft;
+        if (left < picker.scrollLeft || left + li.offsetWidth > picker.scrollLeft + picker.clientWidth) picker.scrollLeft = Math.max(0, left - 16);
+      }
+    }
+    updateBar();
+    if (opts.user) {
+      store(CURRENT_KEY, id);
+      try { history.replaceState(null, "", "#" + id); } catch (e) { /* file:// or old browser */ }
+      live.textContent = "Estimate " + money(g.est.total) + ".";   /* the tab name is already read out */
+      pick(g);
+    }
+  }
+  if (picker && gifts.length) {
+    picker.setAttribute("role", "tablist");
+    for (var t = 0; t < tabs.length; t++) (function (tab, idx) {
+      var id = tab.getAttribute("data-tab");
+      tab.parentNode.setAttribute("role", "presentation");
+      tab.setAttribute("role", "tab");
+      tab.id = "tab-" + id;
+      tab.setAttribute("aria-controls", id);
+      if (byId[id]) { byId[id].art.setAttribute("role", "tabpanel"); }
+      tab.addEventListener("click", function (e) { e.preventDefault(); activate(id, { user: true }); });
+      tab.addEventListener("keydown", function (e) {
+        var n = tabs.length, next = null;
+        if (e.key === "ArrowRight") next = (idx + 1) % n;
+        else if (e.key === "ArrowLeft") next = (idx - 1 + n) % n;
+        else if (e.key === "Home") next = 0;
+        else if (e.key === "End") next = n - 1;
+        else if (e.key === " ") { e.preventDefault(); activate(id, { user: true }); return; }
+        if (next === null) return;
+        e.preventDefault();
+        tabs[next].focus();
+        activate(tabs[next].getAttribute("data-tab"), { user: true });
+      });
+    })(tabs[t], t);
+
+    var fromHash = location.hash ? location.hash.slice(1) : "";
+    var saved = load(CURRENT_KEY);
+    var startId = byId[fromHash] ? fromHash : (typeof saved === "string" && byId[saved] ? saved : gifts[0].id);
+    activate(startId, {});
+    /* a remembered or linked piece is the customer's own pick: the order links carry it from the start */
+    if (byId[fromHash] || startId === saved || current.restored) pick(current);
+    if (byId[fromHash]) {   /* a #piece link (QR card, Linktree, another page): show the studio with that piece chosen */
+      var toPicker = function () { var label = document.getElementById("pick-label"); if (label && label.scrollIntoView) label.scrollIntoView(); };
+      setTimeout(toPicker, 0);
+      /* the browser's own jump to #piece can land after this script; settle on the picker once the page has loaded */
+      if (document.readyState !== "complete") window.addEventListener("load", function () { setTimeout(toPicker, 0); });
+    }
+    window.addEventListener("hashchange", function () {
+      var id = location.hash.slice(1);
+      if (!byId[id]) return;
+      activate(id, { user: true });
+      var label = document.getElementById("pick-label");
+      if (label && label.scrollIntoView) label.scrollIntoView();
+    });
+  }
+
+  /* keyboard focus never ends up under the phone order bar (scroll-padding covers most browsers; this covers the rest) */
+  document.addEventListener("focusin", function (e) {
+    if (bar.hidden || !e.target || !e.target.getBoundingClientRect || bar.contains(e.target)) return;
+    var r = e.target.getBoundingClientRect(), top = bar.getBoundingClientRect().top;
+    if (r.bottom > top - 8 && r.top < window.innerHeight) window.scrollBy(0, r.bottom - top + 16);
+  });
+
+  /* ---------- sticky bar visibility ---------- */
   var heroCta = document.querySelector(".hero-cta");
   var closing = document.querySelector(".closing");
-  var products = document.querySelectorAll("section.product");
-  var rail = document.querySelector(".rail");
-  var railLinks = rail ? rail.querySelectorAll("a") : [];
-  function markSection(sec) {
-    var t = sec.querySelector(".product-title"), p = sec.querySelector(".price");
-    sectionInView = (t ? t.textContent : "") + (p ? " · " + p.textContent : "");
-    updateBar();
-    for (var i = 0; i < railLinks.length; i++) {
-      var on = railLinks[i].getAttribute("href") === "#" + sec.id;
-      railLinks[i].classList.toggle("is-current", on);
-      if (on) railLinks[i].setAttribute("aria-current", "true"); else railLinks[i].removeAttribute("aria-current");
-    }
-  }
   if ("IntersectionObserver" in window && heroCta && closing) {
     var pastHero = false, atClosing = false;
-    var sync = function () { bar.hidden = !(pastHero && !atClosing); document.body.classList.toggle("has-bar", !bar.hidden); };
+    var sync = function () { bar.hidden = !(pastHero && !atClosing); document.body.classList.toggle("has-bar", !bar.hidden); document.documentElement.classList.toggle("has-bar", !bar.hidden); };
     new IntersectionObserver(function (es) { es.forEach(function (e) { pastHero = !e.isIntersecting && e.boundingClientRect.top < 0; }); sync(); }, { threshold: 0 }).observe(heroCta);
     new IntersectionObserver(function (es) { es.forEach(function (e) { atClosing = e.isIntersecting; }); sync(); }, { threshold: 0.4 }).observe(closing);
-    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) markSection(e.target); }); }, { threshold: 0.35 });
-    for (var p = 0; p < products.length; p++) io.observe(products[p]);
   } else if (heroCta) {
     /* no IntersectionObserver: a plain scroll rule */
-    var onScroll = function () { var show = window.scrollY > 480; bar.hidden = !show; document.body.classList.toggle("has-bar", show); };
+    var onScroll = function () { var show = window.scrollY > 420; bar.hidden = !show; document.body.classList.toggle("has-bar", show); document.documentElement.classList.toggle("has-bar", show); };
     window.addEventListener("scroll", onScroll); onScroll();
   }
 })();

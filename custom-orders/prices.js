@@ -102,10 +102,16 @@ function estWatercolor(o) {
   return r;
 }
 
+/* o.addons: the chosen add-on names (one line each, +$10) — or a plain count */
 function estHousewarming(o) {
-  var addons = o && o.addons > 0 ? Math.min(Math.floor(o.addons), 3) : 0;
   var lines = [{ label: "Housewarming & Closing Gift Box", amount: PRICES.housewarming.base }];
-  if (addons) lines.push({ label: "Add or swap × " + addons, amount: PRICES.housewarming.addon * addons });
+  var a = o && o.addons;
+  if (Array.isArray(a)) {
+    for (var i = 0; i < a.length && i < 3; i++) lines.push({ label: String(a[i]), amount: PRICES.housewarming.addon });
+  } else {
+    var n = a > 0 ? Math.min(Math.floor(a), 3) : 0;
+    if (n) lines.push({ label: "Add or swap × " + n, amount: PRICES.housewarming.addon * n });
+  }
   var r = finish(lines);
   r.note = "Estimate for one box";
   return r;

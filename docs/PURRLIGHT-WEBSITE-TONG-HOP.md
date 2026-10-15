@@ -651,7 +651,52 @@ floating 5×7 + rosary.
   Google (hay bị chặn trong Instagram/TikTok); Zelle không có link thanh toán;
   Square Free 3.3% + 30¢ cho thanh toán online.
 
-<!-- review-8i -->
+### Rà soát 5 góc (workflow: tính tiền · câu chữ/pháp lý · trợ năng · brand/ảnh · bảo mật; mỗi lỗi có người kiểm chứng lại)
+
+57 lỗi được báo, **28 được xác nhận** và đã sửa hết (29 bị bác — phần lớn đã sửa ở
+vòng câu chữ trước):
+- **Nặng — máy tính (≥ 900px):** bấm chuột vào nút có thể bị mất (trang tự cuộn
+  khi focus vì đoạn code giữ focus khỏi thanh đặt hàng chạy cả khi thanh bị ẩn) →
+  chỉ chạy khi thanh thật sự hiện; thêm test bấm chuột thật ở 1280px.
+- **Tiền:** xem trang mà chưa chọn gì thì không lưu và không gắn "My pick" vào link
+  đặt hàng nữa (lưu kèm cờ `u:1`, bỏ các lưu mặc định cũ); mục Pay chỉ hiện "Your
+  pick … deposit" + nút *Copy deposit amount* sau khi khách chọn; cọc làm tròn theo
+  xu (nửa xu → lên); $1,095 có dấu phẩy; ô số lượng sửa ngay (60 → 50 kèm câu "Up
+  to 50 here — for more, write the number in your order.", 2.5 → 2); gói gợi ý giữ
+  lời nhắn thiệp đã gõ; sửa chú thích prices.js về Google Form (không có entry id thì
+  không gửi kèm lựa chọn).
+- **Trợ năng:** nút copy trả focus về nút; nút − / + dùng aria-disabled (không mất
+  focus); thông báo "Copied" hiện ngay dưới nút bấm (không bị thanh đặt hàng che);
+  vùng thông báo không bị `display:none` khi trống; đổi món đọc bằng lời ("Cold cut
+  box replaces the jar of jam…", không còn "Removed" sai, không đọc mũi tên); giới
+  hạn 160 ký tự được đọc kèm ô lời nhắn; select đổi món 16px (iOS không zoom).
+- **Brand/ảnh:** gói Pet memorial dùng ảnh mèo (không phải nhà) và mở ở ảnh giấy Dó;
+  bỏ ảnh "Gift box" (thực ra là cận cảnh rosary $15); "…@gmail.com Copy address" có
+  khoảng cách; nhãn đổi món ngắn ("Swap for the sparkling cider"); dấu "— swapped
+  for" không dính chữ; chú thích ảnh tân gia nói về "basic set" thay vì "yours".
+- **Bảo mật:** link `#__proto__` / `#constructor` không còn làm trắng studio
+  (`Object.create(null)`); dữ liệu đổi món lưu trên máy được làm sạch, mỗi món cơ
+  bản chỉ đổi 1 lần.
+
+### Bổ sung theo tin nhắn Elise 15/10 (đợt 2)
+- **Giấy in 3 loại:** Regular paper (đã gồm trong giá in) · Fine-art paper **+$10**
+  · Handmade Vietnamese Dó papyrus +$5.
+- **Ảnh mới:** nhóm mèo len thay Maine Coon; ảnh nhóm khung tranh hiện khi chọn
+  khung (giấy Dó + khung → ảnh khung floating); ảnh chung Christening (chú thích:
+  bóng trong suốt chỉ để chụp, không kèm bộ $89) + ảnh hộp Confirmation trong ô
+  "coming soon". Các tag "Handmade" / "Handmade Blessings" đã làm mờ; chữ trên bóng
+  giữ nguyên (chị chọn).
+- **Tranh là digital painting (Wacom/Procreate):** thêm câu "Painted digitally on a
+  tablet, not by hand — prints are made from that file."; "digital watercolor" ở
+  hộp tân gia, lịch, gói Pet memorial, alt ảnh.
+
+### Còn chờ chị
+- "We handcraft your piece" (How it works, nguyên văn brief) áp cho cả tranh digital.
+- Khách có chọn được kiểu khung (gỗ sồi / trắng / nâu / floating) không — ảnh khung
+  cho thấy nhiều kiểu; trang chưa hứa kiểu nào.
+- Giới hạn 50 tranh/hộp mỗi đơn trên trang; ảnh hộp quà $5 thật (để thay ảnh đã bỏ).
+- Ảnh nhóm mèo / Christening / shadowbox trông như ảnh dựng (AI) — Brand Canon ưu
+  tiên ảnh thật.
 
 ## 9. Link & tài nguyên
 

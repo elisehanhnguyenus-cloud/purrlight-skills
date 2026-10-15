@@ -14,12 +14,13 @@
      box with its add-ons).
    - Both godparents: the second set is $10 less ($95 + $85).
    - 50% deposit when ordering; the balance after the photo is approved.
+   - Print paper: regular paper is included in the print price · fine-art
+     paper +$10 · handmade Vietnamese Dó papyrus +$5.
 
    Readings still open (flagged to Elise — change ONE constant if needed):
    - Watercolor "Print 4×6 $12 · 5×7 $15 · 8×10 $20" are read as the
      price of a printed painting (not $10 digital + print).
-   - "+$5" applies to handmade Vietnamese Dó papyrus; fine-art paper is
-     read as the print's default paper. A gift box is offered for prints.
+   - A gift box is offered for prints.
    - "Second pet on the same order −$10": the second pet is $10 less
      than its own size × yarn price (same size and yarn assumed).
    - Housewarming "Add or swap, +$10 each": adding and swapping cost the same.
@@ -35,8 +36,9 @@ var ORDER_FORM_URL = "mailto:purrlightstudiollc@gmail.com?subject=Custom%20order
    Paste its link (https://tally.so/r/XXXXXX) above; give the form four hidden fields named
    pick, product, total and deposit — the page fills them in. (Google Forms makes customers sign in
    to upload photos, which Instagram/TikTok in-app browsers often block.)
-   Optional, Google Forms only: the field that should receive the customer's pick (e.g. "entry.123456789").
-   Leave "" and the page copies the pick to the clipboard instead. To find the id: Google Form → ⋮ → Get pre-filled link. */
+   Google Forms only: the field that should receive the customer's pick (e.g. "entry.123456789").
+   A Google Form link with this left "" does NOT carry the pick — the customer would have to use "Copy my pick"
+   and paste it. To find the id: Google Form → ⋮ → Get pre-filled link. */
 var ORDER_FORM_PREFILL_ENTRY = "";
 
 /* Where the deposit is paid (Elise 15/10/2026). The Square link is a "Custom order" payment link where the
@@ -62,6 +64,7 @@ var PRICES = {
       { key: "5x7", label: "Print 5×7", price: 15 },
       { key: "8x10", label: "Print 8×10", price: 20 }
     ],
+    fineArt: 10,                                  /* Elise 15/10: fine-art paper +$10 (regular paper included) */
     doPaper: 5,                                   /* handmade Vietnamese Dó papyrus +$5 */
     frame: { "4x6": 8, "5x7": 16, "8x10": 24 },  /* Elise 15/10: confirmed */
     giftBox: 5,
@@ -83,8 +86,8 @@ var PRICES = {
 
 /* ---------- helpers ---------- */
 function money(n) {
-  var s = (Math.round(n * 100) / 100).toFixed(2);
-  return "$" + s.replace(/\.00$/, "");
+  var s = (Math.round(n * 100) / 100).toFixed(2).replace(/\.00$/, "");
+  return "$" + s.replace(/\B(?=(\d{3})+(?!\d))/, ",");   /* $1,095 — only the whole dollars have 4+ digits in a row */
 }
 
 /* ---------- estimators (each returns {total, lines:[{label, amount}], note}) ---------- */
@@ -115,7 +118,8 @@ function estWatercolor(o) {
   fmt = fmt || PRICES.watercolor.formats[0];
   var isPrint = fmt.key !== "digital";
   var lines = [{ label: fmt.label, amount: fmt.price }];
-  if (isPrint && o.doPaper) lines.push({ label: "Handmade Vietnamese Dó papyrus", amount: PRICES.watercolor.doPaper });
+  if (isPrint && o.fineArt) lines.push({ label: "Fine-art paper", amount: PRICES.watercolor.fineArt });
+  else if (isPrint && o.doPaper) lines.push({ label: "Handmade Vietnamese Dó papyrus", amount: PRICES.watercolor.doPaper });
   if (isPrint && o.frame) lines.push({ label: "Frame " + fmt.label.replace("Print ", ""), amount: PRICES.watercolor.frame[fmt.key] });
   if (isPrint && o.giftBox) lines.push({ label: "Gift box", amount: PRICES.watercolor.giftBox });
   if (o && o.rosary) lines.push({ label: "Crochet rosary add-on", amount: PRICES.watercolor.rosary });
@@ -192,8 +196,9 @@ function applyQty(r, qty, one, many) {
 
 /* 50% deposit today, the rest after the photo is approved */
 function settle(r) {
-  r.deposit = round2(r.total * PRICES.depositRate);
-  r.balance = round2(r.total - r.deposit);
+  var cents = Math.round(r.total * 100), dep = Math.ceil(cents * PRICES.depositRate);   /* in whole cents: a half cent always rounds the deposit up */
+  r.deposit = dep / 100;
+  r.balance = (cents - dep) / 100;
   return r;
 }
 

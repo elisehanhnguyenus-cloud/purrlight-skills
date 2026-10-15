@@ -87,13 +87,15 @@
     else legacyCopy(text, onDone, onFail);
   }
   function legacyCopy(text, onDone, onFail) {
+    var prev = document.activeElement;   /* select() moves focus to the textarea: give it back to the button */
     try {
-      var ta = el("textarea", { readonly: "", "aria-hidden": "true", style: "position:fixed;left:-9999px;top:0" });
+      var ta = el("textarea", { readonly: "", "aria-hidden": "true", tabindex: "-1", style: "position:fixed;left:-9999px;top:0" });
       ta.value = text; document.body.appendChild(ta); ta.select();
       var ok = document.execCommand("copy");
       document.body.removeChild(ta);
       if (ok) onDone(); else onFail();
     } catch (e) { onFail(); }
+    if (prev && prev.focus && prev !== document.body) { try { prev.focus({ preventScroll: true }); } catch (e2) { prev.focus(); } }
   }
   function isDisabled(inp) { try { return inp.matches(":disabled"); } catch (e) { return inp.disabled; } }   /* counts a disabled <fieldset> too */
   /* data-when="format!=digital&paper=do" — every condition must hold; "name=a,b" (one of), "name!=a" (none of), "name~a" (checkbox list holds a) */
@@ -149,7 +151,7 @@
       product: "Custom Digital Watercolor Painting", item: "Watercolor painting",
       read: function (v) {
         var print = v.format !== "digital", x = v.extras || [];
-        return { format: v.format, doPaper: print && v.paper === "do", frame: print && v.frame === "yes", giftBox: print && x.indexOf("giftBox") > -1, rosary: x.indexOf("rosary") > -1, qty: v.qty };
+        return { format: v.format, fineArt: print && v.paper === "fine", doPaper: print && v.paper === "do", frame: print && v.frame === "yes", giftBox: print && x.indexOf("giftBox") > -1, rosary: x.indexOf("rosary") > -1, qty: v.qty };
       },
       est: function (o) { return estWatercolor(o); }
     },
@@ -195,10 +197,11 @@
       var inp = inputs[i];
       if (inp.type === "radio") { if (inp.checked) v[inp.name] = inp.value; }
       else if (inp.type === "checkbox") { v[inp.name] = v[inp.name] || []; if (inp.checked && !inp.disabled) v[inp.name].push(inp.value); }
-      else if (inp.type === "number") v[inp.name] = inp.value;
+      else if (inp.type === "number") v[inp.name] = String(clampNum(inp.value, Number(inp.min) || 1, Number(inp.max) || 50));
     }
     return v;
   }
+  function clampNum(n, min, max) { n = Math.floor(Number(n)); return n >= min ? Math.min(n, max) : min; }
   function lowerFirst(t) { t = String(t || ""); return t.charAt(0).toLowerCase() + t.slice(1); }
 
   /* − / + around a quantity field (the field itself stays typeable) */
@@ -209,13 +212,26 @@
     var minus = el("button", { type: "button", "class": "qty-btn", "aria-label": "One fewer", text: "−" });
     var plus = el("button", { type: "button", "class": "qty-btn", "aria-label": "One more", text: "+" });
     wrap.insertBefore(minus, input); wrap.appendChild(plus);
-    function clamp(n) { n = Math.floor(Number(n)); return n >= min ? Math.min(n, max) : min; }
-    function sync() { var n = clamp(input.value); minus.disabled = n <= min; plus.disabled = n >= max; }
+    var capNote = el("p", { "class": "step-hint qty-cap", id: input.id + "-cap", text: "Up to " + max + " here — for more, write the number in your order." });
+    capNote.hidden = true;
+    wrap.parentNode.insertBefore(capNote, wrap.nextSibling);
+    function clamp(n) { return clampNum(n, min, max); }
+    /* aria-disabled, not disabled: a disabled button drops the keyboard focus it holds */
+    function sync() {
+      var n = clamp(input.value);
+      minus.setAttribute("aria-disabled", n <= min ? "true" : "false"); plus.setAttribute("aria-disabled", n >= max ? "true" : "false");
+      capNote.hidden = n < max;
+    }
     function set(n) { input.value = clamp(n); sync(); onChange(); }
-    minus.addEventListener("click", function () { set(clamp(input.value) - 1); });
-    plus.addEventListener("click", function () { set(clamp(input.value) + 1); });
-    input.addEventListener("input", function () { if (input.value !== "" && Number(input.value) >= min) { sync(); onChange(); } });
-    input.addEventListener("change", function () { input.value = clamp(input.value); sync(); });
+    minus.addEventListener("click", function () { if (clamp(input.value) > min) set(clamp(input.value) - 1); });
+    plus.addEventListener("click", function () { if (clamp(input.value) < max) set(clamp(input.value) + 1); });
+    input.addEventListener("input", function () {
+      if (input.value === "") return;   /* still typing: wait */
+      var n = Number(input.value);
+      if (n > max || (n >= min && n !== Math.floor(n))) input.value = clamp(n);   /* 60 → 50, 2.5 → 2 straight away */
+      if (Number(input.value) >= min) { sync(); onChange(); }
+    });
+    input.addEventListener("change", function () { input.value = clamp(input.value); sync(); });   /* the form's change listener updates */
     wrap.syncQty = sync;
     sync();
   }
@@ -249,6 +265,11 @@
     var msgStep = msgEl ? msgEl.closest(".step-message") : null;
     var msgCount = msgStep ? msgStep.querySelector(".msg-count") : null;
     if (msgStep) msgStep.hidden = false;
+    if (msgEl && msgCount) {   /* the counter is visual; the limit itself is read out with the field */
+      var msgHint = el("span", { "class": "sr-only", id: msgEl.id + "-hint", text: "Up to 160 characters." });
+      msgCount.parentNode.insertBefore(msgHint, msgCount);
+      msgEl.setAttribute("aria-describedby", msgHint.id);
+    }
     function message() { return msgEl ? msgEl.value.replace(/\s+/g, " ").trim().slice(0, 160) : ""; }
     function pickText() { var m = message(); return summaryLine(def.product, g.est) + (m ? ' · Card message: "' + m + '"' : ""); }
     if (msgEl) msgEl.addEventListener("input", function () {
@@ -272,7 +293,7 @@
           var sid = art.id + "-swap-" + val;
           var sel = el("select", { id: sid, "data-swap": val });
           sel.appendChild(el("option", { value: "", text: "Add to the box" }));
-          for (var b = 0; b < basics.length; b++) sel.appendChild(el("option", { value: basics[b].getAttribute("data-basic"), text: "Swap for the " + lowerFirst(basics[b].getAttribute("data-text")) }));
+          for (var b = 0; b < basics.length; b++) sel.appendChild(el("option", { value: basics[b].getAttribute("data-basic"), text: "Swap for the " + (basics[b].getAttribute("data-short") || lowerFirst(basics[b].getAttribute("data-text"))) }));
           sel.value = g.swaps[val] || "";
           sel.addEventListener("change", function () { if (sel.value) g.swaps[val] = sel.value; else delete g.swaps[val]; });   /* the form's change listener updates */
           swapWrap.appendChild(el("div", { "class": "swap-row" }, [el("label", { "for": sid, text: box2 ? box2.getAttribute("data-label") : val }), sel]));
@@ -296,7 +317,7 @@
         for (var k3 in g.swaps) if (g.swaps[k3] === bk) { var ab = form.querySelector('input[name="addons"][value="' + k3 + '"]'); by = ab ? ab.getAttribute("data-label") : k3; }
         basics[b2].textContent = basics[b2].getAttribute("data-text");
         basics[b2].classList.toggle("is-swapped", !!by);
-        if (by) basics[b2].appendChild(el("span", { "class": "swapped-for", text: " — swapped for " + lowerFirst(by) }));
+        if (by) { basics[b2].appendChild(document.createTextNode(" ")); basics[b2].appendChild(el("span", { "class": "swapped-for", text: "— swapped for " + lowerFirst(by) })); }
       }
     }
     var qtyWrap = art.querySelector("[data-qty]");
@@ -363,6 +384,8 @@
       var old = box.querySelectorAll("li.line");
       for (var o = 0; o < old.length; o++) box.removeChild(old[o]);
       var added = [], oldLabels = prevLabels || [];
+      function addonKey(l) { var m = l.match(/^Swap: .* → (.*)$/); return m ? m[1] : l.replace(/^Add: /, ""); }
+      function sayLine(l) { var m = l.match(/^Swap: (.*) → (.*)$/); return m ? m[2] + " replaces the " + m[1] : l.replace(/^Add: /, "Added: "); }
       est.lines.forEach(function (l, idx) {
         var li = el("li", { "class": "line " + (idx === 0 ? "line-main" : "line-add") });
         var name = el("span", { "class": "line-name" });
@@ -392,11 +415,12 @@
       balanceRow.appendChild(el("span", { text: "Balance after you approve the photo" })); balanceRow.appendChild(el("span", { "class": "amt", text: money(est.balance) }));
       noteRow.textContent = [est.note, est.digitalOnly ? "" : "Free U.S. shipping"].filter(Boolean).join(" · ");
       copied.textContent = "";
-      store(storeKey, { v: v, swaps: g.swaps });
-      if (g === current) { updatePay(); setBarThumb(g); }
+      if (fromUser) store(storeKey, { v: v, swaps: g.swaps, u: 1 });   /* a plain page view remembers nothing */
+      if (g === current) setBarThumb(g);
       if (fromUser) {
-        var removed = oldLabels.filter(function (lab, ix) { return ix > 0 && prevLabels.indexOf(lab) === -1; });   /* a swapped main line is not a removal */
-        live.textContent = (added.length ? added.join(", ") + ". " : "") + (removed.length ? "Removed: " + removed.join(", ") + ". " : "") + (est.qty > 1 ? est.qty + " " + est.many + ". " : "") + "Estimate " + money(est.total) + ".";
+        var newKeys = prevLabels.slice(1).map(addonKey);
+        var removed = oldLabels.filter(function (lab, ix) { return ix > 0 && newKeys.indexOf(addonKey(lab)) === -1; });   /* a swapped main line, or an add-on that only changed role, is not a removal */
+        live.textContent = (added.length ? added.map(sayLine).join(", ") + ". " : "") + (removed.length ? "Removed: " + removed.map(addonKey).join(", ") + ". " : "") + (est.qty > 1 ? est.qty + " " + est.many + ". " : "") + "Estimate " + money(est.total) + ".";
         var addOn = added.filter(function (a) { return a !== prevLabels[0]; });
         if (addOn.length) barAdded(addOn[addOn.length - 1]);
         pick(g);
@@ -423,12 +447,12 @@
       g.swaps = {};
       mainView();
       if (msgCount) msgCount.textContent = "Up to 160 characters";
-      store(storeKey, null); update(true);
+      update(true); store(storeKey, null);
     });
 
     /* remember the pick on this device (restoring is not a fresh pick — the links wait for a real tap) */
     var saved = load(storeKey);
-    if (form && saved && saved.v && typeof saved.v === "object") {
+    if (form && saved && saved.u === 1 && saved.v && typeof saved.v === "object") {
       g.restored = true;
       var inputs = form.querySelectorAll("input");
       for (var r = 0; r < inputs.length; r++) {
@@ -438,7 +462,10 @@
         else if (inp2.type === "number" && /^\d{1,3}$/.test(String(saved.v[inp2.name]))) inp2.value = Math.max(Number(inp2.min) || 1, Math.min(Number(saved.v[inp2.name]), Number(inp2.max) || 50));
       }
       if (saved.swaps && typeof saved.swaps === "object") for (var sk in saved.swaps) {
-        if (form.querySelector('input[name="addons"][value="' + String(sk).replace(/[^\w-]/g, "") + '"]') && art.querySelector('[data-basic="' + String(saved.swaps[sk]).replace(/[^\w-]/g, "") + '"]')) g.swaps[sk] = saved.swaps[sk];
+        if (!Object.prototype.hasOwnProperty.call(saved.swaps, sk)) continue;
+        var ck = String(sk).replace(/[^\w-]/g, ""), cv = String(saved.swaps[sk]).replace(/[^\w-]/g, ""), used = false;
+        for (var uk in g.swaps) if (g.swaps[uk] === cv) used = true;   /* a basic item swaps once */
+        if (ck && cv && !used && form.querySelector('input[name="addons"][value="' + ck + '"]') && art.querySelector('[data-basic="' + cv + '"]')) g.swaps[ck] = cv;
       }
       /* a stored radio value that no longer exists would leave a group empty: fall back to the default */
       var groups = {};
@@ -454,14 +481,13 @@
     return g;
   }
 
-  var gifts = [], byId = {};
+  var gifts = [], byId = Object.create(null);   /* #__proto__ / #constructor are not pieces */
   var arts = document.querySelectorAll("article.gift[data-gift]");
   for (var a = 0; a < arts.length; a++) { var gg = setupGift(arts[a]); if (gg) { gifts.push(gg); byId[gg.id] = gg; } }
   var current = null;
 
   function updateBar() {
     if (current && current.est) barText.textContent = "Estimate " + money(current.est.total) + " · " + current.def.product;   /* the number first: phones cut the end */
-    updatePay();
     if (current) setBarThumb(current);
   }
   function setBarThumb(g) {
@@ -479,29 +505,39 @@
     for (var ps = 0; ps < paySquare.length; ps++) paySquare[ps].setAttribute("href", PAY.squareUrl);
     if (zelleTo) zelleTo.textContent = PAY.zelleTo;
   }
-  var payStatus = el("p", { "class": "pay-status", role: "status" });
-  var payTimer = null;
-  function payCopy(text, done) {
-    copyText(text, function () { payStatus.textContent = done; clearTimeout(payTimer); payTimer = setTimeout(function () { payStatus.textContent = ""; }, 4000); },
-      function () { payStatus.textContent = "Copy not available here — " + text; });
+  /* each copy button reports right under itself (one status per way to pay), so phones see it next to the tap */
+  function payStatusAfter(block) {
+    var st = el("p", { "class": "pay-status", role: "status" });
+    if (block && block.parentNode) block.parentNode.insertBefore(st, block.nextSibling);
+    return st;
   }
-  var copyAmountBtn = el("button", { type: "button", "class": "link-btn pay-copy-amount", text: "Copy deposit amount" });
-  copyAmountBtn.addEventListener("click", function () {
-    if (current && current.est) payCopy(current.est.deposit.toFixed(2).replace(/\.00$/, ""), "Copied " + money(current.est.deposit) + " — paste it on the Square page.");
-  });
+  function payCopy(st, text, done) {
+    copyText(text, function () { st.textContent = done; clearTimeout(st.timer); st.timer = setTimeout(function () { st.textContent = ""; }, 4000); },
+      function () { st.textContent = "Copy not available here — " + text; });
+  }
+  var copyAmountBtn = el("button", { type: "button", "class": "link-btn pay-copy-amount", text: "Copy deposit amount", hidden: "" });
   var copyZelleBtn = el("button", { type: "button", "class": "link-btn pay-copy-zelle", text: "Copy address" });
-  copyZelleBtn.addEventListener("click", function () { payCopy(zelleTo ? zelleTo.textContent : "", "Copied the Zelle address."); });
-  if (paySquare.length && paySquare[0].parentNode) paySquare[0].parentNode.appendChild(copyAmountBtn);
-  if (zelleTo && zelleTo.parentNode) zelleTo.parentNode.appendChild(copyZelleBtn);
-  var payWays = document.querySelector(".pay-ways");
-  if (payWays) payWays.parentNode.insertBefore(payStatus, payWays.nextSibling);
+  var squareStatus = null, zelleStatus = null;
+  if (paySquare.length && paySquare[0].parentNode) { paySquare[0].parentNode.appendChild(copyAmountBtn); squareStatus = payStatusAfter(paySquare[0].parentNode); }
+  if (zelleTo && zelleTo.parentNode) {
+    zelleTo.parentNode.appendChild(document.createTextNode(" "));   /* never "…@gmail.comCopy address" */
+    zelleTo.parentNode.appendChild(copyZelleBtn);
+    zelleStatus = payStatusAfter(zelleTo.parentNode);
+  }
+  /* the deposit to copy is the pick the order links carry — never a piece the customer has not chosen */
+  copyAmountBtn.addEventListener("click", function () {
+    if (lastPick && squareStatus) payCopy(squareStatus, lastPick.deposit.toFixed(2).replace(/\.00$/, ""), "Copied " + money(lastPick.deposit) + " — paste it on the Square page.");
+  });
+  copyZelleBtn.addEventListener("click", function () { if (zelleStatus) payCopy(zelleStatus, zelleTo ? zelleTo.textContent : "", "Copied the Zelle address."); });
   function updatePay() {
-    if (!payPick || !current || !current.est) return;
-    payPick.hidden = false;
+    copyAmountBtn.hidden = !lastPick;
+    if (!payPick) return;
+    payPick.hidden = !lastPick;
     payPick.innerHTML = "";
-    payPick.appendChild(document.createTextNode("Your pick — " + current.def.product + ": deposit "));
-    payPick.appendChild(el("strong", { text: money(current.est.deposit) }));
-    payPick.appendChild(document.createTextNode(" (estimate " + money(current.est.total) + ")."));
+    if (!lastPick) return;
+    payPick.appendChild(document.createTextNode("Your pick — " + lastPick.product + ": deposit "));
+    payPick.appendChild(el("strong", { text: money(lastPick.deposit) }));
+    payPick.appendChild(document.createTextNode(" (estimate " + money(lastPick.total) + ")."));
   }
 
   /* how the photos travel: the order email today, the order form once ORDER_FORM_URL is a form */
@@ -514,6 +550,7 @@
   function pick(g) {   /* the customer is now building this piece: it is what the order links carry */
     lastPick = { product: g.def.product, total: g.est.total, deposit: g.est.deposit, text: g.text };
     if (g === current) updateBar();
+    updatePay();
     applyOrderLinks();
   }
 
@@ -597,7 +634,7 @@
   /* ---------- or start from a gift idea (presets) ---------- */
   var PRESETS = {
     realtor:  { id: "housewarming",  values: { addons: ["succulent"] } },
-    memorial: { id: "watercolor",    values: { format: "5x7", paper: "do", frame: "yes", extras: ["giftBox"] } },
+    memorial: { id: "watercolor",    values: { format: "5x7", paper: "do", frame: "yes", extras: ["giftBox"] }, show: "paper" },   /* opens on the Dó cat, not the house */
     grandma:  { id: "portrait-doll", values: { shadowbox: "yes" } }
   };
   function setValues(form, values) {
@@ -633,10 +670,12 @@
       if (price && est) price.textContent = money(est.total);
       btn.addEventListener("click", function () {
         var g = byId[p.id];
+        var msg = g.form && g.form.querySelector("[data-message]"), keep = msg ? msg.value : "";   /* the card message is the customer's own words */
         g.clear();
         setValues(g.form, p.values);
+        if (msg && keep) { msg.value = keep; var mc = g.form.querySelector(".msg-count"); if (mc) mc.textContent = keep.length + " / 160"; }
         activate(p.id, { user: true });
-        g.update(true);
+        g.update(true, p.show);
         live.textContent = btn.querySelector(".idea-name").textContent + " — " + g.def.product + ". Estimate " + money(g.est.total) + ".";
         var head = g.art.querySelector(".gift-title");
         if (head) { head.setAttribute("tabindex", "-1"); head.focus({ preventScroll: true }); }
@@ -648,8 +687,10 @@
 
   /* keyboard focus never ends up under the phone order bar (scroll-padding covers most browsers; this covers the rest) */
   document.addEventListener("focusin", function (e) {
-    if (bar.hidden || !e.target || !e.target.getBoundingClientRect || bar.contains(e.target)) return;
-    var r = e.target.getBoundingClientRect(), top = bar.getBoundingClientRect().top;
+    var t = e.target;
+    if (bar.hidden || !bar.offsetHeight || !t || !t.getBoundingClientRect || bar.contains(t)) return;
+    if (t.parentNode && t.parentNode.classList && t.parentNode.classList.contains("tile")) t = t.parentNode;   /* the tile, not its 1px radio */
+    var r = t.getBoundingClientRect(), top = bar.getBoundingClientRect().top;
     if (r.bottom > top - 8 && r.top < window.innerHeight) window.scrollBy(0, r.bottom - top + 16);
   });
 

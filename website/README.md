@@ -210,24 +210,30 @@ khác). Ảnh hero British Shorthair đã gỡ khỏi web (không còn dùng; l�
 
 **Giá nằm ở MỘT chỗ:** `prices.js` (`PRICES`) = brief §3; copy trong
 `index.html` in cùng số đó. Đổi giá → sửa cả hai. Test:
-`node scratchpad/test-prices.js` (8 nhóm), `test-studio.js` (Playwright: tab,
-từng món, phím, nhớ lựa chọn, link #món, chế độ tắt JS), `audit-custom.js`
+`node scratchpad/test-prices.js` (13 nhóm), `test-studio.js` (Playwright: tab,
+từng món, phím, nhớ lựa chọn, link #món, chế độ tắt JS, bấm chuột ở 1280px), `audit-custom.js`
 (chuỗi copy/giá nguyên văn, từ cấm, ảnh, nút, tràn màn 360/390/1280).
 
 **Giá đã chốt 15/10 (Elise):** khung 4×6 $8 · 5×7 $16 · 8×10 $24; giảm theo
-từng món (2–4: 5%, từ 5: 10%) trên cả món; godparent bộ 2 −$10; cọc 50%.
+từng món (2–4: 5%, từ 5: 10%) trên cả món; godparent bộ 2 −$10; cọc 50% (nửa
+xu làm tròn lên ở tiền cọc); giấy in: giấy thường đã gồm · fine-art +$10 · Dó +$5.
+Số tiền ≥ $1,000 có dấu phẩy. Số lượng tối đa 50/đơn trên trang (hơn thì khách ghi
+số trong đơn — chưa phải quy định của chị, chờ chị xác nhận).
 **Cách đọc còn để mở (ghi trong `prices.js`):** in tranh = giá đã gồm tranh
-(không cộng $10 file digital); "+$5" chỉ cho giấy Dó (fine-art là giấy mặc định);
-hộp quà tranh chỉ với bản in; "second pet −$10" = con thứ hai cùng size & len;
+(không cộng $10 file digital); hộp quà tranh chỉ với bản in; "second pet −$10" = con thứ hai cùng size & len;
 "add or swap" cùng giá +$10.
 
 **Ảnh (`assets/img/custom/`):** 9 file kit lấy lại từ asset của artifact v1
 (tên theo image map §4). Đang dùng: 01 collage, 03 tranh "Our 1st Home", 04
-hộp tân gia, **extra christening box (ảnh thật, thay mockup bóng bay 05)**,
-06 godparent, 07 lịch (cắt bỏ crop mark, tách bìa + trang năm), extra Dó
-paper (hiện khi chọn giấy Dó). **Pet crochet dùng ảnh listing Etsy Maine Coon
-(crop 4:5)** thay 02-pet-crochet.jpg vì ảnh kit có tag "Na Na Handmade"
-(không phải của mình); 7 thumb 240px cho hàng chọn món (bước 1); ảnh godparent crop 4:5 bỏ tag "Handmade Blessings" ở
+hộp tân gia, 06 godparent, 07 lịch (cắt bỏ crop mark, tách bìa + trang năm),
+extra Dó paper (hiện khi chọn giấy Dó). Ảnh Elise gửi 15/10 (đợt 2):
+`pet-crochet-group.webp` (nhóm mèo len, thay ảnh Maine Coon; tag "Handmade" đã
+làm mờ), `watercolor-frames-wall.webp` (các khung tranh trên tường — hiện khi
+chọn khung), `christening-confirmation.webp` (ảnh chung gown + hộp Confirmation;
+chú thích: bóng chỉ để trưng bày), `confirmation-box.webp` (trong ô Confirmation
+gift box; tag "Handmade Blessings" đã làm mờ); thumb pet/christening cắt từ các ảnh
+này; `thumb-memorial.webp` (mèo trên giấy Dó) cho gói Pet memorial. 7 thumb 240px
+cho hàng chọn món (bước 1); ảnh godparent crop 4:5 bỏ tag "Handmade Blessings" ở
 góc. Ảnh kit không dùng (02 có tag lạ, 05 mockup) KHÔNG đưa lên web — bản
 gốc nằm trong thư mục kit (scratchpad) để đối chiếu.
 Minh hoạ Merlin ở CTA cuối: `merlin-closing.svg` (bản không nền, không sao,

@@ -179,6 +179,7 @@ p { margin: 0; }
 .gift-title { font-size: 26px; line-height: 1.15; }
 .price { font-family: var(--font-head); font-weight: 500; font-size: 22px; color: var(--berry); line-height: 1.1; }
 .desc { font-size: 16px; }
+.desc-note { font-size: 14.5px; color: var(--ink-soft); }
 .gift-steps { grid-area: steps; display: grid; gap: 22px; min-width: 0; }
 .gift-preview { display: contents; }
 .gift-photo { grid-area: photo; margin: 0; }
@@ -236,6 +237,7 @@ p { margin: 0; }
 .tile.is-off { opacity: 0.55; }
 .tile-info { cursor: default; border-style: dashed; }
 .tile-info:hover { border-color: var(--line-ui); }
+.tile-img { order: 4; width: 112px; height: auto; margin-top: 8px; border-radius: var(--radius-img); }
 /* size tiles read as a list on phones: name + note on the left, price on the right */
 @media (max-width: 599px) {
   .tiles.list { grid-template-columns: minmax(0, 1fr); }
@@ -294,7 +296,7 @@ p { margin: 0; }
 .pick-actions { display: flex; flex-wrap: wrap; gap: 0 18px; align-items: center; }
 .pick-how { font-size: 15px; font-weight: 500; display: inline-flex; align-items: center; min-height: 44px; }
 .pick-copied { font-size: 14px; color: var(--ink); word-break: break-word; }
-.pick-copied:empty { display: none; }
+.pick-copied:empty { height: 0; margin-top: -8px; overflow: hidden; }   /* stays in the accessibility tree, so the status is announced */
 
 /* head notes (approved copy that used to be the doll's rows) */
 .head-notes { list-style: none; margin: 0; padding: 0; font-size: 14.5px; color: var(--ink-soft); }
@@ -320,8 +322,10 @@ p { margin: 0; }
 .qty input::-webkit-outer-spin-button, .qty input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .qty input:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
 .qty-btn { min-width: 48px; min-height: 44px; border: 0; background: transparent; color: var(--ink); font: inherit; font-size: 22px; line-height: 1; cursor: pointer; transition: background-color var(--ease); }
-.qty-btn:hover:not(:disabled) { background: var(--glow-soft); }
-.qty-btn:disabled { color: var(--ink-soft); opacity: 0.45; cursor: not-allowed; }
+.qty-btn:hover:not(:disabled):not([aria-disabled="true"]) { background: var(--glow-soft); }
+.qty-btn:disabled, .qty-btn[aria-disabled="true"] { color: var(--ink-soft); opacity: 0.45; cursor: not-allowed; }
+.qty-cap { margin: 8px 0 0; }
+.qty-cap[hidden] { display: none; }
 .qty-btn:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
 
 /* housewarming: add it, or swap it for a basic item */
@@ -330,7 +334,7 @@ p { margin: 0; }
 .swaps-title { font-size: 14px; color: var(--ink-soft); }
 .swap-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px; }
 .swap-row label { font-size: 14px; font-weight: 600; }
-.swap-row select { min-height: 44px; padding: 8px 10px; border: 1px solid var(--line-ui); border-radius: var(--radius); background: #FFFFFF; color: var(--ink); font: inherit; font-size: 15px; max-width: 100%; }
+.swap-row select { min-height: 44px; padding: 8px 10px; border: 1px solid var(--line-ui); border-radius: var(--radius); background: #FFFFFF; color: var(--ink); font: inherit; font-size: 16px; max-width: 100%; }
 .swap-row select:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
 @media (min-width: 600px) { .swap-row { grid-template-columns: 180px minmax(0, 1fr); align-items: center; gap: 12px; } }
 .box .incl.is-swapped { color: var(--ink-soft); text-decoration: line-through; text-decoration-thickness: 1px; }
@@ -371,7 +375,7 @@ p { margin: 0; }
 .pay-qr img { width: 148px; height: 148px; border-radius: 8px; border: 1px solid var(--line); }
 .pay-qr figcaption { font-size: 13px; color: var(--caption); margin-top: 6px; }
 .pay-status { font-size: 14px; color: var(--ink); margin-top: 8px; }
-.pay-status:empty { display: none; }
+.pay-status:empty { height: 0; margin: 0; overflow: hidden; }   /* rendered while empty: live regions that appear with their text are often not read */
 .pay-terms { margin-top: 14px; max-width: 70ch; }
 .legal { margin-top: 10px; font-size: 12.5px; line-height: 1.5; color: var(--ink-soft); max-width: 80ch; }
 @media (min-width: 900px) {

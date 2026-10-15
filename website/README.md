@@ -191,7 +191,9 @@ hộp tân gia, **extra christening box (ảnh thật, thay mockup bóng bay 05)
 paper (hiện khi chọn giấy Dó). **Pet crochet dùng ảnh listing Etsy Maine Coon
 (crop 4:5)** thay 02-pet-crochet.jpg vì ảnh kit có tag "Na Na Handmade"
 (không phải của mình); hero desktop dùng ảnh listing British Shorthair; 7
-thumb 240px cho dải ảnh. File kit 02 và 05 vẫn giữ (`*-fallback.webp`).
+thumb 240px cho dải ảnh; ảnh godparent crop 4:5 bỏ tag "Handmade Blessings" ở
+góc. Ảnh kit không dùng (02 có tag lạ, 05 mockup) KHÔNG đưa lên web — bản
+gốc nằm trong thư mục kit (scratchpad) để đối chiếu.
 Minh hoạ Merlin ở CTA cuối: `merlin-closing.svg` (bản không nền, không sao,
 không hồng — màu hồng chỉ xuất hiện một lần ở logo header).
 

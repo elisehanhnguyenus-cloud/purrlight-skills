@@ -148,50 +148,62 @@ URL: `https://elisehanhnguyenus-cloud.github.io/purrlight-skills/custom-orders/`
 (Morgan/Elise 15/10/2026): giữ nguyên **từng câu copy và từng giá** ở brief
 §3, bỏ toàn bộ style v1, restyle bằng token Brand Identity v2, mobile-first,
 ảnh WebP lazy-load. Cảm hứng tương tác lấy từ OREOiD (oreo.com/oreoid): chọn
-→ thấy giá ngay → đặt hàng.
+→ thấy giá ngay → đặt hàng. Bố cục chốt qua panel 3 designer + 3 judge
+(hướng "mobile conversion first" thắng 3/3).
 
-**Cấu trúc trang:** header (logo + nút) → hero (§3.0) → How it works (§3.1)
-→ dải 7 ảnh nhảy tới từng món → 7 mục sản phẩm (§3.2–3.8, ảnh trái/phải xen
-kẽ, vạch mảnh thay card) → band Giáng sinh (§3.9) → CTA cuối + Etsy (§3.10)
-→ footer. Ở 5 món có giá biến thiên (doll, pet, tranh, hộp, lịch) có khối
-**"Build your piece"**: chip chọn tuỳ chọn (bảng giá pet chính là picker) →
-ước tính + cọc 50% → *Place your order* / *Copy my pick* / *Start over*.
-Điện thoại có thanh đặt hàng dính ở đáy (hiện sau hero, ẩn ở CTA cuối), ghi
-món đang xem hoặc lựa chọn gần nhất. Lựa chọn được nhớ trên máy
-(localStorage).
+**Cấu trúc trang:** header site (logo + nav + nút ≥900px) → hero (§3.0; ảnh
+British Shorthair chỉ hiện trên desktop) → dải 7 ảnh nhảy tới từng món → How
+it works (§3.1) → 7 mục sản phẩm (§3.2–3.8, ảnh trái/phải xen kẽ, hàng giá
+dạng vạch mảnh, không card) → band Giáng sinh (§3.9, chữ Caveat duy nhất:
+"early") → CTA cuối + Etsy (§3.10) → footer Ink. Ở 5 món có giá biến thiên
+(doll, pet, tranh, hộp, lịch) có khối **"Build your piece"**: chip chọn tuỳ
+chọn (bảng giá pet chính là picker — nhóm radio, phím mũi tên) → *Estimate* →
+*Copy my pick* / *Start over*. Nút "Place your order" chỉ 4 chỗ: header
+(desktop), hero, CTA cuối, thanh dính ở đáy điện thoại (hiện sau hero, ẩn ở
+CTA cuối, ghi món đang xem hoặc lựa chọn gần nhất). Lựa chọn được nhớ trên
+máy (localStorage). Không tính cọc, số lượng hay giảm 5%/10% (brief để mở →
+chỉ in nguyên câu của brief).
 
 **Chị cần điền (2 hằng ở đầu `prices.js`):**
-- `ORDER_FORM_URL` — link Google Form chung cho 7 món (brief §1). Đang là
-  placeholder; mọi nút "Place your order" đọc từ đây, tự kèm `utm_*` từ URL
-  (Linktree gắn `?utm_source=linktree&utm_medium=bio`).
+- `ORDER_FORM_URL` — link Google Form chung cho 7 món (brief §1). Hiện là
+  `mailto:hello@purrlight.studio` (form chưa có; mailto cũng ghi sẵn trong
+  HTML nên trang chạy cả khi tắt JS). Khi là link http, trang tự kèm `utm_*`
+  từ URL (Linktree gắn `?utm_source=linktree&utm_medium=bio`).
 - `ORDER_FORM_PREFILL_ENTRY` — (tuỳ chọn) id ô trong Google Form nhận dòng
   tóm tắt lựa chọn (Form → ⋮ → Get pre-filled link → `entry.xxxx`). Để trống
-  thì trang copy dòng tóm tắt vào clipboard khi khách bấm đặt hàng.
+  thì khách bấm *Copy my pick* rồi dán vào form.
 
 **Giá nằm ở MỘT chỗ:** `prices.js` (`PRICES`) = brief §3; copy trong
-`index.html` in cùng số đó. Đổi giá → sửa cả hai. Test: `node
-scratchpad/test-prices.js` (8 nhóm) và `test-builder.js` (Playwright).
+`index.html` in cùng số đó. Đổi giá → sửa cả hai. Test:
+`node scratchpad/test-prices.js` (8 nhóm), `test-builder.js` (Playwright),
+`audit-custom.js` (79 chuỗi copy/giá nguyên văn, từ cấm, ảnh, nút, tràn màn).
 
 **Cách đọc giá mà brief để mở (đã ghi trong `prices.js`, chị xác nhận):**
-in tranh = giá đã gồm tranh (không cộng thêm $10 file digital); giảm 5%/10%
-tính **theo từng món** từ món thứ 2 / thứ 5, chỉ trên giá tranh/hộp (không
-giảm khung, hộp quà, chuỗi); "second pet −$10" = con thứ hai cùng size & len;
-"+$5" chỉ cho giấy Dó (fine-art paper đã gồm); hộp quà chỉ với bản in.
+in tranh = giá đã gồm tranh (không cộng thêm $10 file digital); "+$5" chỉ cho
+giấy Dó (fine-art paper là giấy mặc định của bản in); hộp quà chỉ với bản in;
+"second pet −$10" = con thứ hai cùng size & len; giá khung 5×7 $16 / 8×10 $24
+là số suy ra (brief §7 chưa xác nhận).
 
 **Ảnh (`assets/img/custom/`):** 9 file kit lấy lại từ asset của artifact v1
 (tên theo image map §4). Đang dùng: 01 collage, 03 tranh "Our 1st Home", 04
 hộp tân gia, **extra christening box (ảnh thật, thay mockup bóng bay 05)**,
 06 godparent, 07 lịch (cắt bỏ crop mark, tách bìa + trang năm), extra Dó
-paper (hiện khi chọn giấy Dó). **Riêng pet crochet dùng ảnh listing Etsy
-Maine Coon** thay 02-pet-crochet.jpg vì ảnh kit có tag "Na Na Handmade"
-(không phải của mình). File kit 02 và 05 vẫn giữ (`*-fallback.webp`).
+paper (hiện khi chọn giấy Dó). **Pet crochet dùng ảnh listing Etsy Maine Coon
+(crop 4:5)** thay 02-pet-crochet.jpg vì ảnh kit có tag "Na Na Handmade"
+(không phải của mình); hero desktop dùng ảnh listing British Shorthair; 7
+thumb 240px cho dải ảnh. File kit 02 và 05 vẫn giữ (`*-fallback.webp`).
+Minh hoạ Merlin ở CTA cuối: `merlin-closing.svg` (bản không nền, không sao,
+không hồng — màu hồng chỉ xuất hiện một lần ở logo header).
 
-**Lệch so với brief — chủ ý, chị quyết:** (1) footer ghi "Designed in
-Texas. Made in Vietnam." — bỏ "Finished in Texas" theo quyết định 09/10 của
-chị trên site chính; (2) "Baby girl baptism outfit set" → "Christening gown
-set — $89" theo chính brief §6 (guardrail "baby"); (3) "curated" ×2 trong copy
-đã duyệt nhưng nằm trong danh sách từ cấm Canon — giữ nguyên văn, chờ chị;
-(4) "Etsy Star Seller ★ 4.9" lấy từ brief, chưa tự kiểm chứng được.
+**Lệch so với brief — chủ ý, chị quyết:** (1) footer "Designed in Texas.
+Made in Vietnam." — bỏ "Finished in Texas" theo quyết định 09/10 của chị trên
+site chính; (2) "Baby girl baptism outfit set" → "Christening Gown Set — lace
+& satin — $89" + "Gown, bonnet, mittens and booties." theo chính brief §6
+(guardrail "baby"); (3) "curated" ×2 trong copy đã duyệt nhưng nằm trong danh
+sách từ cấm Canon — giữ nguyên văn, chờ chị; (4) "Etsy Star Seller ★ 4.9" lấy
+từ brief, chưa tự kiểm chứng được; (5) brief ghi "Merlin icon as the single
+pink signature" — panel chọn giữ hồng một lần (logo) và dùng minh hoạ Merlin
+màu canon; muốn icon hồng thì đổi `src` sang `../assets/brand/favicon-64.png`.
 
 ## Việc còn lại trước khi "launch" (checklist cho Elise)
 

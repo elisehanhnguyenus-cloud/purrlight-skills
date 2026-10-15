@@ -500,6 +500,14 @@ lazy-load.
 3. Dựng `website/custom-orders/` (index.html + prices.js + custom-orders.js +
    custom-orders.css), font Caveat self-host (chỉ 1 chữ), ảnh WebP ≤ 200 KB,
    OG image. Link "Custom Orders" thêm vào nav + footer site chính.
+   Bản 3 theo spec tổng hợp (3/3 judge chọn "mobile conversion first"): header
+   site có nav, hero text (ảnh British Shorthair chỉ desktop), dải 7 thumb
+   trước How it works, hàng giá vạch mảnh không bullet, bảng giá pet = nhóm
+   radio, nút Peach chỉ 4 chỗ (header/hero/CTA cuối/thanh dính), bỏ cọc + số
+   lượng + giảm % (brief để mở), christening dạng H3 + giá, Merlin minh hoạ
+   không hồng (hồng một lần ở logo), footer Ink, Caveat ở chữ "early", link
+   cùng tab (in-app browser của Linktree chặn popup), mailto fallback trong
+   HTML, ORDER_FORM_URL vẫn một hằng trong prices.js.
 4. Audit tự động: 79 chuỗi copy/giá của brief phải có mặt nguyên văn, quét từ
    cấm, alt/width/height/lazy, mọi nút → ORDER_FORM_URL (+utm), 1 h1, title +
    meta + og:image, không tràn 360/390/1280, 0 lỗi console; test tương tác

@@ -14,9 +14,17 @@
   var toggle = document.querySelector(".nav-toggle");
   var nav = document.querySelector(".main-nav");
   var closeBtn = document.querySelector(".nav-close");
+  var mainEl = document.getElementById("main"), footEl = document.querySelector("footer");
   if (toggle && nav) {
-    var shut = function () { nav.classList.remove("open"); toggle.setAttribute("aria-expanded", "false"); };
-    toggle.addEventListener("click", function () { nav.classList.add("open"); toggle.setAttribute("aria-expanded", "true"); });
+    var setInert = function (on) { [mainEl, footEl].forEach(function (n) { if (n) { if (on) n.setAttribute("inert", ""); else n.removeAttribute("inert"); } }); };
+    var shut = function () {
+      if (!nav.classList.contains("open")) return;
+      nav.classList.remove("open"); toggle.setAttribute("aria-expanded", "false"); setInert(false); toggle.focus();
+    };
+    toggle.addEventListener("click", function () {
+      nav.classList.add("open"); toggle.setAttribute("aria-expanded", "true"); setInert(true);
+      (closeBtn || nav.querySelector("a")).focus();
+    });
     if (closeBtn) closeBtn.addEventListener("click", shut);
     nav.addEventListener("click", function (e) { if (e.target.tagName === "A") shut(); });
     document.addEventListener("keydown", function (e) { if (e.key === "Escape") shut(); });
@@ -37,7 +45,10 @@
       var params = new URLSearchParams(location.search);
       params.forEach(function (v, k) { if (/^utm_/i.test(k)) qs.push(encodeURIComponent(k) + "=" + encodeURIComponent(v)); });
     } catch (e) { /* old browsers: plain link */ }
-    if (lastPick && ORDER_FORM_PREFILL_ENTRY) qs.push("usp=pp_url&" + encodeURIComponent(ORDER_FORM_PREFILL_ENTRY) + "=" + encodeURIComponent(lastPick.text));
+    if (lastPick && ORDER_FORM_PREFILL_ENTRY) {
+      if (url.indexOf("usp=") === -1) qs.push("usp=pp_url");
+      qs.push(encodeURIComponent(ORDER_FORM_PREFILL_ENTRY) + "=" + encodeURIComponent(lastPick.text));
+    }
     if (qs.length) url += (url.indexOf("?") > -1 ? "&" : "?") + qs.join("&");
     return url;
   }
@@ -77,7 +88,7 @@
   }
 
   /* ---------- sticky order bar (phones) ---------- */
-  var bar = el("div", { "class": "order-bar", hidden: "" });
+  var bar = el("div", { "class": "order-bar", hidden: "", role: "region", "aria-label": "Order" });
   var barCap = el("span", { "class": "order-bar-cap", text: "Free U.S. shipping on every custom order" });
   var barText = el("span", { "class": "order-bar-text", text: "Custom Orders" });
   var barBtn = el("a", { "class": "btn btn-primary btn-small", "data-order": "", href: orderUrl() }, [
@@ -222,7 +233,7 @@
       g.options.forEach(function (o, oi) {
         var inputId = id + "-" + g.name + "-" + oi;
         var input = el("input", { type: g.type, name: g.name, value: o.value, id: inputId });
-        if (o.checked) input.checked = true;
+        if (o.checked) input.setAttribute("checked", "");   /* defaultChecked → form.reset() restores it */
         var lab = el("label", { "class": "chip", "for": inputId });
         if (o.printOnly) lab.setAttribute("data-print-only", "");
         lab.appendChild(input);
@@ -280,11 +291,14 @@
       for (var i = 0; i < printOnly.length; i++) {
         var node = printOnly[i];
         if (node.tagName === "FIELDSET") node.disabled = isDigital;
-        else { var inp = node.querySelector("input"); if (inp) inp.disabled = isDigital; }
+        else { var inp = node.querySelector("input"); if (inp) { inp.disabled = isDigital; if (isDigital) inp.checked = false; } }
         node.classList.toggle("is-off", isDigital);
         node.setAttribute("aria-disabled", isDigital ? "true" : "false");
       }
       v = values();   /* re-read: disabled extras drop out */
+      /* browsers without :has(): mirror the checked state as a class */
+      var cin = form.querySelectorAll(".chip input");
+      for (var q = 0; q < cin.length; q++) cin[q].parentNode.classList.toggle("is-checked", cin[q].checked && !cin[q].disabled);
       /* price labels that follow another choice (frame by print size, calendar pages by format) */
       var dyn = form.querySelectorAll("[data-price-by]");
       for (var d = 0; d < dyn.length; d++) {
@@ -328,6 +342,8 @@
       }
     }
     form.addEventListener("change", function () { update(false); });
+    form.addEventListener("focusin", function (e) { if (e.target && e.target.parentNode && e.target.parentNode.classList && e.target.parentNode.classList.contains("chip")) { try { e.target.parentNode.classList.toggle("is-focus", e.target.matches(":focus-visible")); } catch (err) { /* no :focus-visible */ } } });
+    form.addEventListener("focusout", function (e) { if (e.target && e.target.parentNode && e.target.parentNode.classList) e.target.parentNode.classList.remove("is-focus"); });
 
     var copiedTimer = null;
     copyBtn.addEventListener("click", function () {
@@ -343,12 +359,12 @@
 
     /* remember the pick on this device (restoring is not a fresh pick — the bar waits for a real tap) */
     var saved = load(storeKey);
-    if (saved && saved.v) {
+    if (saved && saved.v && typeof saved.v === "object") {
       var inputs = form.querySelectorAll("input");
       for (var s = 0; s < inputs.length; s++) {
         var inp2 = inputs[s];
-        if (inp2.type === "radio") inp2.checked = saved.v[inp2.name] === inp2.value;
-        else if (inp2.type === "checkbox") inp2.checked = (saved.v.extras || []).indexOf(inp2.value) > -1;
+        if (inp2.type === "radio") { if (Object.prototype.hasOwnProperty.call(saved.v, inp2.name)) inp2.checked = saved.v[inp2.name] === inp2.value; }
+        else if (inp2.type === "checkbox") inp2.checked = Array.isArray(saved.v.extras) && saved.v.extras.indexOf(inp2.value) > -1;
       }
       if (saved.t && def.table && PRICES.pet.sizes.indexOf(saved.t.size) > -1 && PRICES.pet.yarns.indexOf(saved.t.yarn) > -1) tableState = { size: saved.t.size, yarn: saved.t.yarn };
     }

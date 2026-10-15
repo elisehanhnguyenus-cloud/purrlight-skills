@@ -11,7 +11,7 @@
   --ink-soft: #6F655B;     /* nav links, descriptors ≥13px */
   --peach: #E8A87C;        /* button fill — Ink on Peach 4.84:1 */
   --peach-hover: #F0B68C;  /* button hover (Ink 5.3:1) */
-  --peach-active: #DFA070;
+  --peach-active: #E6A577;   /* Ink 4.69:1 */
   --berry: #B42249;        /* prices, links, emphasis — 6.43:1 white / 5.98:1 cream */
   --pink: #DB426B;         /* identity only — lives in the logo image, never in CSS */
   --caption: #9C5325;      /* captions, legends, small text — 5.31:1 */
@@ -101,8 +101,8 @@ p { margin: 0; }
 .main-nav a { font-size: 15px; font-weight: 500; color: var(--ink-soft); text-decoration: none; padding: 6px 2px; border-bottom: 2px solid transparent; transition: color 200ms ease, border-color 200ms ease; }
 .main-nav a:hover, .main-nav a[aria-current="page"] { color: var(--ink); border-color: var(--peach); }
 .header-cta { white-space: nowrap; }
-.nav-toggle { display: none; background: none; border: 0; cursor: pointer; padding: 8px; border-radius: var(--radius); }
-.nav-toggle svg, .nav-close svg { width: 26px; height: 26px; stroke: var(--ink); }
+.nav-toggle { display: none; background: none; border: 0; cursor: pointer; padding: 9px; min-width: 44px; min-height: 44px; border-radius: var(--radius); color: var(--ink); }
+.nav-toggle svg, .nav-close svg { width: 26px; height: 26px; stroke: currentColor; }
 @media (max-width: 899px) {
   .site-header { backdrop-filter: none; background: var(--cream); }
   .header-inner { padding-top: 8px; padding-bottom: 8px; }
@@ -112,7 +112,7 @@ p { margin: 0; }
   .main-nav.open { visibility: visible; opacity: 1; transition: opacity 240ms ease; }
   .main-nav ul { flex-direction: column; gap: 8px; }
   .main-nav a { display: block; font-family: var(--font-head); font-size: 30px; font-weight: 500; color: var(--ink); padding: 10px 0; border-bottom: 1px solid var(--line); }
-  .nav-close { position: absolute; top: 18px; right: var(--gutter); background: none; border: 0; cursor: pointer; padding: 8px; }
+  .nav-close { position: absolute; top: 18px; right: var(--gutter); background: none; border: 0; cursor: pointer; padding: 9px; min-width: 44px; min-height: 44px; color: var(--ink); }
 }
 @media (min-width: 900px) { .logo img { height: 34px; } .header-inner { padding-top: 14px; padding-bottom: 14px; } .nav-close { display: none; } }
 
@@ -140,7 +140,7 @@ p { margin: 0; }
 .rail a { display: block; color: var(--ink); text-decoration: none; font-size: 13px; line-height: 1.3; }
 .rail img { width: 104px; height: 104px; object-fit: cover; border-radius: var(--radius); margin-bottom: 8px; box-shadow: 0 0 0 1px var(--line); transition: box-shadow 200ms ease; }
 .rail a:hover img, .rail a:focus-visible img, .rail a.is-current img { box-shadow: 0 0 0 2px var(--ink); }
-.rail a:focus-visible { outline: none; }
+.rail a:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; border-radius: 4px; }
 .rail-name { display: block; font-weight: 500; }
 .rail-price { display: block; color: var(--berry); font-weight: 500; margin-top: 2px; }
 @media (min-width: 900px) { .rail-wrap { padding-top: 8px; } .rail { gap: 20px; overflow: visible; } .rail li { flex: 1 1 0; } .rail img { width: 100%; height: auto; aspect-ratio: 1 / 1; } }
@@ -209,6 +209,7 @@ p { margin: 0; }
 .cell-btn { font: inherit; font-family: var(--font-head); font-size: 17px; font-weight: 500; color: var(--berry); background: transparent; border: 1px solid var(--line-ui); border-radius: 6px; padding: 8px 2px; width: 100%; max-width: 72px; min-height: 44px; cursor: pointer; transition: border-color var(--ease), background-color var(--ease); }
 .cell-btn:hover { border-color: var(--ink-soft); }
 .cell-btn.is-on { background: var(--glow-soft); border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); color: var(--ink); }
+@media (forced-colors: active) { .cell-btn.is-on { border-width: 3px; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; } .chip.is-checked, .chip:has(input:checked:not(:disabled)) { border-width: 3px; } }
 
 /* ---------- builder "Build your piece" (filled by custom-orders.js) ---------- */
 .builder { margin-top: 8px; }
@@ -219,14 +220,15 @@ p { margin: 0; }
 .pick-chosen { font-size: 14px; color: var(--caption); margin-top: -6px; }
 .pick-group { border: 0; margin: 0; padding: 0; min-width: 0; }
 .pick-group legend { font-family: var(--font-body); font-weight: 600; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--caption); padding: 0; margin-bottom: 8px; }
-.pick-group.is-off, .chip.is-off { opacity: 0.45; }
+.pick-group.is-off, .chip.is-off { opacity: 0.6; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip { position: relative; display: inline-flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; min-height: 44px; padding: 10px 14px; border: 1px solid var(--line-ui); border-radius: var(--radius); background: transparent; font-size: 15px; font-weight: 500; line-height: 1.25; cursor: pointer; transition: border-color 200ms ease, background-color 200ms ease; }
 .chip input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
 .chip:hover { border-color: var(--ink-soft); }
-.chip:has(input:checked) { border-color: var(--ink); background: var(--glow-soft); box-shadow: inset 0 0 0 1px var(--ink); }
-.chip:has(input:checked) .chip-text::before { content: ""; display: inline-block; width: 8px; height: 13px; margin: 0 8px 0 1px; border: solid var(--ink); border-width: 0 2px 2px 0; transform: rotate(45deg); vertical-align: -1px; }
-.chip:has(input:focus-visible) { outline: 3px solid var(--ink); outline-offset: 3px; }
+.chip:has(input:checked:not(:disabled)), .chip.is-checked { border-color: var(--ink); background: var(--glow-soft); box-shadow: inset 0 0 0 1px var(--ink); }
+.chip:has(input:checked:not(:disabled)) .chip-note, .chip.is-checked .chip-note { color: var(--ink); }
+.chip:has(input:checked:not(:disabled)) .chip-text::before, .chip.is-checked .chip-text::before { content: ""; display: inline-block; width: 8px; height: 13px; margin: 0 8px 0 1px; border: solid var(--ink); border-width: 0 2px 2px 0; transform: rotate(45deg); vertical-align: -1px; }
+.chip:has(input:focus-visible), .chip.is-focus { outline: 3px solid var(--ink); outline-offset: 3px; }
 .chip-price { font-weight: 600; color: var(--berry); font-size: 14px; }
 .chip-price:empty { display: none; }
 .chip-note { flex-basis: 100%; font-size: 13px; font-weight: 400; color: var(--caption); }

@@ -520,7 +520,7 @@ lazy-load.
   bản 3). Pha "3 skeptic/phát hiện" bị dừng vì sẽ mất hàng giờ với 2 agent
   chạy song song; thay bằng vòng "fresh eyes" 3 lăng kính + 1 skeptic/phát
   hiện trên bản cuối.
-- Đã sửa: hạn Giáng sinh in đúng thứ (brief ghi "Sun" nhưng 30/11 và 14/12
+- Đã sửa: hạn Giáng sinh (brief ghi "Sun" nhưng 30/11 và 14/12
   năm 2026 là thứ Hai); viền chip/ô bảng ≥3:1 (WCAG 1.4.11), focus ring Ink,
   hover/active nút ≥4.5:1, chip-note màu Ink khi chọn; vòng "đang xem" ở dải
   ảnh vẽ ngoài ảnh (inset trên <img> không hiện); Start over khôi phục mặc
@@ -548,10 +548,9 @@ lazy-load.
 - Giá custom doll $80 (brief) ≠ bảng giá booth 25/09 (doll Petite $45 /
   Classic $85 / Grand $130) và custom pet Grand Etsy $150 ≠ booth $90–120 —
   khác kênh có chủ ý?
-- **Hạn Giáng sinh trong brief sai thứ:** §1/§3.9 ghi "Sun, Nov 30, 2026 ·
-  Sun, Dec 14, 2026" nhưng hai ngày đó năm 2026 đều là **thứ Hai** (Chủ nhật
-  là 29/11 và 13/12). Trang giữ đúng ngày đã chốt và in thứ đúng ("Mon, Nov
-  30" / "Mon, Dec 14") tới khi Elise chốt ngày hay thứ mới là ý định.
+- ✅ **Hạn Giáng sinh — Elise chốt 15/10: giữ Chủ nhật.** Brief §1/§3.9 ghi
+  "Sun, Nov 30 · Sun, Dec 14" nhưng năm 2026 hai ngày đó là thứ Hai → trang
+  nay ghi **Sun, Nov 29** (crochet) và **Sun, Dec 13** (tranh, lịch, hộp quà).
 - Chưa có Google Form → `ORDER_FORM_URL` tạm là mailto:hello@purrlight.studio
   (lựa chọn của khách đi theo body email); dán link form vào là trang tự
   chuyển, kèm utm từ Linktree.

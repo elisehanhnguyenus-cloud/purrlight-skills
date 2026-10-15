@@ -527,6 +527,13 @@ lazy-load.
 - Giá custom doll $80 (brief) ≠ bảng giá booth 25/09 (doll Petite $45 /
   Classic $85 / Grand $130) và custom pet Grand Etsy $150 ≠ booth $90–120 —
   khác kênh có chủ ý?
+- **Hạn Giáng sinh trong brief sai thứ:** §1/§3.9 ghi "Sun, Nov 30, 2026 ·
+  Sun, Dec 14, 2026" nhưng hai ngày đó năm 2026 đều là **thứ Hai** (Chủ nhật
+  là 29/11 và 13/12). Trang giữ đúng ngày đã chốt và in thứ đúng ("Mon, Nov
+  30" / "Mon, Dec 14") tới khi Elise chốt ngày hay thứ mới là ý định.
+- Chưa có Google Form → `ORDER_FORM_URL` tạm là mailto:hello@purrlight.studio
+  (lựa chọn của khách đi theo body email); dán link form vào là trang tự
+  chuyển, kèm utm từ Linktree.
 
 ## 9. Link & tài nguyên
 

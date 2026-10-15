@@ -18,9 +18,10 @@
      than its own size × yarn price.
    ============================================================ */
 
-/* The one Google Form for all seven products (brief §1 / §5). Elise sets this.
-   Keep the utm so form traffic from Linktree can be traced. */
-var ORDER_FORM_URL = "https://forms.gle/REPLACE-WITH-PURRLIGHT-ORDER-FORM";   /* TODO: Elise — paste the Google Form link */
+/* The one Google Form for all seven products (brief §1 / §5) — THE ONLY PLACE TO EDIT.
+   TODO Elise: paste the Google Form link here. Until the form exists the buttons email the studio
+   (the same mailto is written in the HTML, so the page also works without JavaScript). */
+var ORDER_FORM_URL = "mailto:hello@purrlight.studio?subject=Custom%20order";
 /* Optional: the Google Form field that should receive the customer's pick (e.g. "entry.123456789").
    Leave "" and the page copies the pick to the clipboard instead. To find the id: Google Form → ⋮ → Get pre-filled link. */
 var ORDER_FORM_PREFILL_ENTRY = "";

@@ -25,10 +25,10 @@
   function applyOrderLinks() {
     var href = orderUrl();
     var els = document.querySelectorAll("[data-order]");
+    /* same tab on purpose: Linktree opens this page inside in-app browsers that block pop-ups;
+       the pick is remembered on the device, so coming back costs nothing */
     for (var i = 0; i < els.length; i++) {
       if (!els[i].getAttribute("data-order-summary")) els[i].setAttribute("href", href);
-      els[i].setAttribute("target", "_blank");
-      els[i].setAttribute("rel", "noopener");
     }
   }
   applyOrderLinks();
@@ -55,7 +55,9 @@
   var bar = el("div", { "class": "order-bar", hidden: "" });
   var barCap = el("span", { "class": "order-bar-cap", text: "Free U.S. shipping on every custom order" });
   var barText = el("span", { "class": "order-bar-text", text: "Custom Orders" });
-  var barBtn = el("a", { "class": "btn btn-primary btn-small", "data-order": "", href: orderUrl(), target: "_blank", rel: "noopener", text: "Place your order" });
+  var barBtn = el("a", { "class": "btn btn-primary btn-small", "data-order": "", href: orderUrl() }, [
+    el("span", { "class": "long", text: "Place your order" }), el("span", { "class": "short", text: "Order" })
+  ]);
   var barCol = el("span", { "class": "order-bar-col" }, [barCap, barText]);
   bar.appendChild(barCol); bar.appendChild(barBtn);
   document.body.appendChild(bar);
@@ -86,7 +88,7 @@
       groups: [
         { name: "pets", legend: "How many pets", type: "radio", options: [
           { value: "1", label: "One pet", checked: true },
-          { value: "2", label: "Two pets", note: "second pet on the same order −$10 · same size & yarn" }
+          { value: "2", label: "Two pets", note: "Second pet on the same order −$10 · priced at the same size and yarn — tell us in the form if they differ" }
         ] }
       ],
       read: function (v) { return { size: v.size || "Classic", yarn: v.yarn || "Cotton", pets: Number(v.pets) }; },
@@ -102,7 +104,7 @@
           { value: "8x10", label: "Print 8×10", price: "$20" }
         ] },
         { name: "paper", legend: "Paper", type: "radio", printOnly: true, options: [
-          { value: "fine", label: "Fine-art paper", price: "included", checked: true },
+          { value: "fine", label: "Fine-art paper", checked: true },
           { value: "do", label: "Handmade Vietnamese Dó papyrus", price: "+$5", reveal: "do-paper" }
         ], detail: { src: "../assets/img/custom/do-paper-print-detail.webp", w: 899, h: 1200, alt: "A watercolor print held up to the light on handmade Dó papyrus — the paper's fibers show through", caption: "Printed on handmade Vietnamese Dó papyrus" } },
         { name: "frame", legend: "Frame", type: "radio", printOnly: true, options: [
@@ -169,17 +171,23 @@
     var tableState = { size: "Classic", yarn: "Cotton" };
     var cells = [];
     if (def.table && section) {
+      /* the nine price cells become one radio group (arrow keys move, Space/Enter choose) */
       var tds = section.querySelectorAll("[data-pet-table] td[data-size]");
-      for (var c = 0; c < tds.length; c++) (function (td) {
-        var b = el("button", { type: "button", "class": "cell-btn", "aria-pressed": "false", text: td.textContent.trim() });
+      for (var c = 0; c < tds.length; c++) (function (td, idx) {
+        var b = el("button", { type: "button", "class": "cell-btn", role: "radio", "aria-checked": "false", tabindex: "-1", text: td.textContent.trim() });
         b.setAttribute("aria-label", td.getAttribute("data-size") + " · " + td.getAttribute("data-yarn") + " " + td.textContent.trim());
         td.textContent = ""; td.appendChild(b);
-        b.addEventListener("click", function () {
-          tableState.size = td.getAttribute("data-size"); tableState.yarn = td.getAttribute("data-yarn");
-          update();
+        var choose = function () { tableState.size = td.getAttribute("data-size"); tableState.yarn = td.getAttribute("data-yarn"); update(); };
+        b.addEventListener("click", choose);
+        b.addEventListener("keydown", function (e) {
+          var step = { ArrowRight: 1, ArrowDown: 3, ArrowLeft: -1, ArrowUp: -3 }[e.key];
+          if (step === undefined) return;
+          e.preventDefault();
+          var next = cells[(idx + step + cells.length) % cells.length];
+          next.btn.focus(); next.btn.click();
         });
         cells.push({ btn: b, size: td.getAttribute("data-size"), yarn: td.getAttribute("data-yarn") });
-      })(tds[c]);
+      })(tds[c], c);
       var sizeLine = el("p", { "class": "pick-chosen" });
       form.appendChild(sizeLine);
     }
@@ -233,7 +241,7 @@
     form.appendChild(sum);
 
     var actions = el("div", { "class": "pick-actions" });
-    var orderBtn = el("a", { "class": "btn btn-primary", "data-order": "", "data-order-summary": "1", href: orderUrl(), target: "_blank", rel: "noopener", text: "Place your order" });
+    var orderBtn = el("a", { "class": "btn btn-primary", "data-order": "", "data-order-summary": "1", href: orderUrl(), text: "Place your order" });
     var copyBtn = el("button", { type: "button", "class": "btn btn-ghost", text: "Copy my pick" });
     var resetBtn = el("button", { type: "button", "class": "link-btn", text: "Start over" });
     actions.appendChild(orderBtn); actions.appendChild(copyBtn); actions.appendChild(resetBtn);
@@ -279,7 +287,8 @@
       if (def.table) {
         for (var k = 0; k < cells.length; k++) {
           var on = cells[k].size === tableState.size && cells[k].yarn === tableState.yarn;
-          cells[k].btn.setAttribute("aria-pressed", on ? "true" : "false");
+          cells[k].btn.setAttribute("aria-checked", on ? "true" : "false");
+          cells[k].btn.setAttribute("tabindex", on ? "0" : "-1");   /* roving tabindex: one tab stop */
           cells[k].btn.classList.toggle("is-on", on);
         }
         sizeLine.textContent = "Chosen in the table: " + tableState.size + " · " + tableState.yarn;
@@ -309,13 +318,16 @@
     form.addEventListener("change", update);
     form.addEventListener("input", function (e) { if (e.target && e.target.type === "number") update(); });
 
-    function doCopy(after) {
-      copyText(currentText, function () { copied.textContent = "Copied — paste it into the order form." + (after || ""); },
-        function () { copied.textContent = currentText; });
+    var copiedTimer = null;
+    function doCopy() {
+      copyText(currentText, function () {
+        copied.textContent = "Copied — paste it into the order form.";
+        clearTimeout(copiedTimer); copiedTimer = setTimeout(function () { copied.textContent = ""; }, 4000);
+      }, function () { copied.textContent = currentText; });   /* no clipboard: show the line to copy by hand */
     }
     copyBtn.addEventListener("click", function () { doCopy(); });
-    /* the order click also copies the pick, so the customer can paste it into the form that just opened */
-    orderBtn.addEventListener("click", function () { if (!ORDER_FORM_PREFILL_ENTRY) doCopy(" The form opens in a new tab."); });
+    /* the order tap also copies the pick (best effort) so it can be pasted into the form */
+    orderBtn.addEventListener("click", function () { if (!ORDER_FORM_PREFILL_ENTRY) doCopy(); });
     resetBtn.addEventListener("click", function () {
       form.reset(); tableState.size = "Classic"; tableState.yarn = "Cotton";
       store(storeKey, null); update();

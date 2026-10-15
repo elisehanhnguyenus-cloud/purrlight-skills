@@ -514,6 +514,27 @@ lazy-load.
    Playwright (bảng giá, nhóm chỉ-bản-in, nhãn giá động, stepper, copy, start
    over, thanh dính, bàn phím, nhớ lựa chọn, dải ảnh).
 
+### Vòng review 6 chiều (workflow, mỗi chiều một reviewer) → đã sửa
+- 43 phát hiện (copy/giá 4 · brand 10 · a11y 11 · guardrail 0 lỗi mới · logic 6
+  · hiệu năng 6; ~một phần ba là trạng thái trung gian của bản 2 đã biến mất ở
+  bản 3). Pha "3 skeptic/phát hiện" bị dừng vì sẽ mất hàng giờ với 2 agent
+  chạy song song; thay bằng vòng "fresh eyes" 3 lăng kính + 1 skeptic/phát
+  hiện trên bản cuối.
+- Đã sửa: hạn Giáng sinh in đúng thứ (brief ghi "Sun" nhưng 30/11 và 14/12
+  năm 2026 là thứ Hai); viền chip/ô bảng ≥3:1 (WCAG 1.4.11), focus ring Ink,
+  hover/active nút ≥4.5:1, chip-note màu Ink khi chọn; vòng "đang xem" ở dải
+  ảnh vẽ ngoài ảnh (inset trên <img> không hiện); Start over khôi phục mặc
+  định (defaultChecked); restore localStorage có guard; add-on chỉ-bản-in bị
+  bỏ chọn khi về digital; usp guard; drawer nav quản lý focus + inert +
+  aria-controls; fallback cho trình duyệt không có :has(); forced-colors;
+  nút menu 44px; thanh dính là region; ảnh godparent crop bỏ tag "Handmade
+  Blessings"; xoá ảnh kit không dùng khỏi web; pick đi theo body email khi
+  còn mailto; hero CLS 0.091 → 0 + preload theo media; preload Figtree 500;
+  không tải Fraunces 400; Caveat subset 4 KB cho chữ "early"; ảnh giấy Dó
+  560px. Trang 390px: 21 request · 463 KB (trước 641 KB), CLS 0.
+- Không sửa (chủ ý): link footer trên nền Ink không dùng Berry (tương phản);
+  không thêm chip Size/Yarn trùng với bảng (bảng đã là nhóm radio).
+
 ### Quyết định cần Elise duyệt (đã ghi trong README + prices.js)
 - Footer "Designed in Texas. Made in Vietnam." (bỏ "Finished in Texas" theo
   quyết định 09/10) · "Christening gown set — $89" thay "Baby girl baptism

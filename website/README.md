@@ -173,6 +173,11 @@ chỉ in nguyên câu của brief).
   tóm tắt lựa chọn (Form → ⋮ → Get pre-filled link → `entry.xxxx`). Để trống
   thì khách bấm *Copy my pick* rồi dán vào form.
 
+**Tải trang (đo ở 390px):** 21 request · 463 KB · CLS 0. Font: Fraunces 500/600,
+Figtree 400/500/600, và `caveat-early-400-700.woff2` (subset 4 KB chỉ chứa chữ
+"early"; bản Caveat đầy đủ vẫn ở `css/fonts.css` cho trang khác). Ảnh hero
+desktop chỉ tải từ 900px trở lên.
+
 **Giá nằm ở MỘT chỗ:** `prices.js` (`PRICES`) = brief §3; copy trong
 `index.html` in cùng số đó. Đổi giá → sửa cả hai. Test:
 `node scratchpad/test-prices.js` (8 nhóm), `test-builder.js` (Playwright),

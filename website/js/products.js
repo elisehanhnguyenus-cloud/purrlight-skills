@@ -1,179 +1,166 @@
 /* ============================================================
    Purrlight Studio — product catalog
    ------------------------------------------------------------
+   SOURCE OF TRUTH: the live Etsy shop (vietdelightfinds.etsy.com).
+   Prices, listing links, photos and the facts in `details` were taken
+   from the shop's RSS feed on 15/10/2026 (the feed lists the 10 most
+   recent listings — the rest of the shop is not here yet; see README).
+   Re-check against the listing before changing a price here.
+
    HOW TO EDIT (for Elise):
-   - ETSY_SHOP_URL / TIKTOK_SHOP_URL: replace with your real shop
-     links before publishing.
-   - Prices below are drawn from your current Etsy ranges — verify
-     each one against the live listing before launch.
-   - To swap in real photos: replace the .svg paths in `img` with
-     your photo files (put them in assets/img/), keep square crops.
-   - `etsyUrl` per product: paste the listing URL so "Buy on Etsy"
-     goes straight to that listing instead of the shop home.
-   - `addons` (optional): bundle options shown as a "make it a set"
-     dropdown on the product page. Each Etsy listing MUST have a matching
-     variation with the same price before publishing.
+   - A new listing = copy one block below, set id/name/price/category,
+     paste the listing URL into `etsyUrl`, drop the photo in
+     assets/img/etsy/ and point `img` at it.
+   - Names on the site are ours (canon words); the Etsy title can differ.
+   - `addons` (bundle dropdown) is only allowed when the Etsy listing has
+     the SAME variation at the same price — none do today, so none here.
    ============================================================ */
 
-const ETSY_SHOP_URL = "https://www.etsy.com/shop/PurrlightStudio"; /* TODO: verify exact shop URL */
-const TIKTOK_SHOP_URL = "https://www.tiktok.com/@purrlightstudio"; /* TODO: verify exact handle */
+const ETSY_SHOP_URL = "https://vietdelightfinds.etsy.com";             /* verified 15/10/2026 */
+const TIKTOK_SHOP_URL = "https://www.tiktok.com/@purrlightstudio";     /* TODO: verify exact handle */
 
 const PRODUCTS = [
   {
-    id: "storybook-doll",
-    name: "Storybook Red-Braid Crochet Doll",
+    id: "anne-shirley-set",
+    name: "Red-Braid Storybook Doll Set",
+    category: "Storybook & Traditional Tales",
+    price: 35,
+    badge: "made-to-order",
+    img: "assets/img/etsy/4367997103.jpg",
+    short: "Three small crochet dolls from the red-braid story — about 15 cm each, made to order.",
+    desc: "A set of three hand-crocheted dolls inspired by the red-haired dreamer of the 1908 classic — the kind of keepsake that lives on a bookshelf and gets read to. Each doll is around 15 cm tall (handmade tolerance ±1–2 cm) and made for your order.",
+    details: ["Set of three dolls", "About 15 cm / 6\" each (±1–2 cm)", "Made to order", "Spot clean with a damp cloth"],
+    etsyUrl: "https://www.etsy.com/listing/4367997103"
+  },
+  {
+    id: "bennet-darcy-set",
+    name: "Elizabeth Bennet & Mr Darcy Crochet Doll Pair",
     category: "Storybook & Traditional Tales",
     price: 38,
     badge: "made-to-order",
-    img: "assets/img/product-doll-redbraid.svg",
-    short: "A hand-crocheted heroine with rosy cheeks and long red braids, stitched loop by loop.",
-    desc: "Every Storybook Doll begins as a sketch and a skein of soft cotton yarn. Our artisans crochet her body, braids, and pinafore entirely by hand and paint her face one at a time — no two dolls are ever exactly alike. She stands about 12 inches tall and loves being read to.",
-    details: ["Soft cotton yarn, polyester fill", "About 12\" / 30 cm tall", "Hand-painted face", "Spot clean with a damp cloth"],
-    addons: [{ label: "Doll only", delta: 0 }, { label: "Make it a set · + Matching mini doll keychain", delta: 15 }],
-    etsyUrl: ""
+    img: "assets/img/etsy/4572077122.jpg",
+    short: "A Regency pair for the bookshelf — sage empire gown, navy tailcoat, tall riding boots.",
+    desc: "Elizabeth and Darcy, hand-crocheted as a pair of Regency art dolls. She wears a sage green empire-waist gown with a scalloped hem and a soft white spencer; he wears a navy tailcoat, white cravat and tall black riding boots. Every face is finished by hand, one stitch at a time, which is why no two pairs are ever quite the same.",
+    details: ["Pair of two dolls", "Hand-finished faces", "Made to order", "Spot clean with a damp cloth"],
+    etsyUrl: "https://www.etsy.com/listing/4572077122"
   },
   {
-    id: "baptism-set",
-    name: "Baptism Keepsake Outfit",
-    category: "Faith & Milestones",
+    id: "founding-fathers-set",
+    name: "Founding Fathers Crochet Doll Trio",
+    category: "Storybook & Traditional Tales",
     price: 42,
     badge: "made-to-order",
-    img: "assets/img/product-baptism.svg",
-    short: "A soft heirloom outfit for baptism day — made to be kept long after.",
-    desc: "Sewn in creamy white cotton with delicate detailing, this little outfit is made for the quiet, shining moments. Made to be folded away with the photographs and kept for the next generation.",
-    details: ["Soft cotton fabric", "Sizes 0–3m, 3–6m, 6–12m", "Gentle hand wash recommended", "Arrives gift-folded in tissue"],
-    addons: [{ label: "Outfit only", delta: 0 }, { label: "Make it a set · + Bunny Lovey keepsake", delta: 25 }],
-    etsyUrl: ""
+    img: "assets/img/etsy/4467723974.jpg",
+    short: "Washington, Jefferson and Franklin, crocheted stitch by stitch — a display keepsake for America's 250th.",
+    desc: "The first pieces in our Founding Fathers collection: George Washington, Thomas Jefferson and Benjamin Franklin as a crochet doll trio. A display keepsake for history lovers, teachers and anyone counting down to 1776 + 250 — made to order.",
+    details: ["Trio: Washington, Jefferson, Franklin", "Display keepsake", "Made to order", "Spot clean with a damp cloth"],
+    etsyUrl: "https://www.etsy.com/listing/4467723974"
   },
   {
-    id: "mini-doll-keychain",
-    name: "Mini Fabric Doll Keychain",
-    category: "Little Things",
-    price: 19,
+    id: "christening-gown-set",
+    name: "Christening Gown Set — lace & satin",
+    category: "Faith & Milestones",
+    price: 89,
     badge: "",
-    img: "assets/img/product-keychain-doll.svg",
-    short: "A tiny fabric friend for your keys, bag, or backpack zipper.",
-    desc: "Small enough to ride along everywhere — each mini doll is cut, sewn, and finished by hand, then fitted with a sturdy ring. Pick one that looks like someone you love.",
-    details: ["Cotton fabric, embroidered details", "About 4\" / 10 cm", "Metal keyring hardware", "Decorative keepsake"],
-    etsyUrl: ""
+    img: "assets/img/etsy/4333988358.jpg",
+    short: "Gown, bonnet, mittens and booties in embroidered lace and satin — for the quiet, shining day.",
+    desc: "An heirloom christening set in embroidered lace and satin: gown, bonnet, mittens and booties, made by hand for baptism or dedication day and meant to be folded away with the photographs afterwards. Sized 3–12 months. Ships from our Texas studio.",
+    details: ["Gown, bonnet, mittens and booties", "Embroidered lace and satin", "3–12 months", "Ships from our Texas studio"],
+    etsyUrl: "https://www.etsy.com/listing/4333988358"
   },
   {
-    id: "cat-pvc-keychain",
-    name: "Merlin Moon Keychain",
-    category: "Merlin's World & His Friends",
-    price: 12,
-    badge: "new",
-    img: "assets/img/product-keychain-cat.svg",
-    short: "Merlin in his beret, dozing on a crescent moon — soft-touch PVC.",
-    desc: "Some evenings Merlin sits very still on the windowsill and stares up at the moon. This little charm is that exact mood, cast in flexible soft-touch PVC with a matte finish. Sturdy enough for daily keys, curious enough to make you smile at the door.",
-    details: ["Soft-touch PVC charm", "About 2.5\" / 6 cm", "Metal keyring hardware", "Wipe clean"],
-    etsyUrl: ""
-  },
-  {
-    id: "crochet-cat",
-    name: "Sleepy Merlin Crochet Doll",
-    category: "Merlin's World & His Friends",
-    price: 34,
-    badge: "the-original",
-    img: "assets/img/product-cat-plush.svg",
-    short: "Our studio cat, mid-nap — tuxedo coat, little yellow beret, one white whisker.",
-    desc: "This is Merlin, the curious tuxedo cat who supervises our worktable (when he isn't sleeping on the patterns). Hand-crocheted in his signature yellow beret, with his single white whisker embroidered on the left — just like the real one. From the cat who takes notes.",
-    details: ["Soft acrylic-blend yarn, polyester fill", "About 8\" / 20 cm curled", "Hand-finished face, embroidered whisker", "Spot clean with a damp cloth"],
-    addons: [{ label: "Cat only", delta: 0 }, { label: "Make it a set · + Felt fish for cats", delta: 12 }],
-    etsyUrl: ""
-  },
-  {
-    id: "bunny-lovey",
-    name: "Bunny Lovey Doll",
-    category: "Feelings & Calm",
-    price: 29,
+    id: "rosary-charm",
+    name: "Crochet Decade Rosary Charm",
+    category: "Faith & Milestones",
+    price: 25,
     badge: "",
-    img: "assets/img/product-bunny.svg",
-    short: "A floppy-eared bunny sized for small arms and big feelings.",
-    desc: "With long soft ears made for holding, this hand-finished bunny becomes the friend that goes everywhere. Sewn from soft fabric with a hand-painted face.",
-    details: ["Soft fabric, hand-painted face", "About 10\" / 25 cm", "Machine wash cold, air dry", "Ages 3+, with an adult nearby"],
-    etsyUrl: ""
+    img: "assets/img/etsy/4592186429.jpg",
+    short: "A one-decade rosary for the rearview mirror or a bag — cotton crochet over wood beads, in your color.",
+    desc: "A quiet reminder to pray on the road. Each one-decade rosary is strung by hand in our Pearland, Texas studio from cotton crochet-covered wood beads that are soft to the touch, with a metal crucifix (or a photo charm, if you'd rather) and a clasp for hanging. Comes with a cloth pouch and our prayer card.",
+    details: ["Cotton crochet over wood beads, metal crucifix", "Your choice of color", "Cloth pouch + prayer card included", "Hand-strung in Pearland, Texas — ships in 2–4 days"],
+    etsyUrl: "https://www.etsy.com/listing/4592186429"
   },
   {
-    id: "flower-doll",
-    name: "Little Blossom Fabric Doll",
-    category: "Little Things",
-    price: 22,
-    badge: "",
-    img: "assets/img/product-flower-doll.svg",
-    short: "A pocket-sized fabric doll in a flower bonnet, sewn by hand.",
-    desc: "She wears a petal bonnet and a permanent little smile. Hand-cut, hand-sewn, and small enough to live in a coat pocket or on a bedside shelf.",
-    details: ["Cotton fabric, embroidered details", "About 6\" / 15 cm", "Spot clean", "Ages 3+, with an adult nearby"],
-    etsyUrl: ""
-  },
-  {
-    id: "pet-bandana",
-    name: "Handmade Pet Bandana",
+    id: "maine-coon-cat",
+    name: "Maine Coon Crochet Cat",
     category: "Merlin's World & His Friends",
-    price: 16,
+    price: 55,
     badge: "",
-    img: "assets/img/product-bandana.svg",
-    short: "A snap-on bandana that turns any walk into an occasion.",
-    desc: "Cut and hemmed by hand in our studio prints, with a snap closure that sits comfortably over the collar. For cats and dogs who take their neighborhood rounds seriously.",
-    details: ["Cotton fabric", "Sizes S / M / L — see size chart photos", "Snap closure", "Machine wash cold"],
-    etsyUrl: ""
+    img: "assets/img/etsy/4337395489.jpg",
+    short: "The big shaggy one — small mane, tufted ears, a tail you can run your fingers through. About 25 cm.",
+    desc: "A Maine Coon crocheted stitch by stitch: a 25 cm long-haired cat with a small mane, lightly tufted ear tips and a full fluffy tail. The same body also comes in a Ragdoll colourway — pick whichever breed you love. Boxed and ready to ship.",
+    details: ["About 25 cm / 10\"", "Maine Coon or Ragdoll colourway", "Ready to ship", "Spot clean with a damp cloth"],
+    etsyUrl: "https://www.etsy.com/listing/4337395489"
   },
   {
-    id: "bow-collar",
-    name: "Crochet Bow Pet Collar",
+    id: "british-shorthair-cat",
+    name: "British Shorthair Crochet Cat — Sherlock outfit",
     category: "Merlin's World & His Friends",
-    price: 18,
+    price: 55,
     badge: "made-to-order",
-    img: "assets/img/product-bow-collar.svg",
-    short: "A hand-crocheted bow on a soft collar band — formalwear for whiskers.",
-    desc: "Each bow is crocheted by hand and mounted on a soft, adjustable band. Breakaway-style buckle for safety. Portrait day approved.",
-    details: ["Crocheted cotton bow, soft band", "Adjustable, breakaway buckle", "For cats and small dogs", "Spot clean"],
-    etsyUrl: ""
+    img: "assets/img/etsy/4337895128.jpg",
+    short: "Gray-and-white, pink nose, white paws — and a removable Sherlock-style outfit.",
+    desc: "A British Shorthair in gray and white with a pink nose, white belly and white paws, dressed in a Sherlock-style outfit with removable accessories. Crocheted by hand for your order — not a pattern, the finished cat.",
+    details: ["Gray and white, pink nose", "Removable Sherlock-style outfit", "Made to order", "Spot clean with a damp cloth"],
+    etsyUrl: "https://www.etsy.com/listing/4337895128"
   },
   {
-    id: "whisker-tee",
-    name: "Whiskers & Moonlight Tee",
+    id: "custom-pet-grand",
+    name: "Your Pet, Crocheted — Grand",
     category: "Merlin's World & His Friends",
-    price: 26,
-    badge: "new",
-    img: "assets/img/product-tee-whisker.svg",
-    short: "Whiskers, moonlight, and a page from Merlin's notebook — on a tee for evening people.",
-    desc: "A quiet little graphic — whiskers, a crescent moon, a scatter of stars — straight from Merlin's notebook. Printed to order on a soft unisex tee.",
-    details: ["Soft cotton-blend tee", "Unisex sizes S–3XL — see size chart", "Printed to order", "Machine wash cold, inside out"],
-    etsyUrl: ""
+    price: 150,
+    badge: "made-to-order",
+    img: "assets/img/etsy/4364432946.jpg",
+    short: "Your own cat or dog, made from your photos — the big one, over 14 inches.",
+    desc: "The Grand size of our custom pet portraits: your cat or dog crocheted from the photos you send, over 14 inches tall, made for your order. Send the clearest photos you have — front-on, in daylight if you can — and we work from those.",
+    details: ["Grand size, over 14\" / 36 cm", "Made from your photos", "Made to order", "Spot clean with a damp cloth"],
+    etsyUrl: "https://www.etsy.com/listing/4364432946"
   },
   {
-    id: "felt-fish",
-    name: "Felt Fish for Cats",
-    category: "Merlin's World & His Friends",
-    price: 14,
+    id: "horse-companion",
+    name: "Large Crochet Horse",
+    category: "Feelings & Calm",
+    price: 55,
     badge: "",
-    img: "assets/img/product-fish.svg",
-    short: "A hand-sewn felt fish that has accepted its fate with dignity.",
-    desc: "Sturdy felt, tight stitching, and a satisfying flip — this little fish is built for enthusiastic paws.",
-    details: ["Wool-blend felt, polyester fill", "About 5\" / 13 cm", "Wool-blend felt, stitched closed", "Supervise play; replace if worn"],
-    etsyUrl: ""
+    img: "assets/img/etsy/4368649382.jpg",
+    short: "An oversized, hug-sized horse in soft fluffy yarn — about 40 cm long.",
+    desc: "A generously sized horse, about 40 cm (15.75\") long, worked in ultra-soft fluffy yarn — the kind of companion that ends up on the bed, the sofa and the reading corner in turn.",
+    details: ["About 40 cm / 15.75\" long", "Soft fluffy yarn", "Spot clean with a damp cloth"],
+    etsyUrl: "https://www.etsy.com/listing/4368649382"
+  },
+  {
+    id: "dragon-pattern",
+    name: "Sleeping Dragon — Crochet Pattern (PDF)",
+    category: "Patterns & Printables",
+    price: 1.75,
+    badge: "new",
+    img: "assets/img/etsy/4399784660.jpg",
+    short: "A downloadable pattern for a 120 cm sleeping dragon in super bulky chenille — for makers.",
+    desc: "A digital PDF crochet pattern (US terms) for a 120 cm / 47\" Sleeping Dragon in super bulky chenille yarn with an 8 mm hook: round-by-round instructions, stitch counts, tick tables and assembly tips. This is the pattern, not a finished piece.",
+    details: ["Digital PDF — instant download", "US crochet terms", "Finished size about 120 cm / 47\"", "Super bulky chenille yarn, 8 mm hook"],
+    etsyUrl: "https://www.etsy.com/listing/4399784660"
   }
 ];
 
 /* Which pieces the standard care/safety copy applies to (shared by product.html and the Event Desk):
-   NOT_HANDMADE     — printed to order / molded PVC: no "made by hand", no spot-clean care, no safety line.
-   SAFETY_LINE_SKIP — an infant garment cannot carry "Not suitable for children under 3", and pet
-   accessories are not children's items. Only the verbatim safety line is ever shown; nothing replaces it. */
-const NOT_HANDMADE = ["whisker-tee", "cat-pvc-keychain"];
-const SAFETY_LINE_SKIP = ["baptism-set", "pet-bandana", "bow-collar", "felt-fish"];
+   NOT_HANDMADE     — digital patterns / printed-to-order / molded items: no "made by hand", no spot-clean care, no safety line.
+   SAFETY_LINE_SKIP — a christening garment cannot carry "Not suitable for children under 3", and a rosary
+   charm is not a children's item. Only the verbatim safety line is ever shown; nothing replaces it. */
+const NOT_HANDMADE = ["dragon-pattern"];
+const SAFETY_LINE_SKIP = ["christening-gown-set", "rosary-charm"];
 
 const CATEGORIES = [
-  { name: "Storybook & Traditional Tales", img: "assets/img/cat-dolls.svg" },
-  { name: "Feelings & Calm", img: "assets/img/product-bunny.svg" },
-  { name: "Faith & Milestones", img: "assets/img/cat-baby.svg" },
-  { name: "Little Things", img: "assets/img/cat-keychains.svg" },
-  { name: "Merlin's World & His Friends", img: "assets/img/product-cat-plush.svg" }
+  { name: "Storybook & Traditional Tales", img: "assets/img/etsy/4367997103.jpg" },
+  { name: "Feelings & Calm", img: "assets/img/etsy/4368649382.jpg" },
+  { name: "Faith & Milestones", img: "assets/img/etsy/4333988358.jpg" },
+  { name: "Merlin's World & His Friends", img: "assets/img/etsy/4337395489.jpg" },
+  { name: "Patterns & Printables", img: "assets/img/etsy/4399784660.jpg" }
 ];
 
-/* Canon co 7 collections — 2 collection duoi day RA MAT SAU, chi hien tile
-   "soon" tren trang chu, KHONG vao filter (tranh trang loc rong): */
+/* Canon co 7 collections — 2 collection duoi day chua co listing tren Etsy
+   (Little Things: linen doll bag charm, stress ball set… chua len feed),
+   chi hien tile "soon" tren trang chu, KHONG vao filter (tranh trang loc rong): */
 const UPCOMING_CATEGORIES = [
-  { name: "Heritage & Celebration", img: "assets/img/tile-heritage.svg" },
-  { name: "Patterns & Printables", img: "assets/img/tile-patterns.svg" }
+  { name: "Little Things", img: "assets/img/cat-keychains.svg" },
+  { name: "Heritage & Celebration", img: "assets/img/tile-heritage.svg" }
 ];

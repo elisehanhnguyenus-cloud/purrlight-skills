@@ -79,7 +79,7 @@
   /* ---------- homepage: favorites ---------- */
   var favGrid = document.querySelector("[data-favorites]");
   if (favGrid && typeof PRODUCTS !== "undefined") {
-    var favIds = ["baptism-set", "mini-doll-keychain", "storybook-doll", "crochet-cat"];
+    var favIds = ["anne-shirley-set", "maine-coon-cat", "christening-gown-set", "rosary-charm"];
     renderGrid(favGrid, favIds.map(function (id) {
       return PRODUCTS.find(function (p) { return p.id === id; });
     }).filter(Boolean));

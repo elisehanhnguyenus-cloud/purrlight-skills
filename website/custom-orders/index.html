@@ -93,12 +93,26 @@
           <li><a href="#calendar" data-tab="calendar"><img src="../assets/img/custom/thumb-calendar.webp" alt="" width="240" height="240" decoding="async"><span class="pk-name">Custom Watercolor Pet Calendar 2027</span><span class="pk-price">from $15</span></a></li>
         </ul>
 
+        <!-- "Or start from a template" (OREOiD): one tap chooses the piece and its options. Needs JS, so it starts hidden. -->
+        <div class="ideas" data-ideas hidden>
+          <p class="ideas-title" id="ideas-label">Or start from a gift idea</p>
+          <ul class="ideas-list" aria-labelledby="ideas-label">
+            <li><button type="button" class="idea" data-preset="realtor"><img src="../assets/img/custom/thumb-housewarming.webp" alt="" width="240" height="240" loading="lazy" decoding="async"><span class="idea-text"><span class="idea-name">Realtor closing gift</span><span class="idea-desc">Housewarming box + a small succulent</span></span><span class="idea-price" data-idea-price></span></button></li>
+            <li><button type="button" class="idea" data-preset="memorial"><img src="../assets/img/custom/thumb-watercolor.webp" alt="" width="240" height="240" loading="lazy" decoding="async"><span class="idea-text"><span class="idea-name">Pet memorial</span><span class="idea-desc">5×7 watercolor print on Dó papyrus, framed, in a gift box</span></span><span class="idea-price" data-idea-price></span></button></li>
+            <li><button type="button" class="idea" data-preset="grandma"><img src="../assets/img/custom/thumb-portrait-doll.webp" alt="" width="240" height="240" loading="lazy" decoding="async"><span class="idea-text"><span class="idea-name">Christmas gift for Grandma</span><span class="idea-desc">Portrait doll in a wooden shadowbox display case</span></span><span class="idea-price" data-idea-price></span></button></li>
+          </ul>
+        </div>
+
         <!-- 3.2 Custom Portrait Crochet Doll -->
         <article class="gift" id="portrait-doll" data-gift="portraitDoll" aria-labelledby="pd-h">
           <div class="gift-head">
             <h3 id="pd-h" class="gift-title">Custom Portrait Crochet Doll</h3>
             <p class="price">$80</p>
             <p class="desc">A one-of-a-kind crochet portrait of you or someone you love, made from your photos or your own design. 20–23 cm (8–9 in).</p>
+            <ul class="head-notes">
+              <li>Full doll accessories included — wings, flowers, outfit, fine embroidered details</li>
+              <li>Display accessories, sales tax &amp; U.S. shipping all included</li>
+            </ul>
             <p class="turnaround">Turnaround: from 2 weeks</p>
           </div>
           <form class="gift-steps" aria-label="Options — Custom Portrait Crochet Doll">
@@ -109,6 +123,17 @@
                 <label class="tile"><input type="radio" name="shadowbox" value="yes"><span class="tile-name">Add a wooden shadowbox display case</span><span class="tile-price">+$10</span></label>
               </div>
             </fieldset>
+            <fieldset class="step step-photos">
+              <legend><span class="step-n" aria-hidden="true">3</span> <span class="step-label">Your photos</span></legend>
+              <ul class="photo-list"><li>Face</li><li>Full body</li><li>Any detail you want captured</li></ul>
+              <p class="step-hint photo-how" data-photo-how>Attach them to your order email.</p>
+            </fieldset>
+            <fieldset class="step step-message" hidden>
+              <legend><span class="step-n" aria-hidden="true">4</span> <span class="step-label">Message for the card</span> <span class="legend-note">optional</span></legend>
+              <label class="sr-only" for="pd-msg">Message for the card</label>
+              <textarea id="pd-msg" name="message" rows="2" maxlength="160" data-message></textarea>
+              <p class="step-hint msg-count" aria-hidden="true">Up to 160 characters</p>
+            </fieldset>
           </form>
           <div class="gift-preview">
             <figure class="gift-photo">
@@ -117,8 +142,12 @@
             <div class="gift-box">
               <h4 class="box-title">What's inside</h4>
               <ul class="box">
-                <li class="incl">Full doll accessories included — wings, flowers, outfit, fine embroidered details</li>
-                <li class="incl">Display accessories, sales tax &amp; U.S. shipping all included</li>
+                <li class="incl">Small flower bouquet</li>
+                <li class="incl">Angel wings</li>
+                <li class="incl">Cape / hat / handbag</li>
+                <li class="incl">Detachable wooden stand</li>
+                <li class="incl">Card</li>
+                <li class="incl">U.S. shipping included</li>
               </ul>
               <div class="box-end">
                 <p><a class="btn btn-primary btn-block" data-order href="mailto:hello@purrlight.studio?subject=Custom%20order">Place your order</a></p>
@@ -160,6 +189,12 @@
               </div>
               <p class="step-note">Cats, dogs, rabbits and other pets — all at the same prices</p>
             </fieldset>
+            <fieldset class="step step-photos">
+              <legend><span class="step-n" aria-hidden="true">5</span> <span class="step-label">Your photos</span></legend>
+              <ul class="photo-list"><li>Three photos of your pet</li><li>Face and eye color</li><li>Full body, markings and coat</li></ul>
+              <p class="step-hint photo-how" data-photo-how>Attach them to your order email.</p>
+            </fieldset>
+
             <details class="all-prices" open>
               <summary>All pet prices</summary>
               <table class="price-table">
@@ -235,7 +270,19 @@
                 <label class="tile"><input type="checkbox" name="extras" value="rosary"><span class="tile-name">Crochet rosary add-on</span><span class="tile-price">+$15</span></label>
               </div>
             </fieldset>
-            <p class="step-note">Order more, save more: <strong>5% off</strong> from the 2nd painting · <strong>10% off</strong> from the 5th</p>
+            <fieldset class="step step-qty">
+              <legend><span class="step-n" aria-hidden="true">6</span> <span class="step-label">How many paintings</span></legend>
+              <p class="step-hint">Order more, save more: <strong>5% off</strong> from the 2nd painting · <strong>10% off</strong> from the 5th</p>
+              <div class="qty" data-qty>
+                <label class="sr-only" for="wc-qty">Number of paintings</label>
+                <input id="wc-qty" type="number" name="qty" value="1" min="1" max="50" step="1" inputmode="numeric">
+              </div>
+            </fieldset>
+            <fieldset class="step step-photos">
+              <legend><span class="step-n" aria-hidden="true">7</span> <span class="step-label">Your photos</span></legend>
+              <ul class="photo-list"><li>A photo of your pet or your home</li></ul>
+              <p class="step-hint photo-how" data-photo-how>Attach them to your order email.</p>
+            </fieldset>
           </form>
           <div class="gift-preview">
             <figure class="gift-photo">
@@ -244,7 +291,9 @@
             </figure>
             <div class="gift-box">
               <h4 class="box-title">What's inside</h4>
-              <ul class="box"></ul>
+              <ul class="box">
+                <li class="incl" data-when="format=digital">.png and .pdf files, at least 4×6 in</li>
+              </ul>
               <div class="box-end">
                 <p><a class="btn btn-primary btn-block" data-order href="mailto:hello@purrlight.studio?subject=Custom%20order">Place your order</a></p>
               </div>
@@ -267,25 +316,39 @@
                 <label class="tile"><input type="checkbox" name="addons" value="succulent" data-label="Small succulent or aloe vera"><span class="tile-name">Small succulent or aloe vera</span><span class="tile-price">+$10</span></label>
                 <label class="tile"><input type="checkbox" name="addons" value="coldcut" data-label="Cold cut box"><span class="tile-name">Cold cut box</span><span class="tile-price">+$10</span></label>
                 <label class="tile"><input type="checkbox" name="addons" value="berry" data-label="3-berry fruit box"><span class="tile-name">3-berry fruit box</span><span class="tile-price">+$10</span></label>
+                <label class="tile"><input type="checkbox" name="addons" value="chocolate" data-label="Chocolate box"><span class="tile-name">Chocolate box</span><span class="tile-price">+$10</span></label>
+              </div>
+              <div class="swaps" data-swaps hidden></div>
+            </fieldset>
+            <fieldset class="step step-qty">
+              <legend><span class="step-n" aria-hidden="true">3</span> <span class="step-label">How many boxes</span></legend>
+              <p class="step-hint">Realtors &amp; repeat gifting: <strong>5% off</strong> from the 2nd box · <strong>10% off</strong> from the 5th</p>
+              <div class="qty" data-qty>
+                <label class="sr-only" for="hw-qty">Number of boxes</label>
+                <input id="hw-qty" type="number" name="qty" value="1" min="1" max="50" step="1" inputmode="numeric">
               </div>
             </fieldset>
-            <p class="step-note">Realtors &amp; repeat gifting: <strong>5% off</strong> from the 2nd box · <strong>10% off</strong> from the 5th</p>
+            <fieldset class="step step-photos">
+              <legend><span class="step-n" aria-hidden="true">4</span> <span class="step-label">Your photos</span></legend>
+              <ul class="photo-list"><li>A photo of the home — for the watercolor painting</li></ul>
+              <p class="step-hint photo-how" data-photo-how>Attach them to your order email.</p>
+            </fieldset>
           </form>
           <div class="gift-preview">
             <figure class="gift-photo">
-              <div class="shot"><img src="../assets/img/custom/housewarming-box.webp" alt="Round housewarming gift box with local cider, honey, fruit, cold cuts and a crochet rosary chain" width="382" height="512" loading="lazy" decoding="async"></div>
+              <div class="shot"><img src="../assets/img/custom/housewarming-box.webp" alt="Sample round housewarming gift box with a bottle, honey, fruit, cold cuts and a crochet rosary chain" width="382" height="512" loading="lazy" decoding="async"><p class="shot-cap">Sample box. The bottle in yours is non-alcoholic sparkling cider.</p></div>
             </figure>
             <div class="gift-box">
               <h4 class="box-title">What's inside</h4>
               <ul class="box cols-2">
                 <li class="incl incl-head">Basic set:</li>
-                <li class="incl">local cider</li>
-                <li class="incl">jar of jam or local honey</li>
-                <li class="incl">watercolor painting of the home</li>
-                <li class="incl">crochet rosary chain</li>
-                <li class="incl">candle</li>
-                <li class="incl">gift box</li>
+                <li class="incl" data-basic="cider">Bottle of sparkling cider (non-alcoholic)</li>
+                <li class="incl" data-basic="jam">Jar of jam or local honey</li>
+                <li class="incl" data-basic="painting">Watercolor painting of the home</li>
+                <li class="incl" data-basic="rosary">Crochet rosary chain</li>
+                <li class="incl">Gift box</li>
               </ul>
+              <p class="box-fine">We don't sell or ship alcohol.</p>
               <div class="box-end">
                 <p><a class="btn btn-primary btn-block" data-order href="mailto:hello@purrlight.studio?subject=Custom%20order">Place your order</a></p>
               </div>
@@ -333,6 +396,26 @@
             <p class="desc">A meaningful thank-you for godparents: a custom crochet portrait doll of them, paired with a handmade crochet rosary chain.</p>
             <p class="turnaround">Turnaround: from 2 weeks</p>
           </div>
+          <form class="gift-steps" aria-label="Options — Godparent Gift Set">
+            <fieldset class="step">
+              <legend><span class="step-n" aria-hidden="true">2</span> <span class="step-label">For one or both godparents</span></legend>
+              <div class="tiles">
+                <label class="tile"><input type="radio" name="count" value="1" checked><span class="tile-name">One godparent</span><span class="tile-price">$95</span></label>
+                <label class="tile"><input type="radio" name="count" value="2"><span class="tile-name">Both godparents</span><span class="tile-note">Second set <strong>−$10</strong></span><span class="tile-price">$180</span></label>
+              </div>
+            </fieldset>
+            <fieldset class="step step-photos">
+              <legend><span class="step-n" aria-hidden="true">3</span> <span class="step-label">Your photos</span></legend>
+              <ul class="photo-list"><li>Face and full body of each godparent</li></ul>
+              <p class="step-hint photo-how" data-photo-how>Attach them to your order email.</p>
+            </fieldset>
+            <fieldset class="step step-message" hidden>
+              <legend><span class="step-n" aria-hidden="true">4</span> <span class="step-label">Message for the card</span> <span class="legend-note">optional</span></legend>
+              <label class="sr-only" for="gp-msg">Message for the card</label>
+              <textarea id="gp-msg" name="message" rows="2" maxlength="160" data-message></textarea>
+              <p class="step-hint msg-count" aria-hidden="true">Up to 160 characters</p>
+            </fieldset>
+          </form>
           <div class="gift-preview">
             <figure class="gift-photo">
               <div class="shot"><img src="../assets/img/custom/godparent-set.webp" alt="Crochet portrait doll of a grandmother in a kraft gift box beside a handmade crochet rosary chain" width="960" height="1200" loading="lazy" decoding="async"></div>
@@ -342,6 +425,8 @@
               <ul class="box">
                 <li class="incl">A custom crochet portrait doll of them</li>
                 <li class="incl">A handmade crochet rosary chain</li>
+                <li class="incl">Gift box</li>
+                <li class="incl">Card</li>
               </ul>
               <div class="box-end">
                 <p><a class="btn btn-primary btn-block" data-order href="mailto:hello@purrlight.studio?subject=Custom%20order">Place your order</a></p>
@@ -369,8 +454,13 @@
               <legend><span class="step-n" aria-hidden="true">3</span> <span class="step-label">Pages</span></legend>
               <div class="tiles">
                 <label class="tile"><input type="radio" name="pages" value="1" checked><span class="tile-name">1 page</span><span class="tile-price" data-price-by='{"key":"kind","map":{"print":"$20","digital":"$15"}}'>$20</span></label>
-                <label class="tile"><input type="radio" name="pages" value="6"><span class="tile-name">6 pages</span><span class="tile-price" data-price-by='{"key":"kind","map":{"print":"$50","digital":"$25"}}'>$50</span></label>
+                <label class="tile"><input type="radio" name="pages" value="6"><span class="tile-name">6 pages</span><span class="tile-note">2 months on each page</span><span class="tile-price" data-price-by='{"key":"kind","map":{"print":"$50","digital":"$25"}}'>$50</span></label>
               </div>
+            </fieldset>
+            <fieldset class="step step-photos">
+              <legend><span class="step-n" aria-hidden="true">4</span> <span class="step-label">Your photos</span></legend>
+              <ul class="photo-list"><li>Photos of your pet</li></ul>
+              <p class="step-hint photo-how" data-photo-how>Attach them to your order email.</p>
             </fieldset>
           </form>
           <div class="gift-preview">
@@ -381,6 +471,8 @@
               <h4 class="box-title">What's inside</h4>
               <ul class="box">
                 <li class="incl">Your pet painted in watercolor</li>
+                <li class="incl" data-when="pages=6">6 sheets — 2 months on each page</li>
+                <li class="incl" data-when="kind=print&amp;pages=6">Printed 5×7 in</li>
                 <li class="incl" data-when="kind=print">Printed on regular or fine-art paper</li>
               </ul>
               <div class="box-end">
@@ -401,6 +493,34 @@
           <li><span class="step-num" aria-hidden="true">2</span><p><strong>Pay a 50% deposit.</strong> We handcraft your piece and send you a photo before it ships.</p></li>
           <li><span class="step-num" aria-hidden="true">3</span><p><strong>Approve &amp; receive.</strong> Pay the balance and it arrives at your door — U.S. shipping included.</p></li>
         </ol>
+      </div>
+    </section>
+
+    <!-- Deposit: Square payment link (customer types the amount) or Zelle — Elise 15/10/2026. Values also in prices.js (PAY). -->
+    <section class="pay" id="pay" aria-labelledby="pay-h">
+      <div class="wrap">
+        <h2 id="pay-h" class="section-title">Pay your deposit</h2>
+        <p class="pay-lede">Place your order first, then pay the 50% deposit by card or Zelle. The balance is paid when you approve the photo of your finished piece.</p>
+        <p class="pay-pick" data-pay-pick hidden></p>
+        <div class="pay-ways">
+          <div class="pay-way">
+            <h3 class="pay-title">Card · Square</h3>
+            <p>On the Square page, type your deposit amount.</p>
+            <p class="pay-actions"><a class="btn btn-primary" data-pay-square href="https://square.link/u/UUg2LtbP" rel="noopener">Pay by card</a></p>
+            <figure class="pay-qr">
+              <img src="../assets/img/custom/square-pay-qr.svg" alt="QR code that opens the Square payment page" width="148" height="148" loading="lazy" decoding="async">
+              <figcaption>On a computer? Scan with your phone.</figcaption>
+            </figure>
+          </div>
+          <div class="pay-way">
+            <h3 class="pay-title">Zelle®</h3>
+            <p>Send to <strong class="zelle-to" data-zelle-to>purrlightstudiollc@gmail.com</strong></p>
+            <p class="pay-note">Add your name and your piece in the memo. Please send only to this address — we never ask you to pay anyone else.</p>
+            <p class="pay-note">Zelle® payments work like cash and can't be reversed. For card protection, pay by card with Square.</p>
+          </div>
+        </div>
+        <p class="note pay-terms">Your deposit is refundable until work begins. Custom pieces can't be returned, but anything wrong or damaged is on us, 100%.</p>
+        <p class="legal">Zelle® is a registered trademark of Early Warning Services, LLC. Purrlight Studio is not affiliated with, authorized, endorsed or sponsored by Early Warning Services, LLC.</p>
       </div>
     </section>
 

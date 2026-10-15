@@ -287,6 +287,9 @@
         for (var k2 in g.swaps) if (k2 !== sels[s1].getAttribute("data-swap") && g.swaps[k2] === opt.value) taken = true;
         opt.disabled = !!opt.value && taken;
       }
+      /* the painting swapped out → no home photo to send */
+      var photoStep = art.querySelector(".step-photos");
+      if (photoStep) { var noPainting = false; for (var k4 in g.swaps) if (g.swaps[k4] === "painting") noPainting = true; photoStep.hidden = noPainting; }
       /* the box shows what was swapped out */
       for (var b2 = 0; b2 < basics.length; b2++) {
         var bk = basics[b2].getAttribute("data-basic"), by = "";
@@ -387,7 +390,7 @@
       depositRow.innerHTML = ""; balanceRow.innerHTML = "";
       depositRow.appendChild(el("span", { text: "Deposit today (50%)" })); depositRow.appendChild(el("strong", { "class": "amt", text: money(est.deposit) }));
       balanceRow.appendChild(el("span", { text: "Balance after you approve the photo" })); balanceRow.appendChild(el("span", { "class": "amt", text: money(est.balance) }));
-      noteRow.textContent = (est.note ? est.note + " · " : "") + "Free U.S. shipping";
+      noteRow.textContent = [est.note, est.digitalOnly ? "" : "Free U.S. shipping"].filter(Boolean).join(" · ");
       copied.textContent = "";
       store(storeKey, { v: v, swaps: g.swaps });
       if (g === current) { updatePay(); setBarThumb(g); }
@@ -507,7 +510,7 @@
   /* Instagram / TikTok / Facebook in-app browsers can drop a form while a photo is being picked */
   var inApp = /Instagram|FBAN|FBAV|TikTok|musical_ly|Bytedance/i.test(navigator.userAgent || "");
   for (var hp = 0; hp < howPhotos.length; hp++) howPhotos[hp].textContent = byEmail ? "Attach them to your order email."
-    : "Upload them in the order form." + (inApp ? " Opening this from Instagram or TikTok? Tap ••• and choose Open in browser so your photos attach." : "") + " Photos won't attach? Email them to hello@purrlight.studio.";
+    : "Upload them in the order form." + (inApp ? " Opened this inside an app? Use its ••• menu to open the page in your browser so your photos attach." : "") + " Photos won't attach? Email them to purrlightstudiollc@gmail.com.";
   function pick(g) {   /* the customer is now building this piece: it is what the order links carry */
     lastPick = { product: g.def.product, total: g.est.total, deposit: g.est.deposit, text: g.text };
     if (g === current) updateBar();

@@ -29,7 +29,8 @@
    page is rewritten from this constant on load. TODO Elise: paste the form link (Tally recommended, see below).
    Until the form exists the buttons email the studio. The same mailto is written into index.html
    (data-order hrefs + <noscript> lines) only as the no-JavaScript fallback; it may stay as email. */
-var ORDER_FORM_URL = "mailto:hello@purrlight.studio?subject=Custom%20order";
+/* purrlight.studio is not registered yet (DNS NXDOMAIN, checked 15/10/2026): the stopgap email goes to the studio Gmail. */
+var ORDER_FORM_URL = "mailto:purrlightstudiollc@gmail.com?subject=Custom%20order";
 /* Recommended form: a free Tally form (no sign-in for customers, photo uploads up to 10 MB each).
    Paste its link (https://tally.so/r/XXXXXX) above; give the form four hidden fields named
    pick, product, total and deposit — the page fills them in. (Google Forms makes customers sign in
@@ -119,6 +120,7 @@ function estWatercolor(o) {
   if (isPrint && o.giftBox) lines.push({ label: "Gift box", amount: PRICES.watercolor.giftBox });
   if (o && o.rosary) lines.push({ label: "Crochet rosary add-on", amount: PRICES.watercolor.rosary });
   var r = applyQty(finish(lines), o && o.qty, "painting", "paintings");
+  r.digitalOnly = !isPrint && !(o && o.rosary);   /* nothing ships */
   r.note = r.qty > 1 ? "Estimate for " + r.qty + " paintings with the same options" : "Estimate for one painting";
   return r;
 }
@@ -145,7 +147,9 @@ function estCalendar(o) {
   var kind = o && o.kind === "digital" ? "digital" : "print";
   var pages = o && o.pages === 6 ? 6 : 1;
   var label = (kind === "print" ? "Design + print" : "Digital files only") + " · " + (pages === 1 ? "1 page" : "6 pages");
-  return finish([{ label: label, amount: PRICES.calendar[kind][pages] }]);
+  var r = finish([{ label: label, amount: PRICES.calendar[kind][pages] }]);
+  r.digitalOnly = kind === "digital";
+  return r;
 }
 
 function estGodparent(o) {
@@ -198,7 +202,7 @@ function summaryLine(product, est) {
   var parts = [];
   for (var i = 0; i < est.lines.length; i++) parts.push(est.lines[i].label + " " + money(est.lines[i].amount));
   var qty = est.qty > 1 ? " — × " + est.qty + " " + est.many + " " + money(est.subtotal) + ", order more, save more −" + money(est.saving) : "";
-  return "My pick: " + product + " — " + parts.join(" · ") + qty + " — estimate " + money(est.total) + " · deposit (50%) " + money(est.deposit) + " · Free U.S. shipping";
+  return "My pick: " + product + " — " + parts.join(" · ") + qty + " — estimate " + money(est.total) + " · deposit (50%) " + money(est.deposit) + (est.digitalOnly ? "" : " · Free U.S. shipping");
 }
 
 if (typeof module !== "undefined") {

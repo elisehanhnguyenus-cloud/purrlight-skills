@@ -63,6 +63,10 @@ strong { font-weight: 600; }
 .skip-link { position: absolute; left: -9999px; top: 0; z-index: 100; background: var(--ink); color: var(--cream); padding: 10px 18px; border-radius: 0 0 var(--radius) 0; }
 .skip-link:focus { left: 0; }
 :focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.co-footer :focus-visible { outline-color: var(--cream); }   /* the Ink ring vanishes on the Ink footer */
+/* keyboard focus never lands under the sticky header or the phone order bar (WCAG 2.4.11) */
+html { scroll-padding-top: 80px; }
+html.has-bar { scroll-padding-bottom: 96px; }
 
 /* ---------- type scale (brief §2: Fraunces display, Figtree body/UI) ---------- */
 h1, h2, h3 { font-family: var(--font-head); font-weight: 500; color: var(--ink); margin: 0; letter-spacing: -0.01em; }
@@ -150,7 +154,7 @@ p { margin: 0; }
 }
 
 /* step 1 — the seven pieces (tabs; a swipe row on phones) */
-.picker { list-style: none; margin: 0 calc(-1 * var(--gutter)); padding: 2px var(--gutter) 10px; display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x proximity; scroll-padding-inline: var(--gutter); scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.picker { list-style: none; margin: 0 calc(-1 * var(--gutter)); padding: 6px var(--gutter) 10px; display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x proximity; scroll-padding-inline: var(--gutter); scrollbar-width: none; -webkit-overflow-scrolling: touch; }
 .picker::-webkit-scrollbar { display: none; }
 .picker li { flex: 0 0 112px; scroll-snap-align: start; display: flex; }
 .picker a { display: flex; flex-direction: column; width: 100%; padding: 6px 6px 10px; border: 1px solid transparent; border-radius: 12px; color: var(--ink); text-decoration: none; font-size: 13px; line-height: 1.3; transition: background-color var(--ease), border-color var(--ease); }
@@ -162,7 +166,7 @@ p { margin: 0; }
 .pk-price { display: block; color: var(--berry); font-weight: 600; margin-top: auto; padding-top: 3px; }
 .picker a.is-on .pk-price { color: var(--ink); }
 @media (min-width: 900px) {
-  .picker { margin: 0; padding: 2px 0 4px; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; overflow: visible; }
+  .picker { margin: 0; padding: 6px 0 4px; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; overflow: visible; }
   .picker li { flex: none; }
   .picker a { font-size: 13.5px; }
 }
@@ -180,15 +184,15 @@ p { margin: 0; }
 .gift-photo { grid-area: photo; margin: 0; }
 .gift-box { grid-area: box; }
 @media (min-width: 900px) {
-  .gift { margin-top: 24px; padding-top: 32px; grid-template-columns: minmax(0, 1fr) minmax(0, 420px); grid-template-rows: auto 1fr; grid-template-areas: "head preview" "steps preview"; column-gap: 56px; row-gap: 26px; }
+  .gift { margin-top: 24px; padding-top: 32px; grid-template-columns: minmax(0, 1fr) minmax(0, clamp(320px, 36vw, 420px)); grid-template-rows: auto 1fr; grid-template-areas: "head preview" "steps preview"; column-gap: 56px; row-gap: 26px; }
   .gift-title { font-size: 30px; }
-  .gift-preview { display: grid; gap: 16px; grid-area: preview; align-self: start; }
+  .gift-preview { display: flex; flex-direction: column; gap: 16px; grid-area: preview; align-self: stretch; }
   .gift-preview > .gift-photo, .gift-preview > .gift-box { grid-area: auto; }
   .gift-head { align-self: start; }
   .gift-steps { align-self: start; }
 }
-/* the preview stays beside the options while they scroll — only where the viewport is tall enough to hold it */
-@media (min-width: 900px) and (min-height: 700px) { .gift-preview { position: sticky; top: 84px; } }
+/* the What's inside box stays beside the options while they scroll (the photo scrolls away) — where the viewport can hold it */
+@media (min-width: 900px) and (min-height: 720px) { .gift-box { position: sticky; top: 84px; } }
 
 /* photo: real photo at its natural ratio, never cropped, capped so the box stays in view */
 .shot { display: grid; justify-items: center; gap: 6px; }
@@ -203,18 +207,22 @@ p { margin: 0; }
 
 /* option tiles (native radio / checkbox inside a label) */
 .step { border: 0; margin: 0; padding: 0; min-width: 0; }
-.step.is-off { opacity: 0.55; }
+.step.is-off .tiles { opacity: 0.55; }   /* only the tiles dim: the prices in the hint stay readable */
+.step-off { font-size: 14px; font-weight: 500; color: var(--ink); margin: -4px 0 10px; }
+.step-off[hidden] { display: none; }
 .step-hint { font-size: 14px; color: var(--ink-soft); margin: -4px 0 10px; }
 .step-note { font-size: 14px; color: var(--ink-soft); margin-top: 10px; }
 .gift-steps > .step-note { margin-top: -8px; }
 .tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 .tiles.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .tiles.cols-1 { grid-template-columns: minmax(0, 1fr); }
-@media (min-width: 600px) { .tiles.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } .tiles.cols-1 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 600px) { .tiles.cols-1 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+/* four print sizes in a row only where each tile keeps ~120px (not in the narrow 900–1079px two-column studio) */
+@media (min-width: 600px) and (max-width: 899px), (min-width: 1080px) { .tiles.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 .tile { position: relative; display: flex; flex-direction: column; gap: 2px; min-height: 56px; padding: 11px 30px 11px 12px; border: 1px solid var(--line-ui); border-radius: var(--radius); background: transparent; font-size: 15px; font-weight: 500; line-height: 1.3; cursor: pointer; transition: border-color var(--ease), background-color var(--ease); }
 .tile input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
 .tile:hover { border-color: var(--ink-soft); }
-.tile-name { overflow-wrap: anywhere; }
+.tile-name { overflow-wrap: break-word; }
 .tile-note { order: 2; font-size: 13px; font-weight: 400; color: var(--caption); }
 .tile-note strong { font-weight: 600; color: var(--ink); }
 .tile-price { order: 3; font-family: var(--font-head); font-weight: 500; font-size: 17px; color: var(--berry); margin-top: 2px; }
@@ -355,4 +363,5 @@ p { margin: 0; }
 .order-bar .btn .short { display: none; }
 @media (max-width: 399px) { .order-bar .btn .long { display: none; } .order-bar .btn .short { display: inline; } }
 body.has-bar { padding-bottom: 88px; }
-@media (min-width: 980px) { .order-bar { display: none !important; } body.has-bar { padding-bottom: 0; } }
+/* from 900px the What's inside box (with its own order button) stays in view: no bar */
+@media (min-width: 900px) { .order-bar { display: none !important; } body.has-bar { padding-bottom: 0; } html.has-bar { scroll-padding-bottom: 0; } }

@@ -91,6 +91,7 @@
       if (ok) onDone(); else onFail();
     } catch (e) { onFail(); }
   }
+  function isDisabled(inp) { try { return inp.matches(":disabled"); } catch (e) { return inp.disabled; } }   /* counts a disabled <fieldset> too */
   /* data-when="format!=digital&paper=do" — every condition must hold; "name=a,b" (one of), "name!=a" (none of), "name~a" (checkbox list holds a) */
   function holds(expr, v) {
     var conds = expr.split("&");
@@ -223,11 +224,13 @@
         }
         else { var inp = node.querySelector("input"); if (inp) { inp.disabled = isDigital; if (isDigital) inp.checked = false; } }
         node.classList.toggle("is-off", isDigital);
+        var why = node.querySelector(".step-off");
+        if (why) { why.hidden = !isDigital; if (isDigital) node.setAttribute("aria-describedby", why.id); else node.removeAttribute("aria-describedby"); }
       }
       v = readValues(form);   /* re-read: disabled extras drop out */
       /* browsers without :has(): mirror the checked state as a class */
       var tin = art.querySelectorAll(".tile input");
-      for (var q = 0; q < tin.length; q++) tin[q].parentNode.classList.toggle("is-checked", tin[q].checked && !tin[q].disabled);
+      for (var q = 0; q < tin.length; q++) tin[q].parentNode.classList.toggle("is-checked", tin[q].checked && !isDisabled(tin[q]));
       /* prices that follow another choice (yarn by size, frame by print size, pages by format) */
       var dyn = art.querySelectorAll("[data-price-by]");
       for (var d = 0; d < dyn.length; d++) {
@@ -253,7 +256,7 @@
       /* the box: main line first, the included rows (static HTML), then each add-on */
       var old = box.querySelectorAll("li.line");
       for (var o = 0; o < old.length; o++) box.removeChild(old[o]);
-      var added = [];
+      var added = [], oldLabels = prevLabels || [];
       est.lines.forEach(function (l, idx) {
         var li = el("li", { "class": "line " + (idx === 0 ? "line-main" : "line-add") });
         var name = el("span", { "class": "line-name" });
@@ -275,7 +278,8 @@
       copied.textContent = "";
       store(storeKey, { v: v });
       if (fromUser) {
-        live.textContent = (added.length ? added.join(", ") + ". " : "") + "Estimate " + money(est.total) + ".";
+        var removed = oldLabels.filter(function (lab, ix) { return ix > 0 && prevLabels.indexOf(lab) === -1; });   /* a swapped main line is not a removal */
+        live.textContent = (added.length ? added.join(", ") + ". " : "") + (removed.length ? "Removed: " + removed.join(", ") + ". " : "") + "Estimate " + money(est.total) + ".";
         var addOn = added.filter(function (a) { return a !== prevLabels[0]; });
         if (addOn.length) barAdded(addOn[addOn.length - 1]);
         pick(g);
@@ -361,7 +365,7 @@
     if (opts.user) {
       store(CURRENT_KEY, id);
       try { history.replaceState(null, "", "#" + id); } catch (e) { /* file:// or old browser */ }
-      live.textContent = g.def.product + " — estimate " + money(g.est.total) + ".";
+      live.textContent = "Estimate " + money(g.est.total) + ".";   /* the tab name is already read out */
       pick(g);
     }
   }
@@ -410,17 +414,24 @@
     });
   }
 
+  /* keyboard focus never ends up under the phone order bar (scroll-padding covers most browsers; this covers the rest) */
+  document.addEventListener("focusin", function (e) {
+    if (bar.hidden || !e.target || !e.target.getBoundingClientRect || bar.contains(e.target)) return;
+    var r = e.target.getBoundingClientRect(), top = bar.getBoundingClientRect().top;
+    if (r.bottom > top - 8 && r.top < window.innerHeight) window.scrollBy(0, r.bottom - top + 16);
+  });
+
   /* ---------- sticky bar visibility ---------- */
   var heroCta = document.querySelector(".hero-cta");
   var closing = document.querySelector(".closing");
   if ("IntersectionObserver" in window && heroCta && closing) {
     var pastHero = false, atClosing = false;
-    var sync = function () { bar.hidden = !(pastHero && !atClosing); document.body.classList.toggle("has-bar", !bar.hidden); };
+    var sync = function () { bar.hidden = !(pastHero && !atClosing); document.body.classList.toggle("has-bar", !bar.hidden); document.documentElement.classList.toggle("has-bar", !bar.hidden); };
     new IntersectionObserver(function (es) { es.forEach(function (e) { pastHero = !e.isIntersecting && e.boundingClientRect.top < 0; }); sync(); }, { threshold: 0 }).observe(heroCta);
     new IntersectionObserver(function (es) { es.forEach(function (e) { atClosing = e.isIntersecting; }); sync(); }, { threshold: 0.4 }).observe(closing);
   } else if (heroCta) {
     /* no IntersectionObserver: a plain scroll rule */
-    var onScroll = function () { var show = window.scrollY > 420; bar.hidden = !show; document.body.classList.toggle("has-bar", show); };
+    var onScroll = function () { var show = window.scrollY > 420; bar.hidden = !show; document.body.classList.toggle("has-bar", show); document.documentElement.classList.toggle("has-bar", show); };
     window.addEventListener("scroll", onScroll); onScroll();
   }
 })();

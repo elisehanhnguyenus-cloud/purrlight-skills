@@ -586,7 +586,24 @@ hiểu/bổ sung gì thì báo.
   bar, nhớ lựa chọn, link #món, tắt JS) · `audit-custom.js` (copy nguyên văn,
   từ cấm, ảnh, nút, tràn 360/390/1280) — pass.
 
-<!-- review-8h -->
+### Hai reviewer độc lập (agent) → đã sửa
+- Brand/copy/giá: hộp **Confirmation (coming soon)** đang chọn được và đi vào
+  email đặt hàng với $55 → nay chỉ là ô thông tin, không đặt được; bỏ dòng
+  "Printed on fine-art paper" trong hộp (cách đọc giá giấy còn chờ chị); lựa
+  chọn được nhớ / link #món đi kèm link đặt hàng ngay khi mở lại; về "Digital
+  file" thì giấy, khung, hộp quà cùng về mặc định; hộp tân gia ghi "Add or
+  swap: …"; bỏ token màu hồng khỏi CSS; mũi tên "All pet prices" không xoay.
+- Trợ năng/điện thoại: thanh đặt hàng không còn che ô đang focus (scroll-
+  padding + chặn bằng JS); viền focus thấy được trên footer Ink; bước "chỉ bản
+  in" khi chọn Digital không còn trông như đang chọn + có dòng lý do ("For
+  prints — choose a print size in step 2."); viền focus hàng ảnh không bị cắt;
+  trên desktop chỉ hộp What's inside dính (ảnh cuộn đi) nên vừa màn 720–768px;
+  thanh dính chỉ dưới 900px; thông báo cho trình đọc màn hình gọn hơn
+  ("Removed: …" khi bỏ chọn); chữ trong ô không ngắt giữa từ.
+- Giữ nguyên (chờ chị): How it works nằm dưới studio (brief §5 muốn giữ thứ
+  tự v1 — em đổi để khách vào thẳng phần chọn quà như Oreo); hộp quà tranh chỉ
+  cho bản in (cách đọc cũ, đã ghi trong prices.js); ảnh christening có tràng
+  hạt + thiệp trong khi bộ ghi "gown, bonnet, mittens and booties".
 
 ## 9. Link & tài nguyên
 

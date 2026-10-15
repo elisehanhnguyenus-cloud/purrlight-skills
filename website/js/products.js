@@ -45,15 +45,15 @@ const PRODUCTS = [
     etsyUrl: "https://www.etsy.com/listing/4572077122"
   },
   {
-    id: "founding-fathers-set",
-    name: "Founding Fathers Crochet Doll Trio",
+    id: "george-washington-doll",
+    name: "George Washington Crochet Doll",
     category: "Storybook & Traditional Tales",
     price: 42,
     badge: "made-to-order",
     img: "assets/img/etsy/4467723974.jpg",
-    short: "Washington, Jefferson and Franklin, crocheted stitch by stitch — a display keepsake for America's 250th.",
-    desc: "The first pieces in our Founding Fathers collection: George Washington, Thomas Jefferson and Benjamin Franklin as a crochet doll trio. A display keepsake for history lovers, teachers and anyone counting down to 1776 + 250 — made to order.",
-    details: ["Trio: Washington, Jefferson, Franklin", "Display keepsake", "Made to order", "Spot clean with a damp cloth"],
+    short: "The General, crocheted stitch by stitch — first of our Founding Fathers collection, a display keepsake for America's 250th.",
+    desc: "George Washington, the first piece in our Founding Fathers collection, as a crochet doll: Continental Army blue coat, tricorn hat and hand-detailed features, in 8 in (~20 cm) or 10 in (~25 cm). Thomas Jefferson and Benjamin Franklin join the collection in 2026, so the trio can be collected over time. A display keepsake for history lovers and teachers counting down to 1776 + 250 — made to order, with a preview photo for your approval before it ships.",
+    details: ["George Washington doll — Jefferson & Franklin join the collection in 2026", "8 in (~20 cm) or 10 in (~25 cm) — choose on Etsy", "Display keepsake — made to order", "Spot clean with a damp cloth"],
     etsyUrl: "https://www.etsy.com/listing/4467723974"
   },
   {
@@ -77,7 +77,7 @@ const PRODUCTS = [
     img: "assets/img/etsy/4592186429.jpg",
     short: "A one-decade rosary for the rearview mirror or a bag — cotton crochet over wood beads, in your color.",
     desc: "A quiet reminder to pray on the road. Each one-decade rosary is strung by hand in our Pearland, Texas studio from cotton crochet-covered wood beads that are soft to the touch, with a metal crucifix (or a photo charm, if you'd rather) and a clasp for hanging. Comes with a cloth pouch and our prayer card.",
-    details: ["Cotton crochet over wood beads, metal crucifix", "Your choice of color", "Cloth pouch + prayer card included", "Hand-strung in Pearland, Texas — ships in 2–4 days"],
+    details: ["Cotton crochet over wood beads, metal crucifix", "Your choice of color", "Cloth pouch + prayer card included", "Hand-strung in Pearland, Texas — ships in 2–4 business days"],
     etsyUrl: "https://www.etsy.com/listing/4592186429"
   },
   {
@@ -89,7 +89,7 @@ const PRODUCTS = [
     img: "assets/img/etsy/4337395489.jpg",
     short: "The big shaggy one — small mane, tufted ears, a tail you can run your fingers through. About 25 cm.",
     desc: "A Maine Coon crocheted stitch by stitch: a 25 cm long-haired cat with a small mane, lightly tufted ear tips and a full fluffy tail. The same body also comes in a Ragdoll colourway — pick whichever breed you love. Boxed and ready to ship.",
-    details: ["About 25 cm / 10\"", "Maine Coon or Ragdoll colourway", "Ready to ship", "Spot clean with a damp cloth"],
+    details: ["About 25 cm / 10\" seated", "Maine Coon or Ragdoll colourway", "Chenille velvet yarn — long-pile fur is +$20 on Etsy", "Knitted scarf included", "Ready to ship", "Spot clean with a damp cloth"],
     etsyUrl: "https://www.etsy.com/listing/4337395489"
   },
   {
@@ -99,9 +99,9 @@ const PRODUCTS = [
     price: 55,
     badge: "made-to-order",
     img: "assets/img/etsy/4337895128.jpg",
-    short: "Gray-and-white, pink nose, white paws — and a removable Sherlock-style outfit.",
+    short: "Gray-and-white, pink nose, white paws — and a Sherlock-style outfit with removable accessories.",
     desc: "A British Shorthair in gray and white with a pink nose, white belly and white paws, dressed in a Sherlock-style outfit with removable accessories. Crocheted by hand for your order — not a pattern, the finished cat.",
-    details: ["Gray and white, pink nose", "Removable Sherlock-style outfit", "Made to order", "Spot clean with a damp cloth"],
+    details: ["Gray and white, pink nose", "Sherlock-style outfit with removable accessories", "Made to order — processing time 1–2 weeks"],
     etsyUrl: "https://www.etsy.com/listing/4337895128"
   },
   {
@@ -111,21 +111,21 @@ const PRODUCTS = [
     price: 150,
     badge: "made-to-order",
     img: "assets/img/etsy/4364432946.jpg",
-    short: "Your own cat or dog, made from your photos — the big one, over 14 inches.",
-    desc: "The Grand size of our custom pet portraits: your cat or dog crocheted from the photos you send, over 14 inches tall, made for your order. Send the clearest photos you have — front-on, in daylight if you can — and we work from those.",
-    details: ["Grand size, over 14\" / 36 cm", "Made from your photos", "Made to order", "Spot clean with a damp cloth"],
+    short: "Your own cat (or other pet), made from your photos — the big one, 16–21 inches.",
+    desc: "The Grand size of our custom pet portraits: your cat or other pet, crocheted from the photos you send, 16–21 in (about 40–53 cm), made for your order. Send the clearest photos you have — front-on, in daylight if you can — and we work from those.",
+    details: ["Grand size: 16–21 in / 40–53 cm (over 14 in)", "Personalized to your pet — made from your photos", "Made to order", "Spot clean with a damp cloth"],
     etsyUrl: "https://www.etsy.com/listing/4364432946"
   },
   {
     id: "horse-companion",
-    name: "Large Crochet Horse",
+    name: "Large Knitted Horse",
     category: "Feelings & Calm",
     price: 55,
     badge: "",
     img: "assets/img/etsy/4368649382.jpg",
-    short: "An oversized, hug-sized horse in soft fluffy yarn — about 40 cm long.",
-    desc: "A generously sized horse, about 40 cm (15.75\") long, worked in ultra-soft fluffy yarn — the kind of companion that ends up on the bed, the sofa and the reading corner in turn.",
-    details: ["About 40 cm / 15.75\" long", "Soft fluffy yarn", "Spot clean with a damp cloth"],
+    short: "An oversized, hug-sized horse knitted in soft fluffy yarn — about 40 cm long.",
+    desc: "A generously sized horse, about 40 cm (15.75\") long, knitted by hand in ultra-soft fluffy yarn — the kind of companion that ends up on the bed, the sofa and the reading corner in turn.",
+    details: ["About 40 cm / 15.75\" long", "Hand-knitted in soft fluffy yarn", "Spot clean with a damp cloth; hand wash cold if needed, lay flat to dry"],
     etsyUrl: "https://www.etsy.com/listing/4368649382"
   },
   {

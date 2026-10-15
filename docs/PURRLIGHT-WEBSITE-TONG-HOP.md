@@ -132,20 +132,20 @@ stockists thật: Harrods/Bergdorf/Nordstrom/Bloomingdale's; domain 10/2021):
 
 ## 6. Checklist trước khi publish
 
-1. ☐ Sửa `ETSY_SHOP_URL` + `etsyUrl` từng sản phẩm (js/products.js)
-2. ☐ Đối chiếu giá từng listing thật
-3. ☐ Thay 3 quote SAMPLE bằng review Etsy thật (nguyên văn)
-4. ☐ Tạo variation Etsy khớp với addon "make it a set" (3 SP)
-5. ☐ Thay ảnh SVG bằng ảnh chụp (vuông ≥1200px)
+1. ☑ (15/10) `ETSY_SHOP_URL` = vietdelightfinds.etsy.com + `etsyUrl` cho 10 món
+2. ☑ (15/10) Giá lấy từ RSS feed Etsy, đối chiếu 10/10 món (xem 8f)
+3. ☑ Section testimonials đã GỠ (24/08); chỉ đưa lại khi có review thật
+4. ☑ Addon "make it a set" đã BỎ (15/10) — variation Etsy chưa xác minh giá
+5. ☑ (15/10) Ảnh listing thật từ Etsy cho 10 món (`assets/img/etsy/`); SVG còn lại là brand art
 6. ☐ Đăng ký + sửa handle Instagram/Pinterest
 7. ☐ Thay video poster bằng video/embed thật
 8. ☐ Nối newsletter vào Klaviyo/Mailchimp (TODO trong main.js)
 9. ☐ Bật TikTok Shop Open Collaboration + đặt commission (sau khi check margin
    floor: dolls 55% / pet 50% / POD 35% / keychain 60%)
-10. ☐ Sửa email hello@purrlightstudio.com thành email thật
-11. ☐ Xác nhận câu "paid fairly" + các claim an toàn ("no small parts",
-    "breakaway buckle") đúng thực tế
-12. ☐ Chọn hosting (GitHub Pages / Netlify / Cloudflare Pages) + domain
+10. ☑ Email canon hello@purrlight.studio (domain cũ = 0 chỗ)
+11. ☐ Xác nhận câu "paid fairly" (About); các claim "no small parts" /
+    "breakaway buckle" đã bỏ cùng catalog cũ
+12. ☑ (15/10) GitHub Pages: https://elisehanhnguyenus-cloud.github.io/purrlight-skills/ — ☐ domain purrlight.studio (CNAME + DNS)
 
 ## 7. Chiến lược Affiliate (tóm tắt)
 
@@ -353,16 +353,16 @@ chạy sạch (0 lỗi, 0 link hỏng, 0 tràn, 0 từ cấm) nhưng còn các m
 làm được — xem checklist mục 6 (đánh dấu lại bên dưới).
 
 **Checklist launch còn mở (theo thứ tự chặn):**
-1. 🔴 `ETSY_SHOP_URL` chưa xác minh + 11 `etsyUrl` trống → mọi nút mua có thể 404.
-2. 🔴 Giá + addon "make it a set" là placeholder → đối chiếu từng listing.
-3. 🔴 Ảnh sản phẩm: 100% SVG minh hoạ, chưa có ảnh chụp.
-4. 🔴 Chưa deploy (domain purrlight.studio đã chốt, chưa host); Event Desk
-   Link + QR chờ `publicBaseUrl`.
+1. ✅ (15/10, 8f) `ETSY_SHOP_URL` + 10 `etsyUrl` thật.
+2. ✅ (15/10, 8f) Giá theo listing Etsy; addon bỏ.
+3. ✅ (15/10, 8f) Ảnh listing thật cho 10 món.
+4. ✅ (15/10, 8f) Deploy GitHub Pages; Event Desk Link + QR tự chạy theo URL.
+   ☐ Domain purrlight.studio còn chờ.
 5. 🟡 Newsletter chưa nối Klaviyo (form chỉ hiện thông báo trung thực).
 6. 🟡 TikTok Shop: handle chưa xác minh; Open Collaboration chưa bật → trang
    Partners mô tả chương trình chưa chạy.
-7. 🟡 Claim chưa kiểm chứng: "Breakaway-style buckle" (collar), "paid fairly"
-   (About), kỹ thuật mặt Sleepy Merlin ("hand-finished" — hỏi Elise).
+7. 🟡 Claim chưa kiểm chứng: "paid fairly" (About). (Collar / Sleepy Merlin
+   không còn trong catalog 15/10.)
 8. 🟡 Hộp thư hello@purrlight.studio chưa xác nhận hoạt động.
 9. 🟡 Nghệ thuật Merlin: canon nói trăng/sao chỉ trang trí nhưng hero/keychain
    lấy trăng làm chủ thể; hero nói "tiny backpack" mà không hình nào có ba lô
@@ -370,11 +370,112 @@ làm được — xem checklist mục 6 (đánh dấu lại bên dưới).
 10. ⚪ Favicon bản filled (16px); Part A §02.3 nguyên văn cho About; Pinterest/
     Facebook handle xác nhận; "feeling-balls" nhắc trong About nhưng chưa bán.
 
+## 8f. Đợt 9 — Catalog thật từ Etsy + deploy GitHub Pages (15/10/2026)
+
+**Yêu cầu của Elise:** "Giá từng listing trong link Etsy luôn" + "deploy lên
+GitHub Pages đi em" (shop: https://vietdelightfinds.etsy.com).
+
+### Catalog — làm gì, nguồn ở đâu
+
+- Trang shop/listing Etsy chặn bot (403 DataDome với mọi user-agent). **RSS
+  feed của shop** mở được: `https://www.etsy.com/shop/VietDelightFinds/rss` →
+  10 listing mới nhất, mỗi listing có giá (`<p class="price">`), ảnh il_570xN,
+  mô tả đầy đủ. Ảnh tải từ CDN i.etsystatic.com cỡ il_794xN →
+  `website/assets/img/etsy/<listingId>.jpg` (10 file, 1,2 MB).
+- `js/products.js` viết lại hoàn toàn: 10 món, mỗi món `etsyUrl` riêng, giá
+  đúng feed, `details` chỉ chứa facts có trong listing, không `addons` (giá
+  variation không xác minh được). Tên trên site là tên canon (không copy tiêu
+  đề SEO của Etsy). 2 collection chưa có listing (Little Things, Heritage &
+  Celebration) → tile "soon" trên trang chủ, không vào filter.
+
+| id | Tên trên site | Giá | Collection | Listing |
+|---|---|---|---|---|
+| anne-shirley-set | Red-Braid Storybook Doll Set | $35 | Storybook | 4367997103 |
+| bennet-darcy-set | Elizabeth Bennet & Mr Darcy Crochet Doll Pair | $38 | Storybook | 4572077122 |
+| george-washington-doll | George Washington Crochet Doll | $42 | Storybook | 4467723974 |
+| christening-gown-set | Christening Gown Set — lace & satin | $89 | Faith & Milestones | 4333988358 |
+| rosary-charm | Crochet Decade Rosary Charm | $25 | Faith & Milestones | 4592186429 |
+| maine-coon-cat | Maine Coon Crochet Cat | $55 | Merlin's World | 4337395489 |
+| british-shorthair-cat | British Shorthair Crochet Cat — Sherlock outfit | $55 | Merlin's World | 4337895128 |
+| custom-pet-grand | Your Pet, Crocheted — Grand | $150 | Merlin's World | 4364432946 |
+| horse-companion | Large Knitted Horse | $55 | Feelings & Calm | 4368649382 |
+| dragon-pattern | Sleeping Dragon — Crochet Pattern (PDF) | $1.75 | Patterns & Printables | 4399784660 |
+
+Giá = giá hiển thị của listing trên feed (giá thấp nhất khi có variation);
+phần cộng thêm ghi trong `details` (size 10 in, long-pile fur +$20…).
+
+### Đối chiếu từng món (hallucination check)
+
+- Workflow verify 10 agent (mỗi agent 1 món, đối chiếu `products.js` với
+  `listings.json` từ feed; 871k token, 13 phút): giá / listing id / ảnh khớp
+  **10/10**, không từ cấm; **6 món ok** (anne-shirley, bennet-darcy,
+  christening, rosary, maine-coon, dragon-pattern), **4 món có facts ngoài
+  listing** → đã sửa hết:
+  1. "Founding Fathers Crochet Doll Trio" → listing $42 là **một** búp bê
+     George Washington (DETAILS: 1 doll, 2 size 8 in/10 in; "Jefferson &
+     Franklin join the collection in 2026") → id `george-washington-doll`,
+     viết lại copy.
+  2. British Shorthair: "removable outfit" → listing nói **phụ kiện** tháo
+     được, không phải bộ đồ; listing không có dòng care → bỏ "spot clean",
+     thay bằng "processing time 1–2 weeks" (có trong listing).
+  3. "Large Crochet Horse" → listing là ngựa **đan** (knitting) → "Large
+     Knitted Horse".
+  4. Custom pet Grand: "cat or dog" → listing chỉ nói "Cat & Pet" → "cat (or
+     other pet)"; size theo tiêu đề **16–21 in** (body: "over 14 in"). Giữ
+     "made from your photos" vì là quy trình custom pet đã duyệt 25/09 (Event
+     Desk), không phải facts bịa — nhưng listing Etsy chưa ghi điều này.
+  Thêm nhỏ: rosary "2–4 **business** days"; Maine Coon có khăn đan kèm, yarn
+  chenille (long-pile fur +$20) — đều trong listing.
+- **Lệch phía Etsy — cần Elise xem, site KHÔNG copy theo:** listing ngựa
+  4368649382 dùng "magical companion", "hypoallergenic fiberfill",
+  "child-safe details", "for kids/toddlers/nursery" (vi phạm canon + safety
+  claim chưa chứng nhận); listing dragon pattern 4399784660 có dòng credit
+  "Pattern by Anna_Crochet" (xác nhận quyền bán/license — Hard Rule IP) và
+  tiêu đề "Plush Toy… Nursery Decor" cho một file PDF; listing British
+  Shorthair 4337895128 mở đầu "Crochet pattern for…" dù là sản phẩm vật lý;
+  giá custom pet Grand Etsy $150 vs bảng giá booth 25/09 (Grand cat $90–120).
+
+### Deploy GitHub Pages
+
+- API Pages (`/repos/…/pages`) bị chặn qua proxy của session (403) → cách
+  làm: đẩy branch **`gh-pages`** (orphan; nội dung = `website/` + `.nojekyll`,
+  không có README/script nội bộ). GitHub tự bật Pages (`has_pages: true`) →
+  **https://elisehanhnguyenus-cloud.github.io/purrlight-skills/** sống sau
+  ~1 phút; 12 URL probe trả 200 (HTML, CSS, JS, JPG, manifest).
+- Site chạy dưới sub-path `/purrlight-skills/` — toàn bộ link/ảnh là đường
+  dẫn tương đối nên không cần sửa; Event Desk suy `publicBaseUrl` từ URL
+  https đang chạy → Link + QR cho khách hoạt động ngay (`confirm.html#…`).
+- `website/deploy-pages.sh`: deploy lại bằng một lệnh (`bash
+  website/deploy-pages.sh`) — fetch gh-pages, thay nội dung bằng `website/`,
+  commit, push.
+- Chưa làm: GitHub Actions tự deploy khi push (token session không có quyền
+  `workflow`); domain `purrlight.studio` (thêm `CNAME` vào gh-pages + DNS).
+
+### Kiểm tra sau sửa
+
+- `audit-site.js` (Playwright, 8 trang × desktop/mobile): 0 console error,
+  0 ảnh hỏng, không overflow 360 px, mỗi trang 1 h1.
+- `smoke-desk.js` (Event Desk): pass, ERRORS none (payload v2, QR, id không
+  tái dùng, hostile payload escape).
+- Artifact: Event Desk **v7** (catalog mới), preview site **v9** — ảnh JPG
+  publish dạng supporting files thay vì base64 (bản inline 21 MB vượt giới
+  hạn 16 MB).
+
+### Việc còn mở sau đợt này
+
+- Shop còn listing ngoài 10 món của feed → cần link từng listing hoặc CSV từ
+  Shop Manager để thêm. Little Things / Heritage & Celebration vẫn "soon".
+- 4 điểm lệch phía Etsy ở trên (chị sửa listing hoặc xác nhận chủ ý).
+- Checklist 8e vẫn mở: hộp thư hello@, TikTok handle, Klaviyo, Pinterest/
+  Facebook handle, Purrks, Open Collaboration TikTok Shop.
+
 ## 9. Link & tài nguyên
 
 - **Repo branch:** `claude/purrlight-studio-website-kcsuen` (GitHub:
   elisehanhnguyenus-cloud/purrlight-skills)
-- **Preview 5 trang:** https://claude.ai/code/artifact/d5b2cc94-195e-4f79-a85a-e7ff791a605b
+- **Site LIVE (GitHub Pages, 15/10):** https://elisehanhnguyenus-cloud.github.io/purrlight-skills/
+- **Shop Etsy (nguồn giá):** https://vietdelightfinds.etsy.com
+- **Preview tương tác (artifact, v9):** https://claude.ai/artifact/TPXZGeR5JBpKJypioewheS
 - **Event Desk (hosted, dùng tại booth):** https://claude.ai/artifact/JDd4fYwxtDvRmpf1UGs5rW
 - **Event Desk — hướng dẫn cho nhân sự (Notion):** https://app.notion.com/p/3ea8ed608af981fca71ee10c1128a543
 - **README kỹ thuật:** `website/README.md`

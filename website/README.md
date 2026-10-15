@@ -29,6 +29,7 @@ website/
 ├── event.html        # ★ EVENT DESK — bàn bán hàng tại sự kiện (nội bộ, noindex)
 ├── confirm.html      # Trang khách mở từ link/QR: thank-you hoặc order confirmation
 ├── manifest.webmanifest  # "Add to Home Screen" cho event.html trên điện thoại
+├── deploy-pages.sh   # ★ Deploy lại lên GitHub Pages: bash website/deploy-pages.sh
 ├── css/
 │   ├── fonts.css     # Font self-host: Fraunces (heading) + Figtree (body)
 │   ├── style.css     # Toàn bộ style site — design tokens ở đầu file (:root)
@@ -41,7 +42,8 @@ website/
 └── assets/
     ├── brand/        # logo-flat.png, favicon — KHÔNG vẽ lại, KHÔNG AI-generate
     ├── fonts/        # File .woff2 (đã tải sẵn, có subset tiếng Việt)
-    └── img/          # Minh họa SVG — thay bằng ảnh thật khi có
+    └── img/          # Minh họa SVG (brand art, tile "soon")
+        └── etsy/     # ★ ẢNH LISTING THẬT tải từ Etsy — tên file = listing id (vd 4337395489.jpg)
 ```
 
 ## Event Desk — bàn bán hàng tại sự kiện (`event.html`)
@@ -92,45 +94,73 @@ iOS Mail có thể cắt thư quá dài — tool đã nhắc dùng Copy khi > 1.
 (4) điền giá cho 4 món tồn kho Pearland trong `extraItems` nếu muốn có sẵn
 (hiện để trống, gõ giá tại booth).
 
-## Việc cần làm trước khi publish (checklist cho Elise)
+## Trạng thái online (15/10/2026)
 
-1. **Link Etsy** — mở `js/products.js`, sửa `ETSY_SHOP_URL` thành link shop
-   thật. Điền `etsyUrl` cho từng sản phẩm để nút "Buy on Etsy" trỏ thẳng
-   vào listing.
-2. **Link TikTok** — sửa `TIKTOK_SHOP_URL` và link TikTok ở footer 4 trang.
-3. **Giá** — giá trong `products.js` lấy theo khung giá Etsy hiện tại của
-   shop (dolls $19–40+, POD tee $22–28...). Đối chiếu từng listing thật
-   trước khi publish.
-4. **Ảnh thật** — minh họa SVG hiện tại là placeholder có chủ đích. Khi có
-   ảnh chụp sản phẩm (vuông, ≥1200px), bỏ vào `assets/img/` và đổi đường
-   dẫn `img` trong `products.js`. Giữ minh họa cho hero/story nếu thích —
-   chúng là brand art, không phải placeholder.
-5. **Newsletter** — form chưa nối backend (hiện chỉ hiện thông báo trung
+- **Site đang chạy trên GitHub Pages:**
+  https://elisehanhnguyenus-cloud.github.io/purrlight-skills/
+  (branch `gh-pages` = bản copy của `website/` + `.nojekyll`; không chứa
+  README/script nội bộ). GitHub tự bật Pages khi branch `gh-pages` xuất hiện.
+- **Deploy lại sau khi sửa:** commit code, rồi chạy `bash website/deploy-pages.sh`
+  (copy `website/` sang `gh-pages` và push; Pages cập nhật sau 1–2 phút).
+- **Domain riêng purrlight.studio:** khi sẵn sàng, thêm file `CNAME` (nội dung
+  `purrlight.studio`) vào branch `gh-pages` và trỏ DNS theo GitHub Pages
+  (Settings → Pages → Custom domain). `publicBaseUrl` của Event Desk tự lấy theo
+  URL đang chạy (https) nên không cần điền tay.
+
+## Catalog — nguồn sự thật
+
+- `js/products.js` lấy giá / link / ảnh / facts từ **RSS feed của shop Etsy**
+  (`https://www.etsy.com/shop/VietDelightFinds/rss`) ngày 15/10/2026. Feed chỉ
+  đưa **10 listing mới nhất** → site có 10 món; listing còn lại của shop chưa
+  lên (trang Etsy chặn bot, không kéo tự động được). Thêm món: copy một block
+  trong `products.js`, dán link listing, tải ảnh vào `assets/img/etsy/`.
+- Giá trên site = giá hiển thị của listing (giá thấp nhất khi listing có
+  variation). Phần cộng thêm (size 10 in, long-pile fur +$20…) ghi trong
+  `details` và chọn trên Etsy — site không có dropdown giá.
+- Đã đối chiếu 10/10 món với listing (15/10, mỗi món một agent kiểm tra).
+  4 món có facts ngoài listing, đã sửa: Founding Fathers → chỉ là búp bê
+  **George Washington** (Jefferson & Franklin "join in 2026"); British
+  Shorthair → **phụ kiện** tháo được (không phải bộ đồ), bỏ dòng care vì
+  listing không ghi; "Large Crochet Horse" → listing là ngựa **đan** (knitted);
+  custom pet Grand → "cat (or other pet)", **16–21 in** theo tiêu đề listing.
+  Riêng "made from your photos" ở custom pet là quy trình đã duyệt 25/09 (chưa
+  ghi trên listing Etsy — nên thêm vào listing).
+- **Cần chị xem phía Etsy** (lệch Brand Canon / Hard Rules — site KHÔNG copy
+  theo): (1) listing ngựa 4368649382 dùng "magical", "hypoallergenic",
+  "child-safe", "for kids / toddlers / nursery"; (2) listing dragon pattern
+  4399784660 ghi credit "Pattern by Anna_Crochet" — xác nhận quyền bán/license
+  trước khi giữ trên site; tiêu đề "Plush Toy… Nursery Decor" cho một file PDF;
+  (3) listing British Shorthair 4337895128 mở đầu "Crochet pattern for…" dù là
+  sản phẩm vật lý; (4) giá custom pet Grand trên Etsy $150 vs bảng giá booth
+  25/09 (Grand cat $90–120) — khác kênh có chủ ý, hay cần đồng bộ?
+
+## Việc còn lại trước khi "launch" (checklist cho Elise)
+
+1. **Listing còn lại** — gửi link từng listing (hoặc CSV từ Shop Manager →
+   Listings → Download) để thêm vào site. Collection "Little Things" và
+   "Heritage & Celebration" vẫn là tile "soon" tới khi có listing.
+2. **Link TikTok** — xác minh handle trong `TIKTOK_SHOP_URL` (đang là
+   @purrlightstudio theo Canon v2); mọi link TikTok trên site đọc từ đó.
+3. **Newsletter** — form chưa nối backend (hiện chỉ hiện thông báo trung
    thực). Khi sẵn sàng, nối Klaviyo/Mailchimp form action trong `main.js`
    (đã đánh dấu TODO).
-6. **Testimonials** — section đã GỠ (Brand Fix 24/08: cấm quote SAMPLE).
+4. **Testimonials** — section đã GỠ (Brand Fix 24/08: cấm quote SAMPLE).
    Chỉ đưa lại khi có review Etsy thật (nguyên văn, kèm tên buyer viết tắt).
-7. **Video lifestyle** — 3 card đang trỏ về TikTok profile với poster minh
+5. **Video lifestyle** — 3 card đang trỏ về TikTok profile với poster minh
    họa. Khi có video thật: thay href bằng link video hoặc nhúng embed.
-8. **Social handles** — @purrlightstudio là của mình trên TikTok / Facebook /
+6. **Social handles** — @purrlightstudio là của mình trên TikTok / Facebook /
    Pinterest (Canon v2); handle Instagram thuộc người khác nên site KHÔNG
-   link Instagram. TikTok lấy từ `TIKTOK_SHOP_URL` (attribute `data-tiktok`);
-   Pinterest/Facebook đang hard-code 4+1 chỗ ở section social — xác nhận tài
-   khoản tồn tại trước khi publish.
-9. **Purrks Points** — đang gắn badge "launching soon" (đúng sự thật vì
+   link Instagram. Pinterest/Facebook đang hard-code ở section social — xác
+   nhận tài khoản tồn tại.
+7. **Purrks Points** — đang gắn badge "launching soon" (đúng sự thật vì
    chưa có chương trình). Khi nào chạy thật (Shopify + Smile.io, hoặc thủ
    công qua email) thì bỏ badge và cập nhật mô tả. KHÔNG bỏ badge trước đó.
-10. **Partner program** — trang partners.html hướng creators vào TikTok
-    Shop affiliate (kênh duy nhất đang khả thi vì bán qua Etsy không tự
-    chạy affiliate được). Cần: (a) bật Open Collaboration trong TikTok
-    Shop seller center và đặt commission rate, (b) xác nhận hộp thư
-    hello@purrlight.studio đã hoạt động (đang là email canon, chưa test).
-11. **Domain + hosting** — site tĩnh 100%, deploy được ngay lên GitHub
-    Pages / Netlify / Cloudflare Pages, không cần server. Domain đã chốt:
-    purrlight.studio. Ngày site online: điền `publicBaseUrl` trong
-    `js/event-desk.js` để Event Desk hiện Link + QR cho khách.
-12. **Event Desk** — xem mục riêng ở trên (hộp thư, permit thuế, gửi thử
-    trên điện thoại thật).
+8. **Partner program** — trang partners.html hướng creators vào TikTok
+   Shop affiliate. Cần: (a) bật Open Collaboration trong TikTok Shop seller
+   center và đặt commission rate, (b) xác nhận hộp thư hello@purrlight.studio
+   đã hoạt động (email canon, chưa test).
+9. **Event Desk** — xem mục riêng ở trên (hộp thư, permit thuế, gửi thử
+   trên điện thoại thật). Trên Pages, Link + QR đã hoạt động.
 
 ## Nguyên tắc nội dung (đã tuân thủ, đừng phá khi sửa)
 
@@ -138,17 +168,18 @@ iOS Mail có thể cắt thư quá dài — tool đã nhắc dùng Copy khi > 1.
   Việt Nam. Copy hiện tại: "Designed in Pearland, Texas · handcrafted in
   small batches with our artisan partners in Vietnam" — trung thực và đúng
   chuẩn FTC.
-- KHÔNG dùng tên có rủi ro trademark (vd: "Anne of Green Gables" → đã đổi
-  thành "Storybook Red-Braid Doll").
+- KHÔNG dùng tên có rủi ro trademark (vd: "Anne of Green Gables" → trên site
+  là "Red-Braid Storybook Doll Set"; nhân vật public domain như Bennet/Darcy,
+  George Washington thì được).
 - KHÔNG có review/press bịa — chưa có thật thì không đưa lên.
 - KHÔNG claim "eco-friendly/organic/hypoallergenic" khi chưa có chứng nhận.
 - Tee POD chỉ ghi "Printed to order" — khi đã chốt POD partner in tại Mỹ
   (Printful/Printify) thì mới được thêm "in the USA".
 - Trang About có câu "paid fairly and never rushed" về artisan partners —
   giữ được vì là cam kết thật của nhà, nhưng chị xác nhận lại trước khi publish.
-- Mặt búp bê ghi **hand-painted** (sự thật sản phẩm theo skill CSKH, 8/2026);
-  đã bỏ claim "no small parts" (chưa kiểm chứng). "Breakaway buckle" ở collar
-  vẫn lấy theo listing — đối chiếu sản phẩm thật trước khi publish.
+- Facts sản phẩm (size, chất liệu, ship từ đâu, care) CHỈ lấy từ listing Etsy
+  tương ứng (xem mục Catalog). Không thêm claim ngoài listing ("no small
+  parts", "hypoallergenic", "child-safe"…) dù listing khác có ghi.
 - Vận chuyển: phần lớn SKU ship thẳng từ xưởng Nha Trang (DDP), một số món
   tồn kho ship từ Pearland — copy trên site đã ghi đúng như vậy (30/09);
   KHÔNG ghi "ships from Texas" cho toàn bộ.

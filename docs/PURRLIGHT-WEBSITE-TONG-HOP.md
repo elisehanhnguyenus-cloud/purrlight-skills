@@ -605,6 +605,54 @@ hiểu/bổ sung gì thì báo.
   cho bản in (cách đọc cũ, đã ghi trong prices.js); ảnh christening có tràng
   hạt + thiệp trong khi bộ ghi "gown, bonnet, mittens and booties".
 
+## 8i. Đợt 12 — Gói gợi ý, số lượng & giảm giá, cọc 50%, Square/Zelle, ảnh từng lựa chọn (15/10/2026)
+
+**Elise chốt:** giá khung 5×7 $16 / 8×10 $24 · làm gói gợi ý theo đề xuất ·
+giảm 5%/10% khi đặt nhiều tranh/hộp (hỏi lại: **theo từng món** — món 1 giá đủ,
+2–4 giảm 5%, từ 5 giảm 10% — **trên cả món**) · godparent cả hai: **bộ 2 −$10**
+($180) · cọc 50% hôm nay · Zelle `purrlightstudiollc@gmail.com` · Square
+`https://square.link/u/UUg2LtbP` (link "Custom order", khách tự nhập số tiền,
+$1–$50.000) · thành phần từng món (doll: bó hoa nhỏ, cánh thiên thần, áo choàng
+/ nón / túi xách, đế gỗ rời, thiệp, ship; godparent có hộp + thiệp; lịch 6 tờ, 2
+tháng/trang, in 5×7; file digital .png + .pdf ≥ 4×6 in; hộp tân gia $50 = 4 món
+cơ bản + hộp, đổi được sang sen đá / cold cut / 3-berry / chocolate) · gửi 5
+ảnh: doll trong shadowbox, QR Square, 3 size mèo, len velvet, hộp quà có tranh
+floating 5×7 + rosary.
+
+### Đã làm
+- **Gói gợi ý** ("Or start from a gift idea"): Realtor closing gift $60 · Pet
+  memorial $41 · Christmas gift for Grandma $90 — giá tính từ chính estimator;
+  bấm là mở đúng món, chọn sẵn ô, focus vào tên món.
+- **Số lượng** tranh / hộp (− n +), dòng "× 3 paintings" và "Order more, save
+  more −$…"; **Godparent** 1 hoặc cả hai; mỗi hộp có **Deposit today (50%)** +
+  **Balance after you approve the photo**; mục **Pay your deposit** (`#pay`):
+  Square (nút + *Copy deposit amount* + QR cho máy tính, QR tạo lại đúng link
+  trong QR của chị `?src=webqr`), Zelle® (*Copy address*, ghi chú kiểm địa chỉ),
+  điều khoản cọc lấy từ bản booth 25/09, dòng phi-liên-kết nhãn hiệu Zelle®.
+- **Hộp tân gia**: add-on +$10 chọn **thêm** hoặc **đổi** một món cơ bản (món
+  bị đổi gạch ngang trong hộp; mỗi món chỉ đổi 1 lần; đổi tranh → không cần ảnh
+  nhà). **Không đưa rượu lên trang**: chưa có giấy phép TABC, USPS/UPS/FedEx
+  không nhận rượu từ người không có giấy phép, Texas xếp cider có cồn là wine →
+  ghi "Bottle of sparkling cider (non-alcoholic)" + "We don't sell or ship
+  alcohol."; ảnh mẫu có chai VINO rosé → chú thích ảnh mẫu.
+- **Your photos** từng món + **Message for the card** (doll, godparent; đi kèm
+  "My pick", không lưu trên máy). Hỗ trợ sẵn **Tally** (hidden fields `pick`,
+  `product`, `total`, `deposit`) + mẹo mở bằng trình duyệt khi vào từ app.
+- **Ảnh từng lựa chọn ("now showing")**: shadowbox → ảnh doll trong shadowbox;
+  đổi size → 3 size cạnh nhau; Velvet → cận cảnh len; khung → khung floating
+  5×7; giấy Dó; hộp quà / rosary. Ảnh nhỏ của món đang build hiện ở thanh đặt
+  hàng trên điện thoại. Ảnh cắt tránh chữ quảng cáo và chai rượu.
+- **Email đặt hàng**: tên miền purrlight.studio **chưa đăng ký** (DNS NXDOMAIN)
+  → email tới hello@purrlight.studio bị trả về. Trang Custom Orders chuyển sang
+  purrlightstudiollc@gmail.com; các trang khác + Event Desk vẫn ghi hello@ —
+  chờ chị quyết (đăng ký tên miền + hộp thư, hoặc đổi toàn site).
+- Tra cứu (workflow 4 chủ đề + kiểm chứng): Tally là form miễn phí duy nhất cho
+  khách gửi ảnh không cần đăng nhập (10 MB/file); Google Forms bắt đăng nhập
+  Google (hay bị chặn trong Instagram/TikTok); Zelle không có link thanh toán;
+  Square Free 3.3% + 30¢ cho thanh toán online.
+
+<!-- review-8i -->
+
 ## 9. Link & tài nguyên
 
 - **Repo branch:** `claude/purrlight-studio-website-kcsuen` (GitHub:

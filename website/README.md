@@ -188,7 +188,9 @@ máy tính, điều khoản cọc lấy từ bản chị duyệt cho booth 25/09
 
 **Chị cần điền (đầu `prices.js`):**
 - `ORDER_FORM_URL` — link form đặt hàng chung cho 7 món. Hiện là
-  `mailto:hello@purrlight.studio` (mailto cũng ghi sẵn trong HTML nên trang chạy
+  `mailto:purrlightstudiollc@gmail.com` — **không dùng hello@purrlight.studio:
+  tên miền purrlight.studio chưa được đăng ký (DNS NXDOMAIN, kiểm 15/10/2026),
+  email gửi tới đó bị trả về** (mailto cũng ghi sẵn trong HTML nên trang chạy
   cả khi tắt JS). **Khuyên dùng Tally** (miễn phí, khách không phải đăng nhập,
   nhận ảnh ≤ 10 MB/file): tạo 4 *hidden field* tên `pick`, `product`, `total`,
   `deposit` — trang tự điền. Google Forms bắt khách đăng nhập Google mới tải ảnh

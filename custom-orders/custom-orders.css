@@ -107,7 +107,8 @@ p { margin: 0; }
 .header-cta { white-space: nowrap; }
 .nav-toggle { display: none; background: none; border: 0; cursor: pointer; padding: 9px; min-width: 44px; min-height: 44px; border-radius: var(--radius); color: var(--ink); }
 .nav-toggle svg, .nav-close svg { width: 26px; height: 26px; stroke: currentColor; }
-@media (max-width: 899px) {
+/* the one-row header (logo + 8 links + CTA) needs ~980px; below that the drawer + phone order bar take over */
+@media (max-width: 979px) {
   .site-header { backdrop-filter: none; background: var(--cream); }
   .header-inner { padding-top: 8px; padding-bottom: 8px; }
   .nav-toggle { display: block; margin-left: auto; }
@@ -118,7 +119,7 @@ p { margin: 0; }
   .main-nav a { display: block; font-family: var(--font-head); font-size: 30px; font-weight: 500; color: var(--ink); padding: 10px 0; border-bottom: 1px solid var(--line); }
   .nav-close { position: absolute; top: 18px; right: var(--gutter); background: none; border: 0; cursor: pointer; padding: 9px; min-width: 44px; min-height: 44px; color: var(--ink); }
 }
-@media (min-width: 900px) { .logo img { height: 34px; } .header-inner { padding-top: 14px; padding-bottom: 14px; } .nav-close { display: none; } }
+@media (min-width: 980px) { .logo img { height: 34px; } .header-inner { padding-top: 14px; padding-bottom: 14px; } .nav-close { display: none; } }
 
 /* ---------- hero ---------- */
 .hero { padding: 28px 0 24px; }
@@ -300,4 +301,4 @@ p { margin: 0; }
 .order-bar .btn .short { display: none; }
 @media (max-width: 399px) { .order-bar .btn .long { display: none; } .order-bar .btn .short { display: inline; } }
 body.has-bar { padding-bottom: 88px; }
-@media (min-width: 900px) { .order-bar { display: none !important; } body.has-bar { padding-bottom: 0; } }
+@media (min-width: 980px) { .order-bar { display: none !important; } body.has-bar { padding-bottom: 0; } }

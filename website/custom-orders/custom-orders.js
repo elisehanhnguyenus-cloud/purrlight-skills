@@ -14,9 +14,13 @@
   var toggle = document.querySelector(".nav-toggle");
   var nav = document.querySelector(".main-nav");
   var closeBtn = document.querySelector(".nav-close");
-  var mainEl = document.getElementById("main"), footEl = document.querySelector("footer");
   if (toggle && nav) {
-    var setInert = function (on) { [mainEl, footEl].forEach(function (n) { if (n) { if (on) n.setAttribute("inert", ""); else n.removeAttribute("inert"); } }); };
+    /* while the drawer is open everything outside it is inert (main, footer, order bar, skip link, logo, CTA, the toggle itself) */
+    var outside = function () {
+      var list = [document.getElementById("main"), document.querySelector("footer"), document.querySelector(".order-bar"), document.querySelector(".skip-link"), document.querySelector(".logo"), document.querySelector(".header-cta"), toggle];
+      return list.filter(Boolean);
+    };
+    var setInert = function (on) { outside().forEach(function (n) { if (on) n.setAttribute("inert", ""); else n.removeAttribute("inert"); }); };
     var shut = function () {
       if (!nav.classList.contains("open")) return;
       nav.classList.remove("open"); toggle.setAttribute("aria-expanded", "false"); setInert(false); toggle.focus();
@@ -293,7 +297,7 @@
         if (node.tagName === "FIELDSET") node.disabled = isDigital;
         else { var inp = node.querySelector("input"); if (inp) { inp.disabled = isDigital; if (isDigital) inp.checked = false; } }
         node.classList.toggle("is-off", isDigital);
-        node.setAttribute("aria-disabled", isDigital ? "true" : "false");
+        if (node.tagName === "FIELDSET") node.setAttribute("aria-disabled", isDigital ? "true" : "false");   /* labels carry no role: the input's disabled state is enough */
       }
       v = values();   /* re-read: disabled extras drop out */
       /* browsers without :has(): mirror the checked state as a class */

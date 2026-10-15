@@ -88,8 +88,8 @@
       groups: [
         { name: "pets", legend: "How many pets", type: "radio", options: [
           { value: "1", label: "One pet", checked: true },
-          { value: "2", label: "Two pets", note: "Second pet on the same order −$10 · priced at the same size and yarn — tell us in the form if they differ" }
-        ] }
+          { value: "2", label: "Two pets", note: "Second pet on the same order −$10" }
+        ], note: "A second pet is priced at the same size and yarn — tell us in the form if they differ." }
       ],
       read: function (v) { return { size: v.size || "Classic", yarn: v.yarn || "Cotton", pets: Number(v.pets) }; },
       est: function (o) { return estPet(o); }

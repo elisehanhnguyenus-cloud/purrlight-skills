@@ -117,7 +117,7 @@
   document.body.appendChild(bar);
   var capTimer = null;
   function barAdded(label) {   /* a short "Added: …" in the bar — the phone's view of the box filling up */
-    barCap.textContent = "Added: " + label.replace(/\s*\(.*\)$/, ""); barCap.classList.add("is-added");
+    barCap.textContent = "Added: " + label.replace(/\s*\(.*\)$/, "").replace(/^Add or swap: /, ""); barCap.classList.add("is-added");
     clearTimeout(capTimer);
     capTimer = setTimeout(function () { barCap.textContent = BAR_CAP; barCap.classList.remove("is-added"); }, 2600);
   }
@@ -148,15 +148,15 @@
       product: "Housewarming & Closing Gift Box",
       read: function (v, form) {
         var names = [], boxes = form ? form.querySelectorAll('input[name="addons"]') : [];
-        for (var i = 0; i < boxes.length; i++) if (boxes[i].checked) names.push(boxes[i].getAttribute("data-label") || boxes[i].value);
+        for (var i = 0; i < boxes.length; i++) if (boxes[i].checked) names.push("Add or swap: " + (boxes[i].getAttribute("data-label") || boxes[i].value));
         return { addons: names };
       },
       est: function (o) { return estHousewarming(o); }
     },
-    christening: {
+    christening: {   /* the Confirmation gift box is "coming soon": shown as information, not orderable */
       product: "Christening & Confirmation Gifts",
-      read: function (v) { return { set: v.set === "confirmation" ? "confirmation" : "gown" }; },
-      est: function (o) { return o.set === "confirmation" ? estConfirmationBox() : estChristeningGown(); }
+      read: function () { return {}; },
+      est: function () { return estChristeningGown(); }
     },
     godparent: {
       product: "Godparent Gift Set",
@@ -216,7 +216,11 @@
       var printOnly = art.querySelectorAll("[data-print-only]");
       for (var i = 0; i < printOnly.length; i++) {
         var node = printOnly[i];
-        if (node.tagName === "FIELDSET") node.disabled = isDigital;
+        if (node.tagName === "FIELDSET") {
+          node.disabled = isDigital;
+          /* back to its defaults (fine-art, no frame) — the same as the gift box below, so a later print starts clean */
+          if (isDigital) { var rs = node.querySelectorAll('input[type="radio"]'); for (var k = 0; k < rs.length; k++) rs[k].checked = rs[k].defaultChecked; }
+        }
         else { var inp = node.querySelector("input"); if (inp) { inp.disabled = isDigital; if (isDigital) inp.checked = false; } }
         node.classList.toggle("is-off", isDigital);
       }
@@ -296,6 +300,7 @@
     /* remember the pick on this device (restoring is not a fresh pick — the links wait for a real tap) */
     var saved = load(storeKey);
     if (form && saved && saved.v && typeof saved.v === "object") {
+      g.restored = true;
       var inputs = form.querySelectorAll("input");
       for (var r = 0; r < inputs.length; r++) {
         var inp2 = inputs[r];
@@ -388,6 +393,8 @@
     var saved = load(CURRENT_KEY);
     var startId = byId[fromHash] ? fromHash : (typeof saved === "string" && byId[saved] ? saved : gifts[0].id);
     activate(startId, {});
+    /* a remembered or linked piece is the customer's own pick: the order links carry it from the start */
+    if (byId[fromHash] || startId === saved || current.restored) pick(current);
     if (byId[fromHash]) {   /* a #piece link (QR card, Linktree, another page): show the studio with that piece chosen */
       var toPicker = function () { var label = document.getElementById("pick-label"); if (label && label.scrollIntoView) label.scrollIntoView(); };
       setTimeout(toPicker, 0);

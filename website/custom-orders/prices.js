@@ -126,11 +126,6 @@ function estCalendar(o) {
 
 function estGodparent() { return finish([{ label: "Godparent Gift Set", amount: PRICES.godparent.base }]); }
 function estChristeningGown() { return finish([{ label: "Christening Gown Set — lace & satin", amount: PRICES.christening.gownSet }]); }
-function estConfirmationBox() {
-  var r = finish([{ label: "Confirmation gift box (coming soon)", amount: PRICES.christening.confirmationBox }]);
-  r.note = "Coming soon";
-  return r;
-}
 
 function finish(lines) {
   var total = 0;
@@ -146,5 +141,5 @@ function summaryLine(product, est) {
 }
 
 if (typeof module !== "undefined") {
-  module.exports = { ORDER_FORM_URL: ORDER_FORM_URL, ORDER_FORM_PREFILL_ENTRY: ORDER_FORM_PREFILL_ENTRY, PRICES: PRICES, money: money, estPortraitDoll: estPortraitDoll, estPet: estPet, estWatercolor: estWatercolor, estHousewarming: estHousewarming, estCalendar: estCalendar, estGodparent: estGodparent, estChristeningGown: estChristeningGown, estConfirmationBox: estConfirmationBox, summaryLine: summaryLine };
+  module.exports = { ORDER_FORM_URL: ORDER_FORM_URL, ORDER_FORM_PREFILL_ENTRY: ORDER_FORM_PREFILL_ENTRY, PRICES: PRICES, money: money, estPortraitDoll: estPortraitDoll, estPet: estPet, estWatercolor: estWatercolor, estHousewarming: estHousewarming, estCalendar: estCalendar, estGodparent: estGodparent, estChristeningGown: estChristeningGown, summaryLine: summaryLine };
 }

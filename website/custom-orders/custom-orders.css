@@ -13,7 +13,7 @@
   --peach-hover: #F0B68C;  /* button hover (Ink 5.3:1) */
   --peach-active: #E6A577;   /* Ink 4.69:1 */
   --berry: #B42249;        /* prices, links, emphasis — 6.43:1 white / 5.98:1 cream */
-  --pink: #DB426B;         /* identity only — lives in the logo image, never in CSS */
+  /* Pink #DB426B is identity only: it lives in the logo image, never in this file */
   --caption: #9C5325;      /* captions, legends, small text — 5.31:1 */
   --butter-soft: #FAEFD8;  /* Christmas band */
   --glow-soft: #F6DCC4;    /* selected chip / table cell fill — Ink on it 7.7:1 */
@@ -226,6 +226,8 @@ p { margin: 0; }
 .tile:has(input:focus-visible), .tile.is-focus { outline: 3px solid var(--ink); outline-offset: 3px; }
 .tile.is-off, .step.is-off .tile { cursor: not-allowed; }
 .tile.is-off { opacity: 0.55; }
+.tile-info { cursor: default; border-style: dashed; }
+.tile-info:hover { border-color: var(--line-ui); }
 /* size tiles read as a list on phones: name + note on the left, price on the right */
 @media (max-width: 599px) {
   .tiles.list { grid-template-columns: minmax(0, 1fr); }
@@ -239,7 +241,7 @@ p { margin: 0; }
 .all-prices { border-top: 1px solid var(--line); padding-top: 10px; }
 .all-prices summary { cursor: pointer; font-weight: 500; font-size: 15px; color: var(--berry); min-height: 44px; display: flex; align-items: center; gap: 8px; list-style: none; }
 .all-prices summary::-webkit-details-marker { display: none; }
-.all-prices summary::before { content: ""; width: 7px; height: 7px; border: solid currentColor; border-width: 0 2px 2px 0; transform: rotate(-45deg); transition: transform var(--ease); margin: 0 4px 0 2px; }
+.all-prices summary::before { content: ""; width: 7px; height: 7px; border: solid currentColor; border-width: 0 2px 2px 0; transform: rotate(-45deg); margin: 0 4px 0 2px; }
 .all-prices[open] summary::before { transform: rotate(45deg); }
 .all-prices summary:hover { color: var(--ink); }
 .price-table { border-collapse: collapse; width: 100%; table-layout: fixed; font-size: 15px; margin-top: 4px; }
@@ -259,6 +261,7 @@ p { margin: 0; }
 .box li { padding: 7px 0; border-top: 1px solid var(--line-soft); font-size: 15px; line-height: 1.4; }
 .box li:first-child { border-top: 0; padding-top: 0; }
 .box li[hidden] { display: none; }
+.box:empty { display: none; }
 .line { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
 .line .amt { font-weight: 600; white-space: nowrap; }
 .line-main .line-name { font-family: var(--font-head); font-weight: 500; font-size: 18px; }

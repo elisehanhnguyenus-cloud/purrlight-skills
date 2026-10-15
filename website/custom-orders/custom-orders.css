@@ -442,6 +442,8 @@ p { margin: 0; }
 .order-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 8px var(--gutter) calc(8px + env(safe-area-inset-bottom)); background: rgba(251, 246, 238, 0.96); border-top: 1px solid var(--line); transition: opacity 240ms ease; }
 .order-bar[hidden] { display: none; }
 .order-bar-col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.order-bar-thumb { flex: none; width: 44px; height: 44px; object-fit: cover; border-radius: 8px; border: 1px solid var(--line); background: #FFFFFF; }
+.order-bar-thumb[hidden] { display: none; }
 .order-bar-cap { font-size: 13px; font-weight: 500; color: var(--caption); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .order-bar-text { font-size: 15px; font-weight: 600; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .order-bar .btn { flex: none; }

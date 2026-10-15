@@ -118,6 +118,8 @@
   var barBtn = el("a", { "class": "btn btn-primary btn-small", "data-order": "", href: orderUrl() }, [
     el("span", { "class": "long", text: "Place your order" }), el("span", { "class": "short", text: "Order" })
   ]);
+  var barThumb = el("img", { "class": "order-bar-thumb", alt: "", width: "44", height: "44", hidden: "" });   /* the photo now showing — the phone's view of the box */
+  bar.appendChild(barThumb);
   bar.appendChild(el("span", { "class": "order-bar-col" }, [barCap, barText])); bar.appendChild(barBtn);
   document.body.appendChild(bar);
   var capTimer = null;
@@ -297,7 +299,7 @@
     var qtyWrap = art.querySelector("[data-qty]");
 
     var prevLabels = null, prevTotal = null, prevQty = 1;
-    function update(fromUser) {
+    function update(fromUser, changed) {
       var v = readValues(form);
       /* print-only steps / tiles (paper, frame, gift box) only apply to printed paintings */
       var isDigital = v.format === "digital";
@@ -326,17 +328,29 @@
         dyn[d].textContent = spec.map[v[spec.key]] || "";
       }
       /* conditional rows, captions and photos */
-      var whens = art.querySelectorAll("[data-when]");
+      var whens = art.querySelectorAll("[data-when]:not(.shot)");
       for (var w = 0; w < whens.length; w++) {
         var show = holds(whens[w].getAttribute("data-when"), v);
         if (show && whens[w].hidden && fromUser) whens[w].classList.add("is-new");
         whens[w].hidden = !show;
       }
-      var shots = art.querySelectorAll(".gift-photo .shot"), alt = false;
-      for (var s = 0; s < shots.length; s++) if (shots[s].hasAttribute("data-when") && !shots[s].hidden) alt = true;
-      for (var s2 = 0; s2 < shots.length; s2++) if (!shots[s2].hasAttribute("data-when")) {
-        if (!alt && shots[s2].hidden && fromUser) shots[s2].classList.add("is-new");
-        shots[s2].hidden = alt;
+      /* the photo follows the choice ("now showing", OREOiD): the view tied to the step just changed, else the view
+         already shown while it still applies, else the first view whose condition holds, else the main photo */
+      var shots = art.querySelectorAll(".gift-photo .shot"), mainShot = null, curShot = null, valid = [], showShot = null;
+      for (var s = 0; s < shots.length; s++) {
+        var sw = shots[s].getAttribute("data-when"), so = shots[s].getAttribute("data-on");
+        if (!sw && !so) { mainShot = shots[s]; continue; }
+        if (!shots[s].hidden) curShot = shots[s];
+        if (!sw || holds(sw, v)) valid.push(shots[s]);
+      }
+      if (changed) for (var s2 = 0; s2 < valid.length && !showShot; s2++) if ((" " + valid[s2].getAttribute("data-on") + " ").indexOf(" " + changed + " ") > -1) showShot = valid[s2];
+      if (!showShot && curShot && valid.indexOf(curShot) > -1) showShot = curShot;
+      if (!showShot) for (var s3 = 0; s3 < valid.length && !showShot; s3++) if (valid[s3].hasAttribute("data-when")) showShot = valid[s3];
+      showShot = showShot || mainShot;
+      for (var s4 = 0; s4 < shots.length; s4++) {
+        var vis = shots[s4] === showShot;
+        if (vis && shots[s4].hidden && fromUser) { shots[s4].classList.remove("is-new"); void shots[s4].offsetWidth; shots[s4].classList.add("is-new"); }
+        shots[s4].hidden = !vis;
       }
 
       var est = def.est(def.read(v, form, g));
@@ -376,7 +390,7 @@
       noteRow.textContent = (est.note ? est.note + " · " : "") + "Free U.S. shipping";
       copied.textContent = "";
       store(storeKey, { v: v, swaps: g.swaps });
-      if (g === current) updatePay();
+      if (g === current) { updatePay(); setBarThumb(g); }
       if (fromUser) {
         var removed = oldLabels.filter(function (lab, ix) { return ix > 0 && prevLabels.indexOf(lab) === -1; });   /* a swapped main line is not a removal */
         live.textContent = (added.length ? added.join(", ") + ". " : "") + (removed.length ? "Removed: " + removed.join(", ") + ". " : "") + (est.qty > 1 ? est.qty + " " + est.many + ". " : "") + "Estimate " + money(est.total) + ".";
@@ -387,7 +401,7 @@
     }
     g.update = update;
     if (form) {
-      form.addEventListener("change", function (e) { if (e.target !== msgEl) update(true); });
+      form.addEventListener("change", function (e) { if (e.target !== msgEl) update(true, e.target && e.target.name); });
       if (qtyWrap) enhanceQty(qtyWrap, function () { update(true); });
       form.addEventListener("focusin", function (e) { var t = e.target, lab = t && t.parentNode; if (lab && lab.classList && lab.classList.contains("tile")) { try { lab.classList.toggle("is-focus", t.matches(":focus-visible")); } catch (err) { /* no :focus-visible */ } } });
       form.addEventListener("focusout", function (e) { var lab = e.target && e.target.parentNode; if (lab && lab.classList) lab.classList.remove("is-focus"); });
@@ -400,9 +414,11 @@
         clearTimeout(copiedTimer); copiedTimer = setTimeout(function () { copied.textContent = ""; }, 4000);
       }, function () { copied.textContent = "Copy not available here — note your pick when you order: " + g.text; });
     });
+    function mainView() { var sh = art.querySelectorAll(".gift-photo .shot"); for (var i = 0; i < sh.length; i++) sh[i].hidden = sh[i].hasAttribute("data-when") || sh[i].hasAttribute("data-on"); }
     resetBtn.addEventListener("click", function () {
       if (form) form.reset();
       g.swaps = {};
+      mainView();
       if (msgCount) msgCount.textContent = "Up to 160 characters";
       store(storeKey, null); update(true);
     });
@@ -429,7 +445,7 @@
         for (var r3 = 0; r3 < defs.length; r3++) defs[r3].checked = defs[r3].defaultChecked;
       }
     }
-    g.clear = function () { if (form) form.reset(); g.swaps = {}; if (msgCount) msgCount.textContent = "Up to 160 characters"; };
+    g.clear = function () { if (form) form.reset(); g.swaps = {}; mainView(); if (msgCount) msgCount.textContent = "Up to 160 characters"; };
     g.form = form;
     update(false);
     return g;
@@ -443,6 +459,13 @@
   function updateBar() {
     if (current && current.est) barText.textContent = "Estimate " + money(current.est.total) + " · " + current.def.product;   /* the number first: phones cut the end */
     updatePay();
+    if (current) setBarThumb(current);
+  }
+  function setBarThumb(g) {
+    var img = g.art.querySelector(".gift-photo .shot:not([hidden]) img");
+    if (!img) { barThumb.hidden = true; return; }
+    if (barThumb.getAttribute("src") !== img.getAttribute("src")) barThumb.setAttribute("src", img.getAttribute("src"));
+    barThumb.hidden = false;
   }
 
   /* ---------- pay your deposit: Square link (customer types the amount) or Zelle ---------- */

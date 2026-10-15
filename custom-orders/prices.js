@@ -21,9 +21,10 @@
      than its own size × yarn price (same size and yarn assumed).
    ============================================================ */
 
-/* The one Google Form for all seven products (brief §1 / §5) — THE ONLY PLACE TO EDIT.
-   TODO Elise: paste the Google Form link here. Until the form exists the buttons email the studio
-   (the same mailto is written in the HTML, so the page also works without JavaScript). */
+/* The one Google Form for all seven products (brief §1 / §5). Edit it HERE — every order link on the
+   page is rewritten from this constant on load. TODO Elise: paste the Google Form link.
+   Until the form exists the buttons email the studio. The same mailto is written into index.html
+   (data-order hrefs + <noscript> lines) only as the no-JavaScript fallback; it may stay as email. */
 var ORDER_FORM_URL = "mailto:hello@purrlight.studio?subject=Custom%20order";
 /* Optional: the Google Form field that should receive the customer's pick (e.g. "entry.123456789").
    Leave "" and the page copies the pick to the clipboard instead. To find the id: Google Form → ⋮ → Get pre-filled link. */

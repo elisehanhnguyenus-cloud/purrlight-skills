@@ -1,0 +1,12 @@
+{
+  "name": "Purrlight Event Desk",
+  "short_name": "Event Desk",
+  "description": "Purrlight Studio booth console — thank-you notes and order confirmations for customers at events.",
+  "start_url": "event.html",
+  "display": "standalone",
+  "background_color": "#FBF6EE",
+  "theme_color": "#FBF6EE",
+  "icons": [
+    { "src": "assets/brand/favicon-64.png", "sizes": "64x64", "type": "image/png" }
+  ]
+}

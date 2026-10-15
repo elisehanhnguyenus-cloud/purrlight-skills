@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Purrlight Studio — Handmade dolls, keepsakes & cat-loved things</title>
+  <meta name="description" content="Purrlight Studio makes heirloom crochet and fabric dolls and keepsakes — designed in Pearland, Texas, handmade in Vietnam.">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="64x64" href="assets/brand/favicon-64.png">
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="announce"><span class="star">✦</span> Designed in Pearland, Texas · Handmade in Vietnam · Supervised by Merlin <span class="star">✦</span></div>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="logo" href="index.html" aria-label="Purrlight Studio home">
+        <img src="assets/brand/logo-flat.png" alt="Purrlight Studio" width="360" height="119">
+      </a>
+      <nav class="main-nav" aria-label="Main">
+        <button class="nav-close" aria-label="Close menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+        <ul>
+          <li><a href="index.html" aria-current="page">Home</a></li>
+          <li><a href="shop.html">Shop All</a></li>
+          <li><a href="shop.html?cat=Merlin%27s%20World%20%26%20His%20Friends">Merlin's World</a></li>
+          <li><a href="shop.html?cat=Storybook%20%26%20Traditional%20Tales">Storybook</a></li>
+          <li><a href="shop.html?cat=Faith%20%26%20Milestones">Faith &amp; Milestones</a></li>
+          <li><a href="about.html">Our Story</a></li>
+          <li><a href="partners.html">Partners</a></li>
+        </ul>
+      </nav>
+      <a class="btn btn-primary btn-small header-cta" data-etsy href="#" target="_blank" rel="noopener">Shop on Etsy</a>
+      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- hero -->
+    <section class="hero">
+      <div class="wrap hero-inner">
+        <div>
+          <p class="hero-eyebrow">✦ chapter one · meet merlin</p>
+          <h1>A cat with a tiny backpack. <em>A studio with two homes.</em></h1>
+          <p class="hero-sub">Meet Merlin — our curious tuxedo cat in a little yellow beret, who sketches the world from the studio windowsill while our family stitches it into heirloom dolls and keepsakes. Sketched by Merlin, stitched by us.</p>
+          <div class="hero-actions">
+            <a class="btn btn-glow" href="shop.html">shop the collection</a>
+            <a class="btn btn-ghost" href="about.html">our story</a>
+          </div>
+        </div>
+        <div class="hero-art">
+          <img src="assets/img/hero-mooncat.svg" alt="Illustration of Merlin, a tuxedo cat in a yellow beret and sage bib, asleep inside a crescent moon surrounded by stars" width="600" height="600">
+        </div>
+      </div>
+    </section>
+
+
+    <!-- trust bar (học từ LFA nhưng không overclaim) -->
+    <section class="trust-bar" aria-label="Our commitments">
+      <div class="wrap trust-inner">
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#9C5325" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21C7 17 3 13.5 3 9.5A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 9 2.5c0 4-4 7.5-9 11.5Z"/></svg>
+          <div><strong>Handmade in small batches</strong><span>Every piece finished by hand — never a factory line</span></div>
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#4E6346" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h11v8H3zM14 10h4l3 3v2h-7zM7.5 18a1.8 1.8 0 1 0 0-.01M17.5 18a1.8 1.8 0 1 0 0-.01"/></svg>
+          <div><strong>Tracked delivery on every order</strong><span>Most pieces ship straight from our Vietnam workshop, duties included</span></div>
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#5F5C94" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+          <div><strong>Made to order, honestly</strong><span>Real processing times — hands are not machines</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- categories -->
+    <section class="section-tight">
+      <div class="wrap">
+        <div class="section-head">
+          <h2><span class="kicker">chapter two · the collections</span>Shop by category</h2>
+        </div>
+        <div class="cat-grid" data-categories></div>
+      </div>
+    </section>
+
+    <!-- favorites -->
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <h2><span class="kicker">chapter three · from the worktable</span>Shop favorites</h2>
+          <a class="section-link" href="shop.html">view everything →</a>
+        </div>
+        <div class="product-grid" data-favorites></div>
+      </div>
+    </section>
+    <!-- video lifestyle -->
+    <section class="section-tight">
+      <div class="wrap">
+        <div class="section-head">
+          <h2><span class="kicker">chapter four · the making</span>Watch the making, the gifting, the napping</h2>
+          <a class="section-link" data-tiktok href="https://www.tiktok.com/@purrlightstudio" target="_blank" rel="noopener">more on TikTok →</a>
+        </div>
+        <!-- Posters are brand illustrations. Replace each <a> with a real
+             video embed (TikTok/YouTube) or point href at the actual video. -->
+        <div class="video-grid">
+          <a class="video-card reveal" data-tiktok href="https://www.tiktok.com/@purrlightstudio" target="_blank" rel="noopener" aria-label="Watch how our dolls are crocheted, on TikTok">
+            <img src="assets/img/video-making.svg" alt="" width="800" height="450">
+            <span class="play" aria-hidden="true"><span><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5Z"/></svg></span></span>
+            <span class="video-label">How a doll is born</span>
+          </a>
+          <a class="video-card reveal" data-tiktok href="https://www.tiktok.com/@purrlightstudio" target="_blank" rel="noopener" aria-label="Watch our studio shelf styling video, on TikTok">
+            <img src="assets/img/video-shelf.svg" alt="" width="800" height="450">
+            <span class="play" aria-hidden="true"><span><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5Z"/></svg></span></span>
+            <span class="video-label">On the studio shelf</span>
+          </a>
+          <a class="video-card reveal" data-tiktok href="https://www.tiktok.com/@purrlightstudio" target="_blank" rel="noopener" aria-label="Watch a cat testing our felt fish, on TikTok">
+            <img src="assets/img/video-play.svg" alt="" width="800" height="450">
+            <span class="play" aria-hidden="true"><span><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5Z"/></svg></span></span>
+            <span class="video-label">Quality control department</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- story split -->
+    <section class="section-tight">
+      <div class="wrap">
+        <div class="story reveal">
+          <div class="story-media">
+            <img src="assets/img/story-yarn.svg" alt="Illustration of a ball of peach yarn with a crochet hook and a small heart" width="600" height="600">
+          </div>
+          <div class="story-body">
+            <p class="story-kicker">chapter five · two homes, one story</p>
+            <h2>Every stitch has a story</h2>
+            <p>Purrlight Studio began at a kitchen table in Pearland, Texas — one skein of yarn, one crochet hook, and one very real tuxedo cat named Merlin supervising from the windowsill.</p>
+            <p>Today we design every piece in Texas and craft them in small batches with our family of artisan makers in Vietnam. Nothing mass-produced, nothing rushed — just soft things made carefully, for people who notice the difference.</p>
+            <a class="btn btn-primary" href="about.html">read our story</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- the studio family (canon v2: Merlin + future companions) -->
+    <section class="section-tight">
+      <div class="wrap">
+        <div class="companions reveal">
+          <div class="section-head">
+            <h2><span class="kicker">chapter six · the studio family</span>Meet Merlin &amp; friends</h2>
+          </div>
+          <p>In our storybook, Merlin arrived with a tiny green backpack, a yellow beret, and a notebook full of sketches. In real life, he mostly naps on the patterns. Both feel true. A few friends are on their way to join him.</p>
+          <div class="companion-strip">
+            <a class="companion" href="shop.html?cat=Merlin%27s%20World%20%26%20His%20Friends"><span class="companion-art"><img src="assets/img/merlin-sleeping.svg" alt="" width="300" height="300"></span><span>Merlin</span></a>
+            <span class="companion"><span class="soon-pill">joining soon</span><span class="companion-art"><img src="assets/img/companion-tam.svg" alt="" width="300" height="300"></span><span>Tâm</span></span>
+            <span class="companion"><span class="soon-pill">joining soon</span><span class="companion-art"><img src="assets/img/companion-banhmi.svg" alt="" width="300" height="300"></span><span>Bánh Mì</span></span>
+            <span class="companion"><span class="soon-pill">joining soon</span><span class="companion-art"><img src="assets/img/companion-mochi.svg" alt="" width="300" height="300"></span><span>Mochi</span></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- values -->
+    <section class="section">
+      <div class="wrap">
+        <div class="values">
+          <div class="value reveal">
+            <div class="value-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#D18A5B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21C7 17 3 13.5 3 9.5A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 9 2.5c0 4-4 7.5-9 11.5Z"/></svg>
+            </div>
+            <h3>Made by hand</h3>
+            <p>Crocheted, sewn, and finished by real hands — small batches, never a factory line.</p>
+          </div>
+          <div class="value reveal">
+            <div class="value-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#6E8663" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3.5"/></svg>
+            </div>
+            <h3>Thoughtful materials</h3>
+            <p>Soft cotton yarns and fabrics chosen to be gentle to hold — and kind to curious paws.</p>
+          </div>
+          <div class="value reveal">
+            <div class="value-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#8E8BB8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"/></svg>
+            </div>
+            <h3>Kept, not thrown away</h3>
+            <p>Pieces made to become keepsakes — folded into memory boxes, not landfills.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- purrks rewards (launching soon — do not promise an active program) -->
+    <section class="section-tight">
+      <div class="wrap">
+        <div class="purrks reveal">
+          <span class="soon">✦ launching soon</span>
+          <h2>Purrks Points</h2>
+          <p>Our little thank-you club. Shop, share, and collect companions — earn Purrks, unlock rewards made just for regulars.</p>
+          <div class="purrks-steps">
+            <div class="purrks-step">
+              <span class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#9C5325" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l1.5 13.5a1 1 0 0 1-1 1.1H5.5a1 1 0 0 1-1-1.1Z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/></svg></span>
+              <h3>Shop</h3>
+              <p>Every order earns Purrks.</p>
+            </div>
+            <div class="purrks-step">
+              <span class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#7A5C1E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.2 6.2L21 10l-6.8 1.6L12 18l-2.2-6.4L3 10l6.8-.8Z"/></svg></span>
+              <h3>Earn ✦</h3>
+              <p>Points stack up quietly, like a cat in a sunbeam.</p>
+            </div>
+            <div class="purrks-step">
+              <span class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#5F5C94" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M4 13h16M12 10v10M12 10s-4 0-5-2.5C6.3 5.7 8 4 9.5 4.5 11.6 5.2 12 10 12 10Zm0 0s4 0 5-2.5c.7-1.8-1-3.5-2.5-3C12.4 5.2 12 10 12 10Z"/></svg></span>
+              <h3>Unlock rewards</h3>
+              <p>Early access, member prices, and companion-only surprises.</p>
+            </div>
+          </div>
+          <a class="btn btn-primary" data-etsy href="#" target="_blank" rel="noopener">follow along on Etsy</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- glow note -->
+    <section class="section-tight">
+      <div class="wrap">
+        <div class="glow-note reveal">
+          <svg class="moon" viewBox="0 0 54 54" aria-hidden="true">
+            <path d="M18,38 A16,16 0 0 0 48,38 A12.5,12.5 0 0 1 18,38 Z" fill="#F3D9A4" stroke="#4A423B" stroke-width="2.4" stroke-linejoin="round"/>
+            <path transform="translate(14,14)" fill="#E8A87C" d="M0,-8 Q1.5,-1.5 8,0 Q1.5,1.5 0,8 Q-1.5,1.5 -8,0 Q-1.5,-1.5 0,-8 Z"/>
+          </svg>
+          <h2>Why “Purrlight”?</h2>
+          <p>“Purr” for the sound that fills our studio — Merlin’s, mostly. “Light” for the ones we’ve loved: the name also carries the memory of a husky we lost at five years old. It’s why this studio makes things that are meant to be kept.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- journal (articles upcoming — cards link to TikTok until blog exists) -->
+    <section class="section-tight">
+      <div class="wrap">
+        <div class="section-head">
+          <h2><span class="kicker">the purrlight journal</span>From Merlin’s notebook</h2>
+          <a class="section-link" data-tiktok href="https://www.tiktok.com/@purrlightstudio" target="_blank" rel="noopener">follow along →</a>
+        </div>
+        <div class="journal-grid">
+          <div class="journal-card reveal">
+            <img src="assets/img/story-yarn.svg" alt="" width="800" height="500" loading="lazy">
+            <div class="journal-body"><span class="journal-tag">coming soon · behind the seams</span><h3>How Merlin got his beret (we still don’t know)</h3></div>
+          </div>
+          <div class="journal-card reveal">
+            <img src="assets/img/product-baptism.svg" alt="" width="800" height="500" loading="lazy">
+            <div class="journal-body"><span class="journal-tag">coming soon · keepsake guide</span><h3>Choosing a baptism keepsake that lasts generations</h3></div>
+          </div>
+          <div class="journal-card reveal">
+            <img src="assets/img/video-shelf.svg" alt="" width="800" height="500" loading="lazy">
+            <div class="journal-body"><span class="journal-tag">coming soon · from the worktable</span><h3>One doll, start to finish: a making-of</h3></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- social strip -->
+    <section class="section-tight">
+      <div class="wrap">
+        <div class="section-head">
+          <h2><span class="kicker">follow the glow</span>Purrlight, daily</h2>
+        </div>
+        <!-- Replace tiles with real TikTok/Pinterest photos; keep them square.
+             Handles: @purrlightstudio is OURS on TikTok / Facebook / Pinterest only —
+             the Instagram handle belongs to someone else (Brand Canon v2), so no IG link here. -->
+        <div class="social-tiles reveal">
+          <a data-tiktok href="https://www.tiktok.com/@purrlightstudio" target="_blank" rel="noopener" aria-label="Purrlight on TikTok"><img src="assets/img/merlin-sleeping.svg" alt="" width="300" height="300"></a>
+          <a data-tiktok href="https://www.tiktok.com/@purrlightstudio" target="_blank" rel="noopener" aria-label="Purrlight on TikTok"><img src="assets/img/video-shelf.svg" alt="" width="300" height="300"></a>
+          <a data-tiktok href="https://www.tiktok.com/@purrlightstudio" target="_blank" rel="noopener" aria-label="Purrlight on TikTok"><img src="assets/img/product-baptism.svg" alt="" width="300" height="300"></a>
+          <a href="https://www.pinterest.com/purrlightstudio" target="_blank" rel="noopener" aria-label="Purrlight on Pinterest"><img src="assets/img/story-yarn.svg" alt="" width="300" height="300"></a>
+          <a href="https://www.pinterest.com/purrlightstudio" target="_blank" rel="noopener" aria-label="Purrlight on Pinterest"><img src="assets/img/product-bunny.svg" alt="" width="300" height="300"></a>
+          <a href="https://www.pinterest.com/purrlightstudio" target="_blank" rel="noopener" aria-label="Purrlight on Pinterest"><img src="assets/img/video-play.svg" alt="" width="300" height="300"></a>
+        </div>
+        <div class="social-follow">
+          <a class="btn btn-ghost btn-small" href="https://www.facebook.com/purrlightstudio" target="_blank" rel="noopener">find us on Facebook</a>
+          <a class="btn btn-ghost btn-small" href="https://www.pinterest.com/purrlightstudio" target="_blank" rel="noopener">pin us on Pinterest</a>
+          <a class="btn btn-ghost btn-small" data-tiktok href="https://www.tiktok.com/@purrlightstudio" target="_blank" rel="noopener">watch on TikTok</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- personalization & corporate gifting -->
+    <section class="section-tight">
+      <div class="wrap">
+        <div class="companions reveal">
+          <div class="section-head">
+            <h2><span class="kicker">gifts with a story</span>Personalization &amp; corporate gifting</h2>
+          </div>
+          <p>Names embroidered by hand, keepsakes for showers and milestones, and small-batch gift sets — from one piece to a run for a whole team. Tell us who it’s for; Merlin will make a note.</p>
+          <div class="social-follow">
+            <a class="btn btn-glow" data-etsy href="#" target="_blank" rel="noopener">start a custom order</a>
+            <a class="btn btn-ghost" href="mailto:hello@purrlight.studio?subject=Corporate%20Gifting">corporate inquiries</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- newsletter -->
+    <section class="section" id="newsletter">
+      <div class="wrap">
+        <div class="newsletter reveal">
+          <p class="newsletter-kicker">epilogue</p>
+          <h2>Letters from Merlin</h2>
+          <p>New pieces, small-batch restocks, and the occasional page from the notebook — delivered gently to your inbox, never too often.</p>
+          <form class="newsletter-form" data-newsletter>
+            <label class="visually-hidden" for="nl-email">Email address</label>
+            <input id="nl-email" type="email" name="email" placeholder="your@email.com" required>
+            <button class="btn btn-glow" type="submit">sign up</button>
+          </form>
+          <p class="newsletter-msg" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="footer-logo" href="index.html" aria-label="Purrlight Studio home"><img src="assets/brand/logo-flat.png" alt="Purrlight Studio" width="360" height="119"></a>
+          <p>Heirloom dolls, keepsakes, and cat-loved things. Designed in Pearland, Texas · Handmade in Vietnam.</p>
+        </div>
+        <div>
+          <h2>Shop</h2>
+          <ul>
+            <li><a href="shop.html">All products</a></li>
+            <li><a href="shop.html?cat=Storybook%20%26%20Traditional%20Tales">Storybook &amp; Traditional Tales</a></li>
+            <li><a href="shop.html?cat=Feelings%20%26%20Calm">Feelings &amp; Calm</a></li>
+            <li><a href="shop.html?cat=Faith%20%26%20Milestones">Faith &amp; Milestones</a></li>
+            <li><a href="shop.html?cat=Patterns%20%26%20Printables">Patterns &amp; Printables</a></li>
+            <li><a href="shop.html?cat=Merlin%27s%20World%20%26%20His%20Friends">Merlin's World &amp; His Friends</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Studio</h2>
+          <ul>
+            <li><a href="about.html">Our story</a></li>
+            <li><a href="partners.html">Partner program</a></li>
+            <li><a data-etsy href="#" target="_blank" rel="noopener">Etsy shop</a></li>
+            <li><a data-tiktok href="https://www.tiktok.com/@purrlightstudio" target="_blank" rel="noopener">TikTok Shop</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Help</h2>
+          <ul>
+            <li><a data-etsy href="#" target="_blank" rel="noopener">Shipping &amp; processing</a></li>
+            <li><a data-etsy href="#" target="_blank" rel="noopener">Returns &amp; exchanges</a></li>
+            <li><a href="mailto:hello@purrlight.studio">Contact us — hello@purrlight.studio</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© <span data-year>2026</span> Purrlight Studio LLC · Pearland, TX</p>
+        <p>Made by hand. Made to be kept. ✦</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/products.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

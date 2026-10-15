@@ -19,6 +19,7 @@
   --glow-soft: #F6DCC4;    /* selected chip / table cell fill — Ink on it 7.7:1 */
   --line: rgba(74, 66, 59, 0.18);   /* Ink hairline */
   --line-soft: rgba(74, 66, 59, 0.10);
+  --line-ui: rgba(74, 66, 59, 0.6);   /* control boundaries ≥3:1 on cream (WCAG 1.4.11) */
   --footer-text: #E9E0D6;
   --footer-muted: #C4B9AC;
 
@@ -36,8 +37,8 @@
 @media (min-width: 900px) { :root { --gutter: 40px; } }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; animation: none !important; } }
+html { -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
 
 body {
   margin: 0;
@@ -84,8 +85,8 @@ p { margin: 0; }
 }
 .btn:hover { background: var(--peach-hover); color: var(--ink); }
 .btn:active { background: var(--peach-active); }
-.btn-small { min-height: 44px; padding: 0 16px; font-size: 14px; }
-.btn-large { min-height: 52px; padding: 0 32px; font-size: 16px; min-width: 240px; }
+.btn-small { min-height: 44px; padding: 0 16px; }
+.btn-large { min-height: 52px; padding: 0 32px; min-width: 240px; }
 @media (max-width: 480px) { .hero .btn, .closing .btn { width: 100%; } }
 .link-btn { border: 0; background: transparent; font: inherit; font-size: 15px; font-weight: 500; color: var(--berry); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 10px 2px; min-height: 44px; }
 .link-btn:hover { color: var(--ink); }
@@ -137,8 +138,8 @@ p { margin: 0; }
 .rail::-webkit-scrollbar { display: none; }
 .rail li { flex: 0 0 104px; scroll-snap-align: start; }
 .rail a { display: block; color: var(--ink); text-decoration: none; font-size: 13px; line-height: 1.3; }
-.rail img { width: 104px; height: 104px; object-fit: cover; border-radius: var(--radius); margin-bottom: 8px; box-shadow: inset 0 0 0 1px var(--line); }
-.rail a:hover img, .rail a:focus-visible img, .rail a.is-current img { box-shadow: inset 0 0 0 2px var(--ink); }
+.rail img { width: 104px; height: 104px; object-fit: cover; border-radius: var(--radius); margin-bottom: 8px; box-shadow: 0 0 0 1px var(--line); transition: box-shadow 200ms ease; }
+.rail a:hover img, .rail a:focus-visible img, .rail a.is-current img { box-shadow: 0 0 0 2px var(--ink); }
 .rail a:focus-visible { outline: none; }
 .rail-name { display: block; font-weight: 500; }
 .rail-price { display: block; color: var(--berry); font-weight: 500; margin-top: 2px; }
@@ -198,14 +199,14 @@ p { margin: 0; }
 .price-table { border-collapse: collapse; width: 100%; table-layout: fixed; font-size: 15px; }
 .price-table th:first-child { width: 37%; }
 .price-table th, .price-table td { text-align: left; padding: 10px 4px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
-.price-table thead th { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--caption); font-weight: 500; border-bottom: 1px solid var(--line); }
+.price-table thead th { font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--caption); font-weight: 500; border-bottom: 1px solid var(--line); }
 .price-table tbody th { font-weight: 400; }
 .price-table tbody th strong { display: block; font-weight: 600; }
 .price-table .size-note { font-size: 13px; color: var(--ink-soft); }
 .price-table td { font-weight: 500; color: var(--ink); white-space: nowrap; }
 .price-table th:first-child, .price-table td:first-child { padding-left: 0; }
 .price-table td:has(.cell-btn) { padding-top: 6px; padding-bottom: 6px; }
-.cell-btn { font: inherit; font-family: var(--font-head); font-size: 17px; font-weight: 500; color: var(--berry); background: transparent; border: 1px solid var(--line); border-radius: 6px; padding: 8px 2px; width: 100%; max-width: 72px; min-height: 44px; cursor: pointer; transition: border-color var(--ease), background-color var(--ease); }
+.cell-btn { font: inherit; font-family: var(--font-head); font-size: 17px; font-weight: 500; color: var(--berry); background: transparent; border: 1px solid var(--line-ui); border-radius: 6px; padding: 8px 2px; width: 100%; max-width: 72px; min-height: 44px; cursor: pointer; transition: border-color var(--ease), background-color var(--ease); }
 .cell-btn:hover { border-color: var(--ink-soft); }
 .cell-btn.is-on { background: var(--glow-soft); border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); color: var(--ink); }
 
@@ -220,7 +221,7 @@ p { margin: 0; }
 .pick-group legend { font-family: var(--font-body); font-weight: 600; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--caption); padding: 0; margin-bottom: 8px; }
 .pick-group.is-off, .chip.is-off { opacity: 0.45; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.chip { position: relative; display: inline-flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; min-height: 44px; padding: 10px 14px; border: 1px solid var(--line); border-radius: var(--radius); background: transparent; font-size: 15px; font-weight: 500; line-height: 1.25; cursor: pointer; transition: border-color 200ms ease, background-color 200ms ease; }
+.chip { position: relative; display: inline-flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; min-height: 44px; padding: 10px 14px; border: 1px solid var(--line-ui); border-radius: var(--radius); background: transparent; font-size: 15px; font-weight: 500; line-height: 1.25; cursor: pointer; transition: border-color 200ms ease, background-color 200ms ease; }
 .chip input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
 .chip:hover { border-color: var(--ink-soft); }
 .chip:has(input:checked) { border-color: var(--ink); background: var(--glow-soft); box-shadow: inset 0 0 0 1px var(--ink); }

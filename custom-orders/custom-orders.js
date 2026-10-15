@@ -28,7 +28,10 @@
   var lastPick = null;   /* { product, total, text } — the last pick the customer touched */
   function orderUrl() {
     var url = ORDER_FORM_URL;
-    if (/^mailto:/i.test(url)) return url;   /* the stopgap email link carries nothing extra */
+    if (/^mailto:/i.test(url)) {   /* the stopgap email link: the pick travels in the message body */
+      if (lastPick) url += (url.indexOf("?") > -1 ? "&" : "?") + "body=" + encodeURIComponent(lastPick.text);
+      return url;
+    }
     var qs = [];
     try {
       var params = new URLSearchParams(location.search);
@@ -110,7 +113,7 @@
         { name: "pets", legend: "How many pets", type: "radio", options: [
           { value: "1", label: "One pet", checked: true },
           { value: "2", label: "Two pets", note: "Second pet on the same order −$10" }
-        ], note: "A second pet is priced at the same size and yarn — tell us in the form if they differ." }
+        ], note: "A second pet is priced at the same size and yarn — tell us when you order if they differ." }
       ],
       read: function (v) { return { size: v.size || "Classic", yarn: v.yarn || "Cotton", pets: Number(v.pets) }; },
       est: function (o) { return estPet(o); }
@@ -329,9 +332,9 @@
     var copiedTimer = null;
     copyBtn.addEventListener("click", function () {
       copyText(currentText, function () {
-        copied.textContent = "Copied — paste it into the order form.";
+        copied.textContent = "Copied — paste it into your order.";
         clearTimeout(copiedTimer); copiedTimer = setTimeout(function () { copied.textContent = ""; }, 4000);
-      }, function () { copied.textContent = "Copy not available here — note your pick in the form: " + currentText; });
+      }, function () { copied.textContent = "Copy not available here — note your pick when you order: " + currentText; });
     });
     resetBtn.addEventListener("click", function () {
       form.reset(); tableState.size = "Classic"; tableState.yarn = "Cotton";

@@ -141,7 +141,7 @@
         { name: "paper", legend: "Paper", type: "radio", printOnly: true, options: [
           { value: "fine", label: "Fine-art paper", checked: true },
           { value: "do", label: "Handmade Vietnamese Dó papyrus", price: "+$5" }
-        ], detail: { src: "../assets/img/custom/do-paper-print-detail.webp", w: 899, h: 1200, alt: "Watercolor cat print held up to the light on handmade Vietnamese Dó papyrus, showing the paper's fibers", caption: "Printed on handmade Vietnamese Dó papyrus" } },
+        ], detail: { src: "../assets/img/custom/do-paper-print-detail.webp", w: 560, h: 747, alt: "Watercolor cat print held up to the light on handmade Vietnamese Dó papyrus, showing the paper's fibers", caption: "Printed on handmade Vietnamese Dó papyrus" } },
         { name: "frame", legend: "Frame", type: "radio", printOnly: true, options: [
           { value: "no", label: "No frame", checked: true },
           { value: "yes", label: "Add a frame", priceBy: { "4x6": "+$8", "5x7": "+$16", "8x10": "+$24" } }

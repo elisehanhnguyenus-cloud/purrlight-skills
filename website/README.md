@@ -171,14 +171,34 @@ desktop ~8.900px → ~2.700px. Không tính cọc, số lượng hay giảm 5%/1
 mở → chỉ in nguyên câu của brief). Nút "Place your order": header (desktop),
 hero, trong hộp của từng món, CTA cuối, thanh dính — tất cả = `ORDER_FORM_URL`.
 
-**Chị cần điền (2 hằng ở đầu `prices.js`):**
-- `ORDER_FORM_URL` — link Google Form chung cho 7 món (brief §1). Hiện là
-  `mailto:hello@purrlight.studio` (form chưa có; mailto cũng ghi sẵn trong
-  HTML nên trang chạy cả khi tắt JS). Khi là link http, trang tự kèm `utm_*`
-  từ URL (Linktree gắn `?utm_source=linktree&utm_medium=bio`).
-- `ORDER_FORM_PREFILL_ENTRY` — (tuỳ chọn) id ô trong Google Form nhận dòng
-  tóm tắt lựa chọn (Form → ⋮ → Get pre-filled link → `entry.xxxx`). Để trống
-  thì khách bấm *Copy my pick* rồi dán vào form.
+**Bản 5 (15/10/2026, theo quyết định của chị):** thêm hàng **"Or start from a
+gift idea"** (3 gói: Realtor closing gift $60 · Pet memorial $41 · Christmas gift
+for Grandma $90 — giá tính từ chính estimator, bấm là chọn sẵn các ô); bước **số
+lượng** cho tranh và hộp tân gia (món 1 giá đủ, món 2–4 giảm 5%, từ món 5 giảm
+10%, trên cả món); Godparent **1 hoặc cả hai** (bộ 2 −$10 → $180); mỗi hộp hiện
+**Deposit today (50%)** và **Balance after you approve the photo**; bước **Your
+photos** (danh sách ảnh cần gửi từng món) và **Message for the card** (doll,
+godparent; đi kèm dòng "My pick", không lưu trên máy); hộp tân gia: 4 món cơ bản
++ gift box, add-on +$10 (thêm Chocolate box), mỗi add-on chọn **thêm** hoặc
+**đổi** một món cơ bản (món bị đổi hiện gạch ngang trong hộp); mục **Pay your
+deposit** (`#pay`): nút Square (link "Custom order" khách tự nhập số tiền — trang
+ghi đúng số cọc + nút *Copy deposit amount*), Zelle® tới
+`purrlightstudiollc@gmail.com` (nút *Copy address*), QR Square chỉ hiện trên
+máy tính, điều khoản cọc lấy từ bản chị duyệt cho booth 25/09.
+
+**Chị cần điền (đầu `prices.js`):**
+- `ORDER_FORM_URL` — link form đặt hàng chung cho 7 món. Hiện là
+  `mailto:hello@purrlight.studio` (mailto cũng ghi sẵn trong HTML nên trang chạy
+  cả khi tắt JS). **Khuyên dùng Tally** (miễn phí, khách không phải đăng nhập,
+  nhận ảnh ≤ 10 MB/file): tạo 4 *hidden field* tên `pick`, `product`, `total`,
+  `deposit` — trang tự điền. Google Forms bắt khách đăng nhập Google mới tải ảnh
+  lên được (hay bị chặn trong trình duyệt của Instagram/TikTok). Khi là link
+  http, trang tự kèm `utm_*` từ URL (Linktree gắn `?utm_source=linktree&utm_medium=bio`).
+- `ORDER_FORM_PREFILL_ENTRY` — chỉ khi dùng Google Form: id ô nhận dòng tóm tắt
+  (Form → ⋮ → Get pre-filled link → `entry.xxxx`).
+- `PAY.squareUrl`, `PAY.zelleTo` — nơi nhận cọc (đổi cả trong `index.html`
+  mục `#pay`, bản cho khách tắt JS). QR Square: `assets/img/custom/square-pay-qr.svg`
+  (tạo từ link; đổi link thì tạo lại QR).
 
 **Tải trang (bản 4, đo ở 390px):** 21 request · 480 KB · CLS 0 (desktop 0.006).
 Chỉ ảnh của món đang hiện được tải; 6 món còn lại tải khi khách chọn. Font:
@@ -192,11 +212,12 @@ khác). Ảnh hero British Shorthair đã gỡ khỏi web (không còn dùng; l�
 từng món, phím, nhớ lựa chọn, link #món, chế độ tắt JS), `audit-custom.js`
 (chuỗi copy/giá nguyên văn, từ cấm, ảnh, nút, tràn màn 360/390/1280).
 
-**Cách đọc giá mà brief để mở (đã ghi trong `prices.js`, chị xác nhận):**
-in tranh = giá đã gồm tranh (không cộng thêm $10 file digital); "+$5" chỉ cho
-giấy Dó (fine-art paper là giấy mặc định của bản in); hộp quà chỉ với bản in;
-"second pet −$10" = con thứ hai cùng size & len; giá khung 5×7 $16 / 8×10 $24
-là số suy ra (brief §7 chưa xác nhận).
+**Giá đã chốt 15/10 (Elise):** khung 4×6 $8 · 5×7 $16 · 8×10 $24; giảm theo
+từng món (2–4: 5%, từ 5: 10%) trên cả món; godparent bộ 2 −$10; cọc 50%.
+**Cách đọc còn để mở (ghi trong `prices.js`):** in tranh = giá đã gồm tranh
+(không cộng $10 file digital); "+$5" chỉ cho giấy Dó (fine-art là giấy mặc định);
+hộp quà tranh chỉ với bản in; "second pet −$10" = con thứ hai cùng size & len;
+"add or swap" cùng giá +$10.
 
 **Ảnh (`assets/img/custom/`):** 9 file kit lấy lại từ asset của artifact v1
 (tên theo image map §4). Đang dùng: 01 collage, 03 tranh "Our 1st Home", 04

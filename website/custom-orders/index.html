@@ -59,6 +59,21 @@
       </div>
     </section>
 
+    <!-- product rail: tap a piece to jump to it (the OREOiD "choose your piece" row) -->
+    <nav class="rail-wrap" aria-label="Pieces on this page">
+      <div class="wrap">
+        <ul class="rail">
+          <li><a href="#portrait-doll"><img src="../assets/img/custom/portrait-doll-collage.webp" alt="" loading="lazy" decoding="async" width="1200" height="960"><span class="rail-name">Custom Portrait Crochet Doll</span><span class="rail-price">$80</span></a></li>
+          <li><a href="#pet-crochet"><img src="../assets/img/custom/pet-crochet-maine-coon.webp" alt="" loading="lazy" decoding="async" width="794" height="1270"><span class="rail-name">Custom Cat / Dog / Pet Crochet</span><span class="rail-price">from $40</span></a></li>
+          <li><a href="#watercolor"><img src="../assets/img/custom/watercolor-our-first-home.webp" alt="" loading="lazy" decoding="async" width="1200" height="960"><span class="rail-name">Custom Digital Watercolor Painting</span><span class="rail-price">from $10</span></a></li>
+          <li><a href="#housewarming"><img src="../assets/img/custom/housewarming-box.webp" alt="" loading="lazy" decoding="async" width="382" height="512"><span class="rail-name">Housewarming &amp; Closing Gift Box</span><span class="rail-price">$50</span></a></li>
+          <li><a href="#christening"><img src="../assets/img/custom/christening-box.webp" alt="" loading="lazy" decoding="async" width="900" height="1200"><span class="rail-name">Christening &amp; Confirmation Gifts</span><span class="rail-price">from $55</span></a></li>
+          <li><a href="#godparent"><img src="../assets/img/custom/godparent-set.webp" alt="" loading="lazy" decoding="async" width="1200" height="1200"><span class="rail-name">Godparent Gift Set</span><span class="rail-price">$95</span></a></li>
+          <li><a href="#calendar"><img src="../assets/img/custom/pet-calendar-2027-cover.webp" alt="" loading="lazy" decoding="async" width="411" height="296"><span class="rail-name">Custom Watercolor Pet Calendar 2027</span><span class="rail-price">from $15</span></a></li>
+        </ul>
+      </div>
+    </nav>
+
     <!-- 3.2 Custom Portrait Crochet Doll -->
     <section class="product" id="portrait-doll" aria-labelledby="pd-h">
       <div class="wrap product-inner">
@@ -84,22 +99,22 @@
     <section class="product" id="pet-crochet" aria-labelledby="pet-h">
       <div class="wrap product-inner">
         <figure class="product-media">
-          <img src="../assets/img/custom/pet-crochet-maine-coon.webp" alt="Hand-crocheted Maine Coon cat portrait with a small mane, tufted ears and a full fluffy tail" width="794" height="1270" loading="lazy" decoding="async">
+          <img class="img-portrait" src="../assets/img/custom/pet-crochet-maine-coon.webp" alt="Hand-crocheted Maine Coon cat portrait with a small mane, tufted ears and a full fluffy tail" width="794" height="1270" loading="lazy" decoding="async">
         </figure>
         <div class="product-body">
           <h2 id="pet-h" class="product-title">Custom Cat / Dog / Pet Crochet</h2>
           <p class="price">from $40</p>
           <p class="desc">Your pet, in yarn. Show us three photos and we hand-crochet a portrait of that exact pet — your markings, your eye color, your coat. A beautiful memorial or a gift they will keep forever.</p>
           <div class="table-wrap">
-            <table class="price-table">
-              <caption class="sr-only">Custom pet crochet prices by size and yarn</caption>
+            <table class="price-table" data-pet-table>
+              <caption class="sr-only">Custom pet crochet prices by size and yarn — tap a price to build your piece</caption>
               <thead>
                 <tr><th scope="col">Size</th><th scope="col">Cotton</th><th scope="col">Velvet</th><th scope="col">Fluffy</th></tr>
               </thead>
               <tbody>
-                <tr><th scope="row"><strong>Petite</strong> <span class="size-note">12–20 cm · 5–8 in</span></th><td>$40</td><td>$48</td><td>$55</td></tr>
-                <tr><th scope="row"><strong>Classic</strong> <span class="size-note">20–30 cm · most chosen</span></th><td>$55</td><td>$67</td><td>$79</td></tr>
-                <tr><th scope="row"><strong>Grand</strong> <span class="size-note">30 cm &amp; up · 12 in +</span></th><td>$90</td><td>$105</td><td>$120</td></tr>
+                <tr><th scope="row"><strong>Petite</strong> <span class="size-note">12–20 cm · 5–8 in</span></th><td data-size="Petite" data-yarn="Cotton">$40</td><td data-size="Petite" data-yarn="Velvet">$48</td><td data-size="Petite" data-yarn="Fluffy">$55</td></tr>
+                <tr><th scope="row"><strong>Classic</strong> <span class="size-note">20–30 cm · most chosen</span></th><td data-size="Classic" data-yarn="Cotton">$55</td><td data-size="Classic" data-yarn="Velvet">$67</td><td data-size="Classic" data-yarn="Fluffy">$79</td></tr>
+                <tr><th scope="row"><strong>Grand</strong> <span class="size-note">30 cm &amp; up · 12 in +</span></th><td data-size="Grand" data-yarn="Cotton">$90</td><td data-size="Grand" data-yarn="Velvet">$105</td><td data-size="Grand" data-yarn="Fluffy">$120</td></tr>
               </tbody>
             </table>
           </div>
@@ -172,6 +187,7 @@
             <li><strong>Confirmation gift box — $55</strong> <em>(coming soon)</em>: 12 cm crochet saint figure + handmade rosary chain. Sales tax &amp; shipping included.</li>
           </ul>
           <p class="turnaround">Turnaround: from 1 week</p>
+          <p class="section-cta"><a class="btn btn-primary" data-order href="#">Place your order</a></p>
         </div>
       </div>
     </section>
@@ -187,6 +203,7 @@
           <p class="price">$95</p>
           <p class="desc">A meaningful thank-you for godparents: a custom crochet portrait doll of them, paired with a handmade crochet rosary chain.</p>
           <p class="turnaround">Turnaround: from 2 weeks</p>
+          <p class="section-cta"><a class="btn btn-primary" data-order href="#">Place your order</a></p>
         </div>
       </div>
     </section>
@@ -194,8 +211,9 @@
     <!-- 3.8 Custom Watercolor Pet Calendar 2027 -->
     <section class="product" id="calendar" aria-labelledby="cal-h">
       <div class="wrap product-inner">
-        <figure class="product-media">
-          <img src="../assets/img/custom/pet-calendar-2027.webp" alt="Sample 2027 watercolor pet calendar — tuxedo cat cover art and a full-year calendar page" width="910" height="296" loading="lazy" decoding="async">
+        <figure class="product-media media-pair">
+          <img src="../assets/img/custom/pet-calendar-2027-cover.webp" alt="Sample 2027 watercolor pet calendar cover — a tuxedo cat stretching beside a small crochet cat and balls of yarn" width="411" height="296" loading="lazy" decoding="async">
+          <img src="../assets/img/custom/pet-calendar-2027-year.webp" alt="The full-year 2027 calendar page with the Purrlight logo" width="354" height="248" loading="lazy" decoding="async">
         </figure>
         <div class="product-body">
           <h2 id="cal-h" class="product-title">Custom Watercolor Pet Calendar 2027</h2>
@@ -215,8 +233,10 @@
     <section class="christmas" aria-labelledby="xmas-h">
       <div class="wrap">
         <h2 id="xmas-h">Ordering for <span class="hand">Christmas</span>?</h2>
-        <p>Crochet dolls &amp; custom crochet — order by <strong>Sun, Nov 30</strong></p>
-        <p>Paintings, calendars &amp; gift boxes — order by <strong>Sun, Dec 14</strong></p>
+        <dl class="deadlines">
+          <div><dt>Crochet dolls &amp; custom crochet — order by</dt><dd><strong><time datetime="2026-11-30">Sun, Nov 30</time></strong></dd></div>
+          <div><dt>Paintings, calendars &amp; gift boxes — order by</dt><dd><strong><time datetime="2026-12-14">Sun, Dec 14</time></strong></dd></div>
+        </dl>
         <p class="xmas-note">Every piece is made by hand — order early to secure your spot.</p>
       </div>
     </section>

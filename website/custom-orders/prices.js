@@ -21,6 +21,9 @@
 /* The one Google Form for all seven products (brief §1 / §5). Elise sets this.
    Keep the utm so form traffic from Linktree can be traced. */
 var ORDER_FORM_URL = "https://forms.gle/REPLACE-WITH-PURRLIGHT-ORDER-FORM";   /* TODO: Elise — paste the Google Form link */
+/* Optional: the Google Form field that should receive the customer's pick (e.g. "entry.123456789").
+   Leave "" and the page copies the pick to the clipboard instead. To find the id: Google Form → ⋮ → Get pre-filled link. */
+var ORDER_FORM_PREFILL_ENTRY = "";
 
 var PRICES = {
   portraitDoll: { base: 80, shadowbox: 10 },                               /* §3.2 */

@@ -469,11 +469,63 @@ phần cộng thêm ghi trong `details` (size 10 in, long-pile fur +$20…).
 - Checklist 8e vẫn mở: hộp thư hello@, TikTok handle, Klaviyo, Pinterest/
   Facebook handle, Purrks, Open Collaboration TikTok Shop.
 
+## 8g. Đợt 10 — Custom Orders landing page (15/10/2026): dựng lại v1 theo Brand v2, tương tác kiểu OREOiD
+
+**Yêu cầu của Elise:** tham khảo https://www.oreo.com/oreoid (custom gift
+builder tương tác) cho trang landing "Custom Orders"; đọc BRIEF.md trong kit
+`C:\Users\thanh\Downloads\custom order landing page` + brief Notion; dựng
+lại index.html giữ nguyên từng câu copy và từng giá, bỏ style v1, restyle đúng
+token Brand Identity v2, mobile-first, một hằng ORDER_FORM_URL, ảnh WebP
+lazy-load.
+
+### Nguồn
+- Thư mục kit trên máy chị không truy cập được từ session cloud → dùng brief
+  Notion "Custom Orders Landing Page — Handoff Brief for Claude Code (v1 →
+  rebuild)" (cùng nội dung BRIEF.md). 9 ảnh kit lấy lại từ kho asset của
+  artifact v1 (canvas "Purrlight Custom Orders Catalog"), nhận diện theo image
+  map §4; HTML v1 đọc từ artboard `project/Main.dc.html`.
+- OREOiD: builder 7 bước (chọn base → fudge → sprinkles → design → text →
+  thêm → packaging), "Now showing" preview, Save/Start over, template. Mượn
+  cơ chế (chọn → thấy → đặt), không mượn màu/confetti/bounce (Brand v2 cấm).
+
+### Cách làm
+1. Scout: brief, canon, ảnh, token site, v1. Viết `prices.js` từ brief §3 +
+   test (8 nhóm) trước khi có giao diện.
+2. Panel thiết kế (workflow): 3 designer độc lập (builder-first · editorial +
+   inline estimator · mobile-conversion) → 3 judge (brand · UX/chuyển đổi ·
+   kỹ thuật/a11y) → tổng hợp. Lần đầu dừng vì hết hạn mức; chạy tiếp từ cache.
+   Ba spec hội tụ: cuộn editorial giữ thứ tự brief, picker inline dưới copy,
+   bảng giá pet là picker, thanh đặt hàng dính mobile, dải 7 ảnh nhảy mục,
+   ảnh giấy Dó hiện khi chọn ("Now showing"), Caveat một chữ ở band Giáng sinh.
+3. Dựng `website/custom-orders/` (index.html + prices.js + custom-orders.js +
+   custom-orders.css), font Caveat self-host (chỉ 1 chữ), ảnh WebP ≤ 200 KB,
+   OG image. Link "Custom Orders" thêm vào nav + footer site chính.
+4. Audit tự động: 79 chuỗi copy/giá của brief phải có mặt nguyên văn, quét từ
+   cấm, alt/width/height/lazy, mọi nút → ORDER_FORM_URL (+utm), 1 h1, title +
+   meta + og:image, không tràn 360/390/1280, 0 lỗi console; test tương tác
+   Playwright (bảng giá, nhóm chỉ-bản-in, nhãn giá động, stepper, copy, start
+   over, thanh dính, bàn phím, nhớ lựa chọn, dải ảnh).
+
+### Quyết định cần Elise duyệt (đã ghi trong README + prices.js)
+- Footer "Designed in Texas. Made in Vietnam." (bỏ "Finished in Texas" theo
+  quyết định 09/10) · "Christening gown set — $89" thay "Baby girl baptism
+  outfit set" (brief §6) · "curated" ×2 giữ nguyên văn dù trong danh sách cấm
+  Canon · "Etsy Star Seller ★ 4.9" lấy từ brief, chưa kiểm chứng.
+- Cách đọc giá để mở: in tranh đã gồm tranh; giảm 5%/10% theo từng món từ món
+  2/5, chỉ trên giá tranh/hộp; second pet −$10 cùng size & len; +$5 chỉ giấy
+  Dó; hộp quà chỉ với bản in; giá khung 5×7 $16 / 8×10 $24 là số suy ra (§7).
+- Ảnh pet crochet: ảnh kit 02 có tag "Na Na Handmade" (không phải của mình) →
+  dùng ảnh listing Etsy Maine Coon; christening dùng ảnh hộp thật thay mockup.
+- Giá custom doll $80 (brief) ≠ bảng giá booth 25/09 (doll Petite $45 /
+  Classic $85 / Grand $130) và custom pet Grand Etsy $150 ≠ booth $90–120 —
+  khác kênh có chủ ý?
+
 ## 9. Link & tài nguyên
 
 - **Repo branch:** `claude/purrlight-studio-website-kcsuen` (GitHub:
   elisehanhnguyenus-cloud/purrlight-skills)
 - **Site LIVE (GitHub Pages, 15/10):** https://elisehanhnguyenus-cloud.github.io/purrlight-skills/
+- **Custom Orders landing page:** https://elisehanhnguyenus-cloud.github.io/purrlight-skills/custom-orders/ · brief: https://app.notion.com/p/3fa8ed608af981759ba7f10a4ab625fa
 - **Shop Etsy (nguồn giá):** https://vietdelightfinds.etsy.com
 - **Preview tương tác (artifact, v9):** https://claude.ai/artifact/TPXZGeR5JBpKJypioewheS
 - **Event Desk (hosted, dùng tại booth):** https://claude.ai/artifact/JDd4fYwxtDvRmpf1UGs5rW

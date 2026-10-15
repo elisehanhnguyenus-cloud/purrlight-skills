@@ -29,6 +29,11 @@ website/
 ├── event.html        # ★ EVENT DESK — bàn bán hàng tại sự kiện (nội bộ, noindex)
 ├── confirm.html      # Trang khách mở từ link/QR: thank-you hoặc order confirmation
 ├── manifest.webmanifest  # "Add to Home Screen" cho event.html trên điện thoại
+├── custom-orders/    # ★ LANDING PAGE CUSTOM ORDERS (từ Linktree) — xem mục riêng bên dưới
+│   ├── index.html    #   copy + giá nguyên văn theo Handoff Brief (Notion 15/10)
+│   ├── prices.js     #   ORDER_FORM_URL + bảng giá (= brief §3) + công thức ước tính
+│   ├── custom-orders.js  # builder "Build your piece", thanh đặt hàng dính, link form
+│   └── custom-orders.css # style riêng (token Brand v2), nạp sau css/fonts.css
 ├── deploy-pages.sh   # ★ Deploy lại lên GitHub Pages: bash website/deploy-pages.sh
 ├── css/
 │   ├── fonts.css     # Font self-host: Fraunces (heading) + Figtree (body)
@@ -43,7 +48,8 @@ website/
     ├── brand/        # logo-flat.png, favicon — KHÔNG vẽ lại, KHÔNG AI-generate
     ├── fonts/        # File .woff2 (đã tải sẵn, có subset tiếng Việt)
     └── img/          # Minh họa SVG (brand art, tile "soon")
-        └── etsy/     # ★ ẢNH LISTING THẬT tải từ Etsy — tên file = listing id (vd 4337395489.jpg)
+        ├── etsy/     # ★ ẢNH LISTING THẬT tải từ Etsy — tên file = listing id (vd 4337395489.jpg)
+        └── custom/   # Ảnh trang Custom Orders (WebP ≤ 200 KB) + og-custom-orders.jpg
 ```
 
 ## Event Desk — bàn bán hàng tại sự kiện (`event.html`)
@@ -133,6 +139,59 @@ iOS Mail có thể cắt thư quá dài — tool đã nhắc dùng Copy khi > 1.
   (3) listing British Shorthair 4337895128 mở đầu "Crochet pattern for…" dù là
   sản phẩm vật lý; (4) giá custom pet Grand trên Etsy $150 vs bảng giá booth
   25/09 (Grand cat $90–120) — khác kênh có chủ ý, hay cần đồng bộ?
+
+## Custom Orders — landing page từ Linktree (`custom-orders/`)
+
+URL: `https://elisehanhnguyenus-cloud.github.io/purrlight-skills/custom-orders/`
+(sau này `purrlight.studio/custom-orders/`). Dựng lại từ bản v1 (artifact
+"Purrlight Custom Orders Catalog") theo **Handoff Brief** trên Notion
+(Morgan/Elise 15/10/2026): giữ nguyên **từng câu copy và từng giá** ở brief
+§3, bỏ toàn bộ style v1, restyle bằng token Brand Identity v2, mobile-first,
+ảnh WebP lazy-load. Cảm hứng tương tác lấy từ OREOiD (oreo.com/oreoid): chọn
+→ thấy giá ngay → đặt hàng.
+
+**Cấu trúc trang:** header (logo + nút) → hero (§3.0) → How it works (§3.1)
+→ dải 7 ảnh nhảy tới từng món → 7 mục sản phẩm (§3.2–3.8, ảnh trái/phải xen
+kẽ, vạch mảnh thay card) → band Giáng sinh (§3.9) → CTA cuối + Etsy (§3.10)
+→ footer. Ở 5 món có giá biến thiên (doll, pet, tranh, hộp, lịch) có khối
+**"Build your piece"**: chip chọn tuỳ chọn (bảng giá pet chính là picker) →
+ước tính + cọc 50% → *Place your order* / *Copy my pick* / *Start over*.
+Điện thoại có thanh đặt hàng dính ở đáy (hiện sau hero, ẩn ở CTA cuối), ghi
+món đang xem hoặc lựa chọn gần nhất. Lựa chọn được nhớ trên máy
+(localStorage).
+
+**Chị cần điền (2 hằng ở đầu `prices.js`):**
+- `ORDER_FORM_URL` — link Google Form chung cho 7 món (brief §1). Đang là
+  placeholder; mọi nút "Place your order" đọc từ đây, tự kèm `utm_*` từ URL
+  (Linktree gắn `?utm_source=linktree&utm_medium=bio`).
+- `ORDER_FORM_PREFILL_ENTRY` — (tuỳ chọn) id ô trong Google Form nhận dòng
+  tóm tắt lựa chọn (Form → ⋮ → Get pre-filled link → `entry.xxxx`). Để trống
+  thì trang copy dòng tóm tắt vào clipboard khi khách bấm đặt hàng.
+
+**Giá nằm ở MỘT chỗ:** `prices.js` (`PRICES`) = brief §3; copy trong
+`index.html` in cùng số đó. Đổi giá → sửa cả hai. Test: `node
+scratchpad/test-prices.js` (8 nhóm) và `test-builder.js` (Playwright).
+
+**Cách đọc giá mà brief để mở (đã ghi trong `prices.js`, chị xác nhận):**
+in tranh = giá đã gồm tranh (không cộng thêm $10 file digital); giảm 5%/10%
+tính **theo từng món** từ món thứ 2 / thứ 5, chỉ trên giá tranh/hộp (không
+giảm khung, hộp quà, chuỗi); "second pet −$10" = con thứ hai cùng size & len;
+"+$5" chỉ cho giấy Dó (fine-art paper đã gồm); hộp quà chỉ với bản in.
+
+**Ảnh (`assets/img/custom/`):** 9 file kit lấy lại từ asset của artifact v1
+(tên theo image map §4). Đang dùng: 01 collage, 03 tranh "Our 1st Home", 04
+hộp tân gia, **extra christening box (ảnh thật, thay mockup bóng bay 05)**,
+06 godparent, 07 lịch (cắt bỏ crop mark, tách bìa + trang năm), extra Dó
+paper (hiện khi chọn giấy Dó). **Riêng pet crochet dùng ảnh listing Etsy
+Maine Coon** thay 02-pet-crochet.jpg vì ảnh kit có tag "Na Na Handmade"
+(không phải của mình). File kit 02 và 05 vẫn giữ (`*-fallback.webp`).
+
+**Lệch so với brief — chủ ý, chị quyết:** (1) footer ghi "Designed in
+Texas. Made in Vietnam." — bỏ "Finished in Texas" theo quyết định 09/10 của
+chị trên site chính; (2) "Baby girl baptism outfit set" → "Christening gown
+set — $89" theo chính brief §6 (guardrail "baby"); (3) "curated" ×2 trong copy
+đã duyệt nhưng nằm trong danh sách từ cấm Canon — giữ nguyên văn, chờ chị;
+(4) "Etsy Star Seller ★ 4.9" lấy từ brief, chưa tự kiểm chứng được.
 
 ## Việc còn lại trước khi "launch" (checklist cho Elise)
 

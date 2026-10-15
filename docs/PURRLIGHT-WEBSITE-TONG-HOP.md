@@ -555,6 +555,39 @@ lazy-load.
   (lựa chọn của khách đi theo body email); dán link form vào là trang tự
   chuyển, kèm utm từ Linktree.
 
+## 8h. Đợt 11 — Custom Orders thành "gift studio" kiểu OREOiD (15/10/2026)
+
+**Yêu cầu của Elise:** trang hơi dài, mỗi sản phẩm cần thu ngắn; cấu trúc chưa
+giống Oreo — muốn một bên là các bước chọn để khách tự "build" món quà, một bên
+cho khách thấy món quà gồm những gì, cảm giác như chơi game; em thấy cần tìm
+hiểu/bổ sung gì thì báo.
+
+### Đã làm
+- Bỏ 7 mục sản phẩm xếp dọc. Thay bằng khối **Build your gift**: bước 1 chọn
+  món (7 ảnh = tab, vuốt ngang trên điện thoại) → mỗi lần chỉ hiện một món.
+  Trái: tên, giá, mô tả, turnaround + các bước 2, 3, 4… dạng ô chọn. Phải (dính
+  khi cuộn trên desktop): ảnh + hộp **What's inside** (dòng chính, những thứ đã
+  gồm ✓, add-on vừa chọn hiện mờ dần 260 ms) → Estimate → Place your order →
+  Copy my pick / Start over / How it works. Điện thoại: ảnh trên, hộp dưới,
+  thanh dính đáy "Estimate $X · tên món" + "Added: …".
+- Copy và giá của brief §3 vẫn còn đủ, chỉ đổi chỗ: dòng giá → nhãn ô chọn
+  hoặc gợi ý của bước; danh sách "basic set", "gown, bonnet…" → hộp What's
+  inside; bảng giá pet → mục gập "All pet prices" (mở sẵn khi tắt JS); giảm
+  5%/10% → ghi chú dưới các bước. Pet: bảng 3×3 thay bằng 3 bước Size → Yarn
+  (giá len đổi theo size) → số con.
+- Hero gọn, bỏ ảnh British Shorthair (gỡ file khỏi web); How it works chuyển
+  xuống dưới studio. Link thẳng tới từng món `custom-orders/#pet-crochet`…
+  (cho QR/Linktree); trang nhớ món + lựa chọn cuối trên máy.
+- Chiều dài trang: điện thoại ~11.200 → ~3.400 px; desktop ~8.900 → ~2.700 px.
+  390px: 21 request · 480 KB · CLS 0.
+- `prices.js`: hộp tân gia nhận tên add-on (mỗi món một dòng, vẫn +$10); thêm
+  `estConfirmationBox()` $55 ghi "Coming soon". Không đổi giá nào.
+- Test: `test-prices.js` 8 nhóm · `test-studio.js` (tab, 7 món, phím mũi tên,
+  bar, nhớ lựa chọn, link #món, tắt JS) · `audit-custom.js` (copy nguyên văn,
+  từ cấm, ảnh, nút, tràn 360/390/1280) — pass.
+
+<!-- review-8h -->
+
 ## 9. Link & tài nguyên
 
 - **Repo branch:** `claude/purrlight-studio-website-kcsuen` (GitHub:

@@ -151,18 +151,25 @@ URL: `https://elisehanhnguyenus-cloud.github.io/purrlight-skills/custom-orders/`
 → thấy giá ngay → đặt hàng. Bố cục chốt qua panel 3 designer + 3 judge
 (hướng "mobile conversion first" thắng 3/3).
 
-**Cấu trúc trang:** header site (logo + nav + nút ≥900px) → hero (§3.0; ảnh
-British Shorthair chỉ hiện trên desktop) → dải 7 ảnh nhảy tới từng món → How
-it works (§3.1) → 7 mục sản phẩm (§3.2–3.8, ảnh trái/phải xen kẽ, hàng giá
-dạng vạch mảnh, không card) → band Giáng sinh (§3.9, chữ Caveat duy nhất:
-"early") → CTA cuối + Etsy (§3.10) → footer Ink. Ở 5 món có giá biến thiên
-(doll, pet, tranh, hộp, lịch) có khối **"Build your piece"**: chip chọn tuỳ
-chọn (bảng giá pet chính là picker — nhóm radio, phím mũi tên) → *Estimate* →
-*Copy my pick* / *Start over*. Nút "Place your order" chỉ 4 chỗ: header
-(desktop), hero, CTA cuối, thanh dính ở đáy điện thoại (hiện sau hero, ẩn ở
-CTA cuối, ghi món đang xem hoặc lựa chọn gần nhất). Lựa chọn được nhớ trên
-máy (localStorage). Không tính cọc, số lượng hay giảm 5%/10% (brief để mở →
-chỉ in nguyên câu của brief).
+**Cấu trúc trang (bản 4 — "gift studio" kiểu OREOiD, 15/10/2026):** header
+site → hero gọn (§3.0, không ảnh; nút "Place your order" + link "Build your
+gift") → **Build your gift**: bước 1 chọn 1 trong 7 món (hàng ảnh = tab; trên
+điện thoại vuốt ngang) → mỗi lần chỉ hiện **một** món: bên trái tên, giá, mô tả,
+turnaround và các bước 2, 3, 4… dạng ô chọn (size, len, khổ in, giấy, khung,
+add-on…); bên phải (dính khi cuộn, desktop) ảnh món + hộp **"What's inside"**:
+dòng chính + những thứ đã gồm (✓) + từng add-on vừa chọn hiện mờ dần, rồi
+*Estimate*, nút "Place your order", *Copy my pick* / *Start over* / *How it
+works*. Ảnh đổi theo lựa chọn (chọn giấy Dó → ảnh bản in Dó). Trên điện thoại:
+ảnh ở trên các bước, hộp "What's inside" ở dưới, thanh dính đáy ghi
+"Estimate $X · tên món" và báo "Added: …" khi thêm món → How it works (§3.1) →
+band Giáng sinh (§3.9) → CTA cuối + Etsy (§3.10) → footer Ink. Link thẳng tới
+từng món: `custom-orders/#pet-crochet`, `#portrait-doll`, `#watercolor`,
+`#housewarming`, `#christening`, `#godparent`, `#calendar` (dùng cho QR/
+Linktree). Trang nhớ món + lựa chọn cuối trên máy (localStorage). Tắt JS: cả 7
+món hiện đủ, nối tiếp nhau. Chiều dài trang: điện thoại ~11.200px → ~3.400px,
+desktop ~8.900px → ~2.700px. Không tính cọc, số lượng hay giảm 5%/10% (brief để
+mở → chỉ in nguyên câu của brief). Nút "Place your order": header (desktop),
+hero, trong hộp của từng món, CTA cuối, thanh dính — tất cả = `ORDER_FORM_URL`.
 
 **Chị cần điền (2 hằng ở đầu `prices.js`):**
 - `ORDER_FORM_URL` — link Google Form chung cho 7 món (brief §1). Hiện là
@@ -173,15 +180,17 @@ chỉ in nguyên câu của brief).
   tóm tắt lựa chọn (Form → ⋮ → Get pre-filled link → `entry.xxxx`). Để trống
   thì khách bấm *Copy my pick* rồi dán vào form.
 
-**Tải trang (đo ở 390px):** 21 request · 463 KB · CLS 0. Font: Fraunces 500/600,
-Figtree 400/500/600, và `caveat-early-400-700.woff2` (subset 4 KB chỉ chứa chữ
-"early"; bản Caveat đầy đủ vẫn ở `css/fonts.css` cho trang khác). Ảnh hero
-desktop chỉ tải từ 900px trở lên.
+**Tải trang (bản 4, đo ở 390px):** 21 request · 480 KB · CLS 0 (desktop 0.006).
+Chỉ ảnh của món đang hiện được tải; 6 món còn lại tải khi khách chọn. Font:
+Fraunces 500/600, Figtree 400/500/600, và `caveat-early-400-700.woff2` (subset
+4 KB chỉ chứa chữ "early"; bản Caveat đầy đủ vẫn ở `css/fonts.css` cho trang
+khác). Ảnh hero British Shorthair đã gỡ khỏi web (không còn dùng; lấy lại từ lịch sử git nếu cần).
 
 **Giá nằm ở MỘT chỗ:** `prices.js` (`PRICES`) = brief §3; copy trong
 `index.html` in cùng số đó. Đổi giá → sửa cả hai. Test:
-`node scratchpad/test-prices.js` (8 nhóm), `test-builder.js` (Playwright),
-`audit-custom.js` (79 chuỗi copy/giá nguyên văn, từ cấm, ảnh, nút, tràn màn).
+`node scratchpad/test-prices.js` (8 nhóm), `test-studio.js` (Playwright: tab,
+từng món, phím, nhớ lựa chọn, link #món, chế độ tắt JS), `audit-custom.js`
+(chuỗi copy/giá nguyên văn, từ cấm, ảnh, nút, tràn màn 360/390/1280).
 
 **Cách đọc giá mà brief để mở (đã ghi trong `prices.js`, chị xác nhận):**
 in tranh = giá đã gồm tranh (không cộng thêm $10 file digital); "+$5" chỉ cho
@@ -195,8 +204,7 @@ hộp tân gia, **extra christening box (ảnh thật, thay mockup bóng bay 05)
 06 godparent, 07 lịch (cắt bỏ crop mark, tách bìa + trang năm), extra Dó
 paper (hiện khi chọn giấy Dó). **Pet crochet dùng ảnh listing Etsy Maine Coon
 (crop 4:5)** thay 02-pet-crochet.jpg vì ảnh kit có tag "Na Na Handmade"
-(không phải của mình); hero desktop dùng ảnh listing British Shorthair; 7
-thumb 240px cho dải ảnh; ảnh godparent crop 4:5 bỏ tag "Handmade Blessings" ở
+(không phải của mình); 7 thumb 240px cho hàng chọn món (bước 1); ảnh godparent crop 4:5 bỏ tag "Handmade Blessings" ở
 góc. Ảnh kit không dùng (02 có tag lạ, 05 mockup) KHÔNG đưa lên web — bản
 gốc nằm trong thư mục kit (scratchpad) để đối chiếu.
 Minh hoạ Merlin ở CTA cuối: `merlin-closing.svg` (bản không nền, không sao,

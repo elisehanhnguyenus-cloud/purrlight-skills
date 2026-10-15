@@ -20,7 +20,6 @@
   <link rel="preload" href="../assets/fonts/fraunces-normal-600-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="../assets/fonts/figtree-normal-400-latin-7073ac15.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="../assets/fonts/figtree-normal-500-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" as="image" href="../assets/img/custom/hero-cat-4x5.webp" media="(min-width: 900px)" fetchpriority="high">
   <link rel="stylesheet" href="../css/fonts.css">
   <link rel="stylesheet" href="custom-orders.css">
   <noscript><style>/* no JavaScript: show the nav links in place instead of a dead menu button */.nav-toggle,.nav-close{display:none!important}.main-nav{position:static!important;visibility:visible!important;opacity:1!important;padding:0!important}.main-nav ul{flex-direction:row!important;flex-wrap:wrap;gap:4px 14px!important}.main-nav a{font-family:inherit!important;font-size:15px!important;border-bottom:0!important;padding:4px 0!important}</style></noscript>
@@ -59,40 +58,343 @@
 
   <main id="main">
 
-    <!-- 3.0 Header / hero -->
+    <!-- 3.0 Header / hero (compact: the studio below is the picture) -->
     <section class="hero" aria-labelledby="h1">
       <div class="wrap hero-inner">
         <div class="hero-text">
           <p class="eyebrow">Viet Delight · Purrlight Studio</p>
           <h1 id="h1">Custom Orders</h1>
           <p class="lede">Handcrafted keepsakes made from your photos — crochet portrait dolls, pet memorials, watercolor art &amp; curated gift boxes.</p>
+        </div>
+        <div class="hero-side">
           <p class="shipline">Order direct · Free U.S. shipping on every custom order</p>
-          <p class="hero-cta"><a class="btn btn-primary" data-order href="mailto:hello@purrlight.studio?subject=Custom%20order">Place your order</a></p>
+          <p class="hero-cta"><a class="btn btn-primary" data-order href="mailto:hello@purrlight.studio?subject=Custom%20order">Place your order</a> <a class="hero-build" href="#studio">Build your gift</a></p>
           <noscript><p class="note">Order by email: <a href="mailto:hello@purrlight.studio">hello@purrlight.studio</a></p></noscript>
         </div>
-        <figure class="hero-photo">
-          <img src="../assets/img/custom/hero-cat-4x5.webp" alt="Hand-crocheted grey-and-white cat portrait sitting on a garden table beside a potted rosemary" width="800" height="1000" loading="lazy" decoding="async">
-        </figure>
       </div>
     </section>
 
-    <!-- product rail: tap a piece to jump to it (the OREOiD "choose your piece" row) -->
-    <nav class="rail-wrap" aria-label="Pieces on this page">
+    <!-- Gift studio (the OREOiD idea): 1 choose the piece → left: options step by step · right: what's inside + estimate.
+         Without JavaScript every piece shows in full, one after another; the picker tiles are jump links. -->
+    <section class="studio" id="studio" aria-labelledby="studio-h">
       <div class="wrap">
-        <ul class="rail">
-          <li><a href="#portrait-doll"><img src="../assets/img/custom/thumb-portrait-doll.webp" alt="" width="240" height="240" decoding="async"><span class="rail-name">Custom Portrait Crochet Doll</span><span class="rail-price">$80</span></a></li>
-          <li><a href="#pet-crochet"><img src="../assets/img/custom/thumb-pet-crochet.webp" alt="" width="240" height="240" decoding="async"><span class="rail-name">Custom Cat / Dog / Pet Crochet</span><span class="rail-price">from $40</span></a></li>
-          <li><a href="#watercolor"><img src="../assets/img/custom/thumb-watercolor.webp" alt="" width="240" height="240" decoding="async"><span class="rail-name">Custom Digital Watercolor Painting</span><span class="rail-price">from $10</span></a></li>
-          <li><a href="#housewarming"><img src="../assets/img/custom/thumb-housewarming.webp" alt="" width="240" height="240" decoding="async"><span class="rail-name">Housewarming &amp; Closing Gift Box</span><span class="rail-price">$50</span></a></li>
-          <li><a href="#christening"><img src="../assets/img/custom/thumb-christening.webp" alt="" width="240" height="240" decoding="async"><span class="rail-name">Christening &amp; Confirmation Gifts</span><span class="rail-price">from $55</span></a></li>
-          <li><a href="#godparent"><img src="../assets/img/custom/thumb-godparent.webp" alt="" width="240" height="240" decoding="async"><span class="rail-name">Godparent Gift Set</span><span class="rail-price">$95</span></a></li>
-          <li><a href="#calendar"><img src="../assets/img/custom/thumb-calendar.webp" alt="" width="240" height="240" decoding="async"><span class="rail-name">Custom Watercolor Pet Calendar 2027</span><span class="rail-price">from $15</span></a></li>
+        <div class="studio-head">
+          <h2 id="studio-h" class="section-title">Build your gift</h2>
+          <p class="studio-hint">Choose a piece, then your options — see what's inside and the estimate as you go.</p>
+        </div>
+        <p class="step-title" id="pick-label"><span class="step-n" aria-hidden="true">1</span> <span class="step-label">Choose your gift</span></p>
+        <ul class="picker" aria-labelledby="pick-label">
+          <li><a href="#portrait-doll" data-tab="portrait-doll"><img src="../assets/img/custom/thumb-portrait-doll.webp" alt="" width="240" height="240" decoding="async"><span class="pk-name">Custom Portrait Crochet Doll</span><span class="pk-price">$80</span></a></li>
+          <li><a href="#pet-crochet" data-tab="pet-crochet"><img src="../assets/img/custom/thumb-pet-crochet.webp" alt="" width="240" height="240" decoding="async"><span class="pk-name">Custom Cat / Dog / Pet Crochet</span><span class="pk-price">from $40</span></a></li>
+          <li><a href="#watercolor" data-tab="watercolor"><img src="../assets/img/custom/thumb-watercolor.webp" alt="" width="240" height="240" decoding="async"><span class="pk-name">Custom Digital Watercolor Painting</span><span class="pk-price">from $10</span></a></li>
+          <li><a href="#housewarming" data-tab="housewarming"><img src="../assets/img/custom/thumb-housewarming.webp" alt="" width="240" height="240" decoding="async"><span class="pk-name">Housewarming &amp; Closing Gift Box</span><span class="pk-price">$50</span></a></li>
+          <li><a href="#christening" data-tab="christening"><img src="../assets/img/custom/thumb-christening.webp" alt="" width="240" height="240" decoding="async"><span class="pk-name">Christening &amp; Confirmation Gifts</span><span class="pk-price">from $55</span></a></li>
+          <li><a href="#godparent" data-tab="godparent"><img src="../assets/img/custom/thumb-godparent.webp" alt="" width="240" height="240" decoding="async"><span class="pk-name">Godparent Gift Set</span><span class="pk-price">$95</span></a></li>
+          <li><a href="#calendar" data-tab="calendar"><img src="../assets/img/custom/thumb-calendar.webp" alt="" width="240" height="240" decoding="async"><span class="pk-name">Custom Watercolor Pet Calendar 2027</span><span class="pk-price">from $15</span></a></li>
         </ul>
+
+        <!-- 3.2 Custom Portrait Crochet Doll -->
+        <article class="gift" id="portrait-doll" data-gift="portraitDoll" aria-labelledby="pd-h">
+          <div class="gift-head">
+            <h3 id="pd-h" class="gift-title">Custom Portrait Crochet Doll</h3>
+            <p class="price">$80</p>
+            <p class="desc">A one-of-a-kind crochet portrait of you or someone you love, made from your photos or your own design. 20–23 cm (8–9 in).</p>
+            <p class="turnaround">Turnaround: from 2 weeks</p>
+          </div>
+          <form class="gift-steps" aria-label="Options — Custom Portrait Crochet Doll">
+            <fieldset class="step">
+              <legend><span class="step-n" aria-hidden="true">2</span> <span class="step-label">Display</span></legend>
+              <div class="tiles">
+                <label class="tile"><input type="radio" name="shadowbox" value="no" checked><span class="tile-name">Doll only</span><span class="tile-price">$80</span></label>
+                <label class="tile"><input type="radio" name="shadowbox" value="yes"><span class="tile-name">Add a wooden shadowbox display case</span><span class="tile-price">+$10</span></label>
+              </div>
+            </fieldset>
+          </form>
+          <div class="gift-preview">
+            <figure class="gift-photo">
+              <div class="shot"><img src="../assets/img/custom/portrait-doll-collage.webp" alt="Collection of custom crochet portrait dolls — angel keepsakes in shadowboxes, wedding couples and storybook figures" width="1200" height="960" loading="lazy" decoding="async"></div>
+            </figure>
+            <div class="gift-box">
+              <h4 class="box-title">What's inside</h4>
+              <ul class="box">
+                <li class="incl">Full doll accessories included — wings, flowers, outfit, fine embroidered details</li>
+                <li class="incl">Display accessories, sales tax &amp; U.S. shipping all included</li>
+              </ul>
+              <div class="box-end">
+                <p><a class="btn btn-primary btn-block" data-order href="mailto:hello@purrlight.studio?subject=Custom%20order">Place your order</a></p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 3.3 Custom Cat / Dog / Pet Crochet -->
+        <article class="gift" id="pet-crochet" data-gift="pet" aria-labelledby="pet-h">
+          <div class="gift-head">
+            <h3 id="pet-h" class="gift-title">Custom Cat / Dog / Pet Crochet</h3>
+            <p class="price">from $40</p>
+            <p class="desc">Your pet, in yarn. Show us three photos and we hand-crochet a portrait of that exact pet — your markings, your eye color, your coat. A beautiful memorial or a gift they will keep forever.</p>
+            <p class="turnaround">Turnaround: from 2 weeks · about 3 weeks in peak season</p>
+          </div>
+          <form class="gift-steps" aria-label="Options — Custom Cat / Dog / Pet Crochet">
+            <fieldset class="step">
+              <legend><span class="step-n" aria-hidden="true">2</span> <span class="step-label">Size</span></legend>
+              <div class="tiles cols-3 list">
+                <label class="tile"><input type="radio" name="size" value="Petite"><span class="tile-name">Petite</span><span class="tile-note">12–20 cm · 5–8 in</span><span class="tile-price">from $40</span></label>
+                <label class="tile"><input type="radio" name="size" value="Classic" checked><span class="tile-name">Classic</span><span class="tile-note">20–30 cm · most chosen</span><span class="tile-price">from $55</span></label>
+                <label class="tile"><input type="radio" name="size" value="Grand"><span class="tile-name">Grand</span><span class="tile-note">30 cm &amp; up · 12 in +</span><span class="tile-price">from $90</span></label>
+              </div>
+            </fieldset>
+            <fieldset class="step">
+              <legend><span class="step-n" aria-hidden="true">3</span> <span class="step-label">Yarn</span></legend>
+              <div class="tiles cols-3">
+                <label class="tile"><input type="radio" name="yarn" value="Cotton" checked><span class="tile-name">Cotton</span><span class="tile-price" data-price-by='{"key":"size","map":{"Petite":"$40","Classic":"$55","Grand":"$90"}}'>$55</span></label>
+                <label class="tile"><input type="radio" name="yarn" value="Velvet"><span class="tile-name">Velvet</span><span class="tile-price" data-price-by='{"key":"size","map":{"Petite":"$48","Classic":"$67","Grand":"$105"}}'>$67</span></label>
+                <label class="tile"><input type="radio" name="yarn" value="Fluffy"><span class="tile-name">Fluffy</span><span class="tile-price" data-price-by='{"key":"size","map":{"Petite":"$55","Classic":"$79","Grand":"$120"}}'>$79</span></label>
+              </div>
+            </fieldset>
+            <fieldset class="step">
+              <legend><span class="step-n" aria-hidden="true">4</span> <span class="step-label">How many pets</span></legend>
+              <div class="tiles">
+                <label class="tile"><input type="radio" name="pets" value="1" checked><span class="tile-name">One pet</span></label>
+                <label class="tile"><input type="radio" name="pets" value="2"><span class="tile-name">Two pets</span><span class="tile-note">Second pet on the same order <strong>−$10</strong></span></label>
+              </div>
+              <p class="step-note">Cats, dogs, rabbits and other pets — all at the same prices</p>
+            </fieldset>
+            <details class="all-prices" open>
+              <summary>All pet prices</summary>
+              <table class="price-table">
+                <caption class="sr-only">Custom pet crochet prices by size and yarn</caption>
+                <thead>
+                  <tr><th scope="col">Size</th><th scope="col">Cotton</th><th scope="col">Velvet</th><th scope="col">Fluffy</th></tr>
+                </thead>
+                <tbody>
+                  <tr><th scope="row"><strong>Petite</strong> <span class="size-note">12–20 cm · 5–8 in</span></th><td>$40</td><td>$48</td><td>$55</td></tr>
+                  <tr><th scope="row"><strong>Classic</strong> <span class="size-note">20–30 cm · most chosen</span></th><td>$55</td><td>$67</td><td>$79</td></tr>
+                  <tr><th scope="row"><strong>Grand</strong> <span class="size-note">30 cm &amp; up · 12 in +</span></th><td>$90</td><td>$105</td><td>$120</td></tr>
+                </tbody>
+              </table>
+            </details>
+          </form>
+          <div class="gift-preview">
+            <figure class="gift-photo">
+              <div class="shot"><img src="../assets/img/custom/pet-crochet-maine-coon.webp" alt="Hand-crocheted grey tabby Maine Coon cat with green eyes and a caramel scarf, sitting in a wicker basket" width="604" height="755" loading="lazy" decoding="async"></div>
+            </figure>
+            <div class="gift-box">
+              <h4 class="box-title">What's inside</h4>
+              <ul class="box">
+                <li class="incl">Your markings, your eye color, your coat</li>
+                <li class="incl">Made from three photos of your pet</li>
+              </ul>
+              <div class="box-end">
+                <p><a class="btn btn-primary btn-block" data-order href="mailto:hello@purrlight.studio?subject=Custom%20order">Place your order</a></p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 3.4 Custom Digital Watercolor Painting -->
+        <article class="gift" id="watercolor" data-gift="watercolor" aria-labelledby="wc-h">
+          <div class="gift-head">
+            <h3 id="wc-h" class="gift-title">Custom Digital Watercolor Painting</h3>
+            <p class="price">from $10</p>
+            <p class="desc">A digital watercolor portrait of your pet or your home — a tender pet memorial, or a housewarming &amp; closing gift from your photos.</p>
+            <p class="turnaround">Turnaround: 3–5 days</p>
+          </div>
+          <form class="gift-steps" aria-label="Options — Custom Digital Watercolor Painting">
+            <fieldset class="step">
+              <legend><span class="step-n" aria-hidden="true">2</span> <span class="step-label">Format</span></legend>
+              <div class="tiles cols-4">
+                <label class="tile"><input type="radio" name="format" value="digital" checked><span class="tile-name">Digital file</span><span class="tile-price">$10</span></label>
+                <label class="tile"><input type="radio" name="format" value="4x6"><span class="tile-name">Print 4×6</span><span class="tile-price">$12</span></label>
+                <label class="tile"><input type="radio" name="format" value="5x7"><span class="tile-name">Print 5×7</span><span class="tile-price">$15</span></label>
+                <label class="tile"><input type="radio" name="format" value="8x10"><span class="tile-name">Print 8×10</span><span class="tile-price">$20</span></label>
+              </div>
+            </fieldset>
+            <fieldset class="step" data-print-only>
+              <legend><span class="step-n" aria-hidden="true">3</span> <span class="step-label">Paper</span> <span class="legend-note">prints</span></legend>
+              <p class="step-hint">Printed on fine-art paper or handmade Vietnamese Dó papyrus <strong>+$5</strong></p>
+              <div class="tiles">
+                <label class="tile"><input type="radio" name="paper" value="fine" checked><span class="tile-name">Fine-art paper</span></label>
+                <label class="tile"><input type="radio" name="paper" value="do"><span class="tile-name">Handmade Vietnamese Dó papyrus</span><span class="tile-price">+$5</span></label>
+              </div>
+            </fieldset>
+            <fieldset class="step" data-print-only>
+              <legend><span class="step-n" aria-hidden="true">4</span> <span class="step-label">Frame</span> <span class="legend-note">prints</span></legend>
+              <p class="step-hint">Frame: 4×6 <strong>$8</strong> · 5×7 <strong>$16</strong> · 8×10 <strong>$24</strong></p>
+              <div class="tiles">
+                <label class="tile"><input type="radio" name="frame" value="no" checked><span class="tile-name">No frame</span></label>
+                <label class="tile"><input type="radio" name="frame" value="yes"><span class="tile-name">Add a frame</span><span class="tile-price" data-price-by='{"key":"format","map":{"4x6":"+$8","5x7":"+$16","8x10":"+$24"}}'></span></label>
+              </div>
+            </fieldset>
+            <fieldset class="step">
+              <legend><span class="step-n" aria-hidden="true">5</span> <span class="step-label">Extras</span></legend>
+              <div class="tiles">
+                <label class="tile" data-print-only><input type="checkbox" name="extras" value="giftBox"><span class="tile-name">Gift box</span><span class="tile-price">+$5</span><span class="tile-note">for prints</span></label>
+                <label class="tile"><input type="checkbox" name="extras" value="rosary"><span class="tile-name">Crochet rosary add-on</span><span class="tile-price">+$15</span></label>
+              </div>
+            </fieldset>
+            <p class="step-note">Order more, save more: <strong>5% off</strong> from the 2nd painting · <strong>10% off</strong> from the 5th</p>
+          </form>
+          <div class="gift-preview">
+            <figure class="gift-photo">
+              <div class="shot"><img src="../assets/img/custom/watercolor-our-first-home.webp" alt="Sample custom watercolor home portrait — a brick family home with personalized 'Our 1st Home' lettering" width="1200" height="960" loading="lazy" decoding="async"></div>
+              <div class="shot" data-when="paper=do&amp;format!=digital"><img src="../assets/img/custom/do-paper-print-detail.webp" alt="Watercolor cat print held up to the light on handmade Vietnamese Dó papyrus, showing the paper's fibers" width="560" height="747" loading="lazy" decoding="async"><p class="shot-cap">Printed on handmade Vietnamese Dó papyrus</p></div>
+            </figure>
+            <div class="gift-box">
+              <h4 class="box-title">What's inside</h4>
+              <ul class="box">
+                <li class="incl" data-when="format!=digital&amp;paper=fine">Printed on fine-art paper</li>
+              </ul>
+              <div class="box-end">
+                <p><a class="btn btn-primary btn-block" data-order href="mailto:hello@purrlight.studio?subject=Custom%20order">Place your order</a></p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 3.5 Housewarming & Closing Gift Box -->
+        <article class="gift" id="housewarming" data-gift="housewarming" aria-labelledby="hw-h">
+          <div class="gift-head">
+            <h3 id="hw-h" class="gift-title">Housewarming &amp; Closing Gift Box</h3>
+            <p class="price">$50</p>
+            <p class="desc">A curated welcome-home box — perfect for new neighbors, friends, and realtor closing gifts.</p>
+            <p class="turnaround">Turnaround: from 3 days</p>
+          </div>
+          <form class="gift-steps" aria-label="Options — Housewarming &amp; Closing Gift Box">
+            <fieldset class="step">
+              <legend><span class="step-n" aria-hidden="true">2</span> <span class="step-label">Add or swap, <strong>+$10</strong> each</span></legend>
+              <div class="tiles">
+                <label class="tile"><input type="checkbox" name="addons" value="succulent" data-label="Small succulent or aloe vera"><span class="tile-name">Small succulent or aloe vera</span><span class="tile-price">+$10</span></label>
+                <label class="tile"><input type="checkbox" name="addons" value="coldcut" data-label="Cold cut box"><span class="tile-name">Cold cut box</span><span class="tile-price">+$10</span></label>
+                <label class="tile"><input type="checkbox" name="addons" value="berry" data-label="3-berry fruit box"><span class="tile-name">3-berry fruit box</span><span class="tile-price">+$10</span></label>
+              </div>
+            </fieldset>
+            <p class="step-note">Realtors &amp; repeat gifting: <strong>5% off</strong> from the 2nd box · <strong>10% off</strong> from the 5th</p>
+          </form>
+          <div class="gift-preview">
+            <figure class="gift-photo">
+              <div class="shot"><img src="../assets/img/custom/housewarming-box.webp" alt="Round housewarming gift box with local cider, honey, fruit, cold cuts and a crochet rosary chain" width="382" height="512" loading="lazy" decoding="async"></div>
+            </figure>
+            <div class="gift-box">
+              <h4 class="box-title">What's inside</h4>
+              <ul class="box cols-2">
+                <li class="incl incl-head">Basic set:</li>
+                <li class="incl">local cider</li>
+                <li class="incl">jar of jam or local honey</li>
+                <li class="incl">watercolor painting of the home</li>
+                <li class="incl">crochet rosary chain</li>
+                <li class="incl">candle</li>
+                <li class="incl">gift box</li>
+              </ul>
+              <div class="box-end">
+                <p><a class="btn btn-primary btn-block" data-order href="mailto:hello@purrlight.studio?subject=Custom%20order">Place your order</a></p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 3.6 Christening & Confirmation Gifts -->
+        <article class="gift" id="christening" data-gift="christening" aria-labelledby="ch-h">
+          <div class="gift-head">
+            <h3 id="ch-h" class="gift-title">Christening &amp; Confirmation Gifts</h3>
+            <p class="price">from $55</p>
+            <p class="turnaround">Turnaround: from 1 week</p>
+          </div>
+          <form class="gift-steps" aria-label="Options — Christening &amp; Confirmation Gifts">
+            <fieldset class="step">
+              <legend><span class="step-n" aria-hidden="true">2</span> <span class="step-label">Choose your set</span></legend>
+              <div class="tiles cols-1">
+                <label class="tile"><input type="radio" name="set" value="gown" checked><span class="tile-name">Christening Gown Set — lace &amp; satin</span><span class="tile-price">$89</span><span class="tile-note">A complete heirloom-quality set for her special day.</span></label>
+                <label class="tile"><input type="radio" name="set" value="confirmation"><span class="tile-name">Confirmation gift box</span><span class="tile-price">$55</span><span class="tile-note">(coming soon)</span></label>
+              </div>
+            </fieldset>
+          </form>
+          <div class="gift-preview">
+            <figure class="gift-photo">
+              <div class="shot"><img src="../assets/img/custom/christening-box.webp" alt="Christening gift box with a lace gown, bonnet with bow, booties, a white crochet rosary with a red felt heart, and a thank-you card" width="900" height="1200" loading="lazy" decoding="async"><p class="shot-cap" data-when="set=confirmation">Photo shows the Christening Gown Set.</p></div>
+            </figure>
+            <div class="gift-box">
+              <h4 class="box-title">What's inside</h4>
+              <ul class="box">
+                <li class="incl" data-when="set=gown">Gown, bonnet, mittens and booties.</li>
+                <li class="incl" data-when="set=confirmation">12 cm crochet saint figure + handmade rosary chain. Sales tax &amp; shipping included.</li>
+              </ul>
+              <div class="box-end">
+                <p><a class="btn btn-primary btn-block" data-order href="mailto:hello@purrlight.studio?subject=Custom%20order">Place your order</a></p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 3.7 Godparent Gift Set -->
+        <article class="gift" id="godparent" data-gift="godparent" aria-labelledby="gp-h">
+          <div class="gift-head">
+            <h3 id="gp-h" class="gift-title">Godparent Gift Set</h3>
+            <p class="price">$95</p>
+            <p class="desc">A meaningful thank-you for godparents: a custom crochet portrait doll of them, paired with a handmade crochet rosary chain.</p>
+            <p class="turnaround">Turnaround: from 2 weeks</p>
+          </div>
+          <div class="gift-preview">
+            <figure class="gift-photo">
+              <div class="shot"><img src="../assets/img/custom/godparent-set.webp" alt="Crochet portrait doll of a grandmother in a kraft gift box beside a handmade crochet rosary chain" width="960" height="1200" loading="lazy" decoding="async"></div>
+            </figure>
+            <div class="gift-box">
+              <h4 class="box-title">What's inside</h4>
+              <ul class="box">
+                <li class="incl">A custom crochet portrait doll of them</li>
+                <li class="incl">A handmade crochet rosary chain</li>
+              </ul>
+              <div class="box-end">
+                <p><a class="btn btn-primary btn-block" data-order href="mailto:hello@purrlight.studio?subject=Custom%20order">Place your order</a></p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 3.8 Custom Watercolor Pet Calendar 2027 -->
+        <article class="gift" id="calendar" data-gift="calendar" aria-labelledby="cal-h">
+          <div class="gift-head">
+            <h3 id="cal-h" class="gift-title">Custom Watercolor Pet Calendar 2027</h3>
+            <p class="price">from $15</p>
+            <p class="desc">A 2027 poster calendar made just for you — your pet painted in watercolor, a gift that lasts all year.</p>
+          </div>
+          <form class="gift-steps" aria-label="Options — Custom Watercolor Pet Calendar 2027">
+            <fieldset class="step">
+              <legend><span class="step-n" aria-hidden="true">2</span> <span class="step-label">Format</span></legend>
+              <div class="tiles">
+                <label class="tile"><input type="radio" name="kind" value="print" checked><span class="tile-name">Design + print</span><span class="tile-note">1 page <strong>$20</strong> · add 5 more pages <strong>+$30</strong> (6 pages $50)</span></label>
+                <label class="tile"><input type="radio" name="kind" value="digital"><span class="tile-name">Digital files only</span><span class="tile-note">1 page <strong>$15</strong> · 6 pages <strong>$25</strong></span></label>
+              </div>
+            </fieldset>
+            <fieldset class="step">
+              <legend><span class="step-n" aria-hidden="true">3</span> <span class="step-label">Pages</span></legend>
+              <div class="tiles">
+                <label class="tile"><input type="radio" name="pages" value="1" checked><span class="tile-name">1 page</span><span class="tile-price" data-price-by='{"key":"kind","map":{"print":"$20","digital":"$15"}}'>$20</span></label>
+                <label class="tile"><input type="radio" name="pages" value="6"><span class="tile-name">6 pages</span><span class="tile-price" data-price-by='{"key":"kind","map":{"print":"$50","digital":"$25"}}'>$50</span></label>
+              </div>
+            </fieldset>
+          </form>
+          <div class="gift-preview">
+            <figure class="gift-photo photo-pair">
+              <div class="shot"><img class="cal-cover" src="../assets/img/custom/pet-calendar-2027-cover.webp" alt="2027 calendar cover: watercolor of a tuxedo cat stretching beside yarn balls and a small crochet cat" width="411" height="296" loading="lazy" decoding="async"><img class="cal-year" src="../assets/img/custom/pet-calendar-2027-year.webp" alt="2027 year-at-a-glance calendar page" width="354" height="248" loading="lazy" decoding="async"></div>
+            </figure>
+            <div class="gift-box">
+              <h4 class="box-title">What's inside</h4>
+              <ul class="box">
+                <li class="incl">Your pet painted in watercolor</li>
+                <li class="incl" data-when="kind=print">Printed on regular or fine-art paper</li>
+              </ul>
+              <div class="box-end">
+                <p><a class="btn btn-primary btn-block" data-order href="mailto:hello@purrlight.studio?subject=Custom%20order">Place your order</a></p>
+              </div>
+            </div>
+          </div>
+        </article>
       </div>
-    </nav>
+    </section>
 
     <!-- 3.1 How it works -->
-    <section class="how" aria-labelledby="how-h">
+    <section class="how" id="how" aria-labelledby="how-h">
       <div class="wrap">
         <h2 id="how-h" class="section-title">How it works</h2>
         <ol class="steps">
@@ -100,166 +402,6 @@
           <li><span class="step-num" aria-hidden="true">2</span><p><strong>Pay a 50% deposit.</strong> We handcraft your piece and send you a photo before it ships.</p></li>
           <li><span class="step-num" aria-hidden="true">3</span><p><strong>Approve &amp; receive.</strong> Pay the balance and it arrives at your door — U.S. shipping included.</p></li>
         </ol>
-      </div>
-    </section>
-
-    <!-- 3.2 Custom Portrait Crochet Doll -->
-    <section class="product" id="portrait-doll" aria-labelledby="pd-h">
-      <div class="wrap product-inner">
-        <figure class="product-media">
-          <img src="../assets/img/custom/portrait-doll-collage.webp" alt="Collection of custom crochet portrait dolls — angel keepsakes in shadowboxes, wedding couples and storybook figures" width="1200" height="960" loading="lazy" decoding="async">
-        </figure>
-        <div class="product-body">
-          <h2 id="pd-h" class="product-title">Custom Portrait Crochet Doll</h2>
-          <p class="price">$80</p>
-          <p class="desc">A one-of-a-kind crochet portrait of you or someone you love, made from your photos or your own design. 20–23 cm (8–9 in).</p>
-          <ul class="rows">
-            <li>Full doll accessories included — wings, flowers, outfit, fine embroidered details</li>
-            <li>Display accessories, sales tax &amp; U.S. shipping all included</li>
-            <li>Add a wooden shadowbox display case <strong>+$10</strong></li>
-          </ul>
-          <p class="turnaround">Turnaround: from 2 weeks</p>
-          <div class="builder" data-builder="portraitDoll"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3.3 Custom Cat / Dog / Pet Crochet -->
-    <section class="product" id="pet-crochet" aria-labelledby="pet-h">
-      <div class="wrap product-inner">
-        <figure class="product-media">
-          <img src="../assets/img/custom/pet-crochet-maine-coon.webp" alt="Hand-crocheted grey tabby Maine Coon cat with green eyes and a caramel scarf, sitting in a wicker basket" width="604" height="755" loading="lazy" decoding="async">
-        </figure>
-        <div class="product-body">
-          <h2 id="pet-h" class="product-title">Custom Cat / Dog / Pet Crochet</h2>
-          <p class="price">from $40</p>
-          <p class="desc">Your pet, in yarn. Show us three photos and we hand-crochet a portrait of that exact pet — your markings, your eye color, your coat. A beautiful memorial or a gift they will keep forever.</p>
-          <div class="table-wrap" role="radiogroup" aria-label="Size and yarn">
-            <table class="price-table" data-pet-table>
-              <caption class="sr-only">Custom pet crochet prices by size and yarn — tap a price to build your piece</caption>
-              <thead>
-                <tr><th scope="col">Size</th><th scope="col">Cotton</th><th scope="col">Velvet</th><th scope="col">Fluffy</th></tr>
-              </thead>
-              <tbody>
-                <tr><th scope="row"><strong>Petite</strong> <span class="size-note">12–20 cm · 5–8 in</span></th><td data-size="Petite" data-yarn="Cotton">$40</td><td data-size="Petite" data-yarn="Velvet">$48</td><td data-size="Petite" data-yarn="Fluffy">$55</td></tr>
-                <tr><th scope="row"><strong>Classic</strong> <span class="size-note">20–30 cm · most chosen</span></th><td data-size="Classic" data-yarn="Cotton">$55</td><td data-size="Classic" data-yarn="Velvet">$67</td><td data-size="Classic" data-yarn="Fluffy">$79</td></tr>
-                <tr><th scope="row"><strong>Grand</strong> <span class="size-note">30 cm &amp; up · 12 in +</span></th><td data-size="Grand" data-yarn="Cotton">$90</td><td data-size="Grand" data-yarn="Velvet">$105</td><td data-size="Grand" data-yarn="Fluffy">$120</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <ul class="rows">
-            <li>Second pet on the same order <strong>−$10</strong></li>
-            <li>Cats, dogs, rabbits and other pets — all at the same prices</li>
-          </ul>
-          <p class="turnaround">Turnaround: from 2 weeks · about 3 weeks in peak season</p>
-          <div class="builder" data-builder="pet"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3.4 Custom Digital Watercolor Painting -->
-    <section class="product" id="watercolor" aria-labelledby="wc-h">
-      <div class="wrap product-inner">
-        <figure class="product-media">
-          <img src="../assets/img/custom/watercolor-our-first-home.webp" alt="Sample custom watercolor home portrait — a brick family home with personalized 'Our 1st Home' lettering" width="1200" height="960" loading="lazy" decoding="async">
-        </figure>
-        <div class="product-body">
-          <h2 id="wc-h" class="product-title">Custom Digital Watercolor Painting</h2>
-          <p class="price">from $10</p>
-          <p class="desc">A digital watercolor portrait of your pet or your home — a tender pet memorial, or a housewarming &amp; closing gift from your photos.</p>
-          <ul class="rows">
-            <li>Digital file <strong>$10</strong></li>
-            <li>Print 4×6 <strong>$12</strong> · 5×7 <strong>$15</strong> · 8×10 <strong>$20</strong></li>
-            <li>Printed on fine-art paper or handmade Vietnamese Dó papyrus <strong>+$5</strong></li>
-            <li>Frame: 4×6 <strong>$8</strong> · 5×7 <strong>$16</strong> · 8×10 <strong>$24</strong></li>
-            <li>Gift box <strong>+$5</strong> · Crochet rosary add-on <strong>+$15</strong></li>
-            <li>Order more, save more: <strong>5% off</strong> from the 2nd painting · <strong>10% off</strong> from the 5th</li>
-          </ul>
-          <p class="turnaround">Turnaround: 3–5 days</p>
-          <div class="builder" data-builder="watercolor"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3.5 Housewarming & Closing Gift Box -->
-    <section class="product" id="housewarming" aria-labelledby="hw-h">
-      <div class="wrap product-inner">
-        <figure class="product-media">
-          <img src="../assets/img/custom/housewarming-box.webp" alt="Round housewarming gift box with local cider, honey, fruit, cold cuts and a crochet rosary chain" width="382" height="512" loading="lazy" decoding="async">
-        </figure>
-        <div class="product-body">
-          <h2 id="hw-h" class="product-title">Housewarming &amp; Closing Gift Box</h2>
-          <p class="price">$50</p>
-          <p class="desc">A curated welcome-home box — perfect for new neighbors, friends, and realtor closing gifts.</p>
-          <ul class="rows">
-            <li>Basic set: local cider · jar of jam or local honey · watercolor painting of the home · crochet rosary chain · candle · gift box</li>
-            <li>Add or swap, <strong>+$10</strong> each: small succulent or aloe vera · cold cut box · 3-berry fruit box</li>
-            <li>Realtors &amp; repeat gifting: <strong>5% off</strong> from the 2nd box · <strong>10% off</strong> from the 5th</li>
-          </ul>
-          <p class="turnaround">Turnaround: from 3 days</p>
-          <div class="builder" data-builder="housewarming"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3.6 Christening & Confirmation Gifts -->
-    <section class="product" id="christening" aria-labelledby="ch-h">
-      <div class="wrap product-inner">
-        <figure class="product-media">
-          <img src="../assets/img/custom/christening-box.webp" alt="Christening gift box with a lace gown, bonnet with bow, booties, a white crochet rosary with a red felt heart, and a thank-you card" width="900" height="1200" loading="lazy" decoding="async">
-        </figure>
-        <div class="product-body">
-          <h2 id="ch-h" class="product-title">Christening &amp; Confirmation Gifts</h2>
-          <p class="price">from $55</p>
-          <div class="items">
-            <div class="item">
-              <div class="item-head"><h3>Christening Gown Set — lace &amp; satin</h3><span class="item-price">$89</span></div>
-              <p>A complete heirloom-quality set for her special day.</p>
-              <p class="note">Gown, bonnet, mittens and booties.</p>
-            </div>
-            <div class="item">
-              <div class="item-head"><h3>Confirmation gift box</h3><span class="item-price">$55</span><span class="note">(coming soon)</span></div>
-              <p>12 cm crochet saint figure + handmade rosary chain. Sales tax &amp; shipping included.</p>
-            </div>
-          </div>
-          <p class="turnaround">Turnaround: from 1 week</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3.7 Godparent Gift Set -->
-    <section class="product" id="godparent" aria-labelledby="gp-h">
-      <div class="wrap product-inner">
-        <figure class="product-media">
-          <img src="../assets/img/custom/godparent-set.webp" alt="Crochet portrait doll of a grandmother in a kraft gift box beside a handmade crochet rosary chain" width="960" height="1200" loading="lazy" decoding="async">
-        </figure>
-        <div class="product-body">
-          <h2 id="gp-h" class="product-title">Godparent Gift Set</h2>
-          <p class="price">$95</p>
-          <p class="desc">A meaningful thank-you for godparents: a custom crochet portrait doll of them, paired with a handmade crochet rosary chain.</p>
-          <p class="turnaround">Turnaround: from 2 weeks</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3.8 Custom Watercolor Pet Calendar 2027 -->
-    <section class="product" id="calendar" aria-labelledby="cal-h">
-      <div class="wrap product-inner">
-        <figure class="product-media media-stack">
-          <img class="cal-cover" src="../assets/img/custom/pet-calendar-2027-cover.webp" alt="2027 calendar cover: watercolor of a tuxedo cat stretching beside yarn balls and a small crochet cat" width="411" height="296" loading="lazy" decoding="async">
-          <img class="cal-year" src="../assets/img/custom/pet-calendar-2027-year.webp" alt="2027 year-at-a-glance calendar page" width="354" height="248" loading="lazy" decoding="async">
-        </figure>
-        <div class="product-body">
-          <h2 id="cal-h" class="product-title">Custom Watercolor Pet Calendar 2027</h2>
-          <p class="price">from $15</p>
-          <p class="desc">A 2027 poster calendar made just for you — your pet painted in watercolor, a gift that lasts all year.</p>
-          <ul class="rows">
-            <li>Design + print: 1 page <strong>$20</strong> · add 5 more pages <strong>+$30</strong> (6 pages $50)</li>
-            <li>Digital files only: 1 page <strong>$15</strong> · 6 pages <strong>$25</strong></li>
-            <li>Printed on regular or fine-art paper</li>
-          </ul>
-          <div class="builder" data-builder="calendar"></div>
-        </div>
       </div>
     </section>
 
@@ -289,6 +431,7 @@
       </div>
     </section>
   </main>
+
 
   <footer class="co-footer">
     <div class="wrap">

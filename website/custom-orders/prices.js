@@ -43,8 +43,10 @@
      difference off. Basic items' selling prices: sparkling cider $15 · jam or
      local honey $5 · digital watercolor painting of the home $15 (a 5×7 print on
      Premium Matte paper) · crochet rosary chain $10.
+
+   Decided by Elise 16/10/2026, fifth message:
    - Christening Gown Set: 25% off its $89 through Sun Oct 25, 2026 (end of the day,
-     Texas time) — $66.75; from Oct 26 the page goes back to $89 by itself.
+     Central Time) — $66.75; from Oct 26 the page goes back to $89 by itself.
 
    Readings still open (flagged to Elise — change ONE constant if needed):
    - Watercolor "Print 4×6 $12 · 5×7 $15 · 8×10 $20" are read as the
@@ -111,7 +113,7 @@ var PRICES = {
   },
   christening: {                                                             /* §3.6 (confirmation box: coming soon) */
     gownSet: 89, confirmationBox: 55,
-    gownSale: { off: 25, ends: "2026-10-26T05:00:00Z", through: "Oct 25" }   /* Elise 16/10: 25% off through Sun Oct 25 (midnight CDT) */
+    gownSale: { off: 25, ends: "2026-10-26T05:00:00Z", through: "Oct 25", day: "Sun, Oct 25" }   /* Elise 16/10: 25% off through Sun Oct 25 (midnight CDT) */
   },
   godparent: { base: 95, secondOff: 10 },                                    /* §3.7 · second set −$10: Elise 15/10 */
   calendar: {                                                                /* §3.8 */
@@ -218,7 +220,7 @@ function estGodparent(o) {
   if (o && o.count === 2) lines.push({ label: "Second godparent set (−$" + PRICES.godparent.secondOff + ")", amount: PRICES.godparent.base - PRICES.godparent.secondOff });
   return finish(lines);
 }
-/* the gown set's price now: the sale price until gownSale.ends, then the regular price (o.now: a time in ms, for tests) */
+/* the gown set's price now: the sale price until gownSale.ends, then the regular price (now: a time in ms, for tests) */
 function gownPrice(now) {
   var C = PRICES.christening, sale = C.gownSale, t = typeof now === "number" ? now : new Date().getTime();
   var on = !!sale && t < Date.parse(sale.ends);
@@ -226,7 +228,7 @@ function gownPrice(now) {
 }
 function estChristeningGown(o) {
   var g = gownPrice(o && o.now);
-  return finish([{ label: "Christening Gown Set — lace & satin" + (g.sale ? " (" + g.sale.off + "% off " + money(g.regular) + " through " + g.sale.through + ")" : ""), amount: g.price }]);
+  return finish([{ label: "Christening Gown Set — lace & satin" + (g.sale ? " (" + g.sale.off + "% off " + money(g.regular) + " through " + g.sale.through + " CT)" : ""), amount: g.price }]);
 }
 
 function round2(n) { return Math.round(n * 100) / 100; }

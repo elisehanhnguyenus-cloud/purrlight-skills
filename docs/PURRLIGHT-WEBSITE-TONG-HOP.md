@@ -892,6 +892,12 @@ dùng tên ngắn (sparkling cider, jam or honey, home painting, rosary chain).
   10MB/file (Pro $29/tháng bỏ giới hạn + bỏ "Made with Tally"). Muốn có bảng đơn trong Google Drive:
   bật **Tally → Google Sheets** (miễn phí, mỗi đơn một dòng).
 
+Rà soát popup + giảm giá (2 góc + phản biện): 7 lỗi xác nhận, đã sửa — form Tally không hiện
+(tally.so lỗi) thì nút bị "kẹt" → sau 10 giây tự mở trang form; bấm lại nút khi popup đang mở làm
+mất chữ khách đã gõ → cùng món thì giữ form; gửi xong không cuộn tới "Pay your deposit" khi địa chỉ
+đã có #pay → luôn cuộn; trang mở qua nửa đêm 25/10 còn hiện giá giảm → tự đổi về $89 (ô chọn, ước
+tính, link Tally); thêm "(Central Time)"; "$89" gạch ngang đủ tương phản; "Oct 25" không bị tách dòng.
+
 ### Còn chờ chị
 1. "Turnaround: from X" → "ships within N" (FTC, xem 8j).
 2. Sau mùa lễ: thay ảnh hero/Giáng sinh, gỡ hạn đặt.

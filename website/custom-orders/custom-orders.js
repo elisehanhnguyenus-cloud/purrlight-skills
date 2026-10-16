@@ -84,7 +84,7 @@
      Sent: the popup closes and the page goes to "Pay your deposit" (the form's own redirect, done here). */
   var TALLY_FORM = (ORDER_FORM_URL.match(/^https:\/\/(?:www\.)?tally\.so\/r\/([A-Za-z0-9]+)$/) || [])[1];
   if (TALLY_FORM) {
-    var tallyOpener = null;
+    var tallyOpener = null, tallyHref = null, tallyTimer = null;
     var tallyOpen = function () { return document.querySelector(".tally-form-" + TALLY_FORM); };
     var loadTally = function () {
       var sc = document.createElement("script");
@@ -106,17 +106,28 @@
       var T = window.Tally, href = a.getAttribute("href") || "";
       if (!T || typeof T.openPopup !== "function" || href.indexOf(ORDER_FORM_URL) !== 0) return;
       e.preventDefault();
+      if (tallyOpen() && href === tallyHref) {   /* same pick: back into the form — what they typed stays */
+        var f0 = document.querySelector(".tally-form-" + TALLY_FORM + " iframe"); if (f0) f0.focus();
+        return;
+      }
       if (tallyOpen()) T.closePopup(TALLY_FORM);   /* one popup, with the latest pick */
-      tallyOpener = a;
+      tallyOpener = a; tallyHref = href;
+      /* the form never shows (tally.so down or blocked while the script loaded): after 10 s, open the form page instead */
+      clearTimeout(tallyTimer);
+      tallyTimer = setTimeout(function () {
+        var pop = tallyOpen();
+        if (pop && pop.style.opacity !== "1") { tallyOpener = null; tallyHref = null; T.closePopup(TALLY_FORM); location.href = href; }
+      }, 10000);
       T.openPopup(TALLY_FORM, {
         width: 376, hideTitle: true, emoji: { text: "\uD83D\uDC4B", animation: "wave" }, hiddenFields: hiddenFields(href),
-        onOpen: function () { var f = document.querySelector(".tally-form-" + TALLY_FORM + " iframe"); if (f) f.focus(); },
-        onClose: function () { var o = tallyOpener; tallyOpener = null; if (o && document.documentElement.contains(o)) o.focus({ preventScroll: true }); },
+        onOpen: function () { clearTimeout(tallyTimer); var f = document.querySelector(".tally-form-" + TALLY_FORM + " iframe"); if (f) f.focus(); },
+        onClose: function () { clearTimeout(tallyTimer); tallyHref = null; var o = tallyOpener; tallyOpener = null; if (o && document.documentElement.contains(o)) o.focus({ preventScroll: true }); },
         onSubmit: function () {
           tallyOpener = null;
           T.closePopup(TALLY_FORM);
-          var pay = document.getElementById("pay-h");
+          var sec = document.getElementById("pay"), pay = document.getElementById("pay-h");
           location.hash = "pay";
+          if (sec) sec.scrollIntoView();   /* also when the address already ends in #pay (the "How to pay" link) */
           if (pay) { pay.setAttribute("tabindex", "-1"); pay.focus({ preventScroll: true }); }
         }
       });
@@ -126,22 +137,39 @@
     });
   }
 
-  /* ---------- the gown set's sale (Elise 16/10: 25% off through Oct 25): $89 struck through + the sale price, and a
-     line under the price; when the sale ends (prices.js gownSale.ends) the page shows $89 again by itself ---------- */
-  (function () {
-    var gp = gownPrice();
-    if (!gp.sale) return;
-    var tp = document.querySelector('[data-sale-price="gown"]');
+  /* ---------- the gown set's sale (Elise 16/10: 25% off through Oct 25, Central Time): $89 struck through + the sale
+     price, and a line under the price — drawn with each estimate, so the tile and the estimate always agree; when the
+     sale ends (prices.js gownSale.ends) the page shows $89 again, even if it was left open ---------- */
+  var gownShown = null;
+  function renderGownSale(gp) {
+    var state = gp.sale ? "sale" : "regular";
+    if (state === gownShown) return;
+    gownShown = state;
+    var tp = document.querySelector('[data-sale-price="gown"]'), line = document.querySelector('[data-sale-note="gown"]');
     if (tp) {
-      tp.textContent = "";
-      tp.appendChild(el("s", null, [el("span", { "class": "sr-only", text: "Was " }), document.createTextNode(money(gp.regular))]));
-      tp.appendChild(document.createTextNode(" "));
-      tp.appendChild(el("span", { "class": "sr-only", text: "now " }));
-      tp.appendChild(el("span", { "class": "sale-price", text: money(gp.price) }));
+      tp.textContent = gp.sale ? "" : money(gp.regular);
+      if (gp.sale) {
+        tp.appendChild(el("s", null, [el("span", { "class": "sr-only", text: "Was " }), document.createTextNode(money(gp.regular))]));
+        tp.appendChild(document.createTextNode(" "));
+        tp.appendChild(el("span", { "class": "sr-only", text: "now " }));
+        tp.appendChild(el("span", { "class": "sale-price", text: money(gp.price) }));
+      }
     }
-    var line = document.querySelector('[data-sale-note="gown"]');
-    if (line) { line.textContent = "Christening gown set: " + gp.sale.off + "% off through Sun, " + gp.sale.through; line.hidden = false; }
-  })();
+    if (line) {
+      line.textContent = gp.sale ? "Christening gown set: " + gp.sale.off + "% off through " + gp.sale.day.replace(/ /g, "\u00a0") + " (Central\u00a0Time)" : "";
+      line.hidden = !gp.sale;
+    }
+  }
+  function refreshGown() {   /* the sale ended while the page was open: estimate, tile and order links back to $89 */
+    var g = byId.christening;
+    if (!g || gownShown !== "sale" || gownPrice().sale) return;
+    g.update(false);
+    if (lastPick && lastPick.product === g.def.product) pick(g);
+  }
+  if (gownPrice().sale) {
+    setTimeout(refreshGown, Date.parse(PRICES.christening.gownSale.ends) - new Date().getTime() + 1000);
+    document.addEventListener("visibilitychange", function () { if (!document.hidden) refreshGown(); });   /* background tabs sleep through timers */
+  }
 
   /* ---------- tiny helpers ---------- */
   function el(tag, attrs, children) {
@@ -250,7 +278,7 @@
     christening: {   /* the Confirmation gift box is "coming soon": shown as information, not orderable */
       product: "Christening & Confirmation Gifts",
       read: function () { return {}; },
-      est: function () { return estChristeningGown(); }   /* the sale price until it ends (prices.js gownSale) */
+      est: function () { var now = new Date().getTime(); renderGownSale(gownPrice(now)); return estChristeningGown({ now: now }); }   /* the tile and the estimate read one clock */
     },
     godparent: {
       product: "Godparent Gift Set",

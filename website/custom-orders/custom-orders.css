@@ -254,7 +254,7 @@ p { margin: 0; }
 .tile-note strong { font-weight: 600; color: var(--ink); }
 .tile-price { order: 3; font-family: var(--font-head); font-weight: 500; font-size: 17px; color: var(--berry); margin-top: 2px; }
 .tile-price:empty { display: none; }
-.tile-price s { font-size: 14px; font-weight: 400; color: var(--ink-soft); }   /* the gown set's regular price during its sale */
+.tile-price s { font-size: 14px; font-weight: 400; }   /* the gown set's regular price during its sale (the price colour: ink on a chosen tile) */
 .sale-line { font-size: 15px; font-weight: 600; color: var(--berry); }
 .sale-line[hidden] { display: none; }
 .tile:has(input:checked:not(:disabled)), .tile.is-checked { border-color: var(--ink); background: var(--glow-soft); box-shadow: inset 0 0 0 1px var(--ink); }

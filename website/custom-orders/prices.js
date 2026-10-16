@@ -17,13 +17,24 @@
    - Print paper: regular paper is included in the print price · fine-art
      paper +$10 · handmade Vietnamese Dó papyrus +$5.
 
+   Decided by Elise 16/10/2026:
+   - Housewarming box: basic $60; add-ons succulent +$10 · scented candle +$10
+     · cold cut box +$15 · 3-berry fruit box +$10 · chocolate box (6 pieces) +$20.
+   - Fresh items (cold cut, 3-berry) are pickup only (Pearland Town Center,
+     Saturday or Sunday) — never shipped.
+   - Sales tax 8.25% is added to every order; the 50% deposit is half of the
+     total with tax. Exception kept on purpose: the portrait doll's approved
+     copy says sales tax is included in its price (taxIncluded) — flagged.
+   - Up to 50 paintings or boxes per order on the page (accepted).
+
    Readings still open (flagged to Elise — change ONE constant if needed):
    - Watercolor "Print 4×6 $12 · 5×7 $15 · 8×10 $20" are read as the
      price of a printed painting (not $10 digital + print).
    - A gift box is offered for prints.
    - "Second pet on the same order −$10": the second pet is $10 less
      than its own size × yarn price (same size and yarn assumed).
-   - Housewarming "Add or swap, +$10 each": adding and swapping cost the same.
+   - Housewarming add-ons: swapping out a basic item costs the same as adding
+     the add-on (its own price).
    ============================================================ */
 
 /* The one order form for all seven products (brief §1 / §5). Edit it HERE — every order link on the
@@ -50,7 +61,7 @@ var PAY = {
 };
 
 var PRICES = {
-  portraitDoll: { base: 80, shadowbox: 10 },                               /* §3.2 */
+  portraitDoll: { base: 80, shadowbox: 10, taxIncluded: true },            /* §3.2 · "sales tax & U.S. shipping all included" (approved copy) */
   pet: {                                                                     /* §3.3 */
     sizes: ["Petite", "Classic", "Grand"],
     yarns: ["Cotton", "Velvet", "Fluffy"],
@@ -70,7 +81,12 @@ var PRICES = {
     giftBox: 5,
     rosary: 15
   },
-  housewarming: { base: 50, addon: 10, maxAddons: 4 },                       /* §3.5 · add-ons list: Elise 15/10 */
+  housewarming: {                                                            /* §3.5 · Elise 15/10 + 16/10 */
+    base: 60,
+    addons: { succulent: 10, candle: 10, coldcut: 15, berry: 10, chocolate: 20 },
+    fresh: ["coldcut", "berry"],                  /* pickup only */
+    maxAddons: 5
+  },
   christening: { gownSet: 89, confirmationBox: 55 },                         /* §3.6 (confirmation box: coming soon) */
   godparent: { base: 95, secondOff: 10 },                                    /* §3.7 · second set −$10: Elise 15/10 */
   calendar: {                                                                /* §3.8 */
@@ -81,20 +97,27 @@ var PRICES = {
     tiers: [{ from: 2, off: 0.05 }, { from: 5, off: 0.10 }],
     maxQty: 50
   },
-  depositRate: 0.5                            /* brief §1 + Elise 15/10: 50% deposit today */
+  depositRate: 0.5,                           /* brief §1 + Elise 15/10: 50% deposit today */
+  salesTaxBp: 825                             /* Elise 16/10: 8.25% on every order (basis points: exact cents) */
 };
 
 /* ---------- helpers ---------- */
 function money(n) {
   var s = (Math.round(n * 100) / 100).toFixed(2).replace(/\.00$/, "");
-  return "$" + s.replace(/\B(?=(\d{3})+(?!\d))/, ",");   /* $1,095 — only the whole dollars have 4+ digits in a row */
+  return "$" + s.replace(/\B(?=(\d{3})+(?!\d))/g, ",");   /* $1,095 — only the whole dollars have 4+ digits in a row */
+}
+/* two amounts that sit together (deposit + balance): both with cents when either has cents — "$46.01" and "$46.00" */
+function moneyPair(a, b) {
+  if (Math.round(a * 100) % 100 === 0 && Math.round(b * 100) % 100 === 0) return [money(a), money(b)];
+  var f = function (n) { return "$" + (Math.round(n * 100) / 100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","); };
+  return [f(a), f(b)];
 }
 
 /* ---------- estimators (each returns {total, lines:[{label, amount}], note}) ---------- */
 function estPortraitDoll(o) {
   var lines = [{ label: "Custom Portrait Crochet Doll", amount: PRICES.portraitDoll.base }];
   if (o && o.shadowbox) lines.push({ label: "Wooden shadowbox display case", amount: PRICES.portraitDoll.shadowbox });
-  return finish(lines);
+  return finish(lines, PRICES.portraitDoll.taxIncluded);
 }
 
 function estPet(o) {
@@ -129,20 +152,22 @@ function estWatercolor(o) {
   return r;
 }
 
-/* o.addons: [{ name, swapFor }] (swapFor "" = added to the box) — or plain names, or a count. +$10 each either way. */
+/* o.addons: [{ key, name, swapFor }] (swapFor "" = added to the box) or plain keys. Each add-on costs its own price,
+   added or swapped in. Fresh add-ons (cold cut, berries) make the box pickup only. */
 function estHousewarming(o) {
-  var lines = [{ label: "Housewarming & Closing Gift Box", amount: PRICES.housewarming.base }];
-  var a = o && o.addons, max = PRICES.housewarming.maxAddons;
-  if (Array.isArray(a)) {
-    for (var i = 0; i < a.length && i < max; i++) {
-      var it = typeof a[i] === "object" && a[i] ? a[i] : { name: String(a[i]) };
-      lines.push({ label: it.swapFor ? "Swap: " + it.swapFor + " → " + it.name : "Add: " + it.name, amount: PRICES.housewarming.addon });
-    }
-  } else {
-    var n = a > 0 ? Math.min(Math.floor(a), max) : 0;
-    if (n) lines.push({ label: "Add or swap × " + n, amount: PRICES.housewarming.addon * n });
+  var P = PRICES.housewarming;
+  var lines = [{ label: "Housewarming & Closing Gift Box", amount: P.base }];
+  var a = o && Array.isArray(o.addons) ? o.addons : [], fresh = false;
+  for (var i = 0, n = 0; i < a.length && n < P.maxAddons; i++) {
+    var it = typeof a[i] === "object" && a[i] ? a[i] : { key: String(a[i]) };
+    if (!Object.prototype.hasOwnProperty.call(P.addons, it.key)) continue;
+    var name = it.name || it.key;
+    lines.push({ label: it.swapFor ? "Swap: " + it.swapFor + " → " + name : "Add: " + name, amount: P.addons[it.key] });
+    if (P.fresh.indexOf(it.key) > -1) fresh = true;
+    n++;
   }
   var r = applyQty(finish(lines), o && o.qty, "box", "boxes");
+  r.pickupOnly = fresh;
   r.note = r.qty > 1 ? "Estimate for " + r.qty + " boxes with the same items" : "Estimate for one box";
   return r;
 }
@@ -165,10 +190,11 @@ function estChristeningGown() { return finish([{ label: "Christening Gown Set �
 
 function round2(n) { return Math.round(n * 100) / 100; }
 
-function finish(lines) {
-  var total = 0;
-  for (var i = 0; i < lines.length; i++) total += lines[i].amount;
-  return settle({ total: round2(total), lines: lines, note: "", qty: 1 });
+/* r.pre = price before tax · r.tax · r.total = what the customer pays (with tax) · deposit + balance = total */
+function finish(lines, taxIncluded) {
+  var pre = 0;
+  for (var i = 0; i < lines.length; i++) pre += lines[i].amount;
+  return settle({ pre: round2(pre), lines: lines, note: "", qty: 1, taxIncluded: !!taxIncluded });
 }
 
 /* the discount rate of the n-th identical item (1-based): 0 · 5% from the 2nd · 10% from the 5th */
@@ -183,33 +209,39 @@ function applyQty(r, qty, one, many) {
   var q = Math.floor(Number(qty));
   if (!(q >= 1)) q = 1;
   if (q > PRICES.volume.maxQty) q = PRICES.volume.maxQty;
-  r.qty = q; r.unit = r.total; r.one = one; r.many = many;
+  r.qty = q; r.unit = r.pre; r.one = one; r.many = many;
   if (q > 1) {
     var saving = 0;
     for (var i = 2; i <= q; i++) saving += round2(r.unit * itemOff(i));
     r.subtotal = round2(r.unit * q);
     r.saving = round2(saving);
-    r.total = round2(r.subtotal - r.saving);
+    r.pre = round2(r.subtotal - r.saving);
   }
   return settle(r);
 }
 
-/* 50% deposit today, the rest after the photo is approved */
+/* sales tax on the price (whole cents, half a cent rounds up), then 50% deposit today and the rest after the photo is approved */
 function settle(r) {
-  var cents = Math.round(r.total * 100), dep = Math.ceil(cents * PRICES.depositRate);   /* in whole cents: a half cent always rounds the deposit up */
+  var pre = Math.round(r.pre * 100);
+  var tax = r.taxIncluded ? 0 : Math.round(pre * PRICES.salesTaxBp / 10000);
+  var cents = pre + tax, dep = Math.ceil(cents * PRICES.depositRate);   /* a half cent always rounds the deposit up */
+  r.tax = tax / 100;
+  r.total = cents / 100;
   r.deposit = dep / 100;
   r.balance = (cents - dep) / 100;
   return r;
 }
+function taxLabel() { return "Sales tax (" + (PRICES.salesTaxBp / 100) + "%)"; }
 
-/* one-line summary the customer can paste into the order form */
-function summaryLine(product, est) {
+/* one-line summary the customer can paste into the order form; `how` = how it reaches them (pickup or shipping) */
+function summaryLine(product, est, how) {
   var parts = [];
   for (var i = 0; i < est.lines.length; i++) parts.push(est.lines[i].label + " " + money(est.lines[i].amount));
   var qty = est.qty > 1 ? " — × " + est.qty + " " + est.many + " " + money(est.subtotal) + ", order more, save more −" + money(est.saving) : "";
-  return "My pick: " + product + " — " + parts.join(" · ") + qty + " — estimate " + money(est.total) + " · deposit (50%) " + money(est.deposit) + (est.digitalOnly ? "" : " · Free U.S. shipping");
+  var tax = est.taxIncluded ? " — sales tax included" : " — " + taxLabel().toLowerCase() + " " + money(est.tax);
+  return "My pick: " + product + " — " + parts.join(" · ") + qty + tax + " — estimate " + money(est.total) + " · deposit (50%) " + money(est.deposit) + (est.digitalOnly ? "" : " · " + (how || "Free U.S. shipping"));
 }
 
 if (typeof module !== "undefined") {
-  module.exports = { ORDER_FORM_URL: ORDER_FORM_URL, ORDER_FORM_PREFILL_ENTRY: ORDER_FORM_PREFILL_ENTRY, PAY: PAY, PRICES: PRICES, money: money, itemOff: itemOff, applyQty: applyQty, estPortraitDoll: estPortraitDoll, estPet: estPet, estWatercolor: estWatercolor, estHousewarming: estHousewarming, estCalendar: estCalendar, estGodparent: estGodparent, estChristeningGown: estChristeningGown, summaryLine: summaryLine };
+  module.exports = { ORDER_FORM_URL: ORDER_FORM_URL, ORDER_FORM_PREFILL_ENTRY: ORDER_FORM_PREFILL_ENTRY, PAY: PAY, PRICES: PRICES, money: money, moneyPair: moneyPair, taxLabel: taxLabel, itemOff: itemOff, applyQty: applyQty, estPortraitDoll: estPortraitDoll, estPet: estPet, estWatercolor: estWatercolor, estHousewarming: estHousewarming, estCalendar: estCalendar, estGodparent: estGodparent, estChristeningGown: estChristeningGown, summaryLine: summaryLine };
 }

@@ -205,6 +205,11 @@ p { margin: 0; }
 .photo-pair .cal-cover { width: 58%; max-height: none; border-radius: var(--radius); }
 .photo-pair .cal-year { width: 38%; max-height: none; border-radius: var(--radius); }
 @media (min-width: 900px) { .shot img { max-height: min(260px, 30vh); } }
+/* two photos of one option (gift box closed + open): equal heights, widths by their ratios */
+.shot-pair .pair { display: flex; gap: 8px; justify-content: center; align-items: flex-end; width: 100%; }
+.shot-pair .pair img { width: 0; height: auto; max-height: none; }
+.shot-pair .pair img:first-child { flex: 0.933; }
+.shot-pair .pair img:last-child { flex: 1.282; }
 
 /* option tiles (native radio / checkbox inside a label) */
 .step { border: 0; margin: 0; padding: 0; min-width: 0; }
@@ -314,6 +319,7 @@ p { margin: 0; }
 .idea-name { font-weight: 600; font-size: 15px; }
 .idea-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.35; }
 .idea-price { font-family: var(--font-head); font-weight: 500; font-size: 18px; color: var(--berry); white-space: nowrap; }
+.idea-tax { font-family: var(--font-body); font-size: 13px; font-weight: 400; color: var(--ink-soft); }
 @media (min-width: 900px) { .ideas-list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; } }
 
 /* quantity: − [n] + */
@@ -357,6 +363,8 @@ p { margin: 0; }
 .box-balance { font-size: 13.5px; color: var(--ink-soft); margin-top: -4px; }
 .box .line-qty .line-name, .box .line-save .line-name { font-weight: 500; }
 .box .line-save .amt { color: var(--ink); }
+.box .line-tax .amt { color: var(--ink); }
+.getit-how { margin: 10px 0 0; }
 
 /* ---------- pay your deposit ---------- */
 .pay { padding: 32px 0 36px; border-top: 1px solid var(--line); }

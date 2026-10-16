@@ -162,7 +162,7 @@
         var list = [], boxes = form ? form.querySelectorAll('input[name="addons"]') : [];
         for (var i = 0; i < boxes.length; i++) if (boxes[i].checked) {
           var basic = g && g.swaps[boxes[i].value] ? g.art.querySelector('[data-basic="' + g.swaps[boxes[i].value] + '"]') : null;
-          list.push({ name: boxes[i].getAttribute("data-label") || boxes[i].value, swapFor: basic ? lowerFirst(basic.getAttribute("data-text")) : "" });
+          list.push({ key: boxes[i].value, name: boxes[i].getAttribute("data-label") || boxes[i].value, swapFor: basic ? lowerFirst(basic.getAttribute("data-text")) : "" });
         }
         return { addons: list, qty: v.qty };
       },
@@ -203,6 +203,35 @@
   }
   function clampNum(n, min, max) { n = Math.floor(Number(n)); return n >= min ? Math.min(n, max) : min; }
   function lowerFirst(t) { t = String(t || ""); return t.charAt(0).toLowerCase() + t.slice(1); }
+
+  /* pickup or shipping — one step at the end of every piece's options */
+  var GET_IT = {
+    ship: { name: "Ship to my address", note: "Free U.S. shipping", short: "Free U.S. shipping", pick: "Ship to my address (free U.S. shipping)",
+      hint: "In your order, add your shipping address and a good time to receive it." },
+    sat: { name: "Pickup Saturday", note: "Pearland Town Center", short: "Pickup Saturday · Pearland Town Center", pick: "Pickup Saturday at Pearland Town Center",
+      hint: "Pickup at Pearland Town Center on Saturday." },
+    sun: { name: "Pickup Sunday", note: "Pearland Town Center", short: "Pickup Sunday · Pearland Town Center", pick: "Pickup Sunday at Pearland Town Center",
+      hint: "Pickup at Pearland Town Center on Sunday." }
+  };
+  function addGetIt(form, id) {
+    var nums = form.querySelectorAll(".step-n"), n = 1;
+    for (var i = 0; i < nums.length; i++) n = Math.max(n, Number(nums[i].textContent) || 0);
+    var fs = el("fieldset", { "class": "step step-getit" });
+    fs.appendChild(el("legend", null, [el("span", { "class": "step-n", "aria-hidden": "true", text: String(n + 1) }), document.createTextNode(" "), el("span", { "class": "step-label", text: "Pickup or shipping" })]));
+    var off = el("p", { "class": "step-off", id: id + "-getit-off", text: "Cold cut and 3-berry boxes are pickup only." });
+    off.hidden = true;
+    fs.appendChild(off);
+    var tiles = el("div", { "class": "tiles cols-3 list" });
+    ["ship", "sat", "sun"].forEach(function (k) {
+      var inp = el("input", { type: "radio", name: "getit", value: k });
+      if (k === "ship") { inp.checked = true; inp.defaultChecked = true; }
+      tiles.appendChild(el("label", { "class": "tile" }, [inp, el("span", { "class": "tile-name", text: GET_IT[k].name }), el("span", { "class": "tile-note", text: GET_IT[k].note })]));
+    });
+    fs.appendChild(tiles);
+    fs.appendChild(el("p", { "class": "step-hint getit-how", text: GET_IT.ship.hint }));
+    form.appendChild(fs);
+    return fs;
+  }
 
   /* − / + around a quantity field (the field itself stays typeable) */
   function enhanceQty(wrap, onChange) {
@@ -261,6 +290,8 @@
     var table = art.querySelector("details.all-prices");
     if (table) table.open = false;   /* open without JS; with the tiles doing the work it folds away */
     /* card message (doll, godparents): goes into the pick, never stored on the device */
+    /* how it reaches the customer (Elise 16/10): free U.S. shipping, or pickup at Pearland Town Center on Saturday or Sunday */
+    var getit = form ? addGetIt(form, art.id) : null;
     var msgEl = form ? form.querySelector("[data-message]") : null;
     var msgStep = msgEl ? msgEl.closest(".step-message") : null;
     var msgCount = msgStep ? msgStep.querySelector(".msg-count") : null;
@@ -271,7 +302,7 @@
       msgEl.setAttribute("aria-describedby", msgHint.id);
     }
     function message() { return msgEl ? msgEl.value.replace(/\s+/g, " ").trim().slice(0, 160) : ""; }
-    function pickText() { var m = message(); return summaryLine(def.product, g.est) + (m ? ' · Card message: "' + m + '"' : ""); }
+    function pickText() { var m = message(); return summaryLine(def.product, g.est, g.how) + (m ? ' · Card message: "' + m + '"' : ""); }
     if (msgEl) msgEl.addEventListener("input", function () {
       if (msgCount) msgCount.textContent = msgEl.value.length + " / 160";
       g.text = pickText(); copied.textContent = ""; pick(g);   /* quietly: no announcement per keystroke */
@@ -287,7 +318,7 @@
       var sig = on.join(",");
       if (swapWrap.getAttribute("data-sig") !== sig) {
         swapWrap.innerHTML = "";
-        if (on.length) swapWrap.appendChild(el("p", { "class": "swaps-title", text: "Add it to the box, or swap it for a basic item:" }));
+        if (on.length) swapWrap.appendChild(el("p", { "class": "swaps-title", text: "For each add-on, choose:" }));
         on.forEach(function (val) {
           var box2 = form.querySelector('input[name="addons"][value="' + val + '"]');
           var sid = art.id + "-swap-" + val;
@@ -340,6 +371,15 @@
         var why = node.querySelector(".step-off");
         if (why) { why.hidden = !isDigital; if (isDigital) node.setAttribute("aria-describedby", why.id); else node.removeAttribute("aria-describedby"); }
       }
+      if (getit) {   /* fresh items (cold cut, berries) are pickup only: shipping is off while one is in the box */
+        var freshOn = !!form.querySelector("input[data-fresh]:checked");
+        var shipIn = getit.querySelector('input[value="ship"]'), offNote = getit.querySelector(".step-off");
+        shipIn.disabled = freshOn;
+        shipIn.parentNode.classList.toggle("is-off", freshOn);
+        if (freshOn && shipIn.checked) getit.querySelector('input[value="sat"]').checked = true;
+        offNote.hidden = !freshOn;
+        if (freshOn) getit.setAttribute("aria-describedby", offNote.id); else getit.removeAttribute("aria-describedby");
+      }
       v = readValues(form);   /* re-read: disabled extras drop out */
       syncSwaps(v);
       /* browsers without :has(): mirror the checked state as a class */
@@ -378,7 +418,15 @@
       }
 
       var est = def.est(def.read(v, form, g));
-      g.est = est; g.text = pickText();
+      g.est = est;
+      if (getit) {
+        getit.hidden = !!est.digitalOnly;   /* a digital file is emailed */
+        var gw = GET_IT[v.getit] || GET_IT.ship;
+        g.how = est.digitalOnly ? "" : gw.pick;
+        var howHint = getit.querySelector(".getit-how");
+        if (howHint) howHint.textContent = gw.hint;
+      }
+      g.text = pickText();
       if (qtyWrap && qtyWrap.syncQty) qtyWrap.syncQty();
       /* the box: main line first, the included rows (static HTML), then each add-on */
       var old = box.querySelectorAll("li.line");
@@ -403,6 +451,8 @@
         box.appendChild(qli); box.appendChild(sli);
       }
       prevQty = est.qty;
+      /* sales tax (8.25%, Elise 16/10) — or included, where the piece's own copy says so */
+      box.appendChild(el("li", { "class": "line line-tax" }, [el("span", { "class": "line-name", text: est.taxIncluded ? "Sales tax" : taxLabel() }), el("span", { "class": "amt", text: est.taxIncluded ? "included" : "+" + money(est.tax) })]));
       prevLabels = est.lines.map(function (l) { return l.label; });
       totalRow.innerHTML = "";
       totalRow.appendChild(el("span", { text: "Estimate" }));
@@ -411,9 +461,10 @@
       totalRow.appendChild(amt);
       prevTotal = est.total;
       depositRow.innerHTML = ""; balanceRow.innerHTML = "";
-      depositRow.appendChild(el("span", { text: "Deposit today (50%)" })); depositRow.appendChild(el("strong", { "class": "amt", text: money(est.deposit) }));
-      balanceRow.appendChild(el("span", { text: "Balance after you approve the photo" })); balanceRow.appendChild(el("span", { "class": "amt", text: money(est.balance) }));
-      noteRow.textContent = [est.note, est.digitalOnly ? "" : "Free U.S. shipping"].filter(Boolean).join(" · ");
+      var db = moneyPair(est.deposit, est.balance);
+      depositRow.appendChild(el("span", { text: "Deposit today (50%)" })); depositRow.appendChild(el("strong", { "class": "amt", text: db[0] }));
+      balanceRow.appendChild(el("span", { text: "Balance after you approve the photo" })); balanceRow.appendChild(el("span", { "class": "amt", text: db[1] }));
+      noteRow.textContent = [est.note, est.digitalOnly ? "" : (GET_IT[v.getit] || GET_IT.ship).short].filter(Boolean).join(" · ");
       copied.textContent = "";
       if (fromUser) store(storeKey, { v: v, swaps: g.swaps, u: 1 });   /* a plain page view remembers nothing */
       if (g === current) setBarThumb(g);
@@ -634,7 +685,7 @@
   /* ---------- or start from a gift idea (presets) ---------- */
   var PRESETS = {
     realtor:  { id: "housewarming",  values: { addons: ["succulent"] } },
-    memorial: { id: "watercolor",    values: { format: "5x7", paper: "do", frame: "yes", extras: ["giftBox"] }, show: "paper" },   /* opens on the Dó cat, not the house */
+    memorial: { id: "watercolor",    values: { format: "5x7", paper: "do", frame: "yes", extras: ["giftBox"] }, show: "frame" },   /* opens on the cat on Dó in a floating frame */
     grandma:  { id: "portrait-doll", values: { shadowbox: "yes" } }
   };
   function setValues(form, values) {
@@ -667,7 +718,10 @@
       var p = PRESETS[btn.getAttribute("data-preset")];
       if (!p || !byId[p.id]) { btn.parentNode.hidden = true; return; }
       var est = presetEstimate(p), price = btn.querySelector("[data-idea-price]");
-      if (price && est) price.textContent = money(est.total);
+      if (price && est) {   /* the idea's price before tax, like the prices on the tiles */
+        price.textContent = money(est.pre);
+        if (!est.taxIncluded) price.appendChild(el("span", { "class": "idea-tax", text: " + tax" }));
+      }
       btn.addEventListener("click", function () {
         var g = byId[p.id];
         var msg = g.form && g.form.querySelector("[data-message]"), keep = msg ? msg.value : "";   /* the card message is the customer's own words */

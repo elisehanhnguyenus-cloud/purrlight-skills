@@ -582,7 +582,7 @@ body.has-bar { padding-bottom: 88px; }
   /* while a card is lifted, its hit area reaches back down to where it rested — its lowest pixels neither flicker
      nor miss a click */
   html.motion .picker a { position: relative; }
-  html.motion .picker a:hover::after, html.motion .idea:hover::after, html.motion .tile:not(.tile-info):not(.is-off):hover::before { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 5px; }
+  html.motion .picker a:hover::after, html.motion .idea:hover::after, html.motion .tile:not(.tile-info):not(.is-off):hover::before { content: ""; position: absolute; left: -1px; right: -1px; top: calc(100% - 12px); height: 17px; }   /* also fills the rounded bottom corners */
   html.motion .step.is-off .tile:hover::before { content: none; }
 }
 @media print { html.motion .rv { opacity: 1; transform: none; } .hero-photo, .xmas-photo { transform: none !important; } }
@@ -612,7 +612,7 @@ body.has-bar { padding-bottom: 88px; }
 .glints i:nth-child(3) { --s: 10px; left: 21px; top: 15px; }
 /* the yarn thread in How it works: a stitched line from the end of the title to a ball of yarn. It follows the last
    word, so zoomed or translated text pushes it along (or onto the next line) instead of running under it. */
-.how .section-title { display: flex; flex-wrap: wrap; align-items: center; column-gap: 12px; }
+.how .section-title { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }   /* row gap: a wrapped thread keeps clear of descenders */
 .how .section-title::after { content: ""; flex: 1 1 0; min-width: 48px; height: 28px; pointer-events: none;
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='%23FAEFD8' stroke='%23E8A87C' stroke-width='1.6' stroke-linecap='round'%3E%3Ccircle cx='14' cy='14' r='11'/%3E%3Cpath d='M5 9c6 1 13 6 16 13M4 15c5 0 11 3 13 8M9 4c4 3 10 4 15 3M3.5 12c7-6 15-7 21-2' fill='none'/%3E%3C/svg%3E") no-repeat right center / 28px 28px,
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='28'%3E%3Cpath d='M0 14C10 8 30 20 40 14' fill='none' stroke='%23E8A87C' stroke-width='1.6' stroke-linecap='round' stroke-dasharray='5 4'/%3E%3C/svg%3E") repeat-x left center / 40px 28px; }
@@ -694,7 +694,8 @@ html:not([data-season="christmas"]) .christmas, html:not([data-season="christmas
 .xmas-pause:hover { background: var(--cream); border-color: var(--ink); }
 .xmas-pause:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
 .xmas-pause::before { content: ""; width: 8px; height: 10px; border-left: 3px solid currentColor; border-right: 3px solid currentColor; box-sizing: border-box; }   /* pause bars */
-.xmas-pause[aria-pressed="true"]::before { width: 0; height: 0; border-style: solid; border-width: 5px 0 5px 9px; border-color: transparent transparent transparent currentColor; }   /* play triangle */
+.christmas.is-paused .xmas-pause::before { width: 0; height: 0; border-style: solid; border-width: 5px 0 5px 9px; border-color: transparent transparent transparent currentColor; }   /* play triangle */
+@media (forced-colors: active) { .xmas-pause::before { forced-color-adjust: none; } }   /* keeps the triangle's clear borders clear in High Contrast (else it draws as a square) */
 @media (prefers-reduced-motion: reduce) { .xmas-pause { display: none; } }
 @media print { .xmas-pause { display: none; } }
 @media (prefers-reduced-motion: reduce) { .xmas-snow { display: none; } }

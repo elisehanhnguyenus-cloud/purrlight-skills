@@ -1148,7 +1148,7 @@
       var want = onScreen && !paused && !document.hidden && !(still && still.matches);
       band.classList.toggle("is-live", bandOn);
       band.classList.toggle("is-paused", paused);
-      pause.setAttribute("aria-pressed", paused ? "true" : "false");
+      /* a plain button named for what it will do (Pause / Play) — no aria-pressed, which would read "Play…, pressed" while stopped */
       pause.textContent = paused ? "Play the lights & snow" : "Pause the lights & snow";
       if (want && !running) { running = true; last = 0; frame = window.requestAnimationFrame(fall); }
       else if (!want && running) { running = false; if (frame) window.cancelAnimationFrame(frame); frame = 0; pen.clearRect(0, 0, sw, sh); }

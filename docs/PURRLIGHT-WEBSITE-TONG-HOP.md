@@ -847,6 +847,18 @@ vẫn giữ trong repo. Ảnh thumb ở bước 1 chuyển sang lazy (hero đẩ
     `xmas-merlin-wide-900/1376.webp` + `xmas-merlin-phone-640/1024.webp` (dùng `<picture>`:
     ≥600px ảnh ngang, nhỏ hơn ảnh 4:3). Ảnh tròn Merlin cuối trang giữ nguyên.
 
+### Rà soát ảnh tràn mép (2 góc + người phản biện riêng) — 4 lỗi xác nhận, đã sửa
+- Chữ đè lên ảnh ở 900–1023px (độ tương phản < 4.5:1, gồm ngày "Sun, Nov 15"): ảnh
+  lùi lại trong khoảng đó; mục Giáng sinh có vùng trong suốt trước khi ảnh hiện dần.
+  Đo lại từng chữ ở 900–3440px (cả 200% zoom): không còn chữ nào dưới 4.5:1.
+- Ảnh Giáng sinh lộ vệt ngang (dải phòng tối phía sau mép bàn): đã sửa ảnh — dải đó
+  thành màu mặt bàn, nối liền, mờ vào nền vàng bơ.
+- Màn hình siêu rộng (3440px) cắt mất tai Merlin: đổi điểm neo khung ảnh.
+- "allow 2–4 weeks" ngay dưới "delivered in 2027" nghe mâu thuẫn → "Orders placed by
+  these dates: allow 2–4 weeks."
+Bác bỏ: dấu gạch dài trong tên lịch trùng dấu ngăn cách (chỉ là kiểu chữ); ô chọn lịch
+cao hơn (do tên dài chị chọn); hạn cho Godparent set / Confirmation box (đã rõ).
+
 ### Còn chờ chị
 1. "Turnaround: from X" → "ships within N" (FTC, xem 8j).
 2. Sau mùa lễ: thay ảnh hero/Giáng sinh, gỡ hạn đặt.

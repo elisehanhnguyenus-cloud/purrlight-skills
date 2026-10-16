@@ -240,8 +240,8 @@ Texas với đơn ship ra ngoài Texas** (bước Pickup or shipping có 4 lựa
 within Texas · Ship outside Texas · Pickup Saturday · Pickup Sunday; file digital hỏi
 "Where you live"); **trái cây (3-berry) không chịu thuế** (`taxFree`); doll **tính
 thuế** như mọi món (bỏ "sales tax included"); **cold cut "coming soon"** (chưa có
-giấy phép thực phẩm); sen đá/lô hội: không ship ra ngoài Texas (luật kiểm dịch cây)
-— em tự thêm, chị bỏ được; lịch chỉ in **Premium Matte**; gói gợi ý: 4 gói, gói rẻ
+giấy phép thực phẩm); sen đá/lô hội: "We ship plants within Texas only" (chính sách
+của shop, không viện dẫn luật — em tự thêm, chị bỏ được hoặc đổi thành chỉ pickup); lịch chỉ in **Premium Matte**; gói gợi ý: 4 gói, gói rẻ
 nhất trước (Pet portrait print $15 · Pet memorial $41 · Realtor closing &
 housewarming gift $70 · Christmas gift for friends & family $90).
 **Cách đọc còn để mở (ghi trong `prices.js`):** in tranh = giá đã gồm tranh
@@ -261,8 +261,12 @@ này; `thumb-memorial.webp` (mèo trên giấy Dó) cho gói Pet memorial. 7 thu
 cho hàng chọn món (bước 1); ảnh godparent crop 4:5 bỏ tag "Handmade Blessings" ở
 góc. Ảnh kit không dùng (02 có tag lạ, 05 mockup) KHÔNG đưa lên web — bản
 gốc nằm trong thư mục kit (scratchpad) để đối chiếu.
-Minh hoạ Merlin ở CTA cuối: `merlin-closing.svg` (bản không nền, không sao,
-không hồng — màu hồng chỉ xuất hiện một lần ở logo header).
+**Ảnh Merlin thật (16/10, chị gửi ảnh 12–16):** hero = `hero-merlin-holiday-720/1200.webp`
+(ảnh 14, srcset, tải ưu tiên); mục "Ordering for Christmas?" = `merlin-holiday-gifts.webp`
+(ảnh 15, cắt 4:3); CTA cuối = `merlin-portrait.webp` (ảnh 13, cắt tròn). Đây là ảnh
+**mùa lễ** — sau Giáng sinh thay ảnh hero/Christmas (ảnh 12 có chữ "Merrvest holidays"
+in sẵn nên không dùng). Minh hoạ cũ `merlin-closing.svg` vẫn giữ trong repo để dùng lại
+sau mùa lễ (không hồng — màu hồng chỉ xuất hiện một lần ở logo header).
 
 **Lệch so với brief — chủ ý, chị quyết:** (1) footer "Designed in Texas.
 Made in Vietnam." — bỏ "Finished in Texas" theo quyết định 09/10 của chị trên

@@ -774,6 +774,65 @@ trong comment HTML), giữ câu 2–4 tuần. Gợi ý theo số của chị: ~C
    cho tranh digital.
 6. Form Tally: Phone + "Best time…" đang bắt buộc cả với đơn file digital.
 
+## 8k. Đợt 14 — Elise 16/10 (tin nhắn 2) + rà soát vòng 2 + ảnh Merlin thật (16/10/2026)
+
+**Elise trả lời 6 câu của 8j:** (1) đã có permit; đơn ship ngoài Texas **không thu
+thuế Texas**; trái cây không thuế; thuế thu được nộp đủ (2) doll bỏ "sales tax
+included" → tính thuế như mọi món (3) cold cut chưa có phép → ghi "coming soon"
+(4) sen đá/lô hội bán tại sự kiện, nhận đặt online (5) giữ "Handcrafted keepsakes" +
+tagline; tranh luôn ghi **Digital Watercolor Painting** (6) Tally: Phone và Best time
+không bắt buộc với đơn file digital. Thêm: khối gift idea rớt chữ xấu → sửa; gói đầu
+phải rẻ, dễ bấm; "Christmas gift for friends & family"; "Realtor closing &
+housewarming gift"; lịch chỉ in giấy **Premium Matte**. Sau đó chị gửi ảnh 12–16:
+dùng **Merlin thật** thay con mèo trong mockup (hero, mục Giáng sinh, cuối trang).
+
+### Đã làm (commit c0623ff + đợt này)
+- **Thuế theo nơi nhận** (`prices.js` `settle`/`outOfTexas`): bước Pickup or shipping
+  có 4 lựa chọn — Ship within Texas · **Ship outside Texas (không thuế Texas)** ·
+  Pickup thứ 7 · Pickup CN. File digital không có gì để ship → hỏi **"Where you live"**
+  (In Texas / Outside Texas). Trái cây `taxFree` (dòng thuế ghi "Not on the fresh
+  fruit"). Tally nhận thêm ô ẩn `delivery`.
+- **Tally** (connector, đã publish): Phone + Best time không bắt buộc với đơn digital.
+- **Gift ideas**: 4 gói, rẻ nhất trước có nhãn **Under $20** — Pet portrait print $15 ·
+  Pet memorial $41 · Realtor closing & housewarming gift $70 · Christmas gift for
+  friends & family $90 (giá trước thuế, ghi "+ tax").
+- **Cold cut**: hiện "(coming soon)", không chọn được. **Lịch**: "Printed on Premium
+  Matte paper". **Sen đá**: "ships within Texas" — **em tự thêm** (chính sách shop,
+  không viện dẫn luật), chị bỏ được hoặc đổi thành chỉ pickup.
+
+### Rà soát vòng 2 (thuế · pickup · gift ideas · câu chữ · hồi quy) — 18 báo
+Kiểm chứng đối nghịch: góc thuế có người phản biện riêng; các góc còn lại em dừng
+workflow cho nhanh và tự kiểm bằng test tái hiện từng lỗi (`test-studio.js`).
+**Bác bỏ** (money-1 / GETIT-4): "gộp Outside Texas giữa bản in và file digital" — sai,
+vì nơi khách sống (file) và nơi gửi quà (bản in) có thể khác nhau; gộp sẽ bỏ thuế đáng
+thu. Thay vào đó: giữ cả hai câu trả lời, khi thuế quay lại thì **báo cho khách** ("Texas
+sales tax added — choose Ship outside Texas if it ships to another state.").
+**Đã sửa:** câu thuế đầu studio thiếu file digital cho người ở Texas (3 người báo) ·
+noscript hỏi thêm bang của khách mua file · gói Realtor đổi Ship outside → within Texas
+mà trình đọc màn hình không nghe lý do · gói gợi ý làm mất lựa chọn gốc của khách khi
+trang đã tự đổi · bỏ hộp trái cây khi còn sen đá → khách kẹt ở Pickup (giờ về Ship
+within Texas và báo) · thanh đặt hàng 360px cắt chữ "outside Te…" · pick cũ có cold cut
+bị bỏ im lặng (giờ báo "Cold cut box is coming soon — taken out of your saved pick.") ·
+Pet memorial mất chữ "digital watercolor" · chú thích ảnh tân gia còn "cold-cut
+add-ons" · gift idea vẫn rớt 1 chữ ở 320–834px (`text-wrap: balance` + `&nbsp;`) ·
+Tab tới thẻ 2/4 trên điện thoại không cuộn tới + viền focus bị cắt · `li[hidden]` vẫn
+hiện · nhãn Under $20 đẩy tiêu đề thẻ 1 lệch hàng (giờ nằm trên mép thẻ).
+
+### Ảnh Merlin thật (ảnh 12–16 của chị)
+Hero = ảnh 14 (Merlin giữa hộp quà, len, móc; điện thoại: chữ → nút đặt hàng → ảnh;
+desktop: 2 cột) · "Ordering for Christmas?" = ảnh 15 (2 cột ở desktop) · cuối trang =
+ảnh 13 cắt tròn thay hình vẽ. Ảnh 12 có chữ "Merrvest holidays" in sẵn → không dùng.
+Đây là ảnh **mùa lễ**: sau Giáng sinh thay hero/Christmas; hình vẽ `merlin-closing.svg`
+vẫn giữ trong repo. Ảnh thumb ở bước 1 chuyển sang lazy (hero đẩy xuống dưới màn hình
+đầu trên điện thoại).
+
+### Còn chờ chị
+1. Hạn đặt Giáng sinh mới (gợi ý ~CN 8/11 móc len, ~CN 15/11 tranh/lịch/hộp quà).
+2. Sen đá: giữ "ships within Texas" hay chỉ pickup tại sự kiện?
+3. "Premium Matte" — Brand Canon cấm chữ "premium"; em giữ vì là tên giấy chị chọn.
+4. Tên lịch "Custom Watercolor Pet Calendar 2027" có thêm chữ "Digital" không?
+5. "Turnaround: from X" → "ships within N" (FTC, xem 8j).
+
 ## 9. Link & tài nguyên
 
 - **Repo branch:** `claude/purrlight-studio-website-kcsuen` (GitHub:

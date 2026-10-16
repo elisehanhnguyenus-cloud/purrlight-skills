@@ -219,7 +219,7 @@
   var SHIP_HINT = "In your order, add your shipping address and a good time to receive it.";
   var GET_IT = {
     ship: { name: "Ship within Texas", note: "Free shipping", short: "Free shipping in Texas", pick: "Ship to my Texas address (free shipping)", hint: SHIP_HINT },
-    out: { name: "Ship outside Texas", note: "Free U.S. shipping · no Texas sales tax", short: "Free U.S. shipping · outside Texas", pick: "Ship to my address outside Texas (free U.S. shipping)",
+    out: { name: "Ship outside Texas", note: "Free U.S. shipping · no Texas sales tax", short: "Free shipping · outside Texas", pick: "Ship to my address outside Texas (free U.S. shipping)",
       hint: SHIP_HINT + " No Texas sales tax when it ships to another state." },
     sat: { name: "Pickup Saturday", note: "Pearland Town Center", short: "Pickup Saturday · Pearland Town Center", pick: "Pickup Saturday at Pearland Town Center",
       hint: "Pickup at Pearland Town Center on Saturday — in your order, add a good time to pick it up." },
@@ -432,14 +432,17 @@
           var to = ok.ship ? "ship" : "sat";
           gin[to].checked = true;
           g.auto = { from: g.auto ? g.auto.from : (cur || "ship"), to: to };
-          g.say = (freshOn ? freshWhy : "Live plants can't ship outside Texas") + " — set to " + GET_IT[to].pick + "." + (to === "sat" ? " Sunday works too." : "");
-        } else if (g.auto && gin[g.auto.to].checked && ok[g.auto.from] && g.auto.from !== g.auto.to) {
-          gin[g.auto.from].checked = true;
-          g.say = "Back to " + GET_IT[g.auto.from].name + ".";
-          g.auto = null;
+          g.say = (freshOn ? freshWhy : "We ship plants within Texas only") + " — set to " + GET_IT[to].pick + "." + (to === "sat" ? " Sunday works too." : "");
+        } else if (g.auto && gin[g.auto.to].checked && g.auto.from !== g.auto.to) {
+          var back = ok[g.auto.from] ? g.auto.from : (g.auto.from === "out" && ok.ship ? "ship" : "");
+          if (back && back !== g.auto.to) {
+            gin[back].checked = true;
+            if (back === g.auto.from) { g.say = "Back to " + GET_IT[back].name + "."; g.auto = null; }
+            else { g.say = "We ship plants within Texas only — set to " + GET_IT[back].pick + "."; g.auto.to = back; }
+          }
         }
         var offNote = getit.querySelector(".step-off"), howNote = getit.querySelector(".getit-how");
-        offNote.textContent = [freshOn ? freshWhy + "." : "", plantOn ? "Live plants ship within Texas only." : ""].filter(Boolean).join(" ");
+        offNote.textContent = [freshOn ? freshWhy + "." : "", plantOn ? "We ship plants within Texas only." : ""].filter(Boolean).join(" ");
         offNote.hidden = !offNote.textContent;
         getit.setAttribute("aria-describedby", (offNote.hidden ? "" : offNote.id + " ") + howNote.id);
       }
@@ -492,6 +495,14 @@
         var howHint = getit.querySelector(".getit-how");
         if (howHint) howHint.textContent = gw.hint;
         if (est.digitalOnly ? v.where === "out" : g.getit === "out") est = outOfTexas(est);   /* no Texas sales tax */
+        /* where the buyer lives (a file) and where it ships (a parcel) can differ — keep both, but say the tax came back */
+        if (fromUser && g.wasDigital !== undefined && g.wasDigital !== !!est.digitalOnly && !est.outOfTexas) {
+          var also = "";
+          if (!est.digitalOnly && v.where === "out" && g.getit === "ship" && !isDisabled(getit.querySelector('input[value="out"]'))) also = "Texas sales tax added — choose Ship outside Texas if it ships to another state.";
+          else if (est.digitalOnly && v.getit === "out") also = "Texas sales tax added — under Where you live, choose Outside Texas if you live outside Texas.";
+          if (also) g.say = (g.say ? g.say + " " : "") + also;
+        }
+        g.wasDigital = !!est.digitalOnly;
       }
       g.est = est;
       if (form) {   /* number the steps that show (a swapped-out painting hides "Your photos"); step 1 is the picker */
@@ -538,7 +549,8 @@
       var db = moneyPair(est.deposit, est.balance);
       depositRow.appendChild(el("span", { text: "Deposit today (50%)" })); depositRow.appendChild(el("strong", { "class": "amt", text: db[0] }));
       balanceRow.appendChild(el("span", { text: "Balance after you approve the photo" })); balanceRow.appendChild(el("span", { "class": "amt", text: db[1] }));
-      noteRow.textContent = [est.note, est.digitalOnly ? "" : (GET_IT[v.getit] || GET_IT.ship).short].filter(Boolean).join(" · ");
+      if (fromUser) g.goneNote = "";
+      noteRow.textContent = [est.note, est.digitalOnly ? "" : (GET_IT[v.getit] || GET_IT.ship).short].filter(Boolean).join(" · ") + (g.goneNote ? " " + g.goneNote : "");
       copied.textContent = "";
       if (fromUser) store(storeKey, { v: v, swaps: g.swaps, u: 1, auto: g.auto || 0 });   /* a plain page view remembers nothing */
       if (g === current) setBarThumb(g);
@@ -599,6 +611,13 @@
         var ck = String(sk).replace(/[^\w-]/g, ""), cv = String(saved.swaps[sk]).replace(/[^\w-]/g, ""), used = false;
         for (var uk in g.swaps) if (g.swaps[uk] === cv) used = true;   /* a basic item swaps once */
         if (ck && cv && !used && form.querySelector('input[name="addons"][value="' + ck + '"]') && art.querySelector('[data-basic="' + cv + '"]')) g.swaps[ck] = cv;
+      }
+      /* a saved add-on that is no longer offered (the cold cut box went back to "coming soon") is dropped: say so */
+      var gone = (Array.isArray(saved.v.addons) ? saved.v.addons : []).map(function (a) { return String(a).replace(/[^\w-]/g, ""); })
+        .filter(function (a) { return a && !form.querySelector('input[name="addons"][value="' + a + '"]'); });
+      if (gone.length) {
+        var soonNames = gone.map(function (a) { var t = art.querySelector('[data-soon="' + a + '"] .tile-name'); return t ? t.textContent : ""; }).filter(Boolean);
+        g.goneNote = soonNames.length ? soonNames.join(" and ") + (soonNames.length > 1 ? " are" : " is") + " coming soon — taken out of your saved pick." : "An item in your saved pick is no longer offered — taken out.";
       }
       /* a stored radio value that no longer exists would leave a group empty: fall back to the default */
       var groups = {};
@@ -809,8 +828,8 @@
       btn.addEventListener("click", function () {
         var g = byId[p.id];
         var msg = g.form && g.form.querySelector("[data-message]"), keep = msg ? msg.value : "";   /* the card message is the customer's own words */
-        /* and so is how it reaches them (unless the page chose it) and where they live */
-        var gi = g.form && g.form.querySelector('input[name="getit"]:checked'), keepHow = gi && !g.auto ? gi.value : "";
+        /* and so is how it reaches them (what they chose, not what the page moved them to) and where they live */
+        var gi = g.form && g.form.querySelector('input[name="getit"]:checked'), keepHow = gi ? (g.auto ? g.auto.from : gi.value) : "";
         var wi = g.form && g.form.querySelector('input[name="where"]:checked'), keepWhere = wi ? wi.value : "";
         g.clear();
         setValues(g.form, p.values);
@@ -819,12 +838,17 @@
         if (msg && keep) { msg.value = keep; var mc = g.form.querySelector(".msg-count"); if (mc) mc.textContent = keep.length + " / 160"; }
         activate(p.id, { user: true });
         g.update(true, p.show);
-        live.textContent = btn.querySelector(".idea-name").textContent + " — " + g.def.product + ". Estimate " + money(g.est.total) + ".";
+        live.textContent = btn.querySelector(".idea-name").textContent + " — " + g.def.product + ". Estimate " + money(g.est.total) + "." + (g.say ? " " + g.say : "");
         var head = g.art.querySelector(".gift-title");
         if (head) { head.setAttribute("tabindex", "-1"); head.focus({ preventScroll: true }); }
         g.art.scrollIntoView({ block: "start" });
       });
     })(ideaBtns[ib]);
+    var ideaRow = ideas.querySelector(".ideas-list");
+    if (ideaRow) ideaRow.addEventListener("focusin", function (e) {   /* phones: a tabbed-to idea slides fully into view */
+      var li = e.target && e.target.closest ? e.target.closest("li") : null;
+      if (li && ideaRow.scrollWidth > ideaRow.clientWidth) li.scrollIntoView({ block: "nearest", inline: "nearest" });
+    });
     ideas.hidden = false;
   }
 

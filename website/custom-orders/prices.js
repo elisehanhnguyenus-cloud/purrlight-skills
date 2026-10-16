@@ -32,8 +32,9 @@
      lives. Fresh fruit (the 3-berry box) is not taxed. Tax charged is remitted.
    - The portrait doll is no longer "sales tax included": taxed like the rest.
    - Cold cut box: "coming soon" (no food permit yet) — shown, not orderable.
-   - Succulent / aloe: sold at events, orders taken online. Live plants can't
-     ship outside Texas (fire ant and state plant quarantines): Texas only.
+   - Succulent / aloe: sold at events, orders taken online. Our choice, not
+     a law (plant shipping rules vary by state): we ship plants within Texas only.
+     Elise can drop this (or make plants pickup only).
    - Calendars print on premium matte paper only.
 
    Readings still open (flagged to Elise — change ONE constant if needed):

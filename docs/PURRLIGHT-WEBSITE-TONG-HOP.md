@@ -936,24 +936,26 @@ nhẹ ±28px khi cuộn (≥900px). Ngoại lệ Brand Canon "no transforms" the
   Không gradient, không ảnh nền sau chữ. "How it works" có một sợi chỉ móc nét đứt + cuộn len nhỏ
   (nét vẽ màu Peach) cạnh tiêu đề.
 - **"Đèn sáng" thay cho confetti** (Brand v2 cấm confetti; chị cho chọn "confetti hoặc bông tuyết hoặc
-  đèn sáng"): sao 4 cánh nhỏ lấp lánh cạnh tiêu đề "Build your gift" và "Wedding & party favors"; vầng
-  sáng đèn bàn làm việc (motif "purr" + "light") sau ảnh Merlin cuối trang; **dây đèn** dọc mép trên mục
-  Giáng sinh (bóng Berry / vàng beret #CA8D41 / Peach, nhấp nháy lệch nhịp); **tuyết rơi nhẹ** trên ảnh
-  Merlin (canvas, ≤70 bông, mờ theo mép ảnh nên không bay qua chữ hạn đặt; chỉ chạy khi mục đang hiện
-  trên màn hình và tab đang mở). Khách bật "giảm chuyển động": đèn sáng đứng yên, không có tuyết.
+  đèn sáng"): sao 4 cánh nhỏ cạnh tiêu đề "Build your gift" và "Wedding & party favors" (lấp lánh 2 lần khi
+  hiện ra rồi đứng yên); vầng sáng đèn bàn làm việc (motif "purr" + "light") sau ảnh Merlin cuối trang;
+  **dây đèn** dọc mép trên mục Giáng sinh (bóng Berry / vàng beret #CA8D41 / Peach, nhấp nháy lệch nhịp);
+  **tuyết rơi nhẹ** trên ảnh Merlin (canvas, ≤70 bông, mờ theo mép ảnh nên không bay qua chữ hạn đặt).
+  Đèn + tuyết chỉ chạy khi mục đang hiện trên màn hình và tab đang mở, có nút **"Pause the lights & snow"**
+  (WCAG 2.2.2: chuyển động tự chạy quá 5 giây phải dừng được; máy khách nhớ lựa chọn). Khách bật "giảm
+  chuyển động" (kể cả bật giữa chừng): đèn đứng yên, không tuyết, không nút.
 - **Ảnh Merlin mới** (bàn quà, cây thông đèn sáng) thay ảnh mục "Ordering for Christmas?":
   `xmas-merlin2-wide-900/1376.webp` + `xmas-merlin2-phone-640/1024.webp` (bản điện thoại cắt bớt
   ghế sofa; màu trắng kéo về butter để mép ảnh tan vào nền). Ảnh cũ `xmas-merlin-*` đã gỡ.
 - **Ảnh các thánh** (`confirmation-saints.webp`): hiện khi khách chọn thánh trong Confirmation gift box
-  (chọn "Confirmation gift box" vẫn hiện ảnh hộp Mary), chú thích "Saints from our Confirmation gift set
-  — sample photo.". Ảnh có tượng mở mắt (St. Michael, St. Carlo Acutis…) — chị duyệt "cứ dùng ảnh mở
-  mắt". Câu nhắm mắt giờ chỉ nói tượng 12 cm ("Our 12 cm figures are made with closed eyes.", đúng câu
-  chị trả lời cho tượng 12 cm); dòng "10 in saint figure" bỏ "made with closed eyes".
+  (chọn "Confirmation gift box" vẫn hiện ảnh hộp Mary). Khoảng nửa số tượng trong ảnh mở mắt (St. Peter,
+  St. Francis, St. Michael, St. Carlo, Joan of Arc…), ảnh không phân biệt được tượng 12 cm hay 10 in. Chị
+  duyệt "cứ dùng ảnh mở mắt" → giữ câu chị nói 16/10 "Every figure is made with closed eyes" và chú thích
+  ảnh "Saints from our Confirmation gift set — sample photo; some are shown with open eyes."
 
 ### Còn chờ chị
 1. "Turnaround: from X" → "ships within N" (FTC, xem 8j).
 2. Sau mùa lễ: thay ảnh hero/Giáng sinh, gỡ hạn đặt (dây đèn + tuyết nằm trong mục Giáng sinh, gỡ cùng).
-3. Tượng 12 cm có mở mắt không (ảnh các thánh có vài tượng mở mắt)? Nếu có, bỏ câu "closed eyes".
+3. Tượng có làm mở mắt không (ảnh các thánh có nhiều tượng mở mắt)? Nếu có, bỏ câu "closed eyes" và chú thích.
 4. **Catalog Canva** (bmcv2.my.canva.site/6-catalogue-…): giá trong catalog lệch giá trên trang (búp bê
    Classic $55 vs $80; mèo cotton Grand $105 vs $90; Baptism set $60 / Carlo Acutis 20 cm $85 vs
    Confirmation $55/$90) và có nội dung chỉ dành cho sự kiện (Fife Cat Show 26–27/9, "this weekend only",

@@ -248,12 +248,15 @@ housewarming gift $70 · Christmas gift for friends & family $90).
 (không cộng $10 file digital); hộp quà tranh chỉ với bản in; "second pet −$10" = con thứ hai cùng size & len.
 **Chốt 16/10, tin nhắn 9 — nền + đèn + tuyết, ảnh thánh, ảnh Merlin mới:** section xen kẽ hai màu phẳng
 cream / butter-soft (không gradient, không ảnh sau chữ); "How it works" có sợi chỉ móc + cuộn len nét Peach.
-Đèn thay confetti (Brand v2 cấm confetti): sao nhỏ lấp lánh cạnh tiêu đề "Build your gift" và "Wedding & party
-favors", vầng sáng đèn sau ảnh Merlin cuối trang, dây đèn mép trên mục Giáng sinh, tuyết rơi nhẹ trên ảnh
-Merlin (canvas, mờ theo mép ảnh, chỉ chạy khi đang hiện). Giảm chuyển động: đèn đứng yên, không tuyết. Ảnh
-Giáng sinh mới `xmas-merlin2-*` (ảnh cũ đã gỡ). Ảnh các thánh `confirmation-saints.webp` hiện khi khách chọn
-thánh; chị duyệt dùng ảnh có tượng mở mắt → câu nhắm mắt chỉ còn cho tượng 12 cm. Code: cuối
-`custom-orders.css` (grounds and small lights) và cuối `custom-orders.js` (Christmas band).
+Đèn thay confetti (Brand v2 cấm confetti): sao nhỏ cạnh tiêu đề "Build your gift" và "Wedding & party favors"
+(lấp lánh 2 lần khi hiện ra rồi đứng yên — WCAG 2.2.2 cấm chuyển động tự chạy quá 5 giây mà không có nút dừng),
+vầng sáng đèn sau ảnh Merlin cuối trang, dây đèn mép trên mục Giáng sinh + tuyết rơi nhẹ trên ảnh Merlin (chỉ
+chạy khi mục đang hiện; nút **"Pause the lights & snow"** góc dưới mục, máy khách nhớ lựa chọn). Giảm chuyển
+động (kể cả bật giữa chừng): đèn đứng yên, không tuyết, không nút. Ảnh Giáng sinh mới `xmas-merlin2-*` (ảnh cũ
+đã gỡ). Ảnh các thánh `confirmation-saints.webp` hiện khi khách chọn thánh, chú thích "sample photo; some are
+shown with open eyes" — câu "Every figure is made with closed eyes" (chị nói 16/10) giữ nguyên, chờ chị xác
+nhận. Code: nền section ở khối "grounds and small lights" cuối `custom-orders.css` (`.how, .closing`), sợi chỉ
+ở `.how .section-title::after`; đèn/tuyết/nút ở cuối `custom-orders.js` ("small lights").
 **Chốt 16/10, tin nhắn 8 — hiệu ứng chuyển động (ngoại lệ Brand Canon "no transforms", chị duyệt):**
 các phần hiện dần + trượt lên khi cuộn tới (thẻ trong một hàng hiện lần lượt), thẻ nổi lên khi rê chuột
 (chỉ máy có chuột), ảnh nền hero / Giáng sinh trôi nhẹ khi cuộn (≥900px). Tắt hết khi máy khách bật

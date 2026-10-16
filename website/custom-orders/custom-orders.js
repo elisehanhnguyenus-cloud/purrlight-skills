@@ -1053,10 +1053,19 @@
     if (drift.length) { window.addEventListener("scroll", onDrift, { passive: true }); window.addEventListener("resize", onDrift); onStill(onDrift); place(); }
   }
 
-  /* ---------- Christmas band (Elise 16/10, 9th message): a string of lights along the top — one bulb per 56px of
-     the band; they twinkle only with motion on (CSS) — and light snow over Merlin's photo: a canvas the photo's size,
-     faded at the same edges, drawn only while the band is on screen and the tab is open, and not at all for
-     visitors who ask for less motion. Decoration only. ---------- */
+  /* ---------- small lights (Elise 16/10, 9th message). WCAG 2.2.2: nothing loops on its own for more than 5 s
+     without a way to stop it. The stars by the headings twinkle twice as they come into view (.go), then rest lit.
+     The Christmas band hangs a string of lights along its top (one bulb per 56px) and lets light snow fall over
+     Merlin's photo — a canvas the photo's size, faded at the same edges. Both run only while the band is on screen
+     (.is-live) and the tab is open, never for visitors who ask for less motion (also when they turn that on mid-visit),
+     and the band's own button pauses them (remembered on this device). Decoration only: aria-hidden. ---------- */
+  if (!calm && "IntersectionObserver" in window) {
+    var twinkle = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("go"); twinkle.unobserve(e.target); } });
+    }, { threshold: 0.5 });
+    var stars = document.querySelectorAll(".glints");
+    for (var gi = 0; gi < stars.length; gi++) twinkle.observe(stars[gi]);
+  }
   var band = document.querySelector(".christmas");
   if (band) {
     var lights = document.createElement("div");
@@ -1073,10 +1082,16 @@
   }
   var snowPic = band && band.querySelector(".xmas-pic"), snow = document.createElement("canvas");
   if (snowPic && !calm && "IntersectionObserver" in window && snow.getContext) {
+    var STILL_KEY = "purrlight-xmas-paused", paused = false;
+    try { paused = window.localStorage.getItem(STILL_KEY) === "1"; } catch (e) { /* storage blocked: start playing */ }
     snow.className = "xmas-snow";
     snow.setAttribute("aria-hidden", "true");
     snowPic.parentNode.insertBefore(snow, snowPic.nextSibling);
-    var pen = snow.getContext("2d"), flakes = [], sw = 0, sh = 0, running = false, onScreen = false, last = 0, frame = 0;
+    var pause = document.createElement("button");
+    pause.type = "button";
+    pause.className = "xmas-pause";
+    band.appendChild(pause);
+    var pen = snow.getContext("2d"), flakes = [], sw = 0, sh = 0, running = false, onScreen = false, bandOn = false, last = 0, frame = 0;
     var flake = function (anywhere) {
       return { x: Math.random() * sw, y: anywhere ? Math.random() * sh : -4, r: 1 + Math.random() * 2.2, vy: 14 + Math.random() * 22, sway: 4 + Math.random() * 10, ph: Math.random() * 6.28 };
     };
@@ -1108,14 +1123,31 @@
       frame = window.requestAnimationFrame(fall);
     };
     var snowing = function () {
-      var want = onScreen && !document.hidden && !(still && still.matches);
+      var want = onScreen && !paused && !document.hidden && !(still && still.matches);
+      band.classList.toggle("is-live", bandOn);
+      band.classList.toggle("is-paused", paused);
+      pause.setAttribute("aria-pressed", paused ? "true" : "false");
+      pause.textContent = paused ? "Play the lights & snow" : "Pause the lights & snow";
       if (want && !running) { running = true; last = 0; frame = window.requestAnimationFrame(fall); }
-      else if (!want && running) { running = false; if (frame) window.cancelAnimationFrame(frame); frame = 0; }
+      else if (!want && running) { running = false; if (frame) window.cancelAnimationFrame(frame); frame = 0; pen.clearRect(0, 0, sw, sh); }
     };
+    pause.addEventListener("click", function () {
+      paused = !paused;
+      try { window.localStorage.setItem(STILL_KEY, paused ? "1" : "0"); } catch (e) { /* not remembered: fine */ }
+      snowing();
+    });
     fit();
+    /* re-place the canvas when the band or the photo changes size: the photo loading (older browsers keep no room for
+       it), the phone/desktop photo swapping in, the text above it reflowing */
+    var snowImg = snowPic.querySelector("img");
+    if (snowImg) snowImg.addEventListener("load", fit);
     if ("ResizeObserver" in window) new ResizeObserver(fit).observe(band); else window.addEventListener("resize", fit);
-    new IntersectionObserver(function (es) { es.forEach(function (e) { onScreen = e.isIntersecting; }); snowing(); }).observe(band);
+    /* the bulbs run while the band shows; the snow while the canvas itself shows (on phones it sits well below the
+       band's top) */
+    new IntersectionObserver(function (es) { es.forEach(function (e) { bandOn = e.isIntersecting; }); snowing(); }).observe(band);
+    new IntersectionObserver(function (es) { es.forEach(function (e) { onScreen = e.isIntersecting; }); snowing(); }).observe(snow);
     document.addEventListener("visibilitychange", snowing);
-    onStill(snowing);   /* reduced motion turned on mid-visit: the snow stops (the CSS hides the canvas) */
+    onStill(snowing);   /* reduced motion turned on mid-visit: the snow stops (the CSS hides the canvas and the button) */
+    snowing();
   }
 })();

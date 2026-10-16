@@ -274,6 +274,7 @@ p { margin: 0; }
 .tile-thumb { order: -1; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 8px; margin-bottom: 6px; }
 /* two choices inside one step (how many spoons · which style) */
 .subgroup { border: 0; margin: 0 0 12px; padding: 0; min-width: 0; }
+.tiles + .subgroup { margin-top: 16px; }   /* a choice under a row of tiles (the saint's eyes) */
 .sub-legend { padding: 0; margin-bottom: 6px; font-size: 14px; font-weight: 600; color: var(--caption); }
 /* size tiles read as a list on phones: name + note on the left, price on the right */
 @media (max-width: 599px) {

@@ -283,7 +283,7 @@
     },
     christening: {   /* the gown set (girls, ready to ship in 2–3 days) or a Confirmation gift box (ships after Nov 12) */
       product: "Christening & Confirmation Gifts",
-      read: function (v) { return { set: v.set, figure: v.figure }; },
+      read: function (v) { return { set: v.set, figure: v.figure, eyes: v.eyes }; },
       est: function (o) {
         var now = new Date().getTime();
         renderGownSale(gownPrice(now));   /* the gown tile and the estimate read one clock */

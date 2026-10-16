@@ -422,27 +422,38 @@
             </fieldset>
             <fieldset class="step" data-when="set=confirm">
               <legend><span class="step-n" aria-hidden="true">3</span> <span class="step-label">Choose the saint</span></legend>
-              <p class="step-hint">Every figure is made with closed eyes. Tell us the saint in your order.</p>
+              <p class="step-hint">Tell us the saint in your order.</p>
               <div class="tiles cols-1">
                 <label class="tile"><input type="radio" name="figure" value="ready" checked><span class="tile-name">A saint we have ready</span><span class="tile-note">12 cm</span><span class="tile-price">$55</span></label>
                 <label class="tile"><input type="radio" name="figure" value="made"><span class="tile-name">A saint made for you</span><span class="tile-note">12 cm · made to order</span><span class="tile-price">$55</span></label>
                 <label class="tile"><input type="radio" name="figure" value="carlo"><span class="tile-name">St. Carlo Acutis</span><span class="tile-note">10 in</span><span class="tile-price">$90</span></label>
                 <label class="tile"><input type="radio" name="figure" value="michael"><span class="tile-name">St. Michael the Archangel</span><span class="tile-note">10 in</span><span class="tile-price">$90</span></label>
               </div>
+              <!-- Eyes (Elise 16/10): she makes both — closed "sleeping" eyes or open eyes. A saint we have ready comes as it is. -->
+              <fieldset class="subgroup" data-when="figure=made,carlo,michael">
+                <legend class="sub-legend">Eyes</legend>
+                <div class="tiles">
+                  <label class="tile"><input type="radio" name="eyes" value="closed" checked><span class="tile-name">Closed (sleeping) eyes</span></label>
+                  <label class="tile"><input type="radio" name="eyes" value="open"><span class="tile-name">Open eyes</span></label>
+                </div>
+              </fieldset>
             </fieldset>
           </form>
           <div class="gift-preview">
             <figure class="gift-photo">
               <div class="shot"><img src="../assets/img/custom/christening-confirmation.webp" alt="White christening gown, bonnet and mittens on a hanger inside a clear balloon with a satin bow, beside kraft Confirmation gift boxes with crochet saint figures and rosary chains" width="900" height="900" loading="lazy" decoding="async"><p class="shot-cap">Christening gown set, with Confirmation gift boxes. The clear balloon display is for the photo only.</p></div>
               <div class="shot" data-shot="confirm" data-when="set=confirm" data-on="set" hidden><img src="../assets/img/custom/confirmation-box.webp" alt="Sample Confirmation gift box: a crochet Mary figure and a blue crochet rosary chain in a kraft box" width="320" height="389" loading="lazy" decoding="async"><p class="shot-cap">Sample Confirmation gift box with a 12 cm Mary figure.</p></div>
-              <div class="shot" data-shot="saints" data-when="set=confirm" data-on="figure" hidden><img src="../assets/img/custom/confirmation-saints.webp" alt="A lineup of crochet saint figures on wooden stands, among them Mary with the Child Jesus, Mother Teresa, St. Joseph with lilies, St. Peter with keys, St. Francis, Our Lady of Guadalupe, St. Michael the Archangel, St. Carlo Acutis and St. Joan of Arc" width="1000" height="558" loading="lazy" decoding="async"><p class="shot-cap">Saints from our Confirmation gift set — sample photo; some are shown with open eyes.</p></div>
+              <div class="shot" data-shot="saints" data-when="set=confirm" data-on="figure eyes" hidden><img src="../assets/img/custom/confirmation-saints.webp" alt="A lineup of crochet saint figures on wooden stands, among them Mary with the Child Jesus, Mother Teresa, St. Joseph with lilies, St. Peter with keys, St. Francis, Our Lady of Guadalupe, St. Michael the Archangel, St. Carlo Acutis and St. Joan of Arc" width="1000" height="558" loading="lazy" decoding="async"><p class="shot-cap">Saints from our Confirmation gift set — sample photo, with closed (sleeping) and open eyes.</p></div>
             </figure>
             <div class="gift-box">
               <h4 class="box-title">What's inside</h4>
               <ul class="box">
                 <li class="incl" data-when="set=gown">Gown, bonnet, mittens, booties and socks.</li>
-                <li class="incl" data-when="set=confirm&amp;figure=ready,made">12 cm saint figure, made with closed eyes</li>
-                <li class="incl" data-when="set=confirm&amp;figure=carlo,michael">10 in saint figure, made with closed eyes</li>
+                <li class="incl" data-when="set=confirm&amp;figure=ready">12 cm saint figure</li>
+                <li class="incl" data-when="set=confirm&amp;figure=made&amp;eyes=closed">12 cm saint figure, closed (sleeping) eyes</li>
+                <li class="incl" data-when="set=confirm&amp;figure=made&amp;eyes=open">12 cm saint figure, open eyes</li>
+                <li class="incl" data-when="set=confirm&amp;figure=carlo,michael&amp;eyes=closed">10 in saint figure, closed (sleeping) eyes</li>
+                <li class="incl" data-when="set=confirm&amp;figure=carlo,michael&amp;eyes=open">10 in saint figure, open eyes</li>
                 <li class="incl" data-when="set=confirm">Handmade rosary chain</li>
                 <li class="incl" data-when="set=confirm">Gift box</li>
                 <li class="incl" data-when="set=confirm&amp;getit=ship,out">U.S. shipping included</li>

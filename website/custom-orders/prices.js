@@ -53,10 +53,11 @@
      coming in 2027.
    - Confirmation gift box can be ordered now, shipping after Nov 12: a saint figure
      + rosary chain — 12 cm figure $55 (a saint we have ready, or one made for you),
-     or St. Carlo Acutis / St. Michael the Archangel at 10 in, $90. All figures are
-     made with closed eyes. (Her photo of the saints, 9th message, shows some figures
-     with open eyes; she said to use it — the page captions it "some are shown with
-     open eyes" and keeps her closed-eyes statement. Asked her to confirm.)
+     or St. Carlo Acutis / St. Michael the Archangel at 10 in, $90.
+   - Eyes (Elise 16/10, later): she makes both closed "sleeping" eyes and open eyes —
+     the visitor picks for a saint made to order (12 cm made for you, St. Carlo,
+     St. Michael), same price; a saint we have ready comes as it is. The page avoids
+     "safety eyes" (no safety claims, Hard Rules).
    - Every made-to-order / custom piece: a design mockup after the deposit, before we
      start; word when it is in the works; a progress update after about a week.
    - Housewarming add-on: mother-of-pearl spoons, 2 for $12 or 4 for $24, in four
@@ -134,6 +135,7 @@ var PRICES = {
       carlo:   { price: 90, label: "St. Carlo Acutis, 10 in" },
       michael: { price: 90, label: "St. Michael the Archangel, 10 in" }
     },
+    eyes: { closed: "closed (sleeping) eyes", open: "open eyes" },   /* Elise 16/10: either, same price; not for a saint we have ready */
     gownSale: { off: 25, ends: "2026-10-26T05:00:00Z", through: "Oct 25", day: "Sun, Oct 25" }   /* Elise 16/10: 25% off through Sun Oct 25 (midnight CDT) */
   },
   godparent: { base: 95, secondOff: 10 },                                    /* §3.7 · second set −$10: Elise 15/10 */
@@ -259,10 +261,11 @@ function estChristeningGown(o) {
   r.note = "Ready in 2–3 days";   /* to ship or to pick up */
   return r;
 }
-/* o.figure: ready · made · carlo · michael (PRICES.christening.confirmation) */
+/* o.figure: ready · made · carlo · michael (PRICES.christening.confirmation) · o.eyes: closed · open (not for "ready") */
 function estConfirmation(o) {
-  var C = PRICES.christening.confirmation, f = o && Object.prototype.hasOwnProperty.call(C, o.figure) ? o.figure : "ready";
-  var r = finish([{ label: "Confirmation gift box — " + C[f].label + " (ready after Nov 12)", amount: C[f].price }]);
+  var C = PRICES.christening.confirmation, E = PRICES.christening.eyes, f = o && Object.prototype.hasOwnProperty.call(C, o.figure) ? o.figure : "ready";
+  var eyes = f !== "ready" ? ", " + E[o && o.eyes === "open" ? "open" : "closed"] : "";
+  var r = finish([{ label: "Confirmation gift box — " + C[f].label + eyes + " (ready after Nov 12)", amount: C[f].price }]);
   r.note = "Ready after Nov 12";   /* to ship or to pick up */
   return r;
 }

@@ -949,13 +949,18 @@ nhẹ ±28px khi cuộn (≥900px). Ngoại lệ Brand Canon "no transforms" the
 - **Ảnh các thánh** (`confirmation-saints.webp`): hiện khi khách chọn thánh trong Confirmation gift box
   (chọn "Confirmation gift box" vẫn hiện ảnh hộp Mary). Khoảng nửa số tượng trong ảnh mở mắt (St. Peter,
   St. Francis, St. Michael, St. Carlo, Joan of Arc…), ảnh không phân biệt được tượng 12 cm hay 10 in. Chị
-  duyệt "cứ dùng ảnh mở mắt" → giữ câu chị nói 16/10 "Every figure is made with closed eyes" và chú thích
-  ảnh "Saints from our Confirmation gift set — sample photo; some are shown with open eyes."
+  duyệt "cứ dùng ảnh mở mắt", rồi trả lời: **làm được cả mắt nhắm (sleep eyes) và mắt mở (safety eyes)**.
+  → Bỏ câu "Every figure is made with closed eyes"; thêm lựa chọn **Eyes** (Closed (sleeping) eyes / Open
+  eyes, cùng giá) cho thánh làm theo yêu cầu 12 cm, St. Carlo, St. Michael — thánh có sẵn giữ nguyên như
+  tượng đang có. "What's inside" và Tally `pick` ghi mắt đã chọn (vd. "St. Carlo Acutis, 10 in, open eyes").
+  Không dùng chữ "safety eyes" trên trang (Hard Rules cấm tuyên bố "safe"). Chú thích ảnh: "Saints from our
+  Confirmation gift set — sample photo, with closed (sleeping) and open eyes."
 
 ### Còn chờ chị
 1. "Turnaround: from X" → "ships within N" (FTC, xem 8j).
 2. Sau mùa lễ: thay ảnh hero/Giáng sinh, gỡ hạn đặt (dây đèn + tuyết nằm trong mục Giáng sinh, gỡ cùng).
-3. Tượng có làm mở mắt không (ảnh các thánh có nhiều tượng mở mắt)? Nếu có, bỏ câu "closed eyes" và chú thích.
+3. Tượng 10 in (St. Carlo, St. Michael) có làm theo yêu cầu mắt nhắm/mở được không (trang đang cho chọn)?
+   Thánh có sẵn: trang không cho chọn mắt — đúng ý chị không?
 4. **Catalog Canva** (bmcv2.my.canva.site/6-catalogue-…): giá trong catalog lệch giá trên trang (búp bê
    Classic $55 vs $80; mèo cotton Grand $105 vs $90; Baptism set $60 / Carlo Acutis 20 cm $85 vs
    Confirmation $55/$90) và có nội dung chỉ dành cho sự kiện (Fife Cat Show 26–27/9, "this weekend only",

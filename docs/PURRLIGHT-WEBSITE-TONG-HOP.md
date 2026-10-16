@@ -971,12 +971,19 @@ kỹ thuật) → chọn hướng tối giản + ghép ý hay:
 - Đề xuất **chưa làm** (chờ chị): nhãn "Order by Nov 8" kèm chuông trên thẻ ý tưởng "Christmas gift for friends &
   family"; chuông lắc nhẹ 1 lần khi cuộn tới; 1 bóng đỏ berry trong mỗi 5 bóng.
 
+### Elise 16/10, tin nhắn 11 — đã làm
+- Tự gỡ mục Giáng sinh **hết dịp năm mới**: từ 0h 2/1/2027 (giờ máy khách), kể cả nhãn hạn đặt.
+- Nhãn **"Order by Nov 8"** + chuông trên thẻ "Christmas gift for friends & family", tự biến mất sau 8/11.
+- Chuông của Merlin **lắc nhẹ 1 lần** khi khách cuộn tới; dây đèn xen **1 bóng đỏ + 1 bóng xanh lá** mỗi 5 bóng.
+- Viền vầng sáng quanh ảnh Merlin cuối trang **mỏng lại**.
+- Tượng thánh làm được cả mắt nhắm và mắt mở (kể cả St. Carlo, St. Michael 10 in) — trang đã đúng.
+- Đang làm tiếp: **lá vàng + bông tuyết rơi + cây thông** (Giáng sinh Texas), cắt từ ảnh chị đã gửi; video "bé
+  nhép miệng" — chờ chị gửi file.
+
 ### Còn chờ chị
 1. "Turnaround: from X" → "ships within N" (FTC, xem 8j).
-2. Sau mùa lễ: thay ảnh hero; mục Giáng sinh tự ẩn từ 26/12 — chị muốn 26/12 hay 2/1?
-3. Tượng 10 in (St. Carlo, St. Michael) có làm theo yêu cầu mắt nhắm/mở được không (trang đang cho chọn)?
-   Thánh có sẵn: trang không cho chọn mắt — đúng ý chị không?
-5. Icon: thêm nhãn "Order by Nov 8"? chuông lắc 1 lần? 1 bóng đỏ trong 5 bóng?
+2. Sau mùa lễ: thay ảnh hero (mục Giáng sinh tự ẩn từ 2/1/2027).
+3. Thánh có sẵn: trang không cho chọn mắt (giữ như tượng đang có) — đúng ý chị không?
 4. **Catalog Canva** (bmcv2.my.canva.site/6-catalogue-…): giá trong catalog lệch giá trên trang (búp bê
    Classic $55 vs $80; mèo cotton Grand $105 vs $90; Baptism set $60 / Carlo Acutis 20 cm $85 vs
    Confirmation $55/$90) và có nội dung chỉ dành cho sự kiện (Fife Cat Show 26–27/9, "this weekend only",

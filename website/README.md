@@ -257,6 +257,12 @@ dùng GIF động (50–275 KB/icon, không dừng được theo WCAG 2.2.2); 2 
 kikki.K/Google là tác phẩm của người khác — chỉ tham khảo. **Công tắc mùa:** `data-season="christmas"` trên `<html>`;
 từ 0h ngày **26/12** (giờ máy khách) trang tự ẩn cả mục Giáng sinh (chờ chị chọn 26/12 hay 2/1: `SEASON_END` đầu
 `custom-orders.js`). Mọi chỗ cần gỡ sau mùa ghi "SEASONAL Christmas 2026".
+**Chốt 16/10, tin nhắn 11:** mục Giáng sinh tự gỡ **hết dịp năm mới** — từ 0h **2/1/2027** (giờ máy khách);
+nhãn **"Order by Nov 8"** kèm chuông trên thẻ ý tưởng "Christmas gift for friends & family" (đọc ngày từ mục Giáng
+sinh, tự biến mất sau hết ngày 8/11); chuông **lắc nhẹ 1 lần** (1,4 giây) khi khách cuộn tới (không khi đã tạm dừng
+/ giảm chuyển động / tiết kiệm dữ liệu); dây đèn xen **1 bóng đỏ berry + 1 bóng xanh lá** trong mỗi 5 bóng; viền
+vầng sáng quanh ảnh Merlin cuối trang **mỏng lại** (6px điện thoại / 8px máy tính). Tượng thánh: chị xác nhận làm
+được cả mắt nhắm và mắt mở (kể cả 10 in).
 **Chốt 16/10, tin nhắn 9 — nền + đèn + tuyết, ảnh thánh, ảnh Merlin mới:** section xen kẽ hai màu phẳng
 cream / butter-soft (không gradient, không ảnh sau chữ); "How it works" có sợi chỉ móc + cuộn len nét Peach.
 Đèn thay confetti (Brand v2 cấm confetti): sao nhỏ cạnh tiêu đề "Build your gift" và "Wedding & party favors"

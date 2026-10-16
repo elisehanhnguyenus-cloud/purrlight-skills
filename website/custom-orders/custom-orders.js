@@ -14,7 +14,7 @@
   /* ---------- SEASONAL Christmas 2026: <html data-season="christmas"> shows the Christmas band (order-by dates, photo,
      lights, snow, Merlin's bell). From SEASON_END (the visitor's local midnight) the page retires it by itself, even if
      nobody edits it; deleting the attribute in index.html does the same at once. ---------- */
-  var SEASON_END = new Date(2026, 11, 26);   /* Dec 26, 2026 — proposed; Elise to confirm (Dec 26 or Jan 2) */
+  var SEASON_END = new Date(2027, 0, 2);   /* Jan 2, 2027: through New Year's Day (Elise 16/10) */
   if (new Date() >= SEASON_END) document.documentElement.removeAttribute("data-season");
   var christmas = document.documentElement.getAttribute("data-season") === "christmas";
 
@@ -970,6 +970,19 @@
     });
     ideas.hidden = false;
   }
+  /* SEASONAL Christmas 2026 (Elise 16/10): the Christmas idea shows its order-by date with Merlin's bell, read from the
+     Christmas band's own <time> (the date lives in one place), until the end of that day in the visitor's time — the
+     same kind of badge as "Under $20" */
+  var xIdea = christmas ? document.querySelector(".idea[data-order-by]") : null;
+  var xTime = xIdea ? document.getElementById(xIdea.getAttribute("data-order-by")) : null;
+  var xDay = xTime ? /^(\d{4})-(\d{2})-(\d{2})$/.exec(xTime.getAttribute("datetime") || "") : null;
+  if (xDay && new Date() <= new Date(+xDay[1], +xDay[2] - 1, +xDay[3], 23, 59, 59)) {
+    var xBell = document.createElement("img");
+    xBell.alt = ""; xBell.width = 69; xBell.height = 96; xBell.loading = "lazy"; xBell.decoding = "async";
+    xBell.src = "../assets/img/custom/xmas-bell.webp";
+    var xText = xIdea.querySelector(".idea-text");
+    if (xText) xText.insertBefore(el("span", { "class": "idea-badge idea-badge-xmas" }, [xBell, document.createTextNode("Order by " + xTime.textContent.replace(/^[A-Za-z]+,\s*/, ""))]), xText.firstChild);
+  }
 
   /* keyboard focus never ends up under the phone order bar (scroll-padding covers most browsers; this covers the rest) */
   document.addEventListener("focusin", function (e) {
@@ -1153,7 +1166,14 @@
     if ("ResizeObserver" in window) new ResizeObserver(fit).observe(band); else window.addEventListener("resize", fit);
     /* the bulbs run while the band shows; the snow while the canvas itself shows (on phones it sits well below the
        band's top) */
-    new IntersectionObserver(function (es) { es.forEach(function (e) { bandOn = e.isIntersecting; }); snowing(); }).observe(band);
+    /* Merlin's bell swings once (about 1.4 s) the first time the band comes into view — not when paused, not on a
+       data-saver connection (Elise 16/10) */
+    var bellHang = band.querySelector(".xmas-hang"), rang = false, saver = navigator.connection && navigator.connection.saveData;
+    new IntersectionObserver(function (es) {
+      es.forEach(function (e) { bandOn = e.isIntersecting; });
+      if (bandOn && !rang && bellHang && !paused && !saver) { rang = true; bellHang.classList.add("ring"); }
+      snowing();
+    }).observe(band);
     new IntersectionObserver(function (es) { es.forEach(function (e) { onScreen = e.isIntersecting; }); snowing(); }).observe(snow);
     document.addEventListener("visibilitychange", snowing);
     onStill(snowing);   /* reduced motion turned on mid-visit: the snow stops (the CSS hides the canvas and the button) */

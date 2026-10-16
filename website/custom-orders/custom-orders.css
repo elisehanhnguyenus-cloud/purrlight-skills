@@ -618,20 +618,20 @@ body.has-bar { padding-bottom: 88px; }
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='28'%3E%3Cpath d='M0 14C10 8 30 20 40 14' fill='none' stroke='%23E8A87C' stroke-width='1.6' stroke-linecap='round' stroke-dasharray='5 4'/%3E%3C/svg%3E") repeat-x left center / 40px 28px; }
 /* the worktable lamp's glow behind Merlin: a flat disc */
 .merlin-lamp { position: relative; display: inline-grid; place-items: center; }
-.merlin-lamp::before { content: ""; position: absolute; inset: -16px; border-radius: 50%; background: var(--glow-soft); }
+.merlin-lamp::before { content: ""; position: absolute; inset: -6px; border-radius: 50%; background: var(--glow-soft); }   /* a thin ring of lamp-light (Elise 16/10: thinner) */
 .merlin-lamp .merlin-mark { position: relative; }
 .glints-lamp { position: absolute; inset: 0; width: auto; height: auto; margin: 0; }
-.glints-lamp i:nth-child(1) { left: -35%; top: -9%; --s: 20px; }   /* round the glow, clear of the words beside it */
-.glints-lamp i:nth-child(2) { left: 92%; top: -27%; --s: 13px; }
-.glints-lamp i:nth-child(3) { left: 98%; top: 100%; --s: 10px; }
-.glints-lamp i:nth-child(4) { left: -27%; top: 80%; --s: 10px; }
-@media (min-width: 900px) { .merlin-lamp::before { inset: -20px; } }
+.glints-lamp i:nth-child(1) { left: -28%; top: -6%; --s: 20px; }   /* round the ring, clear of the words beside it */
+.glints-lamp i:nth-child(2) { left: 88%; top: -18%; --s: 13px; }
+.glints-lamp i:nth-child(3) { left: 96%; top: 94%; --s: 10px; }
+.glints-lamp i:nth-child(4) { left: -20%; top: 80%; --s: 10px; }
+@media (min-width: 900px) { .merlin-lamp::before { inset: -8px; } }
 /* ===== SEASONAL Christmas 2026 — remove after the season together with the band (index.html) and xmas-bell.webp.
    A string of warm-white lights on a dark, hand-draped wire (Elise's 29.gif), Merlin's bell hung from it, snow over
    the photo. The wire is one 360px tile with three uneven swags; custom-orders.js hangs one bulb per 72px and each of
    the five bulbs in a tile sits on the wire (--y) with its own small tilt (--r). The wire starts one tile left of the
    text column (--xl), so the bell always hangs from the same point of the wire, above "Christmas". ===== */
-html:not([data-season="christmas"]) .christmas { display: none; }   /* the one switch */
+html:not([data-season="christmas"]) .christmas, html:not([data-season="christmas"]) .idea-badge-xmas { display: none; }   /* the one switch */
 .christmas { --xl: calc(max(0px, (100% - 640px) / 2) + var(--gutter)); }   /* left edge of .xmas-inner's text */
 @media (min-width: 900px) { .christmas { --xl: calc(max(0px, (100% - var(--wrap)) / 2) + var(--gutter)); } }
 .xmas-lights { position: absolute; top: 0; left: calc(var(--xl) - 360px); right: 0; z-index: 2; height: 60px; display: flex; align-items: flex-start; overflow: hidden; pointer-events: none;
@@ -654,6 +654,15 @@ html:not([data-season="christmas"]) .christmas { display: none; }   /* the one s
 .xmas-hang::before { content: ""; position: absolute; left: -0.5px; top: 0; width: 1px; height: calc(var(--thread) + var(--h) * 0.15); background: rgba(74, 66, 59, 0.55); }
 .xmas-bell { position: absolute; left: 0; top: var(--thread); width: auto; height: var(--h); max-width: none; transform: translateX(-57%); }
 @media (min-width: 900px) { .xmas-hang { --h: 40px; --thread: 22px; } }
+/* one red and one green bulb in every five (Elise 16/10): berry beside the bell, a pine green two bulbs on */
+.xmas-lights i:nth-child(5n+3)::after { background: var(--berry); border-color: rgba(142, 27, 58, 0.6); box-shadow: 0 0 5px 2px rgba(180, 34, 73, 0.3), 0 0 14px 5px rgba(180, 34, 73, 0.28); }
+.xmas-lights i:nth-child(5n)::after { background: #6E8B5F; border-color: rgba(78, 99, 70, 0.7); box-shadow: 0 0 5px 2px rgba(110, 139, 95, 0.35), 0 0 14px 5px rgba(78, 99, 70, 0.28); }
+/* the bell swings once when the band first comes into view (custom-orders.js adds .ring) */
+@keyframes co-ring { 0% { transform: rotate(0); } 18% { transform: rotate(10deg); } 40% { transform: rotate(-7deg); } 62% { transform: rotate(4deg); } 82% { transform: rotate(-1.5deg); } 100% { transform: rotate(0); } }
+@media (prefers-reduced-motion: no-preference) { html.motion .christmas:not(.is-paused) .xmas-hang.ring { animation: co-ring 1.4s ease-out 1 both; transform-origin: 0 0; } }
+/* the Christmas idea's order-by date, with the same bell (custom-orders.js reads the date from the band's <time>) */
+.idea-badge-xmas { display: inline-flex; align-items: center; gap: 3px; padding-left: 4px; }
+.idea .idea-badge-xmas img { width: auto; height: 18px; border-radius: 0; object-fit: contain; }
 @media print { .xmas-lights, .xmas-lights ~ .xmas-hang { display: none; } }
 .xmas-snow { position: absolute; pointer-events: none;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 24%, #000 80%, transparent 100%);

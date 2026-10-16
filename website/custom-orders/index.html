@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-season="christmas"><!-- SEASONAL Christmas 2026: this switch shows the Christmas band (its lights, snow and bell); custom-orders.js removes it by itself from SEASON_END -->
+<html lang="en" data-season="christmas"><!-- SEASONAL Christmas 2026: this switch shows the Christmas band (its lights, snow and bell) and the order-by badge on the Christmas idea; custom-orders.js removes it by itself from SEASON_END (Jan 2) -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -109,7 +109,7 @@
             <li><button type="button" class="idea idea-first" data-preset="petprint"><img src="../assets/img/custom/thumb-pet-print.webp" alt="" width="240" height="240" loading="lazy" decoding="async"><span class="idea-text"><span class="idea-badge">Under $20</span><span class="idea-name">Pet portrait print</span><span class="idea-desc">Your pet in digital watercolor, printed&nbsp;5×7</span><span class="idea-price" data-idea-price></span></span></button></li>
             <li><button type="button" class="idea" data-preset="memorial"><img src="../assets/img/custom/thumb-memorial.webp" alt="" width="240" height="240" loading="lazy" decoding="async"><span class="idea-text"><span class="idea-name">Pet memorial</span><span class="idea-desc">5×7 digital watercolor on Dó papyrus, framed, in a gift&nbsp;box</span><span class="idea-price" data-idea-price></span></span></button></li>
             <li><button type="button" class="idea" data-preset="realtor"><img src="../assets/img/custom/thumb-housewarming.webp" alt="" width="240" height="240" loading="lazy" decoding="async"><span class="idea-text"><span class="idea-name">Realtor closing &amp; housewarming&nbsp;gift</span><span class="idea-desc">Housewarming box + a small&nbsp;succulent</span><span class="idea-price" data-idea-price></span></span></button></li>
-            <li><button type="button" class="idea" data-preset="christmas"><img src="../assets/img/custom/thumb-portrait-doll.webp" alt="" width="240" height="240" loading="lazy" decoding="async"><span class="idea-text"><span class="idea-name">Christmas gift for friends &amp;&nbsp;family</span><span class="idea-desc">Portrait doll in a wooden&nbsp;shadowbox</span><span class="idea-price" data-idea-price></span></span></button></li>
+            <li><button type="button" class="idea" data-preset="christmas" data-order-by="xmas-by-crochet"><img src="../assets/img/custom/thumb-portrait-doll.webp" alt="" width="240" height="240" loading="lazy" decoding="async"><span class="idea-text"><span class="idea-name">Christmas gift for friends &amp;&nbsp;family</span><span class="idea-desc">Portrait doll in a wooden&nbsp;shadowbox</span><span class="idea-price" data-idea-price></span></span></button></li>
           </ul>
         </div>
 
@@ -610,7 +610,7 @@
         <h2 id="xmas-h">Ordering for <span class="nw">Christmas?<span class="glints" aria-hidden="true"><i></i><i></i><i></i></span></span></h2>
         <!-- Order-by dates: Elise 16/10 (2nd round). Orders after these dates are delivered in 2027. -->
         <dl class="deadlines">
-          <div><dt>Crochet dolls &amp; custom crochet — order by</dt><dd><strong><time datetime="2026-11-08">Sun, Nov 8</time></strong></dd></div>
+          <div><dt>Crochet dolls &amp; custom crochet — order by</dt><dd><strong><time id="xmas-by-crochet" datetime="2026-11-08">Sun, Nov 8</time></strong></dd></div>
           <div><dt>Paintings, calendars &amp; gift boxes — order by</dt><dd><strong><time datetime="2026-11-15">Sun, Nov 15</time></strong></dd></div>
         </dl>
         <p class="xmas-after">Orders placed after these dates will be delivered in 2027.</p>

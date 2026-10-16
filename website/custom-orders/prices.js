@@ -53,8 +53,9 @@
      coming in 2027.
    - Confirmation gift box can be ordered now, shipping after Nov 12: a saint figure
      + rosary chain — 12 cm figure $55 (a saint we have ready, or one made for you),
-     or St. Carlo Acutis / St. Michael the Archangel at 10 in, $90. All figures are
-     made with closed eyes.
+     or St. Carlo Acutis / St. Michael the Archangel at 10 in, $90. The 12 cm figures
+     are made with closed eyes (her photo of the set, 9th message, shows the 10 in
+     St. Michael and St. Carlo with open eyes).
    - Every made-to-order / custom piece: a design mockup after the deposit, before we
      start; word when it is in the works; a progress update after about a week.
    - Housewarming add-on: mother-of-pearl spoons, 2 for $12 or 4 for $24, in four

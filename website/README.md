@@ -246,6 +246,14 @@ nhất trước (Pet portrait print $15 · Pet memorial $41 · Realtor closing &
 housewarming gift $70 · Christmas gift for friends & family $90).
 **Cách đọc còn để mở (ghi trong `prices.js`):** in tranh = giá đã gồm tranh
 (không cộng $10 file digital); hộp quà tranh chỉ với bản in; "second pet −$10" = con thứ hai cùng size & len.
+**Chốt 16/10, tin nhắn 9 — nền + đèn + tuyết, ảnh thánh, ảnh Merlin mới:** section xen kẽ hai màu phẳng
+cream / butter-soft (không gradient, không ảnh sau chữ); "How it works" có sợi chỉ móc + cuộn len nét Peach.
+Đèn thay confetti (Brand v2 cấm confetti): sao nhỏ lấp lánh cạnh tiêu đề "Build your gift" và "Wedding & party
+favors", vầng sáng đèn sau ảnh Merlin cuối trang, dây đèn mép trên mục Giáng sinh, tuyết rơi nhẹ trên ảnh
+Merlin (canvas, mờ theo mép ảnh, chỉ chạy khi đang hiện). Giảm chuyển động: đèn đứng yên, không tuyết. Ảnh
+Giáng sinh mới `xmas-merlin2-*` (ảnh cũ đã gỡ). Ảnh các thánh `confirmation-saints.webp` hiện khi khách chọn
+thánh; chị duyệt dùng ảnh có tượng mở mắt → câu nhắm mắt chỉ còn cho tượng 12 cm. Code: cuối
+`custom-orders.css` (grounds and small lights) và cuối `custom-orders.js` (Christmas band).
 **Chốt 16/10, tin nhắn 8 — hiệu ứng chuyển động (ngoại lệ Brand Canon "no transforms", chị duyệt):**
 các phần hiện dần + trượt lên khi cuộn tới (thẻ trong một hàng hiện lần lượt), thẻ nổi lên khi rê chuột
 (chỉ máy có chuột), ảnh nền hero / Giáng sinh trôi nhẹ khi cuộn (≥900px). Tắt hết khi máy khách bật
@@ -294,7 +302,7 @@ góc. Ảnh kit không dùng (02 có tag lạ, 05 mockup) KHÔNG đưa lên web 
 gốc nằm trong thư mục kit (scratchpad) để đối chiếu.
 **Ảnh Merlin thật (16/10, chị gửi ảnh 12–16):** hero = `hero-merlin-wide-900/1376.webp`
 + `hero-merlin-phone-640/1024.webp` (ảnh 14) và mục "Ordering for Christmas?" =
-`xmas-merlin-wide-*/xmas-merlin-phone-*` (ảnh 15) là **nền tràn mép**, mép ảnh mờ dần vào
+`xmas-merlin2-wide-*/xmas-merlin2-phone-*` (ảnh bàn quà + cây thông, tin nhắn 9; thay ảnh 15) là **nền tràn mép**, mép ảnh mờ dần vào
 nền (mask — ngoại lệ "no gradients" theo yêu cầu của chị; sàn trắng trong ảnh đã kéo về
 màu nền); CTA cuối = `merlin-portrait.webp` (ảnh 13, cắt tròn). Hạn đặt Giáng sinh: CN 8/11
 (móc len), CN 15/11 (tranh, lịch, hộp quà); sau hạn giao năm 2027. Đây là ảnh

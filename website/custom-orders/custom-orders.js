@@ -1044,4 +1044,69 @@
     var onDrift = function () { if (!ticking) { ticking = true; window.requestAnimationFrame(place); } };
     if (drift.length) { window.addEventListener("scroll", onDrift, { passive: true }); window.addEventListener("resize", onDrift); place(); }
   }
+
+  /* ---------- Christmas band (Elise 16/10, 9th message): a string of lights along the top — one bulb per 56px of
+     the band; they twinkle only with motion on (CSS) — and light snow over Merlin's photo: a canvas the photo's size,
+     faded at the same edges, drawn only while the band is on screen and the tab is open, and not at all for
+     visitors who ask for less motion. Decoration only. ---------- */
+  var band = document.querySelector(".christmas");
+  if (band) {
+    var lights = document.createElement("div");
+    lights.className = "xmas-lights";
+    lights.setAttribute("aria-hidden", "true");
+    var hang = function () {
+      var want = Math.ceil(band.clientWidth / 56) + 1;
+      while (lights.children.length < want) lights.appendChild(document.createElement("i"));
+      while (lights.children.length > want) lights.removeChild(lights.lastChild);
+    };
+    hang();
+    band.insertBefore(lights, band.firstChild);
+    window.addEventListener("resize", hang);
+  }
+  var snowPic = band && band.querySelector(".xmas-pic"), snow = document.createElement("canvas");
+  if (snowPic && !calm && "IntersectionObserver" in window && snow.getContext) {
+    snow.className = "xmas-snow";
+    snow.setAttribute("aria-hidden", "true");
+    snowPic.parentNode.insertBefore(snow, snowPic.nextSibling);
+    var pen = snow.getContext("2d"), flakes = [], sw = 0, sh = 0, running = false, onScreen = false, last = 0, frame = 0;
+    var flake = function (anywhere) {
+      return { x: Math.random() * sw, y: anywhere ? Math.random() * sh : -4, r: 1 + Math.random() * 2.2, vy: 14 + Math.random() * 22, sway: 4 + Math.random() * 10, ph: Math.random() * 6.28 };
+    };
+    var fit = function () {
+      var b = band.getBoundingClientRect(), p = snowPic.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio || 1, 2);
+      sw = Math.round(p.width); sh = Math.round(p.height);
+      snow.style.left = Math.round(p.left - b.left - band.clientLeft) + "px";
+      snow.style.top = Math.round(p.top - b.top - band.clientTop) + "px";
+      snow.style.width = sw + "px"; snow.style.height = sh + "px";
+      snow.width = Math.round(sw * dpr); snow.height = Math.round(sh * dpr);
+      pen.setTransform(dpr, 0, 0, dpr, 0, 0);
+      flakes.length = 0;
+      for (var n = Math.min(70, Math.round(sw * sh / 9000)), i = 0; i < n; i++) flakes.push(flake(true));
+    };
+    var fall = function (now) {
+      frame = 0;
+      if (!running) return;
+      var dt = last ? Math.min((now - last) / 1000, 0.05) : 0;
+      last = now;
+      pen.clearRect(0, 0, sw, sh);
+      for (var i = 0; i < flakes.length; i++) {
+        var f = flakes[i];
+        f.y += f.vy * dt; f.ph += dt * 0.9;
+        if (f.y - f.r > sh) { flakes[i] = flake(false); continue; }
+        var x = f.x + Math.sin(f.ph) * f.sway;
+        pen.beginPath(); pen.arc(x, f.y, f.r + 0.8, 0, 6.2832); pen.fillStyle = "rgba(74, 66, 59, 0.14)"; pen.fill();   /* a faint rim, so a flake shows on white too */
+        pen.beginPath(); pen.arc(x, f.y, f.r, 0, 6.2832); pen.fillStyle = "rgba(255, 255, 255, 0.92)"; pen.fill();
+      }
+      frame = window.requestAnimationFrame(fall);
+    };
+    var snowing = function () {
+      var want = onScreen && !document.hidden;
+      if (want && !running) { running = true; last = 0; frame = window.requestAnimationFrame(fall); }
+      else if (!want && running) { running = false; if (frame) window.cancelAnimationFrame(frame); frame = 0; }
+    };
+    fit();
+    if ("ResizeObserver" in window) new ResizeObserver(fit).observe(band); else window.addEventListener("resize", fit);
+    new IntersectionObserver(function (es) { es.forEach(function (e) { onScreen = e.isIntersecting; }); snowing(); }).observe(band);
+    document.addEventListener("visibilitychange", snowing);
+  }
 })();

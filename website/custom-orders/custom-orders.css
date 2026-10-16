@@ -2,7 +2,8 @@
    Purrlight Custom Orders — page styles
    Brand Identity v2 tokens only (Brand Canon v2, 24/08/2026; handoff brief §2).
    Mobile-first. No gradients (the one exception: the masks that melt the two Merlin photos into the page,
-   Elise 16/10), no confetti, no bounce. Motion: fade/ease 200–300 ms, no transforms.
+   Elise 16/10), no confetti, no bounce. Motion: fade/ease 200–300 ms, no transforms — except the motion Elise
+   asked for on 16/10 (reveal, lift, drift, and the small lights and snow: see the end of this file).
    Loads after ../css/fonts.css only (the site's style.css is not used here on purpose).
    ============================================================ */
 
@@ -18,6 +19,7 @@
   --caption: #9C5325;      /* captions, legends, small text — 5.31:1 */
   --butter-soft: #FAEFD8;  /* Christmas band */
   --glow-soft: #F6DCC4;    /* selected chip / table cell fill — Ink on it 7.7:1 */
+  --beret: #CA8D41;        /* Merlin's beret (Brand Canon v2) — only in the small lights, never for text */
   --line: rgba(74, 66, 59, 0.18);   /* Ink hairline */
   --line-soft: rgba(74, 66, 59, 0.10);
   --line-ui: rgba(74, 66, 59, 0.6);   /* control boundaries ≥3:1 on cream (WCAG 1.4.11) */
@@ -440,7 +442,7 @@ p { margin: 0; }
 .is-new { animation: co-fade 260ms ease; }
 
 /* ---------- how it works (3 short steps) ---------- */
-.how { padding: 32px 0 36px; border-top: 1px solid var(--line); }
+.how { padding: 32px 0 36px; border-top: 1px solid var(--line); background: var(--butter-soft); }
 .how .section-title { margin-bottom: 8px; }
 .steps { list-style: none; margin: 0; padding: 0; display: grid; }
 .steps li { display: grid; grid-template-columns: 36px 1fr; gap: 12px; align-items: start; padding: 14px 0; border-top: 1px solid var(--line); }
@@ -473,7 +475,7 @@ p { margin: 0; }
 }
 
 /* ---------- Christmas band (butter, Ink text, one Caveat word) ---------- */
-.christmas { background: var(--butter-soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 40px 0 0; position: relative; overflow: hidden; }
+.christmas { background: var(--butter-soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 48px 0 0; position: relative; overflow: hidden; }   /* 48px: room for the string of lights */
 .xmas-inner { position: relative; z-index: 1; max-width: 640px; }
 .xmas-text { display: grid; gap: 12px; align-content: center; }
 .xmas-after { font-size: 16px; font-weight: 600; }
@@ -499,7 +501,7 @@ p { margin: 0; }
   .xmas-text { max-width: 430px; }
   .xmas-pic { position: absolute; top: 0; right: 0; bottom: 0; width: 60%; }
   .xmas-photo {
-    width: 100%; height: 100%; margin: 0; object-fit: cover; object-position: 50% 30%;   /* the pine on the left stays clear of the order-by dates */
+    width: 100%; height: 100%; margin: 0; object-fit: cover; object-position: 85% 35%;   /* the crop comes off the sofa side; Merlin and the tree stay */
     -webkit-mask-image: linear-gradient(to right, transparent 0, transparent 14%, #000 46%), linear-gradient(to bottom, transparent 0, #000 18%, #000 82%, transparent 100%);
     -webkit-mask-composite: source-in;
     mask-image: linear-gradient(to right, transparent 0, transparent 14%, #000 46%), linear-gradient(to bottom, transparent 0, #000 18%, #000 82%, transparent 100%);
@@ -508,7 +510,7 @@ p { margin: 0; }
 }
 
 /* ---------- closing ---------- */
-.closing { padding: 56px 0 48px; }
+.closing { padding: 56px 0 48px; background: var(--butter-soft); border-top: 1px solid var(--line); }
 .closing-inner { display: grid; gap: 20px; justify-items: center; text-align: center; max-width: 560px; }
 .closing-body { display: grid; gap: 14px; justify-items: center; }
 .merlin-mark { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; }
@@ -568,3 +570,62 @@ html.motion .hero-photo, html.motion .xmas-photo { will-change: transform; }
   html.motion .favors-row img:hover { transform: translateY(-4px); box-shadow: 0 10px 22px rgba(74, 66, 59, 0.16); }
 }
 @media print { html.motion .rv { opacity: 1; transform: none; } }
+
+/* ---------- grounds and small lights (Elise 16/10, 9th message: clean, minimal, on brand; a few small lights or snow).
+   The sections alternate two flat brand tints — cream, butter — with no gradients and no pictures behind words.
+   Lights, not confetti (Brand v2 rules confetti out): small four-point stars by two headings, the worktable lamp's
+   glow behind Merlin ("purr" + "light"), a string of lights and light snow in the Christmas band. All decoration:
+   aria-hidden, no pointer events. They twinkle and the snow falls only with motion on (html.motion). ---------- */
+.nw { white-space: nowrap; }
+.glints { position: relative; display: inline-block; width: 28px; height: 24px; margin-left: 8px; pointer-events: none; }
+.glints i { position: absolute; display: block; width: var(--s); height: var(--s); background: var(--c);
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); }
+.glints i:nth-child(1) { --s: 14px; --c: var(--peach); left: 0; top: 8px; }
+.glints i:nth-child(2) { --s: 9px; --c: var(--beret); left: 15px; top: 0; }
+.glints i:nth-child(3) { --s: 7px; --c: var(--berry); left: 19px; top: 14px; }
+/* the yarn thread in How it works: a stitched line from the title to a ball of yarn */
+.how .wrap { position: relative; }
+.how .wrap::after { content: ""; position: absolute; top: 4px; left: calc(var(--gutter) + 190px); right: var(--gutter); height: 28px; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='%23FAEFD8' stroke='%23E8A87C' stroke-width='1.6' stroke-linecap='round'%3E%3Ccircle cx='14' cy='14' r='11'/%3E%3Cpath d='M5 9c6 1 13 6 16 13M4 15c5 0 11 3 13 8M9 4c4 3 10 4 15 3M3.5 12c7-6 15-7 21-2' fill='none'/%3E%3C/svg%3E") no-repeat right center / 28px 28px,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='28'%3E%3Cpath d='M0 14C10 8 30 20 40 14' fill='none' stroke='%23E8A87C' stroke-width='1.6' stroke-linecap='round' stroke-dasharray='5 4'/%3E%3C/svg%3E") repeat-x left center / 40px 28px; }
+@media (min-width: 900px) { .how .wrap::after { top: 10px; left: calc(var(--gutter) + 240px); } }
+/* the worktable lamp's glow behind Merlin: a flat disc */
+.merlin-lamp { position: relative; display: inline-grid; place-items: center; }
+.merlin-lamp::before { content: ""; position: absolute; inset: -16px; border-radius: 50%; background: var(--glow-soft); }
+.merlin-lamp .merlin-mark { position: relative; }
+.glints-lamp { position: absolute; inset: 0; width: auto; height: auto; margin: 0; }
+.glints-lamp i:nth-child(1) { left: -32%; top: -6%; --s: 14px; }   /* round the glow, clear of the words beside it */
+.glints-lamp i:nth-child(2) { left: 92%; top: -26%; --s: 10px; }
+.glints-lamp i:nth-child(3) { left: 98%; top: 100%; --s: 8px; }
+.glints-lamp i:nth-child(4) { --s: 8px; --c: var(--beret); left: -26%; top: 80%; }
+@media (min-width: 900px) { .merlin-lamp::before { inset: -20px; } }
+/* Christmas band: a string of lights along the top (custom-orders.js hangs one bulb per 56px) and snow over the photo */
+.xmas-lights { position: absolute; top: 0; left: 0; right: 0; z-index: 2; height: 30px; display: flex; overflow: hidden; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='16'%3E%3Cpath d='M0 2Q28 18 56 2' fill='none' stroke='%234A423B' stroke-opacity='.45' stroke-width='1.2'/%3E%3C/svg%3E") repeat-x 0 0 / 56px 16px; }
+.xmas-lights i { flex: 0 0 56px; position: relative; }
+.xmas-lights i::before { content: ""; position: absolute; left: 25px; top: 9px; width: 6px; height: 4px; border-radius: 1px; background: var(--ink); opacity: 0.6; }
+.xmas-lights i::after { content: ""; position: absolute; left: 24px; top: 12px; width: 8px; height: 12px; border-radius: 50% 50% 50% 50% / 42% 42% 58% 58%;
+  background: var(--bulb, var(--berry)); box-shadow: 0 0 8px 2px var(--bulb-glow, rgba(180, 34, 73, 0.4)); }
+.xmas-lights i:nth-child(3n+2) { --bulb: var(--beret); --bulb-glow: rgba(202, 141, 65, 0.5); }
+.xmas-lights i:nth-child(3n) { --bulb: var(--peach); --bulb-glow: rgba(232, 168, 124, 0.6); }
+.xmas-snow { position: absolute; pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 24%, #000 80%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 24%, #000 80%, transparent 100%); }
+@media (min-width: 900px) {
+  .xmas-snow {   /* the photo's own fade, so no flake drifts over the order-by dates */
+    -webkit-mask-image: linear-gradient(to right, transparent 0, transparent 14%, #000 46%), linear-gradient(to bottom, transparent 0, #000 18%, #000 82%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to right, transparent 0, transparent 14%, #000 46%), linear-gradient(to bottom, transparent 0, #000 18%, #000 82%, transparent 100%);
+    mask-composite: intersect;
+  }
+}
+html.motion .glints i { animation: co-twinkle 2.8s ease-in-out infinite; }
+html.motion .glints i:nth-child(2) { animation-duration: 2.2s; animation-delay: -0.9s; }
+html.motion .glints i:nth-child(3) { animation-duration: 3.4s; animation-delay: -1.7s; }
+html.motion .glints i:nth-child(4) { animation-duration: 2.6s; animation-delay: -0.4s; }
+html.motion .xmas-lights i::after { animation: co-bulb 3s ease-in-out infinite; }
+html.motion .xmas-lights i:nth-child(2n)::after { animation-duration: 2.4s; animation-delay: -1.1s; }
+html.motion .xmas-lights i:nth-child(5n+1)::after { animation-duration: 3.6s; animation-delay: -2s; }
+@keyframes co-twinkle { 0%, 100% { opacity: 1; transform: scale(1) rotate(0); } 50% { opacity: 0.35; transform: scale(0.6) rotate(25deg); } }
+@keyframes co-bulb { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+@media print { .xmas-snow { display: none; } }

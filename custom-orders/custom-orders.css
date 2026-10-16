@@ -254,6 +254,9 @@ p { margin: 0; }
 .tile-note strong { font-weight: 600; color: var(--ink); }
 .tile-price { order: 3; font-family: var(--font-head); font-weight: 500; font-size: 17px; color: var(--berry); margin-top: 2px; }
 .tile-price:empty { display: none; }
+.tile-price s { font-size: 14px; font-weight: 400; }   /* the gown set's regular price during its sale (the price colour: ink on a chosen tile) */
+.sale-line { font-size: 15px; font-weight: 600; color: var(--berry); }
+.sale-line[hidden] { display: none; }
 .tile:has(input:checked:not(:disabled)), .tile.is-checked { border-color: var(--ink); background: var(--glow-soft); box-shadow: inset 0 0 0 1px var(--ink); }
 .tile:has(input:checked:not(:disabled)) .tile-price, .tile.is-checked .tile-price { color: var(--ink); }
 .tile:has(input:checked:not(:disabled)) .tile-note, .tile.is-checked .tile-note { color: var(--ink); }
@@ -518,3 +521,10 @@ p { margin: 0; }
 body.has-bar { padding-bottom: 88px; }
 /* from 900px the What's inside box (with its own order button) stays in view: no bar */
 @media (min-width: 900px) { .order-bar { display: none !important; } body.has-bar { padding-bottom: 0; } html.has-bar { scroll-padding-bottom: 0; } }
+
+/* ---------- Tally popup (Elise 16/10): Tally draws it; these only adjust it ---------- */
+/* phones: shorter than Tally's own (up to 70% of the screen tall; width stays the screen less 40px), so the top of
+   the page stays in view above it — the form scrolls inside */
+@media (max-width: 576px) { .tally-popup iframe { max-height: 62vh !important; } }
+/* the wave holds still for visitors who ask for less motion */
+@media (prefers-reduced-motion: reduce) { .tally-popup .emoji { animation: none !important; } }

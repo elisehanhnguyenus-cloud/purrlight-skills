@@ -75,6 +75,102 @@
   }
   applyOrderLinks();
 
+  /* ---------- Tally popup (Elise 16/10): an order button opens the form over the page instead of leaving it ----------
+     Same form, same hidden fields as the link (pick, product, total, deposit, delivery, utm) — read from the clicked
+     link's own href. Bottom right, 376 px (phones: a little smaller — .tally-popup in the CSS), the form title hidden
+     (the form is also used at events and its title says so), and the waving-hand emoji Elise chose (it holds still
+     for visitors who ask for reduced motion — see the CSS).
+     Tally's script loads after the page; until it has — or if it is blocked — the link opens the form page as before.
+     Sent: the popup closes and the page goes to "Pay your deposit" (the form's own redirect, done here). */
+  var TALLY_FORM = (ORDER_FORM_URL.match(/^https:\/\/(?:www\.)?tally\.so\/r\/([A-Za-z0-9]+)$/) || [])[1];
+  if (TALLY_FORM) {
+    var tallyOpener = null, tallyHref = null, tallyTimer = null;
+    var tallyOpen = function () { return document.querySelector(".tally-form-" + TALLY_FORM); };
+    var loadTally = function () {
+      var sc = document.createElement("script");
+      sc.src = "https://tally.so/widgets/embed.js"; sc.async = true;
+      document.head.appendChild(sc);
+    };
+    if (document.readyState === "complete") loadTally(); else window.addEventListener("load", loadTally);
+    var hiddenFields = function (href) {
+      var out = {}, q = href.split("#")[0].split("?")[1] || "";
+      q.split("&").forEach(function (kv) {
+        var i = kv.indexOf("=");
+        if (i > 0) { try { out[decodeURIComponent(kv.slice(0, i))] = decodeURIComponent(kv.slice(i + 1).replace(/\+/g, " ")); } catch (err) { /* a bad escape: leave it out */ } }
+      });
+      return out;
+    };
+    document.addEventListener("click", function (e) {
+      var a = e.target && e.target.closest ? e.target.closest("a[data-order]") : null;
+      if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;   /* a new tab stays a new tab */
+      var T = window.Tally, href = a.getAttribute("href") || "";
+      if (!T || typeof T.openPopup !== "function" || href.indexOf(ORDER_FORM_URL) !== 0) return;
+      e.preventDefault();
+      if (tallyOpen() && href === tallyHref) {   /* same pick: back into the form — what they typed stays */
+        var f0 = document.querySelector(".tally-form-" + TALLY_FORM + " iframe"); if (f0) f0.focus();
+        return;
+      }
+      if (tallyOpen()) T.closePopup(TALLY_FORM);   /* one popup, with the latest pick */
+      tallyOpener = a; tallyHref = href;
+      /* the form never shows (tally.so down or blocked while the script loaded): after 10 s, open the form page instead */
+      clearTimeout(tallyTimer);
+      tallyTimer = setTimeout(function () {
+        var pop = tallyOpen();
+        if (pop && pop.style.opacity !== "1") { tallyOpener = null; tallyHref = null; T.closePopup(TALLY_FORM); location.href = href; }
+      }, 10000);
+      T.openPopup(TALLY_FORM, {
+        width: 376, hideTitle: true, emoji: { text: "\uD83D\uDC4B", animation: "wave" }, hiddenFields: hiddenFields(href),
+        onOpen: function () { clearTimeout(tallyTimer); var f = document.querySelector(".tally-form-" + TALLY_FORM + " iframe"); if (f) f.focus(); },
+        onClose: function () { clearTimeout(tallyTimer); tallyHref = null; var o = tallyOpener; tallyOpener = null; if (o && document.documentElement.contains(o)) o.focus({ preventScroll: true }); },
+        onSubmit: function () {
+          tallyOpener = null;
+          T.closePopup(TALLY_FORM);
+          var sec = document.getElementById("pay"), pay = document.getElementById("pay-h");
+          location.hash = "pay";
+          if (sec) sec.scrollIntoView();   /* also when the address already ends in #pay (the "How to pay" link) */
+          if (pay) { pay.setAttribute("tabindex", "-1"); pay.focus({ preventScroll: true }); }
+        }
+      });
+    });
+    document.addEventListener("keydown", function (e) {   /* Esc closes it (while focus is on the page; inside, the form's own × does) */
+      if ((e.key === "Escape" || e.key === "Esc") && window.Tally && tallyOpen()) window.Tally.closePopup(TALLY_FORM);
+    });
+  }
+
+  /* ---------- the gown set's sale (Elise 16/10: 25% off through Oct 25, Central Time): $89 struck through + the sale
+     price, and a line under the price — drawn with each estimate, so the tile and the estimate always agree; when the
+     sale ends (prices.js gownSale.ends) the page shows $89 again, even if it was left open ---------- */
+  var gownShown = null;
+  function renderGownSale(gp) {
+    var state = gp.sale ? "sale" : "regular";
+    if (state === gownShown) return;
+    gownShown = state;
+    var tp = document.querySelector('[data-sale-price="gown"]'), line = document.querySelector('[data-sale-note="gown"]');
+    if (tp) {
+      tp.textContent = gp.sale ? "" : money(gp.regular);
+      if (gp.sale) {
+        tp.appendChild(el("s", null, [el("span", { "class": "sr-only", text: "Was " }), document.createTextNode(money(gp.regular))]));
+        tp.appendChild(document.createTextNode(" "));
+        tp.appendChild(el("span", { "class": "sr-only", text: "now " }));
+        tp.appendChild(el("span", { "class": "sale-price", text: money(gp.price) }));
+      }
+    }
+    if (line) {
+      line.textContent = gp.sale ? "Christening gown set: " + gp.sale.off + "% off through " + gp.sale.day.replace(/ /g, "\u00a0") + " (Central\u00a0Time)" : "";
+      line.hidden = !gp.sale;
+    }
+  }
+  function refreshGown() {   /* the sale ended while the page was open: estimate, tile and order links back to $89 */
+    var g = byId.christening;
+    if (!g || gownShown !== "sale" || gownPrice().sale) return;
+    g.update(false);
+    if (lastPick && lastPick.product === g.def.product) pick(g);
+  }
+  if (gownPrice().sale) {
+    setTimeout(refreshGown, Date.parse(PRICES.christening.gownSale.ends) - new Date().getTime() + 1000);
+    document.addEventListener("visibilitychange", function () { if (!document.hidden) refreshGown(); });   /* background tabs sleep through timers */
+  }
+
   /* ---------- tiny helpers ---------- */
   function el(tag, attrs, children) {
     var n = document.createElement(tag);
@@ -182,7 +278,7 @@
     christening: {   /* the Confirmation gift box is "coming soon": shown as information, not orderable */
       product: "Christening & Confirmation Gifts",
       read: function () { return {}; },
-      est: function () { return estChristeningGown(); }
+      est: function () { var now = new Date().getTime(); renderGownSale(gownPrice(now)); return estChristeningGown({ now: now }); }   /* the tile and the estimate read one clock */
     },
     godparent: {
       product: "Godparent Gift Set",

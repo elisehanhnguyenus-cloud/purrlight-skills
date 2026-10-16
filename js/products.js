@@ -63,9 +63,9 @@ const PRODUCTS = [
     price: 89,
     badge: "",
     img: "assets/img/etsy/4333988358.jpg",
-    short: "Gown, bonnet, mittens and booties in embroidered lace and satin — for the quiet, shining day.",
-    desc: "An heirloom christening set in embroidered lace and satin: gown, bonnet, mittens and booties, made by hand for baptism or dedication day and meant to be folded away with the photographs afterwards. Sized 3–12 months. Ships from our Texas studio.",
-    details: ["Gown, bonnet, mittens and booties", "Embroidered lace and satin", "3–12 months", "Ships from our Texas studio"],
+    short: "Gown, bonnet, mittens, booties and socks in embroidered lace and satin — for the quiet, shining day.",
+    desc: "An heirloom christening set in embroidered lace and satin: gown, bonnet, mittens, booties and socks, made by hand for baptism or dedication day and meant to be folded away with the photographs afterwards. Sized 3–12 months. Ships from our Texas studio.",
+    details: ["Gown, bonnet, mittens, booties and socks", "Embroidered lace and satin", "3–12 months", "Ships from our Texas studio"],
     etsyUrl: "https://www.etsy.com/listing/4333988358"
   },
   {

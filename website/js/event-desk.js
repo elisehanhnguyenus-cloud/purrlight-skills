@@ -606,6 +606,16 @@ var DESK_CONFIG = {
     return list;
   }
   var pickerList = pickerItems();
+  /* a sale ended while the desk was open (products.js): the chips and a new sale's lines take the full price */
+  document.addEventListener("purrlight:prices", function () {
+    pickerList = pickerItems();
+    if (!editingId) lines.forEach(function (l) {
+      if (l.kind !== "catalog") return;
+      catalog.forEach(function (c) { if (c.id === l.pid) l.unit = c.price; });
+    });
+    renderPicker(el.search ? el.search.value : "");
+    renderLines();
+  });
   function renderPicker(filter) {
     var q = (filter || "").trim().toLowerCase(), mem = rememberFocus(el.picker);
     el.picker.innerHTML = pickerList.filter(function (p) { return !q || p.name.toLowerCase().indexOf(q) > -1; }).map(function (p) {
@@ -923,10 +933,13 @@ var DESK_CONFIG = {
           custom: { type: i.custom.type || (i.kind === "cat" ? "Cat" : ""), size: i.custom.size || "Classic", yarn: yarnIdx, pair: i.custom.pair ? 1 : 0, pet: i.custom.pet || "", pose: i.custom.pose || "", eyes: i.custom.eyes || "", code: i.custom.code || "" } };
       }
       var p = null; catalog.forEach(function (c) { if (c.id === i.pid) p = c; });
-      var addonIndex = 0;
-      if (p && p.addons) p.addons.forEach(function (a, j) { if (a.label === i.addon) addonIndex = j; });
+      var addonIndex = 0, delta = 0;
+      if (p && p.addons) p.addons.forEach(function (a, j) { if (a.label === i.addon) { addonIndex = j; delta = a.delta || 0; } });
+      /* the price it was sold at, not today's catalog price: a sale may have started or ended since (products.js SALES).
+         A saved unit includes its add-on; the line keeps the base and adds the add-on back. */
+      var unit = typeof i.unit === "number" ? Math.round((i.unit - delta) * 100) / 100 : (p ? p.price : i.unit);
       return { kind: p ? "catalog" : "other", pid: i.pid, name: i.name, addons: p ? (p.addons || null) : null, addonIndex: addonIndex, addon: i.addon,
-        qty: i.qty, unit: p ? p.price : i.unit, custom: null };
+        qty: i.qty, unit: unit, custom: null };
     });
     var sh = o.ship || {};
     writeFields({ name: o.customer.name, email: o.customer.email, phone: o.customer.phone, note: o.note, optIn: o.customer.optIn,
@@ -1262,9 +1275,10 @@ var DESK_CONFIG = {
       setMode(draft.mode === "order" ? "order" : "thanks");
       lines = (Array.isArray(draft.lines) ? draft.lines : []).map(function (l) {
         if (!l || typeof l !== "object") throw new Error("bad line");
-        /* re-attach catalog addons and prices from the live catalog */
+        /* re-attach catalog addons from the live catalog; a new sale takes today's price, an order being edited keeps
+           the price it was sold at */
         var p = null; catalog.forEach(function (c) { if (c.id === l.pid) p = c; });
-        if (p) { l.addons = p.addons || null; l.unit = p.price; l.kind = "catalog"; }
+        if (p) { l.addons = p.addons || null; if (!(editingId && typeof l.unit === "number")) l.unit = p.price; l.kind = "catalog"; }
         if (!l.kind) l.kind = l.custom ? "cat" : "other";
         if (l.custom) {
           /* a size or yarn that no longer exists in the grid falls back rather than crashing */

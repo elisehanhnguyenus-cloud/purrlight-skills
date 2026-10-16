@@ -4,6 +4,8 @@
   "use strict";
 
   var fmt = function (n) { return "$" + n.toFixed(2).replace(/\.00$/, ""); };
+  /* a sale ended while the page was open (js/products.js): show the full prices again */
+  document.addEventListener("purrlight:prices", function () { location.reload(); });
   /* a price on sale (products.js SALES): the full price struck through, then the sale price */
   var priceHTML = function (p, delta) {
     var d = delta || 0;

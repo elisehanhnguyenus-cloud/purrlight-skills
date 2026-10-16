@@ -156,6 +156,23 @@ PRODUCTS.forEach(function (p) {
     p.sale = sale;
   }
 });
+/* a page left open past a sale's end (the Event Desk on the booth phone, a shop tab): the full price comes back and the
+   page hears "purrlight:prices" — the shop pages reload, the Event Desk re-prices its chips and a new sale's lines */
+function endSales() {
+  let ended = false;
+  PRODUCTS.forEach(function (p) {
+    if (p.sale && Date.now() >= Date.parse(p.sale.ends)) { p.price = p.regular; delete p.regular; delete p.sale; ended = true; }
+  });
+  if (ended) document.dispatchEvent(new CustomEvent("purrlight:prices"));
+}
+(function () {
+  const ends = PRODUCTS.filter(function (p) { return p.sale; }).map(function (p) { return Date.parse(p.sale.ends); });
+  if (!ends.length || typeof document === "undefined") return;
+  const wait = Math.min.apply(null, ends) - Date.now() + 1000;
+  if (wait < 2147483647) setTimeout(endSales, wait);
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) endSales(); });   /* sleeping tabs miss timers */
+  window.addEventListener("pageshow", endSales);
+})();
 
 /* Which pieces the standard care/safety copy applies to (shared by product.html and the Event Desk):
    NOT_HANDMADE     — digital patterns / printed-to-order / molded items: no "made by hand", no spot-clean care, no safety line.

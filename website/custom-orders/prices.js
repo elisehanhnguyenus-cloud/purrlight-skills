@@ -254,14 +254,14 @@ function gownPrice(now) {
 function estChristeningGown(o) {
   var g = gownPrice(o && o.now);
   var r = finish([{ label: "Christening Gown Set — lace & satin" + (g.sale ? " (" + g.sale.off + "% off " + money(g.regular) + " through " + g.sale.through + " CT)" : ""), amount: g.price }]);
-  r.note = "Ready to ship in 2–3 days";
+  r.note = "Ready in 2–3 days";   /* to ship or to pick up */
   return r;
 }
 /* o.figure: ready · made · carlo · michael (PRICES.christening.confirmation) */
 function estConfirmation(o) {
   var C = PRICES.christening.confirmation, f = o && Object.prototype.hasOwnProperty.call(C, o.figure) ? o.figure : "ready";
-  var r = finish([{ label: "Confirmation gift box — " + C[f].label, amount: C[f].price }]);
-  r.note = "Ships after Nov 12";
+  var r = finish([{ label: "Confirmation gift box — " + C[f].label + " (ready after Nov 12)", amount: C[f].price }]);
+  r.note = "Ready after Nov 12";   /* to ship or to pick up */
   return r;
 }
 

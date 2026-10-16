@@ -910,6 +910,14 @@ tính, link Tally); thêm "(Central Time)"; "$89" gạch ngang đủ tương ph�
 - **Muỗng xà cừ** (add-on hộp tân gia): 2 cái $12, 4 cái $24; 4 kiểu có ảnh; đổi món cũng tính chênh
   lệch (vd. 4 muỗng thay rosary: +$14).
 
+Rà soát (tiền + trải nghiệm, có phản biện) — 4 lỗi xác nhận, đã sửa: **Event Desk** sửa đơn cũ tự đổi giá
+theo giá Shop hiện tại (đơn bán $66.75 thành $89 sau 25/10 — sai tiền đã thu) → đơn đã lưu giữ đúng giá lúc
+bán; trang Shop / sản phẩm / Event Desk **mở sẵn qua nửa đêm 25/10** vẫn $66.75 → tự về $89 (trang Shop tải
+lại, Event Desk đổi giá chip + đơn mới); Confirmation chọn pickup hiện "Ships after Nov 12 · Pickup Saturday"
+→ "Ready after Nov 12", dòng "U.S. shipping included" chỉ khi ship, Tally `pick` ghi "(ready after Nov 12)";
+mục Giáng sinh "Every piece is made to order — 2–4 weeks" mâu thuẫn bộ váy giao 2–3 ngày → sửa câu.
+Bác bỏ: muỗng 4 cái $25 (chị đã chốt $24), ảnh hộp Confirmation hơi mờ (ảnh tạm), …
+
 ### Còn chờ chị
 1. "Turnaround: from X" → "ships within N" (FTC, xem 8j).
 2. Sau mùa lễ: thay ảnh hero/Giáng sinh, gỡ hạn đặt.

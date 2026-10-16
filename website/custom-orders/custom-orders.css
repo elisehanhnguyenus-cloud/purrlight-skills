@@ -498,7 +498,7 @@ p { margin: 0; }
 @media (min-width: 900px) and (max-width: 1023px) { .hero-pic { width: 54%; } .xmas-pic { width: 52%; } }
 @media (min-width: 900px) {
   .christmas { padding: 0; min-height: clamp(480px, 38vw, 600px); display: flex; align-items: center; }
-  .xmas-inner { max-width: var(--wrap); padding-top: 56px; padding-bottom: 56px; }
+  .xmas-inner { max-width: var(--wrap); padding-top: 88px; padding-bottom: 56px; }   /* 88px: below Merlin's bell (it ends 78px down) even when large text makes the band taller than its min-height */
   .xmas-text { max-width: 430px; }
   .xmas-pic { position: absolute; top: 0; right: 0; bottom: 0; width: 60%; }
   .xmas-photo {
@@ -608,7 +608,7 @@ body.has-bar { padding-bottom: 88px; }
   .glints i { clip-path: none; -webkit-mask: var(--burst, var(--burst-s)) center / contain no-repeat; mask: var(--burst, var(--burst-s)) center / contain no-repeat; }
 }
 .glints i:nth-child(1) { --s: 19px; --burst: var(--burst-l); left: -1px; top: 6px; }
-.glints i:nth-child(2) { --s: 12px; left: 16px; top: -3px; }
+.glints i:nth-child(2) { --s: 12px; left: 16px; top: 2px; }   /* top ≥ 2px: clear of the line above when a title wraps */
 .glints i:nth-child(3) { --s: 10px; left: 21px; top: 15px; }
 /* the yarn thread in How it works: a stitched line from the end of the title to a ball of yarn. It follows the last
    word, so zoomed or translated text pushes it along (or onto the next line) instead of running under it. */
@@ -637,6 +637,8 @@ html:not([data-season="christmas"]) .christmas, html:not([data-season="christmas
 .xmas-lights { position: absolute; top: 0; left: calc(var(--xl) - 360px); right: 0; z-index: 2; height: 60px; display: flex; align-items: flex-start; overflow: hidden; pointer-events: none;
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='28'%3E%3Cpath d='M0 2C30 15 78 20 124 3C150 26 214 24 246 2C276 13 318 15 360 2' fill='none' stroke='%234A423B' stroke-opacity='.8' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") repeat-x 0 0 / 360px 28px; }
 @media (min-width: 1720px) { .xmas-lights { left: calc(var(--xl) - 1080px); } }   /* very wide screens: the wire still reaches the left edge */
+@media (min-width: 3160px) { .xmas-lights { left: calc(var(--xl) - 1800px); } }   /* ultrawide (3440, 4K at 100%) */
+@media (min-width: 4600px) { .xmas-lights { left: calc(var(--xl) - 2520px); } }
 .xmas-lights i { flex: 0 0 72px; height: 20px; position: relative; transform: translateY(var(--y)) rotate(var(--r)); transform-origin: 36px 0; }
 .xmas-lights i.off::before, .xmas-lights i.off::after { content: none; }   /* the part of the wire left of the screen: no bulb, nothing animating */
 .xmas-lights i:nth-child(5n+1) { --y: 10px; --r: 2deg; }

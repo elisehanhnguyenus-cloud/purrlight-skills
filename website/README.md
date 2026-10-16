@@ -270,12 +270,12 @@ cream / butter-soft (không gradient, không ảnh sau chữ); "How it works" c�
 vầng sáng đèn sau ảnh Merlin cuối trang, dây đèn mép trên mục Giáng sinh + tuyết rơi nhẹ trên ảnh Merlin (chỉ
 chạy khi mục đang hiện; nút **"Pause the lights & snow"** góc dưới mục, máy khách nhớ lựa chọn). Giảm chuyển
 động (kể cả bật giữa chừng): đèn đứng yên, không tuyết, không nút. Ảnh Giáng sinh mới `xmas-merlin2-*` (ảnh cũ
-đã gỡ). Ảnh các thánh `confirmation-saints.webp` hiện khi khách chọn thánh, chú thích "sample photo; some are
+đã gỡ). Ảnh các thánh `confirmation-saints.webp` hiện khi khách chọn thánh (chú thích: xem dưới).
 Mắt tượng (chị trả lời 16/10): làm được cả **mắt nhắm (sleeping)** và **mắt mở** → bước chọn thánh có thêm
 "Eyes" (Closed (sleeping) eyes / Open eyes, cùng giá) cho thánh làm theo yêu cầu 12 cm, St. Carlo, St. Michael;
 thánh có sẵn thì giữ nguyên như tượng đang có (không chọn mắt). Lựa chọn vào "What's inside" và Tally `pick`.
-Trang không dùng chữ "safety eyes" (Hard Rules cấm tuyên bố "safe"). Chú thích ảnh: "with closed (sleeping) and
-open eyes". Code: nền section ở khối "grounds and small lights" cuối `custom-orders.css` (`.how, .closing`), sợi chỉ
+Trang không dùng chữ "safety eyes" (Hard Rules cấm tuyên bố "safe"). Chú thích ảnh: "Saints from our Confirmation
+gift set — sample photo, with closed (sleeping) and open eyes." Code: nền section ở khối "grounds and small lights" cuối `custom-orders.css` (`.how, .closing`), sợi chỉ
 ở `.how .section-title::after`; đèn/tuyết/nút ở cuối `custom-orders.js` ("small lights").
 **Chốt 16/10, tin nhắn 8 — hiệu ứng chuyển động (ngoại lệ Brand Canon "no transforms", chị duyệt):**
 các phần hiện dần + trượt lên khi cuộn tới (thẻ trong một hàng hiện lần lượt), thẻ nổi lên khi rê chuột

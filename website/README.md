@@ -173,8 +173,8 @@ mở → chỉ in nguyên câu của brief). Nút "Place your order": header (de
 hero, trong hộp của từng món, CTA cuối, thanh dính — tất cả = `ORDER_FORM_URL`.
 
 **Bản 5 (15/10/2026, theo quyết định của chị):** thêm hàng **"Or start from a
-gift idea"** (3 gói: Realtor closing gift $60 · Pet memorial $41 · Christmas gift
-for Grandma $90 — giá tính từ chính estimator, bấm là chọn sẵn các ô); bước **số
+gift idea"** (bản 5: 3 gói; từ 16/10 là 4 gói, rẻ nhất trước — xem "Chốt 16/10, tin
+nhắn 2" bên dưới; giá tính từ chính estimator, bấm là chọn sẵn các ô); bước **số
 lượng** cho tranh và hộp tân gia (món 1 giá đủ, món 2–4 giảm 5%, từ món 5 giảm
 10%, trên cả món); Godparent **1 hoặc cả hai** (bộ 2 −$10 → $180); mỗi hộp hiện
 **Deposit today (50%)** và **Balance after you approve the photo**; bước **Your
@@ -190,8 +190,11 @@ máy tính, điều khoản cọc lấy từ bản chị duyệt cho booth 25/09
 **Chị cần điền (đầu `prices.js`):**
 - `ORDER_FORM_URL` — link form đặt hàng chung cho 7 món. **Hiện là form Tally
   của chị: `https://tally.so/r/M1KOkY`** (16/10/2026; link này cũng ghi sẵn trong
-  HTML cho khách tắt JS — đổi thì đổi cả hai). Form có 4 *hidden field* `pick`,
-  `product`, `total`, `deposit` — trang tự điền (số tiền luôn có xu, vd `46.01`)
+  HTML cho khách tắt JS — đổi thì đổi cả hai). Form có 5 *hidden field* `pick`,
+  `product`, `total`, `deposit`, `delivery` — trang tự điền (số tiền luôn có xu, vd
+  `46.01`; `delivery` = Ship within Texas / Ship outside Texas / Pickup Saturday /
+  Pickup Sunday / Digital file — form có quy tắc: khác "Digital file" thì Phone và
+  "Best time…" bắt buộc)
   + `utm_*` từ URL (Linktree gắn `?utm_source=linktree&utm_medium=bio`). Gửi xong
   form đưa khách về `#pay`; email báo đơn về purrlightstudiollc@gmail.com. Dùng
   mailto cũng được (dòng "My pick" vào thân email, kèm dòng trống cho địa chỉ ship
@@ -217,7 +220,7 @@ floating thật thay tranh nhà, giấy Dó dựng lại (sợi giấy, màu in 
 
 **Giá nằm ở MỘT chỗ:** `prices.js` (`PRICES`) = brief §3; copy trong
 `index.html` in cùng số đó. Đổi giá → sửa cả hai. Test:
-`node scratchpad/test-prices.js` (14 nhóm), `test-studio.js` (Playwright: tab,
+`node scratchpad/test-prices.js` (15 nhóm), `test-studio.js` (Playwright: tab,
 từng món, phím, nhớ lựa chọn, link #món, chế độ tắt JS, bấm chuột ở 1280px), `audit-custom.js`
 (chuỗi copy/giá nguyên văn, từ cấm, ảnh, nút, tràn màn 360/390/1280).
 
@@ -231,9 +234,16 @@ cold cut +$15 · 3-berry +$10 · chocolate (6 pieces) +$20; món tươi (cold cu
 chỉ pickup; mọi món có bước **Pickup or shipping** (ship miễn phí trong Mỹ — khách ghi
 địa chỉ + giờ tiện nhận trong đơn — hoặc pickup tại Pearland Town Center thứ 7 / chủ
 nhật); **thuế 8.25% cộng vào mọi đơn** (`salesTaxBp: 825`), cọc 50% tính trên tổng
-có thuế — riêng doll giữ "sales tax … included" theo copy đã duyệt (`taxIncluded`,
-chờ chị xác nhận); khung: "We'll contact you to confirm your wooden frame."; mùa lễ
-2–4 tuần.
+có thuế; khung: "We'll contact you to confirm your wooden frame."; mùa lễ 2–4 tuần.
+**Chốt 16/10, tin nhắn 2 (sau khi tra luật thuế):** đã có permit; **không thu thuế
+Texas với đơn ship ra ngoài Texas** (bước Pickup or shipping có 4 lựa chọn: Ship
+within Texas · Ship outside Texas · Pickup Saturday · Pickup Sunday; file digital hỏi
+"Where you live"); **trái cây (3-berry) không chịu thuế** (`taxFree`); doll **tính
+thuế** như mọi món (bỏ "sales tax included"); **cold cut "coming soon"** (chưa có
+giấy phép thực phẩm); sen đá/lô hội: không ship ra ngoài Texas (luật kiểm dịch cây)
+— em tự thêm, chị bỏ được; lịch chỉ in **Premium Matte**; gói gợi ý: 4 gói, gói rẻ
+nhất trước (Pet portrait print $15 · Pet memorial $41 · Realtor closing &
+housewarming gift $70 · Christmas gift for friends & family $90).
 **Cách đọc còn để mở (ghi trong `prices.js`):** in tranh = giá đã gồm tranh
 (không cộng $10 file digital); hộp quà tranh chỉ với bản in; "second pet −$10" = con thứ hai cùng size & len;
 đổi món cơ bản = giá add-on (như thêm).

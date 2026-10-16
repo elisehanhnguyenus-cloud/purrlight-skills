@@ -80,7 +80,7 @@
       <div class="wrap">
         <div class="studio-head">
           <h2 id="studio-h" class="section-title">Build your gift</h2>
-          <p class="studio-hint">Choose a piece, then your options — see what's inside and the estimate as you go. Prices are before 8.25% sales tax, unless marked tax included.</p>
+          <p class="studio-hint">Choose a piece, then your options — see what's inside and the estimate as you go. Prices are before tax: 8.25% Texas sales tax on orders picked up or shipped in Texas.</p>
         </div>
         <p class="step-title" id="pick-label"><span class="step-n" aria-hidden="true">1</span> <span class="step-label">Choose your gift</span></p>
         <ul class="picker" aria-labelledby="pick-label">
@@ -93,13 +93,15 @@
           <li><a href="#calendar" data-tab="calendar"><img src="../assets/img/custom/thumb-calendar.webp" alt="" width="240" height="240" decoding="async"><span class="pk-name">Custom Watercolor Pet Calendar 2027</span><span class="pk-price">from $15</span></a></li>
         </ul>
 
-        <!-- "Or start from a template" (OREOiD): one tap chooses the piece and its options. Needs JS, so it starts hidden. -->
+        <!-- "Or start from a template" (OREOiD): one tap chooses the piece and its options. Needs JS, so it starts hidden.
+             Cheapest first (Elise 16/10): an easy first click. Prices come from the estimators (before tax). -->
         <div class="ideas" data-ideas hidden>
           <p class="ideas-title" id="ideas-label">Or start from a gift idea</p>
           <ul class="ideas-list" aria-labelledby="ideas-label">
-            <li><button type="button" class="idea" data-preset="realtor"><img src="../assets/img/custom/thumb-housewarming.webp" alt="" width="240" height="240" loading="lazy" decoding="async"><span class="idea-text"><span class="idea-name">Realtor closing gift</span><span class="idea-desc">Housewarming box + a small succulent</span></span><span class="idea-price" data-idea-price></span></button></li>
-            <li><button type="button" class="idea" data-preset="memorial"><img src="../assets/img/custom/thumb-memorial.webp" alt="" width="240" height="240" loading="lazy" decoding="async"><span class="idea-text"><span class="idea-name">Pet memorial</span><span class="idea-desc">5×7 digital watercolor print on Dó papyrus, framed, in a gift box</span></span><span class="idea-price" data-idea-price></span></button></li>
-            <li><button type="button" class="idea" data-preset="grandma"><img src="../assets/img/custom/thumb-portrait-doll.webp" alt="" width="240" height="240" loading="lazy" decoding="async"><span class="idea-text"><span class="idea-name">Christmas gift for Grandma</span><span class="idea-desc">Portrait doll in a wooden shadowbox display case</span></span><span class="idea-price" data-idea-price></span></button></li>
+            <li><button type="button" class="idea idea-first" data-preset="petprint"><img src="../assets/img/custom/thumb-pet-print.webp" alt="" width="240" height="240" loading="lazy" decoding="async"><span class="idea-text"><span class="idea-badge">Under $20</span><span class="idea-name">Pet portrait print</span><span class="idea-desc">Your pet in digital watercolor, printed 5×7</span><span class="idea-price" data-idea-price></span></span></button></li>
+            <li><button type="button" class="idea" data-preset="memorial"><img src="../assets/img/custom/thumb-memorial.webp" alt="" width="240" height="240" loading="lazy" decoding="async"><span class="idea-text"><span class="idea-name">Pet memorial</span><span class="idea-desc">5×7 print on Dó papyrus, framed, in a gift box</span><span class="idea-price" data-idea-price></span></span></button></li>
+            <li><button type="button" class="idea" data-preset="realtor"><img src="../assets/img/custom/thumb-housewarming.webp" alt="" width="240" height="240" loading="lazy" decoding="async"><span class="idea-text"><span class="idea-name">Realtor closing &amp; housewarming gift</span><span class="idea-desc">Housewarming box + a small succulent</span><span class="idea-price" data-idea-price></span></span></button></li>
+            <li><button type="button" class="idea" data-preset="christmas"><img src="../assets/img/custom/thumb-portrait-doll.webp" alt="" width="240" height="240" loading="lazy" decoding="async"><span class="idea-text"><span class="idea-name">Christmas gift for friends &amp; family</span><span class="idea-desc">Portrait doll in a wooden shadowbox</span><span class="idea-price" data-idea-price></span></span></button></li>
           </ul>
         </div>
 
@@ -111,7 +113,7 @@
             <p class="desc">A one-of-a-kind crochet portrait of you or someone you love, made from your photos or your own design. 20–23 cm (8–9 in).</p>
             <ul class="head-notes">
               <li>Full doll accessories included — wings, flowers, outfit, fine embroidered details</li>
-              <li>Display accessories, sales tax &amp; U.S. shipping all included</li>
+              <li>Display accessories &amp; U.S. shipping all included</li>
             </ul>
             <p class="turnaround">Turnaround: from 2 weeks</p>
           </div>
@@ -148,7 +150,7 @@
                 <li class="incl">Cape / hat / handbag</li>
                 <li class="incl">Detachable wooden stand</li>
                 <li class="incl">Card</li>
-                <li class="incl" data-when="getit=ship">U.S. shipping included</li>
+                <li class="incl" data-when="getit=ship,out">U.S. shipping included</li>
               </ul>
               <div class="box-end">
                 <p><a class="btn btn-primary btn-block" data-order href="https://tally.so/r/M1KOkY">Place your order</a></p>
@@ -292,6 +294,7 @@
           <div class="gift-preview">
             <figure class="gift-photo">
               <div class="shot"><img src="../assets/img/custom/watercolor-our-first-home.webp" alt="Sample custom digital watercolor home portrait — a brick family home with personalized 'Our 1st Home' lettering" width="1200" height="960" loading="lazy" decoding="async"></div>
+              <div class="shot" data-shot="pet" data-on="pet" hidden><img src="../assets/img/custom/watercolor-pet-cat.webp" alt="Sample digital watercolor portrait of a tuxedo cat in a straw hat on a wooden windowsill, beside yarn balls and a small crochet bear" width="900" height="609" loading="lazy" decoding="async"><p class="shot-cap">Your pet in digital watercolor — a sample painting</p></div>
               <div class="shot" data-shot="floating" data-when="frame=yes&amp;paper=do&amp;format!=digital" data-on="frame" hidden><img src="../assets/img/custom/watercolor-floating-frame.webp" alt="Sample image: digital watercolor print of a tuxedo cat in a straw hat on handmade Dó papyrus, in a light wood floating frame" width="900" height="746" loading="lazy" decoding="async"><p class="shot-cap">Dó papyrus in a floating frame — 5×7 shown · sample image</p></div>
               <div class="shot" data-shot="do" data-when="paper=do&amp;format!=digital" data-on="paper" hidden><img src="../assets/img/custom/do-paper-print-detail.webp" alt="Digital watercolor cat print held up to the light on handmade Vietnamese Dó papyrus, showing the paper's fibers" width="560" height="747" loading="lazy" decoding="async"><p class="shot-cap">Printed on handmade Vietnamese Dó papyrus</p></div>
               <div class="shot" data-shot="frame" data-when="frame=yes&amp;format!=digital" data-on="frame" hidden><img src="../assets/img/custom/watercolor-frames-wall.webp" alt="Six framed digital watercolor prints on a wall — a brick home and a tuxedo cat in a straw hat — in oak, white, dark wood and floating frames" width="960" height="717" loading="lazy" decoding="async"><p class="shot-cap">Framed prints on the wall</p></div>
@@ -323,9 +326,9 @@
               <legend><span class="step-n" aria-hidden="true">2</span> <span class="step-label">Add or swap</span></legend>
               <p class="step-hint">Add it to the box, or swap it for a basic item — the same price either way.</p>
               <div class="tiles">
-                <label class="tile"><input type="checkbox" name="addons" value="succulent" data-label="Small succulent or aloe vera"><span class="tile-name">Small succulent or aloe vera</span><span class="tile-price">+$10</span></label>
+                <label class="tile"><input type="checkbox" name="addons" value="succulent" data-label="Small succulent or aloe vera"><span class="tile-name">Small succulent or aloe vera</span><span class="tile-note">Texas only</span><span class="tile-price">+$10</span></label>
                 <label class="tile"><input type="checkbox" name="addons" value="candle" data-label="Scented candle"><span class="tile-name">Scented candle</span><span class="tile-price">+$10</span></label>
-                <label class="tile"><input type="checkbox" name="addons" value="coldcut" data-label="Cold cut box"><span class="tile-name">Cold cut box</span><span class="tile-note">pickup only</span><span class="tile-price">+$15</span></label>
+                <div class="tile tile-info"><span class="tile-name">Cold cut box</span><span class="tile-note">(coming soon)</span><span class="tile-price">+$15</span></div>
                 <label class="tile"><input type="checkbox" name="addons" value="berry" data-label="3-berry fruit box"><span class="tile-name">3-berry fruit box</span><span class="tile-note">pickup only</span><span class="tile-price">+$10</span></label>
                 <label class="tile"><input type="checkbox" name="addons" value="chocolate" data-label="Chocolate box (6 pieces)"><span class="tile-name">Chocolate box (6 pieces)</span><span class="tile-price">+$20</span></label>
               </div>
@@ -379,7 +382,7 @@
               <legend><span class="step-n" aria-hidden="true">2</span> <span class="step-label">Choose your set</span></legend>
               <div class="tiles cols-1">
                 <label class="tile"><input type="radio" name="set" value="gown" checked><span class="tile-name">Christening Gown Set — lace &amp; satin</span><span class="tile-price">$89</span><span class="tile-note">A complete heirloom-quality set for her special day.</span></label>
-                <div class="tile tile-info"><span class="tile-name">Confirmation gift box</span><span class="tile-price">$55</span><span class="tile-note">(coming soon)</span><span class="tile-note">12 cm crochet saint figure + handmade rosary chain. Sales tax &amp; shipping included.</span><img class="tile-img" src="../assets/img/custom/confirmation-box.webp" alt="Confirmation gift box: a crochet Mary figure and a blue crochet rosary chain in a kraft box" width="320" height="389" loading="lazy" decoding="async"></div>
+                <div class="tile tile-info"><span class="tile-name">Confirmation gift box</span><span class="tile-price">$55</span><span class="tile-note">(coming soon)</span><span class="tile-note">12 cm crochet saint figure + handmade rosary chain. Shipping included.</span><img class="tile-img" src="../assets/img/custom/confirmation-box.webp" alt="Confirmation gift box: a crochet Mary figure and a blue crochet rosary chain in a kraft box" width="320" height="389" loading="lazy" decoding="async"></div>
               </div>
             </fieldset>
           </form>
@@ -481,10 +484,10 @@
             <div class="gift-box">
               <h4 class="box-title">What's inside</h4>
               <ul class="box">
-                <li class="incl">Your pet painted in watercolor</li>
+                <li class="incl">Your pet painted in digital watercolor</li>
                 <li class="incl" data-when="pages=6">6 sheets — 2 months on each page</li>
                 <li class="incl" data-when="kind=print&amp;pages=6">Printed 5×7 in</li>
-                <li class="incl" data-when="kind=print">Printed on regular or fine-art paper</li>
+                <li class="incl" data-when="kind=print">Printed on Premium Matte paper</li>
               </ul>
               <div class="box-end">
                 <p><a class="btn btn-primary btn-block" data-order href="https://tally.so/r/M1KOkY">Place your order</a></p>
@@ -569,7 +572,7 @@
     <div class="wrap">
       <p class="tagline">Made by hand. Made to be kept.</p>
       <p>Designed in Texas. Made in Vietnam.</p>
-      <p>Prices in USD, before 8.25% sales tax unless marked included · Free U.S. shipping or pickup at Pearland Town Center</p>
+      <p>Prices in USD, before Texas sales tax (8.25%) · Free U.S. shipping or pickup at Pearland Town Center</p>
       <p class="footer-links"><a href="../index.html">Home</a> · <a href="../shop.html">Shop All</a> · <a href="../about.html">Our Story</a> · <a href="https://vietdelightfinds.etsy.com" rel="noopener">Etsy shop</a> · <a href="mailto:purrlightstudiollc@gmail.com">purrlightstudiollc@gmail.com</a></p>
       <p class="copyright">© <span data-year>2026</span> Purrlight Studio LLC · Pearland, TX</p>
     </div>

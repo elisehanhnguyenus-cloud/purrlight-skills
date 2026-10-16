@@ -41,6 +41,7 @@
   var lastPick = null;   /* { product, total, deposit, text, getit } — the pick the customer is building */
   /* blank lines to fill in, so a shipping order brings its address and a time to receive it (Elise 16/10) */
   var FILL_IN = { ship: "\n\nShipping address: \nA good time to receive it: \n", sat: "\n\nA good time to pick it up: \n", sun: "\n\nA good time to pick it up: \n" };
+  FILL_IN.out = FILL_IN.ship;
   function orderUrl() {
     var url = ORDER_FORM_URL;
     if (/^mailto:/i.test(url)) {   /* the fallback email link: the pick travels in the message body */
@@ -53,9 +54,11 @@
       params.forEach(function (v, k) { if (/^utm_/i.test(k)) qs.push(encodeURIComponent(k.toLowerCase()) + "=" + encodeURIComponent(v)); });   /* Tally field names are case-sensitive */
     } catch (e) { /* old browsers: plain link */ }
     if (lastPick && /^https:\/\/(www\.)?tally\.so\//i.test(url)) {
-      /* Tally: hidden fields named pick, product, total and deposit (see prices.js); amounts always with cents, like "Copy deposit amount" */
+      /* Tally: hidden fields named pick, product, total, deposit and delivery (see prices.js); amounts always with cents,
+         like "Copy deposit amount"; delivery "Digital file" makes the form's phone + time-to-receive questions optional */
       qs.push("pick=" + encodeURIComponent(lastPick.text), "product=" + encodeURIComponent(lastPick.product),
         "total=" + lastPick.total.toFixed(2), "deposit=" + lastPick.deposit.toFixed(2));
+      if (DELIVERY[lastPick.getit]) qs.push("delivery=" + encodeURIComponent(DELIVERY[lastPick.getit]));
     } else if (lastPick && ORDER_FORM_PREFILL_ENTRY) {
       if (url.indexOf("usp=") === -1) qs.push("usp=pp_url");
       qs.push(encodeURIComponent(ORDER_FORM_PREFILL_ENTRY) + "=" + encodeURIComponent(lastPick.text));
@@ -155,7 +158,7 @@
       est: function (o) { return estPet(o); }
     },
     watercolor: {
-      product: "Custom Digital Watercolor Painting", item: "Watercolor painting",
+      product: "Custom Digital Watercolor Painting", item: "Digital watercolor painting",
       read: function (v) {
         var print = v.format !== "digital", x = v.extras || [];
         return { format: v.format, fineArt: print && v.paper === "fine", doPaper: print && v.paper === "do", frame: print && v.frame === "yes", giftBox: print && x.indexOf("giftBox") > -1, rosary: x.indexOf("rosary") > -1, qty: v.qty };
@@ -211,36 +214,61 @@
   function clampNum(n, min, max) { n = Math.floor(Number(n)); return n >= min ? Math.min(n, max) : min; }
   function lowerFirst(t) { t = String(t || ""); return t.charAt(0).toLowerCase() + t.slice(1); }
 
-  /* pickup or shipping — one step after every piece's options (Elise 16/10) */
+  /* pickup or shipping — one step after every piece's options (Elise 16/10). Shipping is free; an order shipped outside
+     Texas carries no Texas sales tax (Elise 16/10, second message). */
+  var SHIP_HINT = "In your order, add your shipping address and a good time to receive it.";
   var GET_IT = {
-    ship: { name: "Ship to my address", note: "Free U.S. shipping", short: "Free U.S. shipping", pick: "Ship to my address (free U.S. shipping)",
-      hint: "In your order, add your shipping address and a good time to receive it." },
+    ship: { name: "Ship within Texas", note: "Free shipping", short: "Free shipping in Texas", pick: "Ship to my Texas address (free shipping)", hint: SHIP_HINT },
+    out: { name: "Ship outside Texas", note: "Free U.S. shipping · no Texas sales tax", short: "Free U.S. shipping · outside Texas", pick: "Ship to my address outside Texas (free U.S. shipping)",
+      hint: SHIP_HINT + " No Texas sales tax when it ships to another state." },
     sat: { name: "Pickup Saturday", note: "Pearland Town Center", short: "Pickup Saturday · Pearland Town Center", pick: "Pickup Saturday at Pearland Town Center",
       hint: "Pickup at Pearland Town Center on Saturday — in your order, add a good time to pick it up." },
     sun: { name: "Pickup Sunday", note: "Pearland Town Center", short: "Pickup Sunday · Pearland Town Center", pick: "Pickup Sunday at Pearland Town Center",
       hint: "Pickup at Pearland Town Center on Sunday — in your order, add a good time to pick it up." }
   };
+  var GET_KEYS = ["ship", "out", "sat", "sun"];
+  /* the order form's hidden "delivery" field */
+  var DELIVERY = { ship: "Ship within Texas", out: "Ship outside Texas", sat: "Pickup Saturday", sun: "Pickup Sunday", digital: "Digital file" };
+  /* a digital file has nothing to ship: only where the buyer lives matters (for Texas sales tax) */
+  var WHERE = { tx: { name: "In Texas", note: "8.25% Texas sales tax" }, out: { name: "Outside Texas", note: "No Texas sales tax" } };
+  function stepAfterLast(form, fs) {   /* right after the last numbered step (the pet form ends with its price table) */
+    var steps = form.querySelectorAll("fieldset.step"), last = steps[steps.length - 1];
+    form.insertBefore(fs, last ? last.nextSibling : null);
+  }
+  function radioTiles(name, keys, defs, first) {
+    var tiles = el("div", { "class": "tiles cols-1" });   /* one per row on phones: name above its note */
+    keys.forEach(function (k) {
+      var inp = el("input", { type: "radio", name: name, value: k });
+      if (k === first) { inp.checked = true; inp.defaultChecked = true; }
+      tiles.appendChild(el("label", { "class": "tile" }, [inp, el("span", { "class": "tile-name", text: defs[k].name }), el("span", { "class": "tile-note", text: defs[k].note })]));
+    });
+    return tiles;
+  }
+  function stepLegend(text) {
+    return el("legend", null, [el("span", { "class": "step-n", "aria-hidden": "true", text: "" }), document.createTextNode(" "), el("span", { "class": "step-label", text: text })]);
+  }
   function addGetIt(form, id) {
-    var nums = form.querySelectorAll(".step-n"), n = 1;
-    for (var i = 0; i < nums.length; i++) n = Math.max(n, Number(nums[i].textContent) || 0);
     var fs = el("fieldset", { "class": "step step-getit" });
-    fs.appendChild(el("legend", null, [el("span", { "class": "step-n", "aria-hidden": "true", text: String(n + 1) }), document.createTextNode(" "), el("span", { "class": "step-label", text: "Pickup or shipping" })]));
-    var off = el("p", { "class": "step-off", id: id + "-getit-off", text: "Cold cut and 3-berry boxes are pickup only." });
+    fs.appendChild(stepLegend("Pickup or shipping"));
+    var off = el("p", { "class": "step-off", id: id + "-getit-off" });
     off.hidden = true;
     fs.appendChild(off);
-    var tiles = el("div", { "class": "tiles cols-3 list" });
-    ["ship", "sat", "sun"].forEach(function (k) {
-      var inp = el("input", { type: "radio", name: "getit", value: k });
-      if (k === "ship") { inp.checked = true; inp.defaultChecked = true; }
-      tiles.appendChild(el("label", { "class": "tile" }, [inp, el("span", { "class": "tile-name", text: GET_IT[k].name }), el("span", { "class": "tile-note", text: GET_IT[k].note })]));
-    });
-    fs.appendChild(tiles);
+    fs.appendChild(radioTiles("getit", GET_KEYS, GET_IT, "ship"));
     var how = el("p", { "class": "step-hint getit-how", id: id + "-getit-how", text: GET_IT.ship.hint });
     fs.appendChild(how);
     fs.setAttribute("aria-describedby", how.id);
-    /* right after the last numbered step (the pet form ends with its price table) */
-    var steps = form.querySelectorAll("fieldset.step"), last = steps[steps.length - 1];
-    form.insertBefore(fs, last ? last.nextSibling : null);
+    stepAfterLast(form, fs);
+    return fs;
+  }
+  function addWhere(form, id) {
+    var fs = el("fieldset", { "class": "step step-where" });
+    fs.appendChild(stepLegend("Where you live"));
+    var hint = el("p", { "class": "step-hint", id: id + "-where-hint", text: "A digital file has nothing to ship — Texas sales tax applies to buyers in Texas." });
+    fs.appendChild(hint);
+    fs.appendChild(radioTiles("where", ["tx", "out"], WHERE, "tx"));
+    fs.setAttribute("aria-describedby", hint.id);
+    fs.hidden = true;
+    stepAfterLast(form, fs);
     return fs;
   }
 
@@ -303,6 +331,7 @@
     /* card message (doll, godparents): goes into the pick, never stored on the device */
     /* how it reaches the customer (Elise 16/10): free U.S. shipping, or pickup at Pearland Town Center on Saturday or Sunday */
     var getit = form ? addGetIt(form, art.id) : null;
+    var where = form ? addWhere(form, art.id) : null;
     var msgEl = form ? form.querySelector("[data-message]") : null;
     var msgStep = msgEl ? msgEl.closest(".step-message") : null;
     var msgCount = msgStep ? msgStep.querySelector(".msg-count") : null;
@@ -383,18 +412,36 @@
         if (why) { why.hidden = !isDigital; if (isDigital) node.setAttribute("aria-describedby", why.id); else node.removeAttribute("aria-describedby"); }
       }
       g.say = "";
-      if (getit) {   /* fresh items (PRICES.housewarming.fresh: cold cut, berries) are pickup only: shipping is off while one is in the box */
-        var fresh = (PRICES[key] && PRICES[key].fresh) || [], freshOn = false;
-        (v.addons || []).forEach(function (a) { if (fresh.indexOf(a) > -1) freshOn = true; });
-        var shipIn = getit.querySelector('input[value="ship"]'), satIn = getit.querySelector('input[value="sat"]');
+      if (getit) {   /* fresh items (PRICES.housewarming.fresh) are pickup only; live plants (…plants) stay in Texas */
+        var P = PRICES[key] || {}, freshNames = [], plantOn = false;
+        (v.addons || []).forEach(function (a) {
+          var box1 = form.querySelector('input[name="addons"][value="' + a + '"]');
+          if ((P.fresh || []).indexOf(a) > -1) freshNames.push(box1 ? box1.getAttribute("data-label") : a);
+          if ((P.plants || []).indexOf(a) > -1) plantOn = true;
+        });
+        var freshOn = freshNames.length > 0, ok = { ship: !freshOn, out: !freshOn && !plantOn, sat: true, sun: true }, gin = {}, cur = "";
+        GET_KEYS.forEach(function (k) {
+          gin[k] = getit.querySelector('input[value="' + k + '"]');
+          gin[k].disabled = !ok[k];
+          gin[k].parentNode.classList.toggle("is-off", !ok[k]);
+          if (gin[k].checked) cur = k;
+        });
+        var freshWhy = (freshNames.length > 1 ? freshNames.join(" and ") + " are" : "The " + lowerFirst(freshNames[0]) + " is") + " pickup only";
+        /* the page moved the customer: say so, and move them back once the reason is gone (unless they chose since) */
+        if (!ok[cur]) {
+          var to = ok.ship ? "ship" : "sat";
+          gin[to].checked = true;
+          g.auto = { from: g.auto ? g.auto.from : (cur || "ship"), to: to };
+          g.say = (freshOn ? freshWhy : "Live plants can't ship outside Texas") + " — set to " + GET_IT[to].pick + "." + (to === "sat" ? " Sunday works too." : "");
+        } else if (g.auto && gin[g.auto.to].checked && ok[g.auto.from] && g.auto.from !== g.auto.to) {
+          gin[g.auto.from].checked = true;
+          g.say = "Back to " + GET_IT[g.auto.from].name + ".";
+          g.auto = null;
+        }
         var offNote = getit.querySelector(".step-off"), howNote = getit.querySelector(".getit-how");
-        shipIn.disabled = freshOn;
-        shipIn.parentNode.classList.toggle("is-off", freshOn);
-        /* the page moved the customer to pickup: say so, and move them back once no fresh item is left (unless they chose a day themselves) */
-        if (freshOn && shipIn.checked) { satIn.checked = true; g.autoPickup = true; g.say = "Fresh items are pickup only — set to Pickup Saturday at Pearland Town Center. Sunday works too."; }
-        else if (!freshOn && g.autoPickup) { if (satIn.checked) { shipIn.checked = true; g.say = "Shipping to your address is back on."; } g.autoPickup = false; }
-        offNote.hidden = !freshOn;
-        getit.setAttribute("aria-describedby", (freshOn ? offNote.id + " " : "") + howNote.id);
+        offNote.textContent = [freshOn ? freshWhy + "." : "", plantOn ? "Live plants ship within Texas only." : ""].filter(Boolean).join(" ");
+        offNote.hidden = !offNote.textContent;
+        getit.setAttribute("aria-describedby", (offNote.hidden ? "" : offNote.id + " ") + howNote.id);
       }
       v = readValues(form);   /* re-read: disabled extras drop out */
       syncSwaps(v);
@@ -436,15 +483,17 @@
       }
 
       var est = def.est(def.read(v, form, g));
-      g.est = est;
       if (getit) {
-        getit.hidden = !!est.digitalOnly;   /* a digital file is emailed */
+        getit.hidden = !!est.digitalOnly;   /* a digital file has nothing to ship … */
+        where.hidden = !est.digitalOnly;    /* … only where the buyer lives matters for tax */
         var gw = GET_IT[v.getit] || GET_IT.ship;
-        g.getit = est.digitalOnly ? "" : (GET_IT[v.getit] ? v.getit : "ship");
+        g.getit = est.digitalOnly ? "digital" : (GET_IT[v.getit] ? v.getit : "ship");
         g.how = est.digitalOnly ? "" : gw.pick;
         var howHint = getit.querySelector(".getit-how");
         if (howHint) howHint.textContent = gw.hint;
+        if (est.digitalOnly ? v.where === "out" : g.getit === "out") est = outOfTexas(est);   /* no Texas sales tax */
       }
+      g.est = est;
       if (form) {   /* number the steps that show (a swapped-out painting hides "Your photos"); step 1 is the picker */
         var fss = form.querySelectorAll("fieldset.step"), sn = 2;
         for (var f = 0; f < fss.length; f++) { var num = fss[f].querySelector(".step-n"); if (num && !fss[f].hidden) num.textContent = String(sn++); }
@@ -474,8 +523,10 @@
         box.appendChild(qli); box.appendChild(sli);
       }
       prevQty = est.qty;
-      /* sales tax (8.25%, Elise 16/10) — or included, where the piece's own copy says so */
-      box.appendChild(el("li", { "class": "line line-tax" }, [el("span", { "class": "line-name", text: est.taxIncluded ? "Sales tax" : taxLabel() }), el("span", { "class": "amt", text: est.taxIncluded ? "included" : "+" + money(est.tax) })]));
+      /* Texas sales tax (8.25%) — not on fresh fruit, none when it ships (or the buyer lives) outside Texas */
+      var taxName = el("span", { "class": "line-name", text: est.outOfTexas ? "Texas sales tax" : taxLabel() });
+      if (est.outOfTexas || est.taxFree) taxName.appendChild(el("span", { "class": "line-sub", text: est.outOfTexas ? "None outside Texas" : "Not on the fresh fruit" }));
+      box.appendChild(el("li", { "class": "line line-tax" }, [taxName, el("span", { "class": "amt", text: est.outOfTexas ? "$0" : "+" + money(est.tax) })]));
       prevLabels = est.lines.map(function (l) { return l.label; });
       totalRow.innerHTML = "";
       totalRow.appendChild(el("span", { text: "Estimate" }));
@@ -489,7 +540,7 @@
       balanceRow.appendChild(el("span", { text: "Balance after you approve the photo" })); balanceRow.appendChild(el("span", { "class": "amt", text: db[1] }));
       noteRow.textContent = [est.note, est.digitalOnly ? "" : (GET_IT[v.getit] || GET_IT.ship).short].filter(Boolean).join(" · ");
       copied.textContent = "";
-      if (fromUser) store(storeKey, { v: v, swaps: g.swaps, u: 1, auto: g.autoPickup ? 1 : 0 });   /* a plain page view remembers nothing */
+      if (fromUser) store(storeKey, { v: v, swaps: g.swaps, u: 1, auto: g.auto || 0 });   /* a plain page view remembers nothing */
       if (g === current) setBarThumb(g);
       if (fromUser) {
         var newKeys = prevLabels.slice(1).map(addonKey);
@@ -505,7 +556,7 @@
       form.addEventListener("change", function (e) {
         var t = e.target;
         if (!t || t === msgEl) return;
-        if (t.name === "getit") g.autoPickup = false;   /* the customer chose: keep it */
+        if (t.name === "getit") g.auto = null;   /* the customer chose: keep it */
         update(true, t.name, t.type === "checkbox" && t.checked ? t.value : "");
       });
       if (qtyWrap) enhanceQty(qtyWrap, function () { update(true); });
@@ -523,7 +574,7 @@
     function mainView() { var sh = art.querySelectorAll(".gift-photo .shot"); for (var i = 0; i < sh.length; i++) sh[i].hidden = sh[i].hasAttribute("data-when") || sh[i].hasAttribute("data-on"); }
     resetBtn.addEventListener("click", function () {
       if (form) form.reset();
-      g.swaps = {}; g.autoPickup = false;
+      g.swaps = {}; g.auto = null;
       mainView();
       if (msgCount) msgCount.textContent = "Up to 160 characters";
       update(true); store(storeKey, null);
@@ -533,7 +584,9 @@
     var saved = load(storeKey);
     if (form && saved && saved.u === 1 && saved.v && typeof saved.v === "object") {
       g.restored = true;
-      g.autoPickup = saved.auto === 1;
+      /* a pickup the page chose (an older pick stored 1 = ship → Saturday) */
+      if (saved.auto === 1) g.auto = { from: "ship", to: "sat" };
+      else if (saved.auto && GET_IT[saved.auto.from] && GET_IT[saved.auto.to]) g.auto = { from: saved.auto.from, to: saved.auto.to };
       var inputs = form.querySelectorAll("input");
       for (var r = 0; r < inputs.length; r++) {
         var inp2 = inputs[r];
@@ -555,7 +608,7 @@
         for (var r3 = 0; r3 < defs.length; r3++) defs[r3].checked = defs[r3].defaultChecked;
       }
     }
-    g.clear = function () { if (form) form.reset(); g.swaps = {}; g.autoPickup = false; mainView(); if (msgCount) msgCount.textContent = "Up to 160 characters"; };
+    g.clear = function () { if (form) form.reset(); g.swaps = {}; g.auto = null; mainView(); if (msgCount) msgCount.textContent = "Up to 160 characters"; };
     g.form = form;
     update(false);
     return g;
@@ -713,10 +766,11 @@
   }
 
   /* ---------- or start from a gift idea (presets) ---------- */
-  var PRESETS = {
-    realtor:  { id: "housewarming",  values: { addons: ["succulent"] } },
-    memorial: { id: "watercolor",    values: { format: "5x7", paper: "do", frame: "yes", extras: ["giftBox"] }, show: "frame" },   /* opens on the cat on Dó in a floating frame */
-    grandma:  { id: "portrait-doll", values: { shadowbox: "yes" } }
+  var PRESETS = {   /* cheapest first (Elise 16/10): an easy first click */
+    petprint:  { id: "watercolor",    values: { format: "5x7", paper: "regular" }, show: "pet" },   /* opens on a pet painting */
+    memorial:  { id: "watercolor",    values: { format: "5x7", paper: "do", frame: "yes", extras: ["giftBox"] }, show: "frame" },   /* the cat on Dó in a floating frame */
+    realtor:   { id: "housewarming",  values: { addons: ["succulent"] } },
+    christmas: { id: "portrait-doll", values: { shadowbox: "yes" } }
   };
   function setValues(form, values) {
     if (!form) return;
@@ -750,15 +804,18 @@
       var est = presetEstimate(p), price = btn.querySelector("[data-idea-price]");
       if (price && est) {   /* the idea's price before tax, like the prices on the tiles */
         price.textContent = money(est.pre);
-        price.appendChild(el("span", { "class": "idea-tax", text: est.taxIncluded ? " tax incl." : " + tax" }));
+        price.appendChild(el("span", { "class": "idea-tax", text: " + tax" }));
       }
       btn.addEventListener("click", function () {
         var g = byId[p.id];
         var msg = g.form && g.form.querySelector("[data-message]"), keep = msg ? msg.value : "";   /* the card message is the customer's own words */
-        var gi = g.form && g.form.querySelector('input[name="getit"]:checked'), keepHow = gi && !g.autoPickup ? gi.value : "";   /* and so is how it reaches them */
+        /* and so is how it reaches them (unless the page chose it) and where they live */
+        var gi = g.form && g.form.querySelector('input[name="getit"]:checked'), keepHow = gi && !g.auto ? gi.value : "";
+        var wi = g.form && g.form.querySelector('input[name="where"]:checked'), keepWhere = wi ? wi.value : "";
         g.clear();
         setValues(g.form, p.values);
         if (keepHow) setValues(g.form, { getit: keepHow });
+        if (keepWhere) setValues(g.form, { where: keepWhere });
         if (msg && keep) { msg.value = keep; var mc = g.form.querySelector(".msg-count"); if (mc) mc.textContent = keep.length + " / 160"; }
         activate(p.id, { user: true });
         g.update(true, p.show);

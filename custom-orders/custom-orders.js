@@ -11,6 +11,13 @@
 (function () {
   "use strict";
 
+  /* ---------- SEASONAL Christmas 2026: <html data-season="christmas"> shows the Christmas band (order-by dates, photo,
+     lights, snow, Merlin's bell). From SEASON_END (the visitor's local midnight) the page retires it by itself, even if
+     nobody edits it; deleting the attribute in index.html does the same at once. ---------- */
+  var SEASON_END = new Date(2027, 0, 2);   /* Jan 2, 2027: through New Year's Day (Elise 16/10) */
+  if (new Date() >= SEASON_END) document.documentElement.removeAttribute("data-season");
+  var christmas = document.documentElement.getAttribute("data-season") === "christmas";
+
   /* ---------- site nav (same behavior as the main site) ---------- */
   var toggle = document.querySelector(".nav-toggle");
   var nav = document.querySelector(".main-nav");
@@ -283,7 +290,7 @@
     },
     christening: {   /* the gown set (girls, ready to ship in 2–3 days) or a Confirmation gift box (ships after Nov 12) */
       product: "Christening & Confirmation Gifts",
-      read: function (v) { return { set: v.set, figure: v.figure }; },
+      read: function (v) { return { set: v.set, figure: v.figure, eyes: v.eyes }; },
       est: function (o) {
         var now = new Date().getTime();
         renderGownSale(gownPrice(now));   /* the gown tile and the estimate read one clock */
@@ -963,6 +970,19 @@
     });
     ideas.hidden = false;
   }
+  /* SEASONAL Christmas 2026 (Elise 16/10): the Christmas idea shows its order-by date with Merlin's bell, read from the
+     Christmas band's own <time> (the date lives in one place), until the end of that day in the visitor's time — the
+     same kind of badge as "Under $20" */
+  var xIdea = christmas ? document.querySelector(".idea[data-order-by]") : null;
+  var xTime = xIdea ? document.getElementById(xIdea.getAttribute("data-order-by")) : null;
+  var xDay = xTime ? /^(\d{4})-(\d{2})-(\d{2})$/.exec(xTime.getAttribute("datetime") || "") : null;
+  if (xDay && new Date() <= new Date(+xDay[1], +xDay[2] - 1, +xDay[3], 23, 59, 59)) {
+    var xBell = document.createElement("img");
+    xBell.alt = ""; xBell.width = 69; xBell.height = 96; xBell.loading = "lazy"; xBell.decoding = "async";
+    xBell.src = "../assets/img/custom/xmas-bell.webp";
+    var xText = xIdea.querySelector(".idea-text");
+    if (xText) xText.insertBefore(el("span", { "class": "idea-badge idea-badge-xmas" }, [xBell, document.createTextNode("Order by " + xTime.textContent.replace(/^[A-Za-z]+,\s*/, ""))]), xText.firstChild);
+  }
 
   /* keyboard focus never ends up under the phone order bar (scroll-padding covers most browsers; this covers the rest) */
   document.addEventListener("focusin", function (e) {
@@ -985,5 +1005,178 @@
     /* no IntersectionObserver: a plain scroll rule */
     var onScroll = function () { var show = window.scrollY > 420; bar.hidden = !show; document.body.classList.toggle("has-bar", show); document.documentElement.classList.toggle("has-bar", show); };
     window.addEventListener("scroll", onScroll); onScroll();
+  }
+
+  /* ---------- motion (Elise 16/10 — her exception to the Canon's "no transforms"): each part fades and rises as it
+     comes into view (cards one after another), cards lift under the mouse (CSS), and on wide screens the two
+     background photos drift a little slower than the page. Nothing moves for visitors who ask for less motion;
+     without JavaScript or IntersectionObserver everything is simply there. ---------- */
+  var still = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null, calm = !!(still && still.matches);
+  /* the setting can change while the page is open: the CSS turns the reveal, lift and twinkle off by itself; the drift
+     and the snow listen here */
+  var onStill = function (fn) { if (!still) return; if (still.addEventListener) still.addEventListener("change", fn); else if (still.addListener) still.addListener(fn); };
+  if (!calm && "IntersectionObserver" in window) {
+    document.documentElement.classList.add("motion");
+    var RISE = [".studio-head", ".pick-step", ".ideas-title", ".gift-photo", ".gift-box", ".how .section-title", ".pay .section-title", ".pay-lede",
+      ".xmas-text", ".favors .soon-tag", ".favors .section-title", ".favors-lede", ".favors .note", ".closing-inner > *"];
+    /* rows whose cards come in one after another — the row is watched, not each card, so cards still off to the
+       side in a sliding row on a phone come in with the rest */
+    var CASCADE = [".picker", ".ideas-list", ".steps", ".pay-ways", ".favors-row"];
+    var seen = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        if (e.target.hasAttribute("data-rv-row")) { var kids = e.target.children; for (var k = 0; k < kids.length; k++) kids[k].classList.add("in"); }
+        else e.target.classList.add("in");
+        seen.unobserve(e.target);
+      });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+    /* a part already on screen when this script runs (late, on a slow connection) stays as it is — it never fades
+       out under the visitor's eyes. Parts in a hidden tab have no height, so they still rise in when shown. */
+    var shown = function (n) { var r = n.getBoundingClientRect(); return r.height > 0 && r.top < window.innerHeight && r.bottom > 0; };
+    var mark = function (node, delay) {
+      if (shown(node)) return;
+      node.classList.add("rv");
+      if (delay) node.style.setProperty("--rv-delay", delay + "ms");
+      seen.observe(node);
+    };
+    RISE.forEach(function (sel) { var ns = document.querySelectorAll(sel); for (var i = 0; i < ns.length; i++) mark(ns[i], 0); });
+    CASCADE.forEach(function (sel) {
+      var rows = document.querySelectorAll(sel);
+      for (var i = 0; i < rows.length; i++) {
+        if (shown(rows[i])) continue;
+        var kids = rows[i].children;
+        for (var k = 0; k < kids.length; k++) { kids[k].classList.add("rv"); if (k) kids[k].style.setProperty("--rv-delay", Math.min(k, 6) * 70 + "ms"); }
+        rows[i].setAttribute("data-rv-row", "");
+        seen.observe(rows[i]);
+      }
+    });
+    /* a keyboard user who tabs ahead of the fade never meets an invisible control */
+    document.addEventListener("focusin", function (e) {
+      var r = e.target && e.target.closest ? e.target.closest(".rv:not(.in)") : null;
+      if (r) { r.classList.add("in"); seen.unobserve(r); }
+    });
+    /* the hero and Christmas photos drift: up to ±28px against the scroll, only while on screen, only where they are
+       backgrounds (900px and wider) */
+    var drift = [document.querySelector(".hero-photo"), document.querySelector(".xmas-photo")].filter(Boolean);
+    var wide = window.matchMedia("(min-width: 900px)"), ticking = false;
+    var place = function () {
+      ticking = false;
+      drift.forEach(function (img) {
+        if (!wide.matches || (still && still.matches)) { img.style.transform = ""; return; }
+        var r = img.parentNode.getBoundingClientRect(), vh = window.innerHeight;
+        if (r.bottom < 0 || r.top > vh) return;
+        var t = (r.top + r.height / 2 - vh / 2) / (vh / 2 + r.height / 2);   /* −1 … 1 across the screen */
+        img.style.transform = "translate3d(0," + Math.round(Math.max(-1, Math.min(1, t)) * 28) + "px,0) scale(1.06)";
+      });
+    };
+    var onDrift = function () { if (!ticking) { ticking = true; window.requestAnimationFrame(place); } };
+    if (drift.length) { window.addEventListener("scroll", onDrift, { passive: true }); window.addEventListener("resize", onDrift); onStill(onDrift); place(); }
+  }
+
+  /* ---------- small lights (Elise 16/10, 9th message). WCAG 2.2.2: nothing loops on its own for more than 5 s
+     without a way to stop it. The stars by the headings twinkle twice as they come into view (.go), then rest lit.
+     The Christmas band hangs a string of lights along its top (one bulb per 72px, on a hand-draped wire, with
+     Merlin's bell hung from it) and lets light snow fall over
+     Merlin's photo — a canvas the photo's size, faded at the same edges. Both run only while the band is on screen
+     (.is-live) and the tab is open, never for visitors who ask for less motion (also when they turn that on mid-visit),
+     and the band's own button pauses them (remembered on this device). Decoration only: aria-hidden. ---------- */
+  if (!calm && "IntersectionObserver" in window) {
+    var twinkle = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("go"); twinkle.unobserve(e.target); } });
+    }, { threshold: 0.5 });
+    var stars = document.querySelectorAll(".glints");
+    for (var gi = 0; gi < stars.length; gi++) twinkle.observe(stars[gi]);
+  }
+  var band = christmas ? document.querySelector(".christmas") : null;
+  if (band) {
+    var lights = document.createElement("div");
+    lights.className = "xmas-lights";
+    lights.setAttribute("aria-hidden", "true");
+    band.insertBefore(lights, band.firstChild);   /* in place first: hang() measures it, and the CSS hangs the bell only after it */
+    var hang = function () {   /* one bulb per 72px of wire (the wire starts a tile left of the text column: see the CSS) */
+      var want = Math.ceil(lights.clientWidth / 72) + 1;
+      while (lights.children.length < want) lights.appendChild(document.createElement("i"));
+      while (lights.children.length > want) lights.removeChild(lights.lastChild);
+      for (var k = 0, off = Math.floor(-lights.offsetLeft / 72); k < want; k++) lights.children[k].className = k < off ? "off" : "";
+    };
+    hang();
+    window.addEventListener("resize", hang);
+  }
+  var snowPic = band && band.querySelector(".xmas-pic"), snow = document.createElement("canvas");
+  if (snowPic && !calm && "IntersectionObserver" in window && snow.getContext) {
+    var STILL_KEY = "purrlight-xmas-paused", paused = false;
+    try { paused = window.localStorage.getItem(STILL_KEY) === "1"; } catch (e) { /* storage blocked: start playing */ }
+    snow.className = "xmas-snow";
+    snow.setAttribute("aria-hidden", "true");
+    snowPic.parentNode.insertBefore(snow, snowPic.nextSibling);
+    var pause = document.createElement("button");
+    pause.type = "button";
+    pause.className = "xmas-pause";
+    band.appendChild(pause);
+    var pen = snow.getContext("2d"), flakes = [], sw = 0, sh = 0, running = false, onScreen = false, bandOn = false, last = 0, frame = 0;
+    var flake = function (anywhere) {
+      return { x: Math.random() * sw, y: anywhere ? Math.random() * sh : -4, r: 1 + Math.random() * 2.2, vy: 14 + Math.random() * 22, sway: 4 + Math.random() * 10, ph: Math.random() * 6.28 };
+    };
+    var fit = function () {
+      var b = band.getBoundingClientRect(), p = snowPic.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio || 1, 2);
+      sw = Math.round(p.width); sh = Math.round(p.height);
+      snow.style.left = Math.round(p.left - b.left - band.clientLeft) + "px";
+      snow.style.top = Math.round(p.top - b.top - band.clientTop) + "px";
+      snow.style.width = sw + "px"; snow.style.height = sh + "px";
+      snow.width = Math.round(sw * dpr); snow.height = Math.round(sh * dpr);
+      pen.setTransform(dpr, 0, 0, dpr, 0, 0);
+      flakes.length = 0;
+      for (var n = Math.min(70, Math.round(sw * sh / 9000)), i = 0; i < n; i++) flakes.push(flake(true));
+    };
+    var fall = function (now) {
+      frame = 0;
+      if (!running) return;
+      var dt = last ? Math.min((now - last) / 1000, 0.05) : 0;
+      last = now;
+      pen.clearRect(0, 0, sw, sh);
+      for (var i = 0; i < flakes.length; i++) {
+        var f = flakes[i];
+        f.y += f.vy * dt; f.ph += dt * 0.9;
+        if (f.y - f.r > sh) { flakes[i] = flake(false); continue; }
+        var x = f.x + Math.sin(f.ph) * f.sway;
+        pen.beginPath(); pen.arc(x, f.y, f.r + 0.8, 0, 6.2832); pen.fillStyle = "rgba(74, 66, 59, 0.14)"; pen.fill();   /* a faint rim, so a flake shows on white too */
+        pen.beginPath(); pen.arc(x, f.y, f.r, 0, 6.2832); pen.fillStyle = "rgba(255, 255, 255, 0.92)"; pen.fill();
+      }
+      frame = window.requestAnimationFrame(fall);
+    };
+    var snowing = function () {
+      var want = onScreen && !paused && !document.hidden && !(still && still.matches);
+      band.classList.toggle("is-live", bandOn);
+      band.classList.toggle("is-paused", paused);
+      /* a plain button named for what it will do (Pause / Play) — no aria-pressed, which would read "Play…, pressed" while stopped */
+      pause.textContent = paused ? "Play the lights & snow" : "Pause the lights & snow";
+      if (want && !running) { running = true; last = 0; frame = window.requestAnimationFrame(fall); }
+      else if (!want && running) { running = false; if (frame) window.cancelAnimationFrame(frame); frame = 0; pen.clearRect(0, 0, sw, sh); }
+    };
+    pause.addEventListener("click", function () {
+      paused = !paused;
+      try { window.localStorage.setItem(STILL_KEY, paused ? "1" : "0"); } catch (e) { /* not remembered: fine */ }
+      snowing();
+    });
+    fit();
+    /* re-place the canvas when the band or the photo changes size: the photo loading (older browsers keep no room for
+       it), the phone/desktop photo swapping in, the text above it reflowing */
+    var snowImg = snowPic.querySelector("img");
+    if (snowImg) snowImg.addEventListener("load", fit);
+    if ("ResizeObserver" in window) new ResizeObserver(fit).observe(band); else window.addEventListener("resize", fit);
+    /* the bulbs run while the band shows; the snow while the canvas itself shows (on phones it sits well below the
+       band's top) */
+    /* Merlin's bell swings once (about 1.4 s) the first time the band comes into view — not when paused, not on a
+       data-saver connection (Elise 16/10) */
+    var bellHang = band.querySelector(".xmas-hang"), rang = false, saver = navigator.connection && navigator.connection.saveData;
+    new IntersectionObserver(function (es) {
+      es.forEach(function (e) { bandOn = e.isIntersecting; });
+      if (bandOn && !rang && bellHang && !paused && !saver) { rang = true; bellHang.classList.add("ring"); }
+      snowing();
+    }).observe(band);
+    new IntersectionObserver(function (es) { es.forEach(function (e) { onScreen = e.isIntersecting; }); snowing(); }).observe(snow);
+    document.addEventListener("visibilitychange", snowing);
+    onStill(snowing);   /* reduced motion turned on mid-visit: the snow stops (the CSS hides the canvas and the button) */
+    snowing();
   }
 })();

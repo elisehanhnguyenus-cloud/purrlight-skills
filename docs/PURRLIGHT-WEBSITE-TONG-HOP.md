@@ -980,14 +980,22 @@ kỹ thuật) → chọn hướng tối giản + ghép ý hay:
 - Đang làm tiếp: **lá vàng + bông tuyết rơi + cây thông** (Giáng sinh Texas), cắt từ ảnh chị đã gửi; video "bé
   nhép miệng" — chờ chị gửi file.
 
+### Elise 16/10, tin nhắn 12 — đã làm
+- Thánh có sẵn: không chọn mắt (chị: đúng ý).
+- **Catalog Canva:** bỏ link (trang giá lệch giá trang web); chỉ đưa **6 trang chọn len** vào bước "Yarn" của Custom
+  Pet Crochet ("See every yarn color", đóng sẵn, ảnh chỉ tải khi mở; khách ghi mã màu C-25 / V-04… trong đơn). Bỏ
+  trang giới thiệu (có "children refuse to put down", "Finished in Texas") và trang mẫu len in.
+- **Giao hàng 2–3 tuần sau khi làm xong** (mùa lễ Thanksgiving, Christmas): ở "How it works", mục Giáng sinh, và hộp
+  "What's inside" khi chọn ship.
+- **Video Merlin** (Gemini, chị gửi): ảnh đầu trang chuyển thành video 10 giây, phát 1 lần, không tiếng, có nút
+  dừng/phát lại; khung đầu khớp ảnh nên chuyển liền mạch; nhẹ 260–470 KB (bản gốc 2,9 MB); theo công tắc mùa.
+
 ### Còn chờ chị
-1. "Turnaround: from X" → "ships within N" (FTC, xem 8j).
-2. Sau mùa lễ: thay ảnh hero (mục Giáng sinh tự ẩn từ 2/1/2027).
-3. Thánh có sẵn: trang không cho chọn mắt (giữ như tượng đang có) — đúng ý chị không?
-4. **Catalog Canva** (bmcv2.my.canva.site/6-catalogue-…): giá trong catalog lệch giá trên trang (búp bê
-   Classic $55 vs $80; mèo cotton Grand $105 vs $90; Baptism set $60 / Carlo Acutis 20 cm $85 vs
-   Confirmation $55/$90) và có nội dung chỉ dành cho sự kiện (Fife Cat Show 26–27/9, "this weekend only",
-   "Finished in Texas", "Ages 3+", email 2vietdelightgiftshop@gmail.com) → chưa gắn link; chờ chị chốt.
+1. Hạn đặt Giáng sinh: CN 8/11 + làm 2–4 tuần + giao 2–3 tuần → chậm nhất ~27/12 (sau Giáng sinh). "2–4 tuần" là
+   thời gian làm hay đã gồm cả giao? Có cần dời hạn sớm hơn không?
+2. Nhận tại Pearland (pickup): cũng cần 2–3 tuần sau khi làm xong (hàng từ Việt Nam) không?
+3. Video Merlin có tiếng nói không? Nếu chị muốn bật tiếng, gửi em lời thoại để làm phụ đề.
+4. Sau mùa lễ: thay ảnh hero (mục Giáng sinh + video tự ẩn từ 2/1/2027).
 
 ## 9. Link & tài nguyên
 

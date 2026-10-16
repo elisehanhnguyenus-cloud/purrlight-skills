@@ -54,6 +54,9 @@
    - Confirmation gift box can be ordered now, shipping after Nov 12: a saint figure
      + rosary chain — 12 cm figure $55 (a saint we have ready, or one made for you),
      or St. Carlo Acutis / St. Michael the Archangel at 10 in, $90.
+   - Delivery (Elise 16/10, 12th message): 2–3 weeks from the day a piece is finished —
+     year-end shipping runs into Thanksgiving and Christmas. Shown with shipping (not
+     pickup, not digital files, not the ready-made gown set): DELIVERY_NOTE.
    - Eyes (Elise 16/10, later): she makes both closed "sleeping" eyes and open eyes —
      the visitor picks for a saint made to order (12 cm made for you, St. Carlo,
      St. Michael), same price; a saint we have ready comes as it is. The page avoids
@@ -255,10 +258,12 @@ function gownPrice(now) {
   var on = !!sale && t < Date.parse(sale.ends);
   return { price: on ? Math.round(C.gownSet * (100 - sale.off)) / 100 : C.gownSet, regular: C.gownSet, sale: on ? sale : null };
 }
+var DELIVERY_NOTE = "delivery 2–3 weeks after it's finished";   /* Elise 16/10 (12th message) */
 function estChristeningGown(o) {
   var g = gownPrice(o && o.now);
   var r = finish([{ label: "Christening Gown Set — lace & satin" + (g.sale ? " (" + g.sale.off + "% off " + money(g.regular) + " through " + g.sale.through + " CT)" : ""), amount: g.price }]);
   r.note = "Ready in 2–3 days";   /* to ship or to pick up */
+  r.readyMade = true;   /* already made: no "after it's finished" delivery note */
   return r;
 }
 /* o.figure: ready · made · carlo · michael (PRICES.christening.confirmation) · o.eyes: closed · open (not for "ready") */
@@ -330,5 +335,5 @@ function summaryLine(product, est, how) {
 }
 
 if (typeof module !== "undefined") {
-  module.exports = { ORDER_FORM_URL: ORDER_FORM_URL, ORDER_FORM_PREFILL_ENTRY: ORDER_FORM_PREFILL_ENTRY, PAY: PAY, PRICES: PRICES, money: money, moneyPair: moneyPair, taxLabel: taxLabel, outOfTexas: outOfTexas, itemOff: itemOff, applyQty: applyQty, estPortraitDoll: estPortraitDoll, estPet: estPet, estWatercolor: estWatercolor, estHousewarming: estHousewarming, estCalendar: estCalendar, estGodparent: estGodparent, estChristeningGown: estChristeningGown, estConfirmation: estConfirmation, addonPrice: addonPrice, gownPrice: gownPrice, summaryLine: summaryLine };
+  module.exports = { ORDER_FORM_URL: ORDER_FORM_URL, ORDER_FORM_PREFILL_ENTRY: ORDER_FORM_PREFILL_ENTRY, PAY: PAY, PRICES: PRICES, money: money, moneyPair: moneyPair, taxLabel: taxLabel, outOfTexas: outOfTexas, itemOff: itemOff, applyQty: applyQty, estPortraitDoll: estPortraitDoll, estPet: estPet, estWatercolor: estWatercolor, estHousewarming: estHousewarming, estCalendar: estCalendar, estGodparent: estGodparent, estChristeningGown: estChristeningGown, estConfirmation: estConfirmation, DELIVERY_NOTE: DELIVERY_NOTE, addonPrice: addonPrice, gownPrice: gownPrice, summaryLine: summaryLine };
 }

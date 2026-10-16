@@ -257,6 +257,19 @@ dùng GIF động (50–275 KB/icon, không dừng được theo WCAG 2.2.2); 2 
 kikki.K/Google là tác phẩm của người khác — chỉ tham khảo. **Công tắc mùa:** `data-season="christmas"` trên `<html>`;
 từ 0h ngày **26/12** (giờ máy khách) trang tự ẩn cả mục Giáng sinh (chờ chị chọn 26/12 hay 2/1: `SEASON_END` đầu
 `custom-orders.js`). Mọi chỗ cần gỡ sau mùa ghi "SEASONAL Christmas 2026".
+**Chốt 16/10, tin nhắn 12:** (1) Thánh có sẵn không chọn mắt — đúng ý chị. (2) **Bảng màu len** từ catalog Canva
+của chị: chỉ lấy 6 trang chọn len (cotton trơn ×2, cotton mix, velvet ×2, fluffy — trang fluffy ghi "+$15–30", khớp
+giá Fluffy trên trang), **không gắn link catalog** (các trang giá lệch giá trang). Ở bước "Yarn" của Custom Pet
+Crochet: "See every yarn color" (đóng sẵn, ảnh chỉ tải khi mở; mỗi trang mở cỡ lớn để đọc mã), khách ghi mã màu (vd.
+C-25, V-04) trong đơn. Ảnh: `assets/img/custom/yarn-book-*.webp` (render 2x từ trang Canva, cắt bỏ thanh công cụ).
+(3) **Thời gian giao**: "delivery takes 2–3 weeks after it's finished" (chị: Thanksgiving, Christmas làm vận chuyển
+chậm) — trong "How it works" bước 4, ghi chú mục Giáng sinh, và dòng ghi chú trong hộp "What's inside" khi chọn ship
+(không hiện khi nhận tại chỗ, file digital, bộ váy làm sẵn). Câu "allow 2–4 weeks" (thời gian làm, chị chốt 16/10) giữ
+nguyên. (4) **Video Merlin** (`assets/video/hero-merlin-960.{webm,mp4}` + bản điện thoại 4:3
+`hero-merlin-phone-640.*`, 260–470 KB): ảnh đầu trang "sống dậy" — khung đầu = ảnh hero (đã chỉnh tông khớp ảnh), phát
+**1 lần** 10 giây, **không tiếng** (âm thanh gốc bỏ), rồi mờ về ảnh; nút "Pause video" / "Play video"; chỉ chạy sau
+khi trang tải xong, khi đầu trang đang hiện; không chạy khi khách bật giảm chuyển động / tiết kiệm dữ liệu, và hết mùa
+(2/1/2027) thì thôi. Code: cuối `custom-orders.js` ("Merlin says hello").
 **Chốt 16/10, tin nhắn 11:** mục Giáng sinh tự gỡ **hết dịp năm mới** — từ 0h **2/1/2027** (giờ máy khách);
 nhãn **"Order by Nov 8"** kèm chuông trên thẻ ý tưởng "Christmas gift for friends & family" (đọc ngày từ mục Giáng
 sinh, tự biến mất sau hết ngày 8/11); chuông **lắc nhẹ 1 lần** (1,4 giây) khi khách cuộn tới (không khi đã tạm dừng

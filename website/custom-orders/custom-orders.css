@@ -287,11 +287,24 @@ p { margin: 0; }
 
 /* "All pet prices" — the brief's table, folded away once the tiles work */
 .all-prices { border-top: 1px solid var(--line); padding-top: 10px; }
-.all-prices summary { cursor: pointer; font-weight: 500; font-size: 15px; color: var(--berry); min-height: 44px; display: flex; align-items: center; gap: 8px; list-style: none; }
-.all-prices summary::-webkit-details-marker { display: none; }
-.all-prices summary::before { content: ""; width: 7px; height: 7px; border: solid currentColor; border-width: 0 2px 2px 0; transform: rotate(-45deg); margin: 0 4px 0 2px; }
-.all-prices[open] summary::before { transform: rotate(45deg); }
-.all-prices summary:hover { color: var(--ink); }
+.all-prices summary, .yarn-book summary { cursor: pointer; font-weight: 500; font-size: 15px; color: var(--berry); min-height: 44px; display: flex; align-items: center; gap: 8px; list-style: none; }
+.all-prices summary::-webkit-details-marker, .yarn-book summary::-webkit-details-marker { display: none; }
+.all-prices summary::before, .yarn-book summary::before { content: ""; width: 7px; height: 7px; border: solid currentColor; border-width: 0 2px 2px 0; transform: rotate(-45deg); margin: 0 4px 0 2px; }
+.all-prices[open] summary::before, .yarn-book[open] summary::before { transform: rotate(45deg); }
+.all-prices summary:hover, .yarn-book summary:hover { color: var(--ink); }
+/* the yarn color book (Elise's catalogue pages): a row that slides on phones, three across on wide screens; each page
+   opens full size to read the codes */
+.yarn-book { margin-top: 8px; }
+.yarn-book .step-hint { margin: 0 0 10px; }
+.yarn-pages { list-style: none; margin: 0 calc(-1 * var(--gutter)); padding: 4px var(--gutter) 10px; display: grid; grid-auto-flow: column; grid-auto-columns: 78%; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); }
+.yarn-pages:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
+.yarn-pages li { scroll-snap-align: start; display: grid; gap: 6px; align-content: start; }
+.yarn-pages a { display: block; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: #FFFFFF; }
+.yarn-pages a:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.yarn-pages img { display: block; width: 100%; height: auto; }
+.yarn-cap { font-size: 13px; color: var(--caption); }
+@media (min-width: 600px) { .yarn-pages { grid-auto-columns: 44%; } }
+@media (min-width: 900px) { .yarn-pages { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0; padding: 0; overflow: visible; } }
 .price-table { border-collapse: collapse; width: 100%; table-layout: fixed; font-size: 15px; margin-top: 4px; }
 .price-table th:first-child { width: 40%; }
 .price-table th, .price-table td { text-align: left; padding: 9px 4px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
@@ -689,13 +702,29 @@ html:not([data-season="christmas"]) .christmas, html:not([data-season="christmas
   html.motion .christmas.is-live:not(.is-paused) .xmas-lights i:nth-child(2n)::after { animation-duration: 2.8s; animation-delay: -1.1s; }
   html.motion .christmas.is-live:not(.is-paused) .xmas-lights i:nth-child(5n+1)::after { animation-duration: 4.2s; animation-delay: -2s; }
 }
-.xmas-pause { position: absolute; right: var(--gutter); bottom: 12px; z-index: 2; display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 4px 12px;
+.xmas-pause, .hero-play { position: absolute; right: var(--gutter); bottom: 12px; z-index: 2; display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 4px 12px;
   border: 1px solid var(--line-ui); border-radius: 999px; background: rgba(251, 246, 238, 0.92); color: var(--ink); font: 500 13px/1.2 var(--font-body); cursor: pointer; }
-.xmas-pause:hover { background: var(--cream); border-color: var(--ink); }
-.xmas-pause:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
-.xmas-pause::before { content: ""; width: 8px; height: 10px; border-left: 3px solid currentColor; border-right: 3px solid currentColor; box-sizing: border-box; }   /* pause bars */
-.christmas.is-paused .xmas-pause::before { width: 0; height: 0; border-style: solid; border-width: 5px 0 5px 9px; border-color: transparent transparent transparent currentColor; }   /* play triangle */
-@media (forced-colors: active) { .xmas-pause::before { forced-color-adjust: none; } }   /* keeps the triangle's clear borders clear in High Contrast (else it draws as a square) */
+.xmas-pause:hover, .hero-play:hover { background: var(--cream); border-color: var(--ink); }
+.xmas-pause:focus-visible, .hero-play:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.xmas-pause::before, .hero-play::before { content: ""; width: 8px; height: 10px; border-left: 3px solid currentColor; border-right: 3px solid currentColor; box-sizing: border-box; }   /* pause bars */
+.christmas.is-paused .xmas-pause::before, .hero-play.is-stopped::before { width: 0; height: 0; border-style: solid; border-width: 5px 0 5px 9px; border-color: transparent transparent transparent currentColor; }   /* play triangle */
+@media (forced-colors: active) { .xmas-pause::before, .hero-play::before { forced-color-adjust: none; } }
+/* SEASONAL Christmas 2026 — Merlin's hello video over the hero photo (custom-orders.js places it on the photo's box;
+   same fit and the same faded edges, so it melts in the same way). It fades in while playing, out to the photo after. */
+.hero-video { position: absolute; z-index: 0; display: block; object-fit: cover; opacity: 0; transition: opacity 450ms ease; pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 24%, #000 80%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 24%, #000 80%, transparent 100%); }
+.hero-video.on { opacity: 1; }
+@media (min-width: 900px) {
+  .hero-video { object-position: 55% 40%;
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 34%), linear-gradient(to bottom, transparent 0, #000 16%, #000 82%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to right, transparent 0, #000 34%), linear-gradient(to bottom, transparent 0, #000 16%, #000 82%, transparent 100%);
+    mask-composite: intersect; }
+}
+.hero-play { bottom: 16px; }
+@media (prefers-reduced-motion: reduce) { .hero-video, .hero-play { display: none; } }
+@media print { .hero-video, .hero-play { display: none; } }   /* keeps the triangle's clear borders clear in High Contrast (else it draws as a square) */
 @media (prefers-reduced-motion: reduce) { .xmas-pause { display: none; } }
 @media print { .xmas-pause { display: none; } }
 @media (prefers-reduced-motion: reduce) { .xmas-snow { display: none; } }

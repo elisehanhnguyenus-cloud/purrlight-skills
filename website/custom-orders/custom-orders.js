@@ -669,7 +669,8 @@
       depositRow.appendChild(el("span", { text: "Deposit today (50%)" })); depositRow.appendChild(el("strong", { "class": "amt", text: db[0] }));
       balanceRow.appendChild(el("span", { text: "Balance after you approve the photo" })); balanceRow.appendChild(el("span", { "class": "amt", text: db[1] }));
       if (fromUser) g.goneNote = "";
-      noteRow.textContent = [est.note, est.digitalOnly ? "" : (GET_IT[v.getit] || GET_IT.ship).short].filter(Boolean).join(" · ") + (g.goneNote ? " " + g.goneNote : "");
+      var shipping = !est.digitalOnly && (v.getit === "ship" || v.getit === "out" || !GET_IT[v.getit]);
+      noteRow.textContent = [est.note, est.digitalOnly ? "" : (GET_IT[v.getit] || GET_IT.ship).short, shipping && !est.readyMade ? DELIVERY_NOTE : ""].filter(Boolean).join(" · ") + (g.goneNote ? " " + g.goneNote : "");
       copied.textContent = "";
       if (fromUser) store(storeKey, { v: v, swaps: g.swaps, u: 1, auto: g.auto || 0 });   /* a plain page view remembers nothing */
       if (g === current) setBarThumb(g);
@@ -1062,11 +1063,12 @@
     var place = function () {
       ticking = false;
       drift.forEach(function (img) {
-        if (!wide.matches || (still && still.matches)) { img.style.transform = ""; return; }
+        if (!wide.matches || (still && still.matches)) { img.style.transform = ""; if (img.follower) img.follower.style.transform = ""; return; }
         var r = img.parentNode.getBoundingClientRect(), vh = window.innerHeight;
         if (r.bottom < 0 || r.top > vh) return;
         var t = (r.top + r.height / 2 - vh / 2) / (vh / 2 + r.height / 2);   /* −1 … 1 across the screen */
         img.style.transform = "translate3d(0," + Math.round(Math.max(-1, Math.min(1, t)) * 28) + "px,0) scale(1.06)";
+        if (img.follower) img.follower.style.transform = img.style.transform;   /* the hero video drifts with its photo */
       });
     };
     var onDrift = function () { if (!ticking) { ticking = true; window.requestAnimationFrame(place); } };
@@ -1178,5 +1180,69 @@
     document.addEventListener("visibilitychange", snowing);
     onStill(snowing);   /* reduced motion turned on mid-visit: the snow stops (the CSS hides the canvas and the button) */
     snowing();
+  }
+
+  /* ---------- SEASONAL Christmas 2026 — Merlin says hello (Elise 16/10, 12th message: her video, "put it where it fits").
+     The hero photo comes alive: the same scene (its first frame is the photo, tone-matched), played once (10 s, muted —
+     the sound is not used), then it fades back to the photo. It starts after the page has loaded, only while the hero is
+     on screen, never for visitors who ask for less motion or save data, and a button pauses it or plays it again
+     (WCAG 2.2.2). Phones get a 4:3 cut of it, like the phone photo. Decoration only: the photo's alt text says it all. */
+  var heroPic = document.querySelector(".hero-pic"), heroImg = heroPic && heroPic.querySelector(".hero-photo"), heroBox = document.querySelector(".hero");
+  var probe = document.createElement("video");
+  /* WebM (VP9) where it plays, else MP4 (H.264): between them every current browser */
+  var heroType = !probe.canPlayType ? "" : probe.canPlayType('video/webm; codecs="vp9"') ? ".webm" : probe.canPlayType('video/mp4; codecs="avc1.640028"') ? ".mp4" : "";
+  if (christmas && heroImg && heroBox && heroType && !calm && !(navigator.connection && navigator.connection.saveData) && "IntersectionObserver" in window) {
+    var heroWide = window.matchMedia("(min-width: 600px)"), heroOn = false, heroStopped = false, heroVideo = null, heroBtn = null;
+    var heroFit = function () {
+      if (!heroVideo) return;
+      var b = heroBox.getBoundingClientRect(), r = (wideEnough() ? heroPic : heroImg).getBoundingClientRect();
+      heroVideo.style.left = Math.round(r.left - b.left) + "px"; heroVideo.style.top = Math.round(r.top - b.top) + "px";
+      heroVideo.style.width = Math.round(r.width) + "px"; heroVideo.style.height = Math.round(r.height) + "px";
+    };
+    var wideEnough = function () { return window.matchMedia("(min-width: 900px)").matches; };   /* the photo is a background (absolute) from 900px */
+    var heroLabel = function () {
+      var playing = heroVideo && !heroVideo.paused && !heroVideo.ended;
+      heroBtn.textContent = playing ? "Pause video" : "Play video";
+      heroBtn.className = "hero-play" + (playing ? "" : " is-stopped");
+    };
+    var heroShow = function (on) { heroVideo.className = "hero-video" + (on ? " on" : ""); };
+    var heroStart = function () {
+      heroVideo = document.createElement("video");
+      heroVideo.className = "hero-video";
+      heroVideo.muted = true; heroVideo.defaultMuted = true; heroVideo.setAttribute("muted", "");
+      heroVideo.setAttribute("playsinline", ""); heroVideo.setAttribute("aria-hidden", "true"); heroVideo.setAttribute("tabindex", "-1");
+      heroVideo.preload = "auto";
+      heroVideo.src = "../assets/video/" + (heroWide.matches ? "hero-merlin-960" : "hero-merlin-phone-640") + heroType;
+      heroPic.parentNode.insertBefore(heroVideo, heroPic.nextSibling);
+      heroImg.follower = heroVideo;
+      heroBtn = document.createElement("button");
+      heroBtn.type = "button";
+      heroBox.appendChild(heroBtn);
+      heroFit();
+      heroVideo.addEventListener("canplaythrough", function () { if (heroOn && !heroStopped && heroVideo.paused && !heroVideo.ended && heroVideo.currentTime === 0) heroPlay(); });
+      heroVideo.addEventListener("ended", function () { heroShow(false); heroLabel(); });
+      heroVideo.addEventListener("pause", heroLabel);
+      heroVideo.addEventListener("play", heroLabel);
+      heroBtn.addEventListener("click", function () {
+        if (heroVideo.paused || heroVideo.ended) { heroStopped = false; if (heroVideo.ended) heroVideo.currentTime = 0; heroPlay(); }
+        else { heroStopped = true; heroVideo.pause(); }
+      });
+      heroLabel();
+      if ("ResizeObserver" in window) new ResizeObserver(heroFit).observe(heroBox); else window.addEventListener("resize", heroFit);
+      onStill(function () { if (still.matches) { heroStopped = true; heroVideo.pause(); heroShow(false); } });
+    };
+    var heroPlay = function () {
+      heroShow(true);
+      var p = heroVideo.play();
+      if (p && p.catch) p.catch(function () { heroShow(false); heroLabel(); });   /* autoplay refused: the photo stays, the button can start it */
+    };
+    new IntersectionObserver(function (es) {
+      es.forEach(function (e) { heroOn = e.isIntersecting; });
+      if (!heroVideo) return;
+      if (!heroOn && !heroVideo.paused) heroVideo.pause();                       /* scrolled away: hold */
+      else if (heroOn && heroVideo.paused && !heroVideo.ended && !heroStopped && heroVideo.currentTime > 0) heroPlay();   /* back: carry on */
+    }, { threshold: 0.25 }).observe(heroBox);
+    var heroLater = function () { setTimeout(function () { if (!heroVideo) heroStart(); }, 600); };
+    if (document.readyState === "complete") heroLater(); else window.addEventListener("load", heroLater);
   }
 })();

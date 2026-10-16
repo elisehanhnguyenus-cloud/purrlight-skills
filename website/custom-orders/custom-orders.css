@@ -476,9 +476,9 @@ p { margin: 0; }
 }
 
 /* ---------- Christmas band (butter, Ink text, one Caveat word) ---------- */
-.christmas { background: var(--butter-soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 48px 0 0; position: relative; overflow: hidden; }   /* 48px: room for the string of lights */
+.christmas { background: var(--butter-soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 76px 0 0; position: relative; overflow: hidden; }   /* 76px: room for the string of lights and the bell hung from it */
 .xmas-inner { position: relative; z-index: 1; max-width: 640px; }
-.xmas-text { display: grid; gap: 12px; align-content: center; }
+.xmas-text { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; align-content: center; }   /* minmax: the title's nowrap last word + stars can't widen the column past a small screen at large text sizes */
 .xmas-after { font-size: 16px; font-weight: 600; }
 .xmas-photo {   /* the same melt as the hero, into the butter band */
   margin-top: 4px;
@@ -595,12 +595,21 @@ body.has-bar { padding-bottom: 88px; }
 .how, .closing { background: var(--butter-soft); }   /* cream elsewhere (the page ground); the Christmas band is butter too */
 .closing { border-top: 1px solid var(--line); }
 .nw { white-space: nowrap; }
-.glints { position: relative; display: inline-block; width: 28px; height: 24px; margin-left: 8px; pointer-events: none; }
-.glints i { position: absolute; display: block; width: var(--s); height: var(--s); background: var(--c);
+/* the stars: thin starbursts in Merlin's beret gold, one colour, uneven rays (Elise's kikki.K reference). A browser
+   without CSS masks keeps the four-point star shape, never a solid square. */
+:root {
+  --burst-l: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%3E%3Cpath%20d='M12.00%2012.00L12.00%200.50M12.00%2012.00L16.38%207.62M12.00%2012.00L22.40%2012.00M12.00%2012.00L15.96%2015.96M12.00%2012.00L12.00%2023.00M12.00%2012.00L7.33%2016.67M12.00%2012.00L2.20%2012.00M12.00%2012.00L8.32%208.32M12.94%209.68L13.65%207.92M14.32%2012.94L15.71%2013.50M11.06%2014.32L10.28%2016.27M9.68%2011.06L8.48%2010.58'%20fill='none'%20stroke='%23000'%20stroke-width='1.15'%20stroke-linecap='round'/%3E%3C/svg%3E");   /* 12 rays, uneven lengths */
+  --burst-s: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%3E%3Cpath%20d='M12.00%2012.00L12.00%201.00M12.00%2012.00L16.60%207.40M12.00%2012.00L22.00%2012.00M12.00%2012.00L16.24%2016.24M12.00%2012.00L12.00%2023.00M12.00%2012.00L7.40%2016.60M12.00%2012.00L2.00%2012.00M12.00%2012.00L7.76%207.76'%20fill='none'%20stroke='%23000'%20stroke-width='1.9'%20stroke-linecap='round'/%3E%3C/svg%3E");   /* 8 rays, heavier stroke: still ~0.8px at 10px */
+}
+.glints { position: relative; display: inline-block; width: 30px; height: 26px; margin-left: 8px; pointer-events: none; }
+.glints i { position: absolute; display: block; width: var(--s); height: var(--s); background: var(--beret);
   clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); }
-.glints i:nth-child(1) { --s: 14px; --c: var(--peach); left: 0; top: 8px; }
-.glints i:nth-child(2) { --s: 9px; --c: var(--beret); left: 15px; top: 0; }
-.glints i:nth-child(3) { --s: 7px; --c: var(--berry); left: 19px; top: 14px; }
+@supports ((mask: none) or (-webkit-mask: none)) {
+  .glints i { clip-path: none; -webkit-mask: var(--burst, var(--burst-s)) center / contain no-repeat; mask: var(--burst, var(--burst-s)) center / contain no-repeat; }
+}
+.glints i:nth-child(1) { --s: 19px; --burst: var(--burst-l); left: -1px; top: 6px; }
+.glints i:nth-child(2) { --s: 12px; left: 16px; top: -3px; }
+.glints i:nth-child(3) { --s: 10px; left: 21px; top: 15px; }
 /* the yarn thread in How it works: a stitched line from the end of the title to a ball of yarn. It follows the last
    word, so zoomed or translated text pushes it along (or onto the next line) instead of running under it. */
 .how .section-title { display: flex; flex-wrap: wrap; align-items: center; column-gap: 12px; }
@@ -612,20 +621,40 @@ body.has-bar { padding-bottom: 88px; }
 .merlin-lamp::before { content: ""; position: absolute; inset: -16px; border-radius: 50%; background: var(--glow-soft); }
 .merlin-lamp .merlin-mark { position: relative; }
 .glints-lamp { position: absolute; inset: 0; width: auto; height: auto; margin: 0; }
-.glints-lamp i:nth-child(1) { left: -32%; top: -6%; --s: 14px; }   /* round the glow, clear of the words beside it */
-.glints-lamp i:nth-child(2) { left: 92%; top: -26%; --s: 10px; }
-.glints-lamp i:nth-child(3) { left: 98%; top: 100%; --s: 8px; }
-.glints-lamp i:nth-child(4) { --s: 8px; --c: var(--beret); left: -26%; top: 80%; }
+.glints-lamp i:nth-child(1) { left: -35%; top: -9%; --s: 20px; }   /* round the glow, clear of the words beside it */
+.glints-lamp i:nth-child(2) { left: 92%; top: -27%; --s: 13px; }
+.glints-lamp i:nth-child(3) { left: 98%; top: 100%; --s: 10px; }
+.glints-lamp i:nth-child(4) { left: -27%; top: 80%; --s: 10px; }
 @media (min-width: 900px) { .merlin-lamp::before { inset: -20px; } }
-/* Christmas band: a string of lights along the top (custom-orders.js hangs one bulb per 56px) and snow over the photo */
-.xmas-lights { position: absolute; top: 0; left: 0; right: 0; z-index: 2; height: 30px; display: flex; overflow: hidden; pointer-events: none;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='16'%3E%3Cpath d='M0 2Q28 18 56 2' fill='none' stroke='%234A423B' stroke-opacity='.45' stroke-width='1.2'/%3E%3C/svg%3E") repeat-x 0 0 / 56px 16px; }
-.xmas-lights i { flex: 0 0 56px; position: relative; }
-.xmas-lights i::before { content: ""; position: absolute; left: 25px; top: 9px; width: 6px; height: 4px; border-radius: 1px; background: var(--ink); opacity: 0.6; }
-.xmas-lights i::after { content: ""; position: absolute; left: 24px; top: 12px; width: 8px; height: 12px; border-radius: 50% 50% 50% 50% / 42% 42% 58% 58%;
-  background: var(--bulb, var(--berry)); box-shadow: 0 0 8px 2px var(--bulb-glow, rgba(180, 34, 73, 0.4)); }
-.xmas-lights i:nth-child(3n+2) { --bulb: var(--beret); --bulb-glow: rgba(202, 141, 65, 0.5); }
-.xmas-lights i:nth-child(3n) { --bulb: var(--peach); --bulb-glow: rgba(232, 168, 124, 0.6); }
+/* ===== SEASONAL Christmas 2026 — remove after the season together with the band (index.html) and xmas-bell.webp.
+   A string of warm-white lights on a dark, hand-draped wire (Elise's 29.gif), Merlin's bell hung from it, snow over
+   the photo. The wire is one 360px tile with three uneven swags; custom-orders.js hangs one bulb per 72px and each of
+   the five bulbs in a tile sits on the wire (--y) with its own small tilt (--r). The wire starts one tile left of the
+   text column (--xl), so the bell always hangs from the same point of the wire, above "Christmas". ===== */
+html:not([data-season="christmas"]) .christmas { display: none; }   /* the one switch */
+.christmas { --xl: calc(max(0px, (100% - 640px) / 2) + var(--gutter)); }   /* left edge of .xmas-inner's text */
+@media (min-width: 900px) { .christmas { --xl: calc(max(0px, (100% - var(--wrap)) / 2) + var(--gutter)); } }
+.xmas-lights { position: absolute; top: 0; left: calc(var(--xl) - 360px); right: 0; z-index: 2; height: 60px; display: flex; align-items: flex-start; overflow: hidden; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='28'%3E%3Cpath d='M0 2C30 15 78 20 124 3C150 26 214 24 246 2C276 13 318 15 360 2' fill='none' stroke='%234A423B' stroke-opacity='.8' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") repeat-x 0 0 / 360px 28px; }
+@media (min-width: 1720px) { .xmas-lights { left: calc(var(--xl) - 1080px); } }   /* very wide screens: the wire still reaches the left edge */
+.xmas-lights i { flex: 0 0 72px; height: 20px; position: relative; transform: translateY(var(--y)) rotate(var(--r)); transform-origin: 36px 0; }
+.xmas-lights i.off::before, .xmas-lights i.off::after { content: none; }   /* the part of the wire left of the screen: no bulb, nothing animating */
+.xmas-lights i:nth-child(5n+1) { --y: 10px; --r: 2deg; }
+.xmas-lights i:nth-child(5n+2) { --y: 6.5px; --r: -5deg; }
+.xmas-lights i:nth-child(5n+3) { --y: 18px; --r: -1deg; }
+.xmas-lights i:nth-child(5n+4) { --y: 2.5px; --r: 7deg; }
+.xmas-lights i:nth-child(5n) { --y: 8px; --r: -4deg; }
+.xmas-lights i::before { content: ""; position: absolute; left: 33px; top: 0; width: 6px; height: 5px; border-radius: 1px 1px 2px 2px; background: var(--ink); opacity: 0.9; }   /* socket */
+.xmas-lights i::after { content: ""; position: absolute; left: 31px; top: 4px; width: 10px; height: 15px; border-radius: 50% 50% 50% 50% / 42% 42% 58% 58%;
+  background: var(--cream); border: 1px solid rgba(202, 141, 65, 0.6); box-shadow: 0 0 5px 2px var(--glow-soft), 0 0 14px 5px rgba(202, 141, 65, 0.4); }   /* warm-white glass, two-layer glow */
+/* Merlin's bell (the gold bell on his red bow, SVGator bell, still frame, recoloured), on a thread from the wire.
+   Shown only once custom-orders.js has hung the wire. */
+.xmas-hang { display: none; position: absolute; z-index: 2; left: calc(var(--xl) + 216px); top: 15px; width: 0; height: 0; pointer-events: none; --h: 32px; --thread: 12px; }
+.xmas-lights ~ .xmas-hang { display: block; }
+.xmas-hang::before { content: ""; position: absolute; left: -0.5px; top: 0; width: 1px; height: calc(var(--thread) + var(--h) * 0.15); background: rgba(74, 66, 59, 0.55); }
+.xmas-bell { position: absolute; left: 0; top: var(--thread); width: auto; height: var(--h); max-width: none; transform: translateX(-57%); }
+@media (min-width: 900px) { .xmas-hang { --h: 40px; --thread: 22px; } }
+@media print { .xmas-lights, .xmas-lights ~ .xmas-hang { display: none; } }
 .xmas-snow { position: absolute; pointer-events: none;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 24%, #000 80%, transparent 100%);
   mask-image: linear-gradient(to bottom, transparent 0, #000 24%, #000 80%, transparent 100%); }
@@ -645,9 +674,9 @@ body.has-bar { padding-bottom: 88px; }
   html.motion .glints.go i:nth-child(2) { animation-delay: 0.35s; }
   html.motion .glints.go i:nth-child(3) { animation-delay: 0.7s; }
   html.motion .glints.go i:nth-child(4) { animation-delay: 0.2s; }
-  html.motion .christmas.is-live:not(.is-paused) .xmas-lights i::after { animation: co-bulb 3s ease-in-out infinite; }
-  html.motion .christmas.is-live:not(.is-paused) .xmas-lights i:nth-child(2n)::after { animation-duration: 2.4s; animation-delay: -1.1s; }
-  html.motion .christmas.is-live:not(.is-paused) .xmas-lights i:nth-child(5n+1)::after { animation-duration: 3.6s; animation-delay: -2s; }
+  html.motion .christmas.is-live:not(.is-paused) .xmas-lights i::after { animation: co-bulb 3.6s ease-in-out infinite; }
+  html.motion .christmas.is-live:not(.is-paused) .xmas-lights i:nth-child(2n)::after { animation-duration: 2.8s; animation-delay: -1.1s; }
+  html.motion .christmas.is-live:not(.is-paused) .xmas-lights i:nth-child(5n+1)::after { animation-duration: 4.2s; animation-delay: -2s; }
 }
 .xmas-pause { position: absolute; right: var(--gutter); bottom: 12px; z-index: 2; display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 4px 12px;
   border: 1px solid var(--line-ui); border-radius: 999px; background: rgba(251, 246, 238, 0.92); color: var(--ink); font: 500 13px/1.2 var(--font-body); cursor: pointer; }
@@ -659,5 +688,5 @@ body.has-bar { padding-bottom: 88px; }
 @media print { .xmas-pause { display: none; } }
 @media (prefers-reduced-motion: reduce) { .xmas-snow { display: none; } }
 @keyframes co-twinkle { 0%, 100% { opacity: 1; transform: scale(1) rotate(0); } 50% { opacity: 0.35; transform: scale(0.6) rotate(25deg); } }
-@keyframes co-bulb { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+@keyframes co-bulb { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }   /* a soft breath, not a blink */
 @media print { .xmas-snow { display: none; } }

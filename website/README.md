@@ -246,6 +246,17 @@ nhất trước (Pet portrait print $15 · Pet memorial $41 · Realtor closing &
 housewarming gift $70 · Christmas gift for friends & family $90).
 **Cách đọc còn để mở (ghi trong `prices.js`):** in tranh = giá đã gồm tranh
 (không cộng $10 file digital); hộp quà tranh chỉ với bản in; "second pet −$10" = con thứ hai cùng size & len.
+**Chốt 16/10, tin nhắn 10 — bộ icon SVGator chị gửi (panel thiết kế 3 hướng + 3 giám khảo):** dùng **1/9 icon**:
+chiếc **chuông** (giống chuông vàng trên nơ đỏ của Merlin), khung hình tĩnh, đổi màu theo brand, treo bằng sợi chỉ
+từ dây đèn phía trên chữ "Christmas" (`xmas-bell.webp` 3,6 KB + `xmas-bell.LICENSE.txt` trích giấy phép SVGator:
+miễn phí thương mại, không cần ghi nguồn). Dây đèn đổi theo ảnh tham khảo của chị: **bóng trắng ấm trên dây sẫm
+võng tay** (1 bóng/72px, sáng "thở" nhẹ). Sao cạnh tiêu đề đổi thành **tia sao mảnh vàng beret** (kiểu kikki.K),
+thêm ở tiêu đề Giáng sinh. Không dùng: kẹo gậy + bánh gừng (có chấm confetti), quà/tất/thông/quả châu (xanh teal,
+chuyển động nhún = "bounce" Brand v2 cấm), tuần lộc (nhân vật hoạt hình cạnh Merlin), nến (trùng motif đèn); không
+dùng GIF động (50–275 KB/icon, không dừng được theo WCAG 2.2.2); 2 SVG mẫu (quả cầu tuyết, nút Subscribe) và các ảnh
+kikki.K/Google là tác phẩm của người khác — chỉ tham khảo. **Công tắc mùa:** `data-season="christmas"` trên `<html>`;
+từ 0h ngày **26/12** (giờ máy khách) trang tự ẩn cả mục Giáng sinh (chờ chị chọn 26/12 hay 2/1: `SEASON_END` đầu
+`custom-orders.js`). Mọi chỗ cần gỡ sau mùa ghi "SEASONAL Christmas 2026".
 **Chốt 16/10, tin nhắn 9 — nền + đèn + tuyết, ảnh thánh, ảnh Merlin mới:** section xen kẽ hai màu phẳng
 cream / butter-soft (không gradient, không ảnh sau chữ); "How it works" có sợi chỉ móc + cuộn len nét Peach.
 Đèn thay confetti (Brand v2 cấm confetti): sao nhỏ cạnh tiêu đề "Build your gift" và "Wedding & party favors"

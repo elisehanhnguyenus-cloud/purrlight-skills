@@ -11,6 +11,13 @@
 (function () {
   "use strict";
 
+  /* ---------- SEASONAL Christmas 2026: <html data-season="christmas"> shows the Christmas band (order-by dates, photo,
+     lights, snow, Merlin's bell). From SEASON_END (the visitor's local midnight) the page retires it by itself, even if
+     nobody edits it; deleting the attribute in index.html does the same at once. ---------- */
+  var SEASON_END = new Date(2026, 11, 26);   /* Dec 26, 2026 — proposed; Elise to confirm (Dec 26 or Jan 2) */
+  if (new Date() >= SEASON_END) document.documentElement.removeAttribute("data-season");
+  var christmas = document.documentElement.getAttribute("data-season") === "christmas";
+
   /* ---------- site nav (same behavior as the main site) ---------- */
   var toggle = document.querySelector(".nav-toggle");
   var nav = document.querySelector(".main-nav");
@@ -1055,7 +1062,8 @@
 
   /* ---------- small lights (Elise 16/10, 9th message). WCAG 2.2.2: nothing loops on its own for more than 5 s
      without a way to stop it. The stars by the headings twinkle twice as they come into view (.go), then rest lit.
-     The Christmas band hangs a string of lights along its top (one bulb per 56px) and lets light snow fall over
+     The Christmas band hangs a string of lights along its top (one bulb per 72px, on a hand-draped wire, with
+     Merlin's bell hung from it) and lets light snow fall over
      Merlin's photo — a canvas the photo's size, faded at the same edges. Both run only while the band is on screen
      (.is-live) and the tab is open, never for visitors who ask for less motion (also when they turn that on mid-visit),
      and the band's own button pauses them (remembered on this device). Decoration only: aria-hidden. ---------- */
@@ -1066,18 +1074,19 @@
     var stars = document.querySelectorAll(".glints");
     for (var gi = 0; gi < stars.length; gi++) twinkle.observe(stars[gi]);
   }
-  var band = document.querySelector(".christmas");
+  var band = christmas ? document.querySelector(".christmas") : null;
   if (band) {
     var lights = document.createElement("div");
     lights.className = "xmas-lights";
     lights.setAttribute("aria-hidden", "true");
-    var hang = function () {
-      var want = Math.ceil(band.clientWidth / 56) + 1;
+    band.insertBefore(lights, band.firstChild);   /* in place first: hang() measures it, and the CSS hangs the bell only after it */
+    var hang = function () {   /* one bulb per 72px of wire (the wire starts a tile left of the text column: see the CSS) */
+      var want = Math.ceil(lights.clientWidth / 72) + 1;
       while (lights.children.length < want) lights.appendChild(document.createElement("i"));
       while (lights.children.length > want) lights.removeChild(lights.lastChild);
+      for (var k = 0, off = Math.floor(-lights.offsetLeft / 72); k < want; k++) lights.children[k].className = k < off ? "off" : "";
     };
     hang();
-    band.insertBefore(lights, band.firstChild);
     window.addEventListener("resize", hang);
   }
   var snowPic = band && band.querySelector(".xmas-pic"), snow = document.createElement("canvas");

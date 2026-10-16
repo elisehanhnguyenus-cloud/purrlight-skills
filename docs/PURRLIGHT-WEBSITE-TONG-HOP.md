@@ -956,11 +956,27 @@ nhẹ ±28px khi cuộn (≥900px). Ngoại lệ Brand Canon "no transforms" the
   Không dùng chữ "safety eyes" trên trang (Hard Rules cấm tuyên bố "safe"). Chú thích ảnh: "Saints from our
   Confirmation gift set — sample photo, with closed (sleeping) and open eyes."
 
+### Bộ icon SVGator (Elise 16/10, tin nhắn 10) — panel thiết kế
+Chị gửi bộ 9 icon GIF của SVGator (giấy phép trong readme: "Free for personal and commercial use, without
+attribution", AS-IS) + 2 SVG mẫu + 4 ảnh tham khảo (dây đèn trắng ấm, email kikki.K sao vàng, Google doodle, cây
+thông). Panel 3 hướng (tối giản / bám ảnh tham khảo / UX-hiệu năng), 3 giám khảo (thương hiệu · ý chị + UX · a11y +
+kỹ thuật) → chọn hướng tối giản + ghép ý hay:
+- **Chuông của Merlin** (icon chuông, khung tĩnh, đổi màu) treo bằng sợi chỉ từ dây đèn, phía trên "Christmas".
+- **Dây đèn trắng ấm** trên dây sẫm võng tay (theo ảnh 29 chị gửi), 1 bóng/72px, sáng "thở" nhẹ, vẫn có nút tạm dừng.
+- **Tia sao mảnh vàng beret** (theo kikki.K) thay sao 4 cánh nhiều màu — cạnh "Build your gift", "favors",
+  vầng sáng Merlin và tiêu đề Giáng sinh (giữ quanh năm, trừ mục Giáng sinh).
+- Không dùng 8 icon còn lại (confetti, teal, nhún/bounce, nhân vật hoạt hình, nến trùng motif đèn), không dùng GIF
+  động (nặng 50–275 KB, không dừng được), không dùng SVG mẫu/ảnh của thương hiệu khác.
+- **Công tắc mùa** `data-season="christmas"` + tự gỡ mục Giáng sinh từ 26/12 (giờ máy khách).
+- Đề xuất **chưa làm** (chờ chị): nhãn "Order by Nov 8" kèm chuông trên thẻ ý tưởng "Christmas gift for friends &
+  family"; chuông lắc nhẹ 1 lần khi cuộn tới; 1 bóng đỏ berry trong mỗi 5 bóng.
+
 ### Còn chờ chị
 1. "Turnaround: from X" → "ships within N" (FTC, xem 8j).
-2. Sau mùa lễ: thay ảnh hero/Giáng sinh, gỡ hạn đặt (dây đèn + tuyết nằm trong mục Giáng sinh, gỡ cùng).
+2. Sau mùa lễ: thay ảnh hero; mục Giáng sinh tự ẩn từ 26/12 — chị muốn 26/12 hay 2/1?
 3. Tượng 10 in (St. Carlo, St. Michael) có làm theo yêu cầu mắt nhắm/mở được không (trang đang cho chọn)?
    Thánh có sẵn: trang không cho chọn mắt — đúng ý chị không?
+5. Icon: thêm nhãn "Order by Nov 8"? chuông lắc 1 lần? 1 bóng đỏ trong 5 bóng?
 4. **Catalog Canva** (bmcv2.my.canva.site/6-catalogue-…): giá trong catalog lệch giá trên trang (búp bê
    Classic $55 vs $80; mèo cotton Grand $105 vs $90; Baptism set $60 / Carlo Acutis 20 cm $85 vs
    Confirmation $55/$90) và có nội dung chỉ dành cho sự kiện (Fife Cat Show 26–27/9, "this weekend only",

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-season="christmas"><!-- SEASONAL Christmas 2026: this switch shows the Christmas band (its lights, snow and bell); custom-orders.js removes it by itself from SEASON_END -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -601,11 +601,13 @@
       </div>
     </section>
 
-    <!-- 3.9 Christmas deadlines -->
+    <!-- 3.9 Christmas deadlines — SEASONAL Christmas 2026: after the season delete this whole section and
+         assets/img/custom/xmas-bell.webp (data-season on <html> already hides it) -->
     <section class="christmas" aria-labelledby="xmas-h">
+      <span class="xmas-hang" aria-hidden="true"><img class="xmas-bell" src="../assets/img/custom/xmas-bell.webp" alt="" width="69" height="96" loading="lazy" decoding="async"></span>
       <div class="wrap xmas-inner">
         <div class="xmas-text">
-        <h2 id="xmas-h">Ordering for Christmas?</h2>
+        <h2 id="xmas-h">Ordering for <span class="nw">Christmas?<span class="glints" aria-hidden="true"><i></i><i></i><i></i></span></span></h2>
         <!-- Order-by dates: Elise 16/10 (2nd round). Orders after these dates are delivered in 2027. -->
         <dl class="deadlines">
           <div><dt>Crochet dolls &amp; custom crochet — order by</dt><dd><strong><time datetime="2026-11-08">Sun, Nov 8</time></strong></dd></div>

@@ -142,6 +142,38 @@ const PRODUCTS = [
   }
 ];
 
+/* Sales (Elise 16/10: the same discount as on Etsy). While a sale runs, p.price is the sale price everywhere that reads
+   it (shop cards, the product page, the Event Desk) and p.regular keeps the full price for the struck-through display.
+   The Christening Gown Set sale is also in custom-orders/prices.js (gownSale) — change both together. */
+const SALES = {
+  "christening-gown-set": { off: 25, ends: "2026-10-26T05:00:00Z", through: "Sun, Oct 25 (Central Time)" }   /* midnight CDT */
+};
+PRODUCTS.forEach(function (p) {
+  const sale = SALES[p.id];
+  if (sale && Date.now() < Date.parse(sale.ends)) {
+    p.regular = p.price;
+    p.price = Math.round(p.price * (100 - sale.off)) / 100;
+    p.sale = sale;
+  }
+});
+/* a page left open past a sale's end (the Event Desk on the booth phone, a shop tab): the full price comes back and the
+   page hears "purrlight:prices" — the shop pages reload, the Event Desk re-prices its chips and a new sale's lines */
+function endSales() {
+  let ended = false;
+  PRODUCTS.forEach(function (p) {
+    if (p.sale && Date.now() >= Date.parse(p.sale.ends)) { p.price = p.regular; delete p.regular; delete p.sale; ended = true; }
+  });
+  if (ended) document.dispatchEvent(new CustomEvent("purrlight:prices"));
+}
+(function () {
+  const ends = PRODUCTS.filter(function (p) { return p.sale; }).map(function (p) { return Date.parse(p.sale.ends); });
+  if (!ends.length || typeof document === "undefined") return;
+  const wait = Math.min.apply(null, ends) - Date.now() + 1000;
+  if (wait < 2147483647) setTimeout(endSales, wait);
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) endSales(); });   /* sleeping tabs miss timers */
+  window.addEventListener("pageshow", endSales);
+})();
+
 /* Which pieces the standard care/safety copy applies to (shared by product.html and the Event Desk):
    NOT_HANDMADE     — digital patterns / printed-to-order / molded items: no "made by hand", no spot-clean care, no safety line.
    SAFETY_LINE_SKIP — a christening garment cannot carry "Not suitable for children under 3", and a rosary

@@ -206,10 +206,11 @@ p { margin: 0; }
 .photo-pair .cal-year { width: 38%; max-height: none; border-radius: var(--radius); }
 @media (min-width: 900px) { .shot img { max-height: min(260px, 30vh); } }
 /* two photos of one option (gift box closed + open): equal heights, widths by their ratios */
-.shot-pair .pair { display: flex; gap: 8px; justify-content: center; align-items: flex-end; width: 100%; }
+.shot-pair .pair { display: flex; gap: 8px; justify-content: center; align-items: flex-end; width: 100%; max-width: 628px; margin: 0 auto; }   /* as tall as the other views: 280px × (0.933 + 1.282) + the gap */
 .shot-pair .pair img { width: 0; height: auto; max-height: none; }
 .shot-pair .pair img:first-child { flex: 0.933; }
 .shot-pair .pair img:last-child { flex: 1.282; }
+@media (min-width: 900px) { .shot-pair .pair { max-width: calc(min(260px, 30vh) * 2.215 + 8px); } }
 
 /* option tiles (native radio / checkbox inside a label) */
 .step { border: 0; margin: 0; padding: 0; min-width: 0; }

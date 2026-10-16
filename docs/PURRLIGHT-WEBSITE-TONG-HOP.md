@@ -142,7 +142,7 @@ stockists thật: Harrods/Bergdorf/Nordstrom/Bloomingdale's; domain 10/2021):
 8. ☐ Nối newsletter vào Klaviyo/Mailchimp (TODO trong main.js)
 9. ☐ Bật TikTok Shop Open Collaboration + đặt commission (sau khi check margin
    floor: dolls 55% / pet 50% / POD 35% / keychain 60%)
-10. ☑ Email canon hello@purrlight.studio (domain cũ = 0 chỗ)
+10. ☑ Email canon hello@purrlight.studio (domain cũ = 0 chỗ) — *16/10: tên miền chưa đăng ký, toàn site tạm dùng purrlightstudiollc@gmail.com (8j)*
 11. ☐ Xác nhận câu "paid fairly" (About); các claim "no small parts" /
     "breakaway buckle" đã bỏ cùng catalog cũ
 12. ☑ (15/10) GitHub Pages: https://elisehanhnguyenus-cloud.github.io/purrlight-skills/ — ☐ domain purrlight.studio (CNAME + DNS)
@@ -363,7 +363,7 @@ làm được — xem checklist mục 6 (đánh dấu lại bên dưới).
    Partners mô tả chương trình chưa chạy.
 7. 🟡 Claim chưa kiểm chứng: "paid fairly" (About). (Collar / Sleepy Merlin
    không còn trong catalog 15/10.)
-8. 🟡 Hộp thư hello@purrlight.studio chưa xác nhận hoạt động.
+8. 🟡 Hộp thư hello@purrlight.studio chưa xác nhận hoạt động. *(16/10: purrlight.studio chưa đăng ký → toàn site tạm dùng purrlightstudiollc@gmail.com, xem 8j.)*
 9. 🟡 Nghệ thuật Merlin: canon nói trăng/sao chỉ trang trí nhưng hero/keychain
    lấy trăng làm chủ thể; hero nói "tiny backpack" mà không hình nào có ba lô
    → hoạ sĩ vẽ lại theo canon (đã nằm trong brief Dribbble).
@@ -645,7 +645,8 @@ floating 5×7 + rosary.
 - **Email đặt hàng**: tên miền purrlight.studio **chưa đăng ký** (DNS NXDOMAIN)
   → email tới hello@purrlight.studio bị trả về. Trang Custom Orders chuyển sang
   purrlightstudiollc@gmail.com; các trang khác + Event Desk vẫn ghi hello@ —
-  chờ chị quyết (đăng ký tên miền + hộp thư, hoặc đổi toàn site).
+  chờ chị quyết (đăng ký tên miền + hộp thư, hoặc đổi toàn site). *16/10: chị
+  quyết đổi toàn site sang Gmail (8j).*
 - Tra cứu (workflow 4 chủ đề + kiểm chứng): Tally là form miễn phí duy nhất cho
   khách gửi ảnh không cần đăng nhập (10 MB/file); Google Forms bắt đăng nhập
   Google (hay bị chặn trong Instagram/TikTok); Zelle không có link thanh toán;
@@ -697,6 +698,81 @@ vòng câu chữ trước):
 - Giới hạn 50 tranh/hộp mỗi đơn trên trang; ảnh hộp quà $5 thật (để thay ảnh đã bỏ).
 - Ảnh nhóm mèo / Christening / shadowbox trông như ảnh dựng (AI) — Brand Canon ưu
   tiên ảnh thật.
+
+## 8j. Đợt 13 — Quyết định Elise 16/10: hộp tân gia $60, thuế 8.25%, pickup/ship, form Tally (16/10/2026)
+
+**Elise chốt 16/10:** chưa có tên miền → mọi liên hệ trên site tạm về
+purrlightstudiollc@gmail.com · sửa câu "We handcraft your piece" · khung: chỉ ghi
+"We'll contact you to confirm your wooden frame." (tùy tình hình xưởng) · chấp nhận
+giới hạn 50 · dùng ảnh chị gửi + ghép tranh mèo vào ảnh khung floating ("Cả hai") ·
+tạm dùng ảnh AI · hàng tươi (cold cut, 3-berry) **chỉ nhận tại chỗ** · mùa cao điểm
+**2–4 tuần** · **thuế 8.25% cộng vào mọi đơn** · hộp tân gia basic **$60**; nến thơm
++$10, cold cut +$15, chocolate 6 viên +$20 (sen đá, 3-berry giữ +$10) · mỗi món phải
+chọn **Pickup tại Pearland Town Center (thứ 7 / CN)** hoặc **Ship** (miễn phí, khách
+ghi địa chỉ + giờ nhận) · form đặt hàng là **Tally của chị** https://tally.so/r/M1KOkY.
+
+### Đã làm (commit a4b2264 + đợt sửa sau rà soát)
+- **Giá & thuế** (`prices.js`): mọi số tính bằng xu; thuế theo basis point (825);
+  `pre` (trước thuế) · `tax` · `total` · cọc = ½ tổng có thuế (nửa xu làm tròn lên).
+  Doll giữ "sales tax … included" (copy đã duyệt) — **đang chờ chị quyết**. Dòng
+  chung đổi thành "Prices are before 8.25% sales tax, unless marked tax included."; ô
+  gợi ý Grandma ghi "$90 tax incl.".
+- **Pickup or shipping**: bước cuối mỗi món (trừ file digital); chọn cold cut /
+  3-berry → tắt Ship, tự chọn Pickup Saturday **và báo cho khách**; bỏ hàng tươi ra
+  → tự trả về Ship (trừ khi khách tự chọn ngày). Thanh đặt hàng trên điện thoại ghi
+  đúng cách nhận của món đang chọn. Dòng "U.S. shipping included" của doll ẩn khi
+  chọn pickup. Danh sách hàng tươi đọc từ `PRICES.housewarming.fresh` (một chỗ).
+- **Form Tally**: mọi nút "Place your order" mở form của chị, mang theo `pick`,
+  `product`, `total`, `deposit` (luôn có xu, vd 46.01) + utm (chữ thường). Đã sửa
+  form qua connector (chị duyệt): ô ảnh "Upload your photos" nhận tối đa 10 ảnh,
+  không bắt buộc; địa chỉ + "Anything else?" không bắt buộc; màu Brand Canon; gửi
+  xong quay về `#pay`; email báo đơn về Gmail. Màu ô nhập riêng cần gói Pro.
+  Không JS: nút cũng mở form Tally; câu nhắc ghi pickup (thứ 7/CN) hoặc địa chỉ + giờ.
+- **Ảnh**: ảnh khung floating ghép tranh mèo — bản 2 có sợi giấy Dó, màu dịu như
+  bản in thật, xóa vệt cây của ảnh nhà cũ; ghi chú "sample image". Hộp quà: cặp ảnh
+  đóng / mở (giới hạn chiều cao như ảnh khác). Tick rosary khi đã có hộp quà → hiện
+  ảnh rosary.
+- **Câu chữ**: "digital watercolor art" ở meta/og/lede; "custom pieces are made from
+  your photos"; email Gmail toàn site (about, shop, product, index, partners, confirm,
+  Event Desk).
+
+### Rà soát 5 góc (tiền · pickup/trợ năng · câu chữ/pháp lý · ảnh · hồi quy) — 39 báo, 36 xác nhận
+Đã sửa: hàng tươi tự chuyển pickup mà không báo + không trả lại (MS-1, SHIP-1/2,
+copy-6) · thanh đặt hàng "Free U.S. shipping on every custom order" (5 người báo) ·
+dòng thuế chung mâu thuẫn với doll · email/form không hỏi địa chỉ + giờ (mailto có
+dòng trống để điền; Tally có ô riêng) · số tiền gửi Tally mất số 0 · số bước 2, 3, 5
+khi đổi tranh · bước pickup nằm sau bảng giá pet · gói gợi ý xóa lựa chọn pickup ·
+ảnh rosary bị hộp quà che · ảnh hộp quà quá cao ở tablet · ảnh ghép Dó quá "sạch" +
+vệt cây · chú thích cũ trong code.
+**Giữ lại chờ chị:** hạn Giáng sinh 29/11 (móc len) và 13/12 (tranh, lịch, hộp quà)
+**không kịp** với "2–4 tuần" (+10–14 ngày bay từ Việt Nam) → tạm ẩn hai hạn (để
+trong comment HTML), giữ câu 2–4 tuần. Gợi ý theo số của chị: ~CN 8/11 (móc len),
+~CN 15/11 (tranh, lịch, hộp quà).
+
+### Tra cứu (workflow 4 chủ đề + kiểm chứng): FTC · thuế Texas · Tally · thực phẩm
+- **FTC (16 CFR 435)**: luật quy định thời gian **gửi hàng** (giao cho hãng vận
+  chuyển) mà shop hứa, không quy định thời gian tới tay khách. Không ghi gì → mặc định
+  30 ngày từ khi nhận cọc + đủ thông tin. Ghi "2–4 tuần" thì 4 tuần là hạn chót. Trễ
+  → phải email khách **trước hạn**, cho chọn chờ hoặc hủy hoàn tiền (hoàn trong 7 ngày
+  làm việc). Nên đổi "Turnaround: from X" thành "ships within N" (chị đặt N).
+- **Thuế Texas**: 8.25% = 6.25% bang + 2% địa phương (Pearland phần Brazoria; phần
+  Harris/Fort Bend có thể 7.75%). Hàng ship ra ngoài Texas **không chịu thuế Texas**;
+  trái cây tươi, thịt nguội cắt sẵn (không khay/dĩa) **không chịu thuế**; chocolate,
+  nến, sen đá chịu thuế. Thuế đã thu (kể cả thu dư) phải nộp hết cho bang. Cần
+  **permit đứng tên Purrlight Studio LLC** trước khi thu thuế.
+- **Thực phẩm**: cold cut cần giấy phép thực phẩm hoặc mua từ deli có phép; berry giữ
+  nguyên hộp nhựa gốc; sen đá/lô hội bán online cần đăng ký TDA Nursery/Floral; không
+  đóng lại nhãn mật ong/mứt/chocolate.
+
+### Còn chờ chị
+1. Hạn đặt Giáng sinh mới (hoặc bỏ "2–4 tuần").
+2. Thuế: permit đã có chưa (tên LLC)? Có giữ "mọi đơn +8.25%" cho đơn ship ngoài
+   Texas và hàng tươi không? Doll: bỏ "tax included" hay giữ?
+3. "Turnaround: from X" → "ships within N" từng món.
+4. Cold cut: tạm ngưng hay lấy từ deli có giấy phép; sen đá: đăng ký TDA.
+5. "Handcrafted keepsakes" (lede/meta) và tagline "Made by hand. Made to be kept."
+   cho tranh digital.
+6. Form Tally: Phone + "Best time…" đang bắt buộc cả với đơn file digital.
 
 ## 9. Link & tài nguyên
 

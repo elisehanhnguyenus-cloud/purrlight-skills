@@ -26,6 +26,12 @@
      total with tax. Exception kept on purpose: the portrait doll's approved
      copy says sales tax is included in its price (taxIncluded) — flagged.
    - Up to 50 paintings or boxes per order on the page (accepted).
+   - Order form: Elise's Tally form (below).
+
+   Flagged to Elise 16/10 (tax research — not changed without her word):
+   Texas tax is not due on orders shipped outside Texas, or on fresh fruit and
+   plain sliced cold cuts; any amount charged as tax must be remitted; the sales
+   tax permit must be in Purrlight Studio LLC's name before tax is collected.
 
    Readings still open (flagged to Elise — change ONE constant if needed):
    - Watercolor "Print 4×6 $12 · 5×7 $15 · 8×10 $20" are read as the
@@ -38,15 +44,17 @@
    ============================================================ */
 
 /* The one order form for all seven products (brief §1 / §5). Edit it HERE — every order link on the
-   page is rewritten from this constant on load. TODO Elise: paste the form link (Tally recommended, see below).
-   Until the form exists the buttons email the studio. The same mailto is written into index.html
-   (data-order hrefs + <noscript> lines) only as the no-JavaScript fallback; it may stay as email. */
-/* purrlight.studio is not registered yet (DNS NXDOMAIN, checked 15/10/2026): the stopgap email goes to the studio Gmail. */
-var ORDER_FORM_URL = "mailto:purrlightstudiollc@gmail.com?subject=Custom%20order";
-/* Recommended form: a free Tally form (no sign-in for customers, photo uploads up to 10 MB each).
-   Paste its link (https://tally.so/r/XXXXXX) above; give the form four hidden fields named
-   pick, product, total and deposit — the page fills them in. (Google Forms makes customers sign in
-   to upload photos, which Instagram/TikTok in-app browsers often block.)
+   page is rewritten from this constant on load. The same link is written into index.html (data-order
+   hrefs) for visitors without JavaScript — change both together.
+   Elise's Tally form (16/10/2026, "Purrlight Custom Gift Order"): free plan, no sign-in for customers,
+   photo uploads up to 10 MB each; four hidden fields named pick, product, total and deposit — the page
+   fills them in (total and deposit with cents, e.g. 46.01). Notifications go to the studio Gmail; after
+   sending, the form returns the customer to #pay on this page.
+   A mailto: link also works here (the pick goes in the email body, with blank lines for the shipping
+   address and a time to receive it). purrlight.studio is not registered yet (DNS NXDOMAIN, checked
+   15/10/2026): email goes to the studio Gmail. */
+var ORDER_FORM_URL = "https://tally.so/r/M1KOkY";
+/* (Google Forms makes customers sign in to upload photos, which Instagram/TikTok in-app browsers often block.)
    Google Forms only: the field that should receive the customer's pick (e.g. "entry.123456789").
    A Google Form link with this left "" does NOT carry the pick — the customer would have to use "Copy my pick"
    and paste it. To find the id: Google Form → ⋮ → Get pre-filled link. */
@@ -84,10 +92,11 @@ var PRICES = {
   housewarming: {                                                            /* §3.5 · Elise 15/10 + 16/10 */
     base: 60,
     addons: { succulent: 10, candle: 10, coldcut: 15, berry: 10, chocolate: 20 },
-    fresh: ["coldcut", "berry"],                  /* pickup only */
+    fresh: ["coldcut", "berry"],                  /* pickup only — the page turns shipping off from this list */
     maxAddons: 5
   },
-  christening: { gownSet: 89, confirmationBox: 55 },                         /* §3.6 (confirmation box: coming soon) */
+  christening: { gownSet: 89, confirmationBox: 55 },                         /* §3.6 (confirmation box: coming soon — TODO before it is orderable:
+                                                                                its tile says "Sales tax & shipping included", so mark it taxIncluded or change that copy) */
   godparent: { base: 95, secondOff: 10 },                                    /* §3.7 · second set −$10: Elise 15/10 */
   calendar: {                                                                /* §3.8 */
     print:   { 1: 20, 6: 50 },   /* 1 page $20 · add 5 more pages +$30 (6 pages $50) */
@@ -239,7 +248,7 @@ function summaryLine(product, est, how) {
   for (var i = 0; i < est.lines.length; i++) parts.push(est.lines[i].label + " " + money(est.lines[i].amount));
   var qty = est.qty > 1 ? " — × " + est.qty + " " + est.many + " " + money(est.subtotal) + ", order more, save more −" + money(est.saving) : "";
   var tax = est.taxIncluded ? " — sales tax included" : " — " + taxLabel().toLowerCase() + " " + money(est.tax);
-  return "My pick: " + product + " — " + parts.join(" · ") + qty + tax + " — estimate " + money(est.total) + " · deposit (50%) " + money(est.deposit) + (est.digitalOnly ? "" : " · " + (how || "Free U.S. shipping"));
+  return "My pick: " + product + " — " + parts.join(" · ") + qty + tax + " — estimate " + money(est.total) + " · deposit (50%) " + money(est.deposit) + (est.digitalOnly ? "" : " · " + (how || (est.pickupOnly ? "Pickup at Pearland Town Center" : "Free U.S. shipping")));
 }
 
 if (typeof module !== "undefined") {

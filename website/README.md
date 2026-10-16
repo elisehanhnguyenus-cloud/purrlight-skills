@@ -188,15 +188,16 @@ ghi đúng số cọc + nút *Copy deposit amount*), Zelle® tới
 máy tính, điều khoản cọc lấy từ bản chị duyệt cho booth 25/09.
 
 **Chị cần điền (đầu `prices.js`):**
-- `ORDER_FORM_URL` — link form đặt hàng chung cho 7 món. Hiện là
-  `mailto:purrlightstudiollc@gmail.com` — **không dùng hello@purrlight.studio:
-  tên miền purrlight.studio chưa được đăng ký (DNS NXDOMAIN, kiểm 15/10/2026),
-  email gửi tới đó bị trả về** (mailto cũng ghi sẵn trong HTML nên trang chạy
-  cả khi tắt JS). **Khuyên dùng Tally** (miễn phí, khách không phải đăng nhập,
-  nhận ảnh ≤ 10 MB/file): tạo 4 *hidden field* tên `pick`, `product`, `total`,
-  `deposit` — trang tự điền. Google Forms bắt khách đăng nhập Google mới tải ảnh
-  lên được (hay bị chặn trong trình duyệt của Instagram/TikTok). Khi là link
-  http, trang tự kèm `utm_*` từ URL (Linktree gắn `?utm_source=linktree&utm_medium=bio`).
+- `ORDER_FORM_URL` — link form đặt hàng chung cho 7 món. **Hiện là form Tally
+  của chị: `https://tally.so/r/M1KOkY`** (16/10/2026; link này cũng ghi sẵn trong
+  HTML cho khách tắt JS — đổi thì đổi cả hai). Form có 4 *hidden field* `pick`,
+  `product`, `total`, `deposit` — trang tự điền (số tiền luôn có xu, vd `46.01`)
+  + `utm_*` từ URL (Linktree gắn `?utm_source=linktree&utm_medium=bio`). Gửi xong
+  form đưa khách về `#pay`; email báo đơn về purrlightstudiollc@gmail.com. Dùng
+  mailto cũng được (dòng "My pick" vào thân email, kèm dòng trống cho địa chỉ ship
+  + giờ nhận). **Không dùng hello@purrlight.studio**: tên miền chưa đăng ký
+  (DNS NXDOMAIN, kiểm 15/10/2026). Google Forms bắt khách đăng nhập Google mới tải
+  ảnh lên được (hay bị chặn trong trình duyệt của Instagram/TikTok).
 - `ORDER_FORM_PREFILL_ENTRY` — chỉ khi dùng Google Form: id ô nhận dòng tóm tắt
   (Form → ⋮ → Get pre-filled link → `entry.xxxx`).
 - `PAY.squareUrl`, `PAY.zelleTo` — nơi nhận cọc (đổi cả trong `index.html`
@@ -209,9 +210,14 @@ Fraunces 500/600, Figtree 400/500/600, và `caveat-early-400-700.woff2` (subset
 4 KB chỉ chứa chữ "early"; bản Caveat đầy đủ vẫn ở `css/fonts.css` cho trang
 khác). Ảnh hero British Shorthair đã gỡ khỏi web (không còn dùng; lấy lại từ lịch sử git nếu cần).
 
+**Ảnh ghép (16/10, chị yêu cầu):** `watercolor-floating-frame.webp` và
+`thumb-memorial.webp` là ảnh ghép — tranh mèo (từ ảnh hộp quà mở) đặt vào ảnh khung
+floating thật thay tranh nhà, giấy Dó dựng lại (sợi giấy, màu in dịu); trang ghi
+"sample image". Có ảnh chụp thật bản in mèo trên Dó trong khung thì thay ngay.
+
 **Giá nằm ở MỘT chỗ:** `prices.js` (`PRICES`) = brief §3; copy trong
 `index.html` in cùng số đó. Đổi giá → sửa cả hai. Test:
-`node scratchpad/test-prices.js` (13 nhóm), `test-studio.js` (Playwright: tab,
+`node scratchpad/test-prices.js` (14 nhóm), `test-studio.js` (Playwright: tab,
 từng món, phím, nhớ lựa chọn, link #món, chế độ tắt JS, bấm chuột ở 1280px), `audit-custom.js`
 (chuỗi copy/giá nguyên văn, từ cấm, ảnh, nút, tràn màn 360/390/1280).
 

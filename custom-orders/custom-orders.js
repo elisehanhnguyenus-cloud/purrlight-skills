@@ -38,22 +38,24 @@
   if (yr) yr.textContent = new Date().getFullYear();
 
   /* ---------- order link: one constant + utm passthrough (brief §5) ---------- */
-  var lastPick = null;   /* { product, total, text } — the pick the customer is building */
+  var lastPick = null;   /* { product, total, deposit, text, getit } — the pick the customer is building */
+  /* blank lines to fill in, so a shipping order brings its address and a time to receive it (Elise 16/10) */
+  var FILL_IN = { ship: "\n\nShipping address: \nA good time to receive it: \n", sat: "\n\nA good time to pick it up: \n", sun: "\n\nA good time to pick it up: \n" };
   function orderUrl() {
     var url = ORDER_FORM_URL;
-    if (/^mailto:/i.test(url)) {   /* the stopgap email link: the pick travels in the message body */
-      if (lastPick) url += (url.indexOf("?") > -1 ? "&" : "?") + "body=" + encodeURIComponent(lastPick.text);
+    if (/^mailto:/i.test(url)) {   /* the fallback email link: the pick travels in the message body */
+      if (lastPick) url += (url.indexOf("?") > -1 ? "&" : "?") + "body=" + encodeURIComponent(lastPick.text + (FILL_IN[lastPick.getit] || ""));
       return url;
     }
     var qs = [];
     try {
       var params = new URLSearchParams(location.search);
-      params.forEach(function (v, k) { if (/^utm_/i.test(k)) qs.push(encodeURIComponent(k) + "=" + encodeURIComponent(v)); });
+      params.forEach(function (v, k) { if (/^utm_/i.test(k)) qs.push(encodeURIComponent(k.toLowerCase()) + "=" + encodeURIComponent(v)); });   /* Tally field names are case-sensitive */
     } catch (e) { /* old browsers: plain link */ }
     if (lastPick && /^https:\/\/(www\.)?tally\.so\//i.test(url)) {
-      /* Tally: hidden fields named pick, product, total and deposit (see prices.js) */
+      /* Tally: hidden fields named pick, product, total and deposit (see prices.js); amounts always with cents, like "Copy deposit amount" */
       qs.push("pick=" + encodeURIComponent(lastPick.text), "product=" + encodeURIComponent(lastPick.product),
-        "total=" + encodeURIComponent(lastPick.total), "deposit=" + encodeURIComponent(lastPick.deposit));
+        "total=" + lastPick.total.toFixed(2), "deposit=" + lastPick.deposit.toFixed(2));
     } else if (lastPick && ORDER_FORM_PREFILL_ENTRY) {
       if (url.indexOf("usp=") === -1) qs.push("usp=pp_url");
       qs.push(encodeURIComponent(ORDER_FORM_PREFILL_ENTRY) + "=" + encodeURIComponent(lastPick.text));
@@ -113,7 +115,12 @@
   }
 
   /* ---------- sticky order bar (phones) ---------- */
-  var BAR_CAP = "Free U.S. shipping on every custom order";
+  var BAR_CAP = "Free U.S. shipping or pickup in Pearland";   /* until a piece is chosen; then how this pick reaches the customer */
+  function barCapText() {
+    if (!current || !current.est) return BAR_CAP;
+    if (current.est.digitalOnly) return "Digital file — nothing to ship";
+    return (GET_IT[current.getit] || GET_IT.ship).short;
+  }
   var bar = el("div", { "class": "order-bar", hidden: "", role: "region", "aria-label": "Order" });
   var barCap = el("span", { "class": "order-bar-cap", text: BAR_CAP });
   var barText = el("span", { "class": "order-bar-text", text: "Custom Orders" });
@@ -130,7 +137,7 @@
     barCap.textContent = swap ? "Swapped in: " + swap[1] : "Added: " + label.replace(/\s*\(.*\)$/, "").replace(/^Add: /, "");
     barCap.classList.add("is-added");
     clearTimeout(capTimer);
-    capTimer = setTimeout(function () { barCap.textContent = BAR_CAP; barCap.classList.remove("is-added"); }, 2600);
+    capTimer = setTimeout(function () { barCap.textContent = barCapText(); barCap.classList.remove("is-added"); }, 2600);
   }
 
   /* ---------- the seven pieces ----------
@@ -157,12 +164,12 @@
     },
     housewarming: {
       product: "Housewarming & Closing Gift Box",
-      /* each add-on goes into the box, or swaps out one basic item (g.swaps: add-on value → basic key) — +$10 either way */
+      /* each add-on goes into the box, or swaps out one basic item (g.swaps: add-on value → basic key) — at its own price (PRICES.housewarming.addons) either way */
       read: function (v, form, g) {
         var list = [], boxes = form ? form.querySelectorAll('input[name="addons"]') : [];
         for (var i = 0; i < boxes.length; i++) if (boxes[i].checked) {
           var basic = g && g.swaps[boxes[i].value] ? g.art.querySelector('[data-basic="' + g.swaps[boxes[i].value] + '"]') : null;
-          list.push({ name: boxes[i].getAttribute("data-label") || boxes[i].value, swapFor: basic ? lowerFirst(basic.getAttribute("data-text")) : "" });
+          list.push({ key: boxes[i].value, name: boxes[i].getAttribute("data-label") || boxes[i].value, swapFor: basic ? lowerFirst(basic.getAttribute("data-text")) : "" });
         }
         return { addons: list, qty: v.qty };
       },
@@ -203,6 +210,39 @@
   }
   function clampNum(n, min, max) { n = Math.floor(Number(n)); return n >= min ? Math.min(n, max) : min; }
   function lowerFirst(t) { t = String(t || ""); return t.charAt(0).toLowerCase() + t.slice(1); }
+
+  /* pickup or shipping — one step after every piece's options (Elise 16/10) */
+  var GET_IT = {
+    ship: { name: "Ship to my address", note: "Free U.S. shipping", short: "Free U.S. shipping", pick: "Ship to my address (free U.S. shipping)",
+      hint: "In your order, add your shipping address and a good time to receive it." },
+    sat: { name: "Pickup Saturday", note: "Pearland Town Center", short: "Pickup Saturday · Pearland Town Center", pick: "Pickup Saturday at Pearland Town Center",
+      hint: "Pickup at Pearland Town Center on Saturday — in your order, add a good time to pick it up." },
+    sun: { name: "Pickup Sunday", note: "Pearland Town Center", short: "Pickup Sunday · Pearland Town Center", pick: "Pickup Sunday at Pearland Town Center",
+      hint: "Pickup at Pearland Town Center on Sunday — in your order, add a good time to pick it up." }
+  };
+  function addGetIt(form, id) {
+    var nums = form.querySelectorAll(".step-n"), n = 1;
+    for (var i = 0; i < nums.length; i++) n = Math.max(n, Number(nums[i].textContent) || 0);
+    var fs = el("fieldset", { "class": "step step-getit" });
+    fs.appendChild(el("legend", null, [el("span", { "class": "step-n", "aria-hidden": "true", text: String(n + 1) }), document.createTextNode(" "), el("span", { "class": "step-label", text: "Pickup or shipping" })]));
+    var off = el("p", { "class": "step-off", id: id + "-getit-off", text: "Cold cut and 3-berry boxes are pickup only." });
+    off.hidden = true;
+    fs.appendChild(off);
+    var tiles = el("div", { "class": "tiles cols-3 list" });
+    ["ship", "sat", "sun"].forEach(function (k) {
+      var inp = el("input", { type: "radio", name: "getit", value: k });
+      if (k === "ship") { inp.checked = true; inp.defaultChecked = true; }
+      tiles.appendChild(el("label", { "class": "tile" }, [inp, el("span", { "class": "tile-name", text: GET_IT[k].name }), el("span", { "class": "tile-note", text: GET_IT[k].note })]));
+    });
+    fs.appendChild(tiles);
+    var how = el("p", { "class": "step-hint getit-how", id: id + "-getit-how", text: GET_IT.ship.hint });
+    fs.appendChild(how);
+    fs.setAttribute("aria-describedby", how.id);
+    /* right after the last numbered step (the pet form ends with its price table) */
+    var steps = form.querySelectorAll("fieldset.step"), last = steps[steps.length - 1];
+    form.insertBefore(fs, last ? last.nextSibling : null);
+    return fs;
+  }
 
   /* − / + around a quantity field (the field itself stays typeable) */
   function enhanceQty(wrap, onChange) {
@@ -261,6 +301,8 @@
     var table = art.querySelector("details.all-prices");
     if (table) table.open = false;   /* open without JS; with the tiles doing the work it folds away */
     /* card message (doll, godparents): goes into the pick, never stored on the device */
+    /* how it reaches the customer (Elise 16/10): free U.S. shipping, or pickup at Pearland Town Center on Saturday or Sunday */
+    var getit = form ? addGetIt(form, art.id) : null;
     var msgEl = form ? form.querySelector("[data-message]") : null;
     var msgStep = msgEl ? msgEl.closest(".step-message") : null;
     var msgCount = msgStep ? msgStep.querySelector(".msg-count") : null;
@@ -271,7 +313,7 @@
       msgEl.setAttribute("aria-describedby", msgHint.id);
     }
     function message() { return msgEl ? msgEl.value.replace(/\s+/g, " ").trim().slice(0, 160) : ""; }
-    function pickText() { var m = message(); return summaryLine(def.product, g.est) + (m ? ' · Card message: "' + m + '"' : ""); }
+    function pickText() { var m = message(); return summaryLine(def.product, g.est, g.how) + (m ? ' · Card message: "' + m + '"' : ""); }
     if (msgEl) msgEl.addEventListener("input", function () {
       if (msgCount) msgCount.textContent = msgEl.value.length + " / 160";
       g.text = pickText(); copied.textContent = ""; pick(g);   /* quietly: no announcement per keystroke */
@@ -287,7 +329,7 @@
       var sig = on.join(",");
       if (swapWrap.getAttribute("data-sig") !== sig) {
         swapWrap.innerHTML = "";
-        if (on.length) swapWrap.appendChild(el("p", { "class": "swaps-title", text: "Add it to the box, or swap it for a basic item:" }));
+        if (on.length) swapWrap.appendChild(el("p", { "class": "swaps-title", text: "For each add-on, choose:" }));
         on.forEach(function (val) {
           var box2 = form.querySelector('input[name="addons"][value="' + val + '"]');
           var sid = art.id + "-swap-" + val;
@@ -323,7 +365,7 @@
     var qtyWrap = art.querySelector("[data-qty]");
 
     var prevLabels = null, prevTotal = null, prevQty = 1;
-    function update(fromUser, changed) {
+    function update(fromUser, changed, val) {
       var v = readValues(form);
       /* print-only steps / tiles (paper, frame, gift box) only apply to printed paintings */
       var isDigital = v.format === "digital";
@@ -339,6 +381,20 @@
         node.classList.toggle("is-off", isDigital);
         var why = node.querySelector(".step-off");
         if (why) { why.hidden = !isDigital; if (isDigital) node.setAttribute("aria-describedby", why.id); else node.removeAttribute("aria-describedby"); }
+      }
+      g.say = "";
+      if (getit) {   /* fresh items (PRICES.housewarming.fresh: cold cut, berries) are pickup only: shipping is off while one is in the box */
+        var fresh = (PRICES[key] && PRICES[key].fresh) || [], freshOn = false;
+        (v.addons || []).forEach(function (a) { if (fresh.indexOf(a) > -1) freshOn = true; });
+        var shipIn = getit.querySelector('input[value="ship"]'), satIn = getit.querySelector('input[value="sat"]');
+        var offNote = getit.querySelector(".step-off"), howNote = getit.querySelector(".getit-how");
+        shipIn.disabled = freshOn;
+        shipIn.parentNode.classList.toggle("is-off", freshOn);
+        /* the page moved the customer to pickup: say so, and move them back once no fresh item is left (unless they chose a day themselves) */
+        if (freshOn && shipIn.checked) { satIn.checked = true; g.autoPickup = true; g.say = "Fresh items are pickup only — set to Pickup Saturday at Pearland Town Center. Sunday works too."; }
+        else if (!freshOn && g.autoPickup) { if (satIn.checked) { shipIn.checked = true; g.say = "Shipping to your address is back on."; } g.autoPickup = false; }
+        offNote.hidden = !freshOn;
+        getit.setAttribute("aria-describedby", (freshOn ? offNote.id + " " : "") + howNote.id);
       }
       v = readValues(form);   /* re-read: disabled extras drop out */
       syncSwaps(v);
@@ -367,7 +423,9 @@
         if (!shots[s].hidden) curShot = shots[s];
         if (!sw || holds(sw, v)) valid.push(shots[s]);
       }
-      if (changed) for (var s2 = 0; s2 < valid.length && !showShot; s2++) if ((" " + valid[s2].getAttribute("data-on") + " ").indexOf(" " + changed + " ") > -1) showShot = valid[s2];
+      /* a box just ticked: its own view first (the rosary, not the gift box ticked before it) */
+      if (changed && val) for (var s1 = 0; s1 < valid.length && !showShot; s1++) if (("&" + valid[s1].getAttribute("data-when") + "&").indexOf("&" + changed + "~" + val + "&") > -1) showShot = valid[s1];
+      if (changed && !showShot) for (var s2 = 0; s2 < valid.length && !showShot; s2++) if ((" " + valid[s2].getAttribute("data-on") + " ").indexOf(" " + changed + " ") > -1) showShot = valid[s2];
       if (!showShot && curShot && valid.indexOf(curShot) > -1) showShot = curShot;
       if (!showShot) for (var s3 = 0; s3 < valid.length && !showShot; s3++) if (valid[s3].hasAttribute("data-when")) showShot = valid[s3];
       showShot = showShot || mainShot;
@@ -378,7 +436,20 @@
       }
 
       var est = def.est(def.read(v, form, g));
-      g.est = est; g.text = pickText();
+      g.est = est;
+      if (getit) {
+        getit.hidden = !!est.digitalOnly;   /* a digital file is emailed */
+        var gw = GET_IT[v.getit] || GET_IT.ship;
+        g.getit = est.digitalOnly ? "" : (GET_IT[v.getit] ? v.getit : "ship");
+        g.how = est.digitalOnly ? "" : gw.pick;
+        var howHint = getit.querySelector(".getit-how");
+        if (howHint) howHint.textContent = gw.hint;
+      }
+      if (form) {   /* number the steps that show (a swapped-out painting hides "Your photos"); step 1 is the picker */
+        var fss = form.querySelectorAll("fieldset.step"), sn = 2;
+        for (var f = 0; f < fss.length; f++) { var num = fss[f].querySelector(".step-n"); if (num && !fss[f].hidden) num.textContent = String(sn++); }
+      }
+      g.text = pickText();
       if (qtyWrap && qtyWrap.syncQty) qtyWrap.syncQty();
       /* the box: main line first, the included rows (static HTML), then each add-on */
       var old = box.querySelectorAll("li.line");
@@ -403,6 +474,8 @@
         box.appendChild(qli); box.appendChild(sli);
       }
       prevQty = est.qty;
+      /* sales tax (8.25%, Elise 16/10) — or included, where the piece's own copy says so */
+      box.appendChild(el("li", { "class": "line line-tax" }, [el("span", { "class": "line-name", text: est.taxIncluded ? "Sales tax" : taxLabel() }), el("span", { "class": "amt", text: est.taxIncluded ? "included" : "+" + money(est.tax) })]));
       prevLabels = est.lines.map(function (l) { return l.label; });
       totalRow.innerHTML = "";
       totalRow.appendChild(el("span", { text: "Estimate" }));
@@ -411,16 +484,17 @@
       totalRow.appendChild(amt);
       prevTotal = est.total;
       depositRow.innerHTML = ""; balanceRow.innerHTML = "";
-      depositRow.appendChild(el("span", { text: "Deposit today (50%)" })); depositRow.appendChild(el("strong", { "class": "amt", text: money(est.deposit) }));
-      balanceRow.appendChild(el("span", { text: "Balance after you approve the photo" })); balanceRow.appendChild(el("span", { "class": "amt", text: money(est.balance) }));
-      noteRow.textContent = [est.note, est.digitalOnly ? "" : "Free U.S. shipping"].filter(Boolean).join(" · ");
+      var db = moneyPair(est.deposit, est.balance);
+      depositRow.appendChild(el("span", { text: "Deposit today (50%)" })); depositRow.appendChild(el("strong", { "class": "amt", text: db[0] }));
+      balanceRow.appendChild(el("span", { text: "Balance after you approve the photo" })); balanceRow.appendChild(el("span", { "class": "amt", text: db[1] }));
+      noteRow.textContent = [est.note, est.digitalOnly ? "" : (GET_IT[v.getit] || GET_IT.ship).short].filter(Boolean).join(" · ");
       copied.textContent = "";
-      if (fromUser) store(storeKey, { v: v, swaps: g.swaps, u: 1 });   /* a plain page view remembers nothing */
+      if (fromUser) store(storeKey, { v: v, swaps: g.swaps, u: 1, auto: g.autoPickup ? 1 : 0 });   /* a plain page view remembers nothing */
       if (g === current) setBarThumb(g);
       if (fromUser) {
         var newKeys = prevLabels.slice(1).map(addonKey);
         var removed = oldLabels.filter(function (lab, ix) { return ix > 0 && newKeys.indexOf(addonKey(lab)) === -1; });   /* a swapped main line, or an add-on that only changed role, is not a removal */
-        live.textContent = (added.length ? added.map(sayLine).join(", ") + ". " : "") + (removed.length ? "Removed: " + removed.map(addonKey).join(", ") + ". " : "") + (est.qty > 1 ? est.qty + " " + est.many + ". " : "") + "Estimate " + money(est.total) + ".";
+        live.textContent = (added.length ? added.map(sayLine).join(", ") + ". " : "") + (removed.length ? "Removed: " + removed.map(addonKey).join(", ") + ". " : "") + (est.qty > 1 ? est.qty + " " + est.many + ". " : "") + "Estimate " + money(est.total) + "." + (g.say ? " " + g.say : "");
         var addOn = added.filter(function (a) { return a !== prevLabels[0]; });
         if (addOn.length) barAdded(addOn[addOn.length - 1]);
         pick(g);
@@ -428,7 +502,12 @@
     }
     g.update = update;
     if (form) {
-      form.addEventListener("change", function (e) { if (e.target !== msgEl) update(true, e.target && e.target.name); });
+      form.addEventListener("change", function (e) {
+        var t = e.target;
+        if (!t || t === msgEl) return;
+        if (t.name === "getit") g.autoPickup = false;   /* the customer chose: keep it */
+        update(true, t.name, t.type === "checkbox" && t.checked ? t.value : "");
+      });
       if (qtyWrap) enhanceQty(qtyWrap, function () { update(true); });
       form.addEventListener("focusin", function (e) { var t = e.target, lab = t && t.parentNode; if (lab && lab.classList && lab.classList.contains("tile")) { try { lab.classList.toggle("is-focus", t.matches(":focus-visible")); } catch (err) { /* no :focus-visible */ } } });
       form.addEventListener("focusout", function (e) { var lab = e.target && e.target.parentNode; if (lab && lab.classList) lab.classList.remove("is-focus"); });
@@ -444,7 +523,7 @@
     function mainView() { var sh = art.querySelectorAll(".gift-photo .shot"); for (var i = 0; i < sh.length; i++) sh[i].hidden = sh[i].hasAttribute("data-when") || sh[i].hasAttribute("data-on"); }
     resetBtn.addEventListener("click", function () {
       if (form) form.reset();
-      g.swaps = {};
+      g.swaps = {}; g.autoPickup = false;
       mainView();
       if (msgCount) msgCount.textContent = "Up to 160 characters";
       update(true); store(storeKey, null);
@@ -454,6 +533,7 @@
     var saved = load(storeKey);
     if (form && saved && saved.u === 1 && saved.v && typeof saved.v === "object") {
       g.restored = true;
+      g.autoPickup = saved.auto === 1;
       var inputs = form.querySelectorAll("input");
       for (var r = 0; r < inputs.length; r++) {
         var inp2 = inputs[r];
@@ -475,7 +555,7 @@
         for (var r3 = 0; r3 < defs.length; r3++) defs[r3].checked = defs[r3].defaultChecked;
       }
     }
-    g.clear = function () { if (form) form.reset(); g.swaps = {}; mainView(); if (msgCount) msgCount.textContent = "Up to 160 characters"; };
+    g.clear = function () { if (form) form.reset(); g.swaps = {}; g.autoPickup = false; mainView(); if (msgCount) msgCount.textContent = "Up to 160 characters"; };
     g.form = form;
     update(false);
     return g;
@@ -488,6 +568,7 @@
 
   function updateBar() {
     if (current && current.est) barText.textContent = "Estimate " + money(current.est.total) + " · " + current.def.product;   /* the number first: phones cut the end */
+    if (!barCap.classList.contains("is-added")) barCap.textContent = barCapText();
     if (current) setBarThumb(current);
   }
   function setBarThumb(g) {
@@ -548,7 +629,7 @@
   for (var hp = 0; hp < howPhotos.length; hp++) howPhotos[hp].textContent = byEmail ? "Attach them to your order email."
     : "Upload them in the order form." + (inApp ? " Opened this inside an app? Use its ••• menu to open the page in your browser so your photos attach." : "") + " Photos won't attach? Email them to purrlightstudiollc@gmail.com.";
   function pick(g) {   /* the customer is now building this piece: it is what the order links carry */
-    lastPick = { product: g.def.product, total: g.est.total, deposit: g.est.deposit, text: g.text };
+    lastPick = { product: g.def.product, total: g.est.total, deposit: g.est.deposit, text: g.text, getit: g.getit };
     if (g === current) updateBar();
     updatePay();
     applyOrderLinks();
@@ -634,7 +715,7 @@
   /* ---------- or start from a gift idea (presets) ---------- */
   var PRESETS = {
     realtor:  { id: "housewarming",  values: { addons: ["succulent"] } },
-    memorial: { id: "watercolor",    values: { format: "5x7", paper: "do", frame: "yes", extras: ["giftBox"] }, show: "paper" },   /* opens on the Dó cat, not the house */
+    memorial: { id: "watercolor",    values: { format: "5x7", paper: "do", frame: "yes", extras: ["giftBox"] }, show: "frame" },   /* opens on the cat on Dó in a floating frame */
     grandma:  { id: "portrait-doll", values: { shadowbox: "yes" } }
   };
   function setValues(form, values) {
@@ -667,12 +748,17 @@
       var p = PRESETS[btn.getAttribute("data-preset")];
       if (!p || !byId[p.id]) { btn.parentNode.hidden = true; return; }
       var est = presetEstimate(p), price = btn.querySelector("[data-idea-price]");
-      if (price && est) price.textContent = money(est.total);
+      if (price && est) {   /* the idea's price before tax, like the prices on the tiles */
+        price.textContent = money(est.pre);
+        price.appendChild(el("span", { "class": "idea-tax", text: est.taxIncluded ? " tax incl." : " + tax" }));
+      }
       btn.addEventListener("click", function () {
         var g = byId[p.id];
         var msg = g.form && g.form.querySelector("[data-message]"), keep = msg ? msg.value : "";   /* the card message is the customer's own words */
+        var gi = g.form && g.form.querySelector('input[name="getit"]:checked'), keepHow = gi && !g.autoPickup ? gi.value : "";   /* and so is how it reaches them */
         g.clear();
         setValues(g.form, p.values);
+        if (keepHow) setValues(g.form, { getit: keepHow });
         if (msg && keep) { msg.value = keep; var mc = g.form.querySelector(".msg-count"); if (mc) mc.textContent = keep.length + " / 160"; }
         activate(p.id, { user: true });
         g.update(true, p.show);

@@ -19,7 +19,7 @@
 var DESK_CONFIG = {
   studioName: "Purrlight Studio",
   studioCity: "Pearland, Texas",
-  studioEmail: "hello@purrlight.studio",         /* Brand Canon v2 — the old .com address must not appear anywhere */
+  studioEmail: "purrlightstudiollc@gmail.com",         /* stopgap until purrlight.studio is registered (Elise 16/10: all mail to the studio Gmail) */
 
   /* Base URL of the live site, with trailing slash. The domain is decided
      (purrlight.studio, Canon v2) but the site is not deployed yet — set this
@@ -127,8 +127,8 @@ var DESK_CONFIG = {
 
   /* Custom pieces are made from the customer's photo. Replies go to whatever
      mailbox the booth phone sends from, so the studio address is named too
-     (and cc'd on every email) — CONFIRM hello@purrlight.studio works before
-     the first event (Notion Booth Kit 18/09: not yet confirmed). */
+     (and cc'd on every email) — CONFIRM the studio Gmail (stopgap until purrlight.studio
+     is registered, Elise 16/10) works and the booth phone is signed in to it before the first event. */
   photoLine: "If you haven't already, reply with the clearest photo you have of {pet} — front-on, in daylight if you can — or send it to {email}. That photo is what we work from.",
 
   /* Approved promise line (The Purrlight Promise on the product page),

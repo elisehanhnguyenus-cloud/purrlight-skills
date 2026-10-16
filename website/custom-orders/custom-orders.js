@@ -167,12 +167,13 @@
     },
     housewarming: {
       product: "Housewarming & Closing Gift Box",
-      /* each add-on goes into the box, or swaps out one basic item (g.swaps: add-on value → basic key) — at its own price (PRICES.housewarming.addons) either way */
+      /* each add-on goes into the box (its own price), or swaps out one basic item (g.swaps: add-on value → basic key) —
+         then it costs the difference between the two (PRICES.housewarming.addons − .basics) */
       read: function (v, form, g) {
         var list = [], boxes = form ? form.querySelectorAll('input[name="addons"]') : [];
         for (var i = 0; i < boxes.length; i++) if (boxes[i].checked) {
           var basic = g && g.swaps[boxes[i].value] ? g.art.querySelector('[data-basic="' + g.swaps[boxes[i].value] + '"]') : null;
-          list.push({ key: boxes[i].value, name: boxes[i].getAttribute("data-label") || boxes[i].value, swapFor: basic ? lowerFirst(basic.getAttribute("data-text")) : "" });
+          list.push({ key: boxes[i].value, name: boxes[i].getAttribute("data-label") || boxes[i].value, swapFor: basic ? lowerFirst(basic.getAttribute("data-name") || basic.getAttribute("data-text")) : "", swapKey: basic ? g.swaps[boxes[i].value] : "" });
         }
         return { addons: list, qty: v.qty };
       },
@@ -213,6 +214,7 @@
   }
   function clampNum(n, min, max) { n = Math.floor(Number(n)); return n >= min ? Math.min(n, max) : min; }
   function lowerFirst(t) { t = String(t || ""); return t.charAt(0).toLowerCase() + t.slice(1); }
+  function signed(n) { var c = Math.round(n * 100); return c > 0 ? "+" + money(n) : money(n); }   /* +$10 · $0 · −$5 */
 
   /* pickup or shipping — one step after every piece's options (Elise 16/10). Shipping is free; an order shipped outside
      Texas carries no Texas sales tax (Elise 16/10, second message). */
@@ -363,8 +365,12 @@
           var box2 = form.querySelector('input[name="addons"][value="' + val + '"]');
           var sid = art.id + "-swap-" + val;
           var sel = el("select", { id: sid, "data-swap": val });
-          sel.appendChild(el("option", { value: "", text: "Add to the box" }));
-          for (var b = 0; b < basics.length; b++) sel.appendChild(el("option", { value: basics[b].getAttribute("data-basic"), text: "Swap for the " + (basics[b].getAttribute("data-short") || lowerFirst(basics[b].getAttribute("data-text"))) }));
+          var HW = PRICES.housewarming, add = HW.addons[val] || 0;
+          sel.appendChild(el("option", { value: "", text: "Add to the box (" + signed(add) + ")" }));
+          for (var b = 0; b < basics.length; b++) {
+            var bkey = basics[b].getAttribute("data-basic"), worth = HW.basics[bkey];
+            sel.appendChild(el("option", { value: bkey, text: "Swap for the " + (basics[b].getAttribute("data-short") || lowerFirst(basics[b].getAttribute("data-text"))) + (worth === undefined ? "" : " (" + signed(add - worth) + ")") }));
+          }
           sel.value = g.swaps[val] || "";
           sel.addEventListener("change", function () { if (sel.value) g.swaps[val] = sel.value; else delete g.swaps[val]; });   /* the form's change listener updates */
           swapWrap.appendChild(el("div", { "class": "swap-row" }, [el("label", { "for": sid, text: box2 ? box2.getAttribute("data-label") : val }), sel]));
@@ -521,9 +527,9 @@
         var li = el("li", { "class": "line " + (idx === 0 ? "line-main" : "line-add") });
         var name = el("span", { "class": "line-name" });
         if (idx === 0 && def.item) { name.appendChild(el("span", { "class": "line-item", text: def.item })); name.appendChild(el("span", { "class": "line-sub", text: l.label })); }
-        else name.textContent = l.label;
+        else { name.textContent = l.label; if (l.detail) name.appendChild(el("span", { "class": "line-sub", text: l.detail })); }
         li.appendChild(name);
-        li.appendChild(el("span", { "class": "amt", text: (idx === 0 ? "" : "+") + money(l.amount) }));
+        li.appendChild(el("span", { "class": "amt", text: idx === 0 ? money(l.amount) : signed(l.amount) }));
         if (prevLabels && prevLabels.indexOf(l.label) === -1) { added.push(l.label); if (fromUser) li.classList.add("is-new"); }
         if (idx === 0) box.insertBefore(li, box.firstChild); else box.appendChild(li);
       });

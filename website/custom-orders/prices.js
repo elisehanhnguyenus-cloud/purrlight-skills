@@ -37,14 +37,19 @@
      Elise can drop this (or make plants pickup only).
    - Calendars print on premium matte paper only.
 
+   Decided by Elise 16/10/2026, third message:
+   - Housewarming swaps: a swapped-in add-on replaces the basic item's own price
+     — the swap costs only the difference, and a cheaper add-on takes the
+     difference off. Basic items' selling prices: sparkling cider $15 · jam or
+     local honey $5 · digital watercolor painting of the home $15 (a 5×7 print on
+     Premium Matte paper) · crochet rosary chain $10.
+
    Readings still open (flagged to Elise — change ONE constant if needed):
    - Watercolor "Print 4×6 $12 · 5×7 $15 · 8×10 $20" are read as the
      price of a printed painting (not $10 digital + print).
    - A gift box is offered for prints.
    - "Second pet on the same order −$10": the second pet is $10 less
      than its own size × yarn price (same size and yarn assumed).
-   - Housewarming add-ons: swapping out a basic item costs the same as adding
-     the add-on (its own price).
    ============================================================ */
 
 /* The one order form for all seven products (brief §1 / §5). Edit it HERE — every order link on the
@@ -96,8 +101,9 @@ var PRICES = {
   housewarming: {                                                            /* §3.5 · Elise 15/10 + 16/10 */
     base: 60,
     addons: { succulent: 10, candle: 10, coldcut: 15, berry: 10, chocolate: 20 },   /* cold cut: coming soon, not orderable */
+    basics: { cider: 15, jam: 5, painting: 15, rosary: 10 },   /* Elise 16/10 (3rd): what each basic item sells for — a swap costs the difference */
     fresh: ["coldcut", "berry"],                  /* pickup only — the page turns shipping off from this list */
-    plants: ["succulent"],                        /* Texas only — the page turns "ship outside Texas" off */
+    plants: ["succulent"],                        /* ships within Texas only — the page turns "ship outside Texas" off */
     taxFree: ["berry"],                           /* fresh fruit: not taxed in Texas */
     maxAddons: 5
   },
@@ -117,6 +123,7 @@ var PRICES = {
 
 /* ---------- helpers ---------- */
 function money(n) {
+  if (Math.round(n * 100) < 0) return "−" + money(-n);   /* a swap to a cheaper item: −$5 */
   var s = (Math.round(n * 100) / 100).toFixed(2).replace(/\.00$/, "");
   return "$" + s.replace(/\B(?=(\d{3})+(?!\d))/g, ",");   /* $1,095 — only the whole dollars have 4+ digits in a row */
 }
@@ -127,7 +134,8 @@ function moneyPair(a, b) {
   return [f(a), f(b)];
 }
 
-/* ---------- estimators (each returns {total, lines:[{label, amount, taxFree?}], note}) ---------- */
+/* ---------- estimators (each returns {total, lines:[{label, amount, taxFree?, detail?}], note}) — taxFree: the
+   untaxed part of the line in dollars (true = all of it) ---------- */
 function estPortraitDoll(o) {
   var lines = [{ label: "Custom Portrait Crochet Doll", amount: PRICES.portraitDoll.base }];
   if (o && o.shadowbox) lines.push({ label: "Wooden shadowbox display case", amount: PRICES.portraitDoll.shadowbox });
@@ -166,8 +174,11 @@ function estWatercolor(o) {
   return r;
 }
 
-/* o.addons: [{ key, name, swapFor }] (swapFor "" = added to the box) or plain keys. Each add-on costs its own price,
-   added or swapped in. Fresh add-ons (cold cut, berries) make the box pickup only; fresh fruit is not taxed. */
+/* o.addons: [{ key, name, swapFor, swapKey }] (swapFor "" = added to the box) or plain keys. Added: the add-on's own
+   price. Swapped in for a basic item (swapKey, a PRICES.housewarming.basics key): the add-on replaces that item's
+   price — the line is the difference, below zero when the add-on costs less (Elise 16/10, third message).
+   Fresh add-ons (cold cut, berries) make the box pickup only; fresh fruit is not taxed (taxFree = its own price,
+   since the basic item it replaces was taxed). */
 function estHousewarming(o) {
   var P = PRICES.housewarming;
   var lines = [{ label: "Housewarming & Closing Gift Box", amount: P.base }];
@@ -175,8 +186,10 @@ function estHousewarming(o) {
   for (var i = 0, n = 0; i < a.length && n < P.maxAddons; i++) {
     var it = typeof a[i] === "object" && a[i] ? a[i] : { key: String(a[i]) };
     if (!Object.prototype.hasOwnProperty.call(P.addons, it.key)) continue;
-    var name = it.name || it.key;
-    lines.push({ label: it.swapFor ? "Swap: " + it.swapFor + " → " + name : "Add: " + name, amount: P.addons[it.key], taxFree: P.taxFree.indexOf(it.key) > -1 });
+    var name = it.name || it.key, price = P.addons[it.key], swapped = it.swapFor && Object.prototype.hasOwnProperty.call(P.basics, it.swapKey);
+    var line = { label: it.swapFor ? "Swap: " + it.swapFor + " → " + name : "Add: " + name, amount: swapped ? round2(price - P.basics[it.swapKey]) : price, taxFree: P.taxFree.indexOf(it.key) > -1 ? price : 0 };
+    if (swapped) line.detail = name + " " + money(price) + " − " + it.swapFor + " " + money(P.basics[it.swapKey]);
+    lines.push(line);
     if (P.fresh.indexOf(it.key) > -1) fresh = true;
     n++;
   }
@@ -208,7 +221,7 @@ function round2(n) { return Math.round(n * 100) / 100; }
    pays (with tax) · deposit + balance = total */
 function finish(lines) {
   var pre = 0, free = 0;
-  for (var i = 0; i < lines.length; i++) { pre += lines[i].amount; if (lines[i].taxFree) free += lines[i].amount; }
+  for (var i = 0; i < lines.length; i++) { pre += lines[i].amount; free += lines[i].taxFree === true ? lines[i].amount : (lines[i].taxFree || 0); }
   return settle({ pre: round2(pre), taxFree: round2(free), lines: lines, note: "", qty: 1 });
 }
 
@@ -255,7 +268,7 @@ function taxLabel() { return "Texas sales tax (" + (PRICES.salesTaxBp / 100) + "
 /* one-line summary the customer can paste into the order form; `how` = how it reaches them (pickup or shipping) */
 function summaryLine(product, est, how) {
   var parts = [];
-  for (var i = 0; i < est.lines.length; i++) parts.push(est.lines[i].label + " " + money(est.lines[i].amount));
+  for (var i = 0; i < est.lines.length; i++) parts.push(est.lines[i].label + " " + money(est.lines[i].amount) + (est.lines[i].detail ? " (" + est.lines[i].detail + ")" : ""));
   var qty = est.qty > 1 ? " — × " + est.qty + " " + est.many + " " + money(est.subtotal) + ", order more, save more −" + money(est.saving) : "";
   var tax = est.outOfTexas ? " — no Texas sales tax (outside Texas)" : " — " + taxLabel() + " " + money(est.tax) + (est.taxFree ? " (not on the fresh fruit)" : "");
   return "My pick: " + product + " — " + parts.join(" · ") + qty + tax + " — estimate " + money(est.total) + " · deposit (50%) " + money(est.deposit) + (est.digitalOnly ? "" : " · " + (how || (est.pickupOnly ? "Pickup at Pearland Town Center" : "Free U.S. shipping")));

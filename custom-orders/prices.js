@@ -22,16 +22,20 @@
      · cold cut box +$15 · 3-berry fruit box +$10 · chocolate box (6 pieces) +$20.
    - Fresh items (cold cut, 3-berry) are pickup only (Pearland Town Center,
      Saturday or Sunday) — never shipped.
-   - Sales tax 8.25% is added to every order; the 50% deposit is half of the
-     total with tax. Exception kept on purpose: the portrait doll's approved
-     copy says sales tax is included in its price (taxIncluded) — flagged.
-   - Up to 50 paintings or boxes per order on the page (accepted).
+   - Texas sales tax 8.25% on the order; the 50% deposit is half of the total
+     with tax. Up to 50 paintings or boxes per order on the page (accepted).
    - Order form: Elise's Tally form (below).
 
-   Flagged to Elise 16/10 (tax research — not changed without her word):
-   Texas tax is not due on orders shipped outside Texas, or on fresh fruit and
-   plain sliced cold cuts; any amount charged as tax must be remitted; the sales
-   tax permit must be in Purrlight Studio LLC's name before tax is collected.
+   Decided by Elise 16/10/2026, second message (after the tax research):
+   - The sales tax permit is in hand. No Texas sales tax on orders shipped
+     outside Texas (Tax Code 151.330) — a digital file goes by where the buyer
+     lives. Fresh fruit (the 3-berry box) is not taxed. Tax charged is remitted.
+   - The portrait doll is no longer "sales tax included": taxed like the rest.
+   - Cold cut box: "coming soon" (no food permit yet) — shown, not orderable.
+   - Succulent / aloe: sold at events, orders taken online. Our choice, not
+     a law (plant shipping rules vary by state): we ship plants within Texas only.
+     Elise can drop this (or make plants pickup only).
+   - Calendars print on premium matte paper only.
 
    Readings still open (flagged to Elise — change ONE constant if needed):
    - Watercolor "Print 4×6 $12 · 5×7 $15 · 8×10 $20" are read as the
@@ -69,7 +73,7 @@ var PAY = {
 };
 
 var PRICES = {
-  portraitDoll: { base: 80, shadowbox: 10, taxIncluded: true },            /* §3.2 · "sales tax & U.S. shipping all included" (approved copy) */
+  portraitDoll: { base: 80, shadowbox: 10 },                               /* §3.2 · taxed like the rest (Elise 16/10, second message) */
   pet: {                                                                     /* §3.3 */
     sizes: ["Petite", "Classic", "Grand"],
     yarns: ["Cotton", "Velvet", "Fluffy"],
@@ -91,12 +95,13 @@ var PRICES = {
   },
   housewarming: {                                                            /* §3.5 · Elise 15/10 + 16/10 */
     base: 60,
-    addons: { succulent: 10, candle: 10, coldcut: 15, berry: 10, chocolate: 20 },
+    addons: { succulent: 10, candle: 10, coldcut: 15, berry: 10, chocolate: 20 },   /* cold cut: coming soon, not orderable */
     fresh: ["coldcut", "berry"],                  /* pickup only — the page turns shipping off from this list */
+    plants: ["succulent"],                        /* Texas only — the page turns "ship outside Texas" off */
+    taxFree: ["berry"],                           /* fresh fruit: not taxed in Texas */
     maxAddons: 5
   },
-  christening: { gownSet: 89, confirmationBox: 55 },                         /* §3.6 (confirmation box: coming soon — TODO before it is orderable:
-                                                                                its tile says "Sales tax & shipping included", so mark it taxIncluded or change that copy) */
+  christening: { gownSet: 89, confirmationBox: 55 },                         /* §3.6 (confirmation box: coming soon) */
   godparent: { base: 95, secondOff: 10 },                                    /* §3.7 · second set −$10: Elise 15/10 */
   calendar: {                                                                /* §3.8 */
     print:   { 1: 20, 6: 50 },   /* 1 page $20 · add 5 more pages +$30 (6 pages $50) */
@@ -107,7 +112,7 @@ var PRICES = {
     maxQty: 50
   },
   depositRate: 0.5,                           /* brief §1 + Elise 15/10: 50% deposit today */
-  salesTaxBp: 825                             /* Elise 16/10: 8.25% on every order (basis points: exact cents) */
+  salesTaxBp: 825                             /* Texas sales tax 8.25% (basis points: exact cents) — not on orders shipped outside Texas */
 };
 
 /* ---------- helpers ---------- */
@@ -122,11 +127,11 @@ function moneyPair(a, b) {
   return [f(a), f(b)];
 }
 
-/* ---------- estimators (each returns {total, lines:[{label, amount}], note}) ---------- */
+/* ---------- estimators (each returns {total, lines:[{label, amount, taxFree?}], note}) ---------- */
 function estPortraitDoll(o) {
   var lines = [{ label: "Custom Portrait Crochet Doll", amount: PRICES.portraitDoll.base }];
   if (o && o.shadowbox) lines.push({ label: "Wooden shadowbox display case", amount: PRICES.portraitDoll.shadowbox });
-  return finish(lines, PRICES.portraitDoll.taxIncluded);
+  return finish(lines);
 }
 
 function estPet(o) {
@@ -162,7 +167,7 @@ function estWatercolor(o) {
 }
 
 /* o.addons: [{ key, name, swapFor }] (swapFor "" = added to the box) or plain keys. Each add-on costs its own price,
-   added or swapped in. Fresh add-ons (cold cut, berries) make the box pickup only. */
+   added or swapped in. Fresh add-ons (cold cut, berries) make the box pickup only; fresh fruit is not taxed. */
 function estHousewarming(o) {
   var P = PRICES.housewarming;
   var lines = [{ label: "Housewarming & Closing Gift Box", amount: P.base }];
@@ -171,7 +176,7 @@ function estHousewarming(o) {
     var it = typeof a[i] === "object" && a[i] ? a[i] : { key: String(a[i]) };
     if (!Object.prototype.hasOwnProperty.call(P.addons, it.key)) continue;
     var name = it.name || it.key;
-    lines.push({ label: it.swapFor ? "Swap: " + it.swapFor + " → " + name : "Add: " + name, amount: P.addons[it.key] });
+    lines.push({ label: it.swapFor ? "Swap: " + it.swapFor + " → " + name : "Add: " + name, amount: P.addons[it.key], taxFree: P.taxFree.indexOf(it.key) > -1 });
     if (P.fresh.indexOf(it.key) > -1) fresh = true;
     n++;
   }
@@ -199,11 +204,12 @@ function estChristeningGown() { return finish([{ label: "Christening Gown Set �
 
 function round2(n) { return Math.round(n * 100) / 100; }
 
-/* r.pre = price before tax · r.tax · r.total = what the customer pays (with tax) · deposit + balance = total */
-function finish(lines, taxIncluded) {
-  var pre = 0;
-  for (var i = 0; i < lines.length; i++) pre += lines[i].amount;
-  return settle({ pre: round2(pre), lines: lines, note: "", qty: 1, taxIncluded: !!taxIncluded });
+/* r.pre = price before tax · r.taxFree = the part of it not taxed (fresh fruit) · r.tax · r.total = what the customer
+   pays (with tax) · deposit + balance = total */
+function finish(lines) {
+  var pre = 0, free = 0;
+  for (var i = 0; i < lines.length; i++) { pre += lines[i].amount; if (lines[i].taxFree) free += lines[i].amount; }
+  return settle({ pre: round2(pre), taxFree: round2(free), lines: lines, note: "", qty: 1 });
 }
 
 /* the discount rate of the n-th identical item (1-based): 0 · 5% from the 2nd · 10% from the 5th */
@@ -225,14 +231,16 @@ function applyQty(r, qty, one, many) {
     r.subtotal = round2(r.unit * q);
     r.saving = round2(saving);
     r.pre = round2(r.subtotal - r.saving);
+    if (r.taxFree) r.taxFree = round2(r.taxFree * r.pre / r.unit);   /* each item's untaxed part, with the same discount */
   }
   return settle(r);
 }
 
-/* sales tax on the price (whole cents, half a cent rounds up), then 50% deposit today and the rest after the photo is approved */
+/* Texas sales tax on the taxed part of the price (whole cents, half a cent rounds up) — none when the order ships
+   outside Texas — then 50% deposit today and the rest after the photo is approved */
 function settle(r) {
-  var pre = Math.round(r.pre * 100);
-  var tax = r.taxIncluded ? 0 : Math.round(pre * PRICES.salesTaxBp / 10000);
+  var pre = Math.round(r.pre * 100), taxed = r.outOfTexas ? 0 : pre - Math.round((r.taxFree || 0) * 100);
+  var tax = Math.round(Math.max(0, taxed) * PRICES.salesTaxBp / 10000);
   var cents = pre + tax, dep = Math.ceil(cents * PRICES.depositRate);   /* a half cent always rounds the deposit up */
   r.tax = tax / 100;
   r.total = cents / 100;
@@ -240,17 +248,19 @@ function settle(r) {
   r.balance = (cents - dep) / 100;
   return r;
 }
-function taxLabel() { return "Sales tax (" + (PRICES.salesTaxBp / 100) + "%)"; }
+/* an estimate for an order that ships outside Texas (or a digital file for a buyer outside Texas): no Texas sales tax */
+function outOfTexas(r) { r.outOfTexas = true; return settle(r); }
+function taxLabel() { return "Texas sales tax (" + (PRICES.salesTaxBp / 100) + "%)"; }
 
 /* one-line summary the customer can paste into the order form; `how` = how it reaches them (pickup or shipping) */
 function summaryLine(product, est, how) {
   var parts = [];
   for (var i = 0; i < est.lines.length; i++) parts.push(est.lines[i].label + " " + money(est.lines[i].amount));
   var qty = est.qty > 1 ? " — × " + est.qty + " " + est.many + " " + money(est.subtotal) + ", order more, save more −" + money(est.saving) : "";
-  var tax = est.taxIncluded ? " — sales tax included" : " — " + taxLabel().toLowerCase() + " " + money(est.tax);
+  var tax = est.outOfTexas ? " — no Texas sales tax (outside Texas)" : " — " + taxLabel() + " " + money(est.tax) + (est.taxFree ? " (not on the fresh fruit)" : "");
   return "My pick: " + product + " — " + parts.join(" · ") + qty + tax + " — estimate " + money(est.total) + " · deposit (50%) " + money(est.deposit) + (est.digitalOnly ? "" : " · " + (how || (est.pickupOnly ? "Pickup at Pearland Town Center" : "Free U.S. shipping")));
 }
 
 if (typeof module !== "undefined") {
-  module.exports = { ORDER_FORM_URL: ORDER_FORM_URL, ORDER_FORM_PREFILL_ENTRY: ORDER_FORM_PREFILL_ENTRY, PAY: PAY, PRICES: PRICES, money: money, moneyPair: moneyPair, taxLabel: taxLabel, itemOff: itemOff, applyQty: applyQty, estPortraitDoll: estPortraitDoll, estPet: estPet, estWatercolor: estWatercolor, estHousewarming: estHousewarming, estCalendar: estCalendar, estGodparent: estGodparent, estChristeningGown: estChristeningGown, summaryLine: summaryLine };
+  module.exports = { ORDER_FORM_URL: ORDER_FORM_URL, ORDER_FORM_PREFILL_ENTRY: ORDER_FORM_PREFILL_ENTRY, PAY: PAY, PRICES: PRICES, money: money, moneyPair: moneyPair, taxLabel: taxLabel, outOfTexas: outOfTexas, itemOff: itemOff, applyQty: applyQty, estPortraitDoll: estPortraitDoll, estPet: estPet, estWatercolor: estWatercolor, estHousewarming: estHousewarming, estCalendar: estCalendar, estGodparent: estGodparent, estChristeningGown: estChristeningGown, summaryLine: summaryLine };
 }

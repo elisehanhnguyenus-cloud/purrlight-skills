@@ -48,6 +48,18 @@
    - Christening Gown Set: 25% off its $89 through Sun Oct 25, 2026 (end of the day,
      Central Time) — $66.75; from Oct 26 the page goes back to $89 by itself.
 
+   Decided by Elise 16/10/2026, sixth message:
+   - The gown set is for girls and ready to ship in 2–3 days; a boys' outfit is
+     coming in 2027.
+   - Confirmation gift box can be ordered now, shipping after Nov 12: a saint figure
+     + rosary chain — 12 cm figure $55 (a saint we have ready, or one made for you),
+     or St. Carlo Acutis / St. Michael the Archangel at 10 in, $90. All figures are
+     made with closed eyes.
+   - Every made-to-order / custom piece: a design mockup after the deposit, before we
+     start; word when it is in the works; a progress update after about a week.
+   - Housewarming add-on: mother-of-pearl spoons, 2 for $12 or 4 for $24, in four
+     styles (white carved leaf · brown shell carved leaf · wood handle · blue shell handle).
+
    Readings still open (flagged to Elise — change ONE constant if needed):
    - Watercolor "Print 4×6 $12 · 5×7 $15 · 8×10 $20" are read as the
      price of a printed painting (not $10 digital + print).
@@ -104,7 +116,8 @@ var PRICES = {
   },
   housewarming: {                                                            /* §3.5 · Elise 15/10 + 16/10 */
     base: 60,
-    addons: { succulent: 10, candle: 10, coldcut: 15, berry: 10, chocolate: 20 },   /* cold cut: coming soon, not orderable */
+    addons: { succulent: 10, candle: 10, coldcut: 15, berry: 10, chocolate: 20,   /* cold cut: coming soon, not orderable */
+              spoons: { 2: 12, 4: 24 } },                  /* mother-of-pearl spoons: price by how many (Elise 16/10) */
     basics: { cider: 15, jam: 5, painting: 15, rosary: 10 },   /* Elise 16/10 (3rd): what each basic item sells for — a swap costs the difference */
     fresh: ["coldcut", "berry"],                  /* pickup only — the page turns shipping off from this list */
     plants: ["succulent"],                        /* ships within Texas only — the page turns "ship outside Texas" off */
@@ -112,7 +125,13 @@ var PRICES = {
     maxAddons: 5
   },
   christening: {                                                             /* §3.6 (confirmation box: coming soon) */
-    gownSet: 89, confirmationBox: 55,
+    gownSet: 89,
+    confirmation: {                                  /* Elise 16/10: ships after Nov 12 */
+      ready:   { price: 55, label: "a saint we have ready, 12 cm" },
+      made:    { price: 55, label: "a saint made for you, 12 cm" },
+      carlo:   { price: 90, label: "St. Carlo Acutis, 10 in" },
+      michael: { price: 90, label: "St. Michael the Archangel, 10 in" }
+    },
     gownSale: { off: 25, ends: "2026-10-26T05:00:00Z", through: "Oct 25", day: "Sun, Oct 25" }   /* Elise 16/10: 25% off through Sun Oct 25 (midnight CDT) */
   },
   godparent: { base: 95, secondOff: 10 },                                    /* §3.7 · second set −$10: Elise 15/10 */
@@ -186,6 +205,12 @@ function estWatercolor(o) {
    price — the line is the difference, below zero when the add-on costs less (Elise 16/10, third message).
    Fresh add-ons (cold cut, berries) make the box pickup only; fresh fruit is not taxed (taxFree = its own price,
    since the basic item it replaces was taxed). */
+/* an add-on's price: one number, or by variant (spoons: { 2: 12, 4: 24 }, it.variant "2" or "4") */
+function addonPrice(P, it) {
+  var p = P.addons[it.key];
+  if (p && typeof p === "object") return Object.prototype.hasOwnProperty.call(p, it.variant) ? p[it.variant] : p[Object.keys(p)[0]];
+  return p;
+}
 function estHousewarming(o) {
   var P = PRICES.housewarming;
   var lines = [{ label: "Housewarming & Closing Gift Box", amount: P.base }];
@@ -193,7 +218,7 @@ function estHousewarming(o) {
   for (var i = 0, n = 0; i < a.length && n < P.maxAddons; i++) {
     var it = typeof a[i] === "object" && a[i] ? a[i] : { key: String(a[i]) };
     if (!Object.prototype.hasOwnProperty.call(P.addons, it.key)) continue;
-    var name = it.name || it.key, price = P.addons[it.key], swapped = it.swapFor && Object.prototype.hasOwnProperty.call(P.basics, it.swapKey);
+    var name = it.name || it.key, price = addonPrice(P, it), swapped = it.swapFor && Object.prototype.hasOwnProperty.call(P.basics, it.swapKey);
     var line = { label: it.swapFor ? "Swap: " + it.swapFor + " → " + name : "Add: " + name, amount: swapped ? round2(price - P.basics[it.swapKey]) : price, taxFree: P.taxFree.indexOf(it.key) > -1 ? price : 0 };
     if (swapped) line.detail = name + " " + money(price) + " − " + it.swapFor + " " + money(P.basics[it.swapKey]);
     lines.push(line);
@@ -228,7 +253,16 @@ function gownPrice(now) {
 }
 function estChristeningGown(o) {
   var g = gownPrice(o && o.now);
-  return finish([{ label: "Christening Gown Set — lace & satin" + (g.sale ? " (" + g.sale.off + "% off " + money(g.regular) + " through " + g.sale.through + " CT)" : ""), amount: g.price }]);
+  var r = finish([{ label: "Christening Gown Set — lace & satin" + (g.sale ? " (" + g.sale.off + "% off " + money(g.regular) + " through " + g.sale.through + " CT)" : ""), amount: g.price }]);
+  r.note = "Ready to ship in 2–3 days";
+  return r;
+}
+/* o.figure: ready · made · carlo · michael (PRICES.christening.confirmation) */
+function estConfirmation(o) {
+  var C = PRICES.christening.confirmation, f = o && Object.prototype.hasOwnProperty.call(C, o.figure) ? o.figure : "ready";
+  var r = finish([{ label: "Confirmation gift box — " + C[f].label, amount: C[f].price }]);
+  r.note = "Ships after Nov 12";
+  return r;
 }
 
 function round2(n) { return Math.round(n * 100) / 100; }
@@ -291,5 +325,5 @@ function summaryLine(product, est, how) {
 }
 
 if (typeof module !== "undefined") {
-  module.exports = { ORDER_FORM_URL: ORDER_FORM_URL, ORDER_FORM_PREFILL_ENTRY: ORDER_FORM_PREFILL_ENTRY, PAY: PAY, PRICES: PRICES, money: money, moneyPair: moneyPair, taxLabel: taxLabel, outOfTexas: outOfTexas, itemOff: itemOff, applyQty: applyQty, estPortraitDoll: estPortraitDoll, estPet: estPet, estWatercolor: estWatercolor, estHousewarming: estHousewarming, estCalendar: estCalendar, estGodparent: estGodparent, estChristeningGown: estChristeningGown, gownPrice: gownPrice, summaryLine: summaryLine };
+  module.exports = { ORDER_FORM_URL: ORDER_FORM_URL, ORDER_FORM_PREFILL_ENTRY: ORDER_FORM_PREFILL_ENTRY, PAY: PAY, PRICES: PRICES, money: money, moneyPair: moneyPair, taxLabel: taxLabel, outOfTexas: outOfTexas, itemOff: itemOff, applyQty: applyQty, estPortraitDoll: estPortraitDoll, estPet: estPet, estWatercolor: estWatercolor, estHousewarming: estHousewarming, estCalendar: estCalendar, estGodparent: estGodparent, estChristeningGown: estChristeningGown, estConfirmation: estConfirmation, addonPrice: addonPrice, gownPrice: gownPrice, summaryLine: summaryLine };
 }

@@ -269,16 +269,26 @@
         var list = [], boxes = form ? form.querySelectorAll('input[name="addons"]') : [];
         for (var i = 0; i < boxes.length; i++) if (boxes[i].checked) {
           var basic = g && g.swaps[boxes[i].value] ? g.art.querySelector('[data-basic="' + g.swaps[boxes[i].value] + '"]') : null;
-          list.push({ key: boxes[i].value, name: boxes[i].getAttribute("data-label") || boxes[i].value, swapFor: basic ? basic.getAttribute("data-short") || lowerFirst(basic.getAttribute("data-text")) : "", swapKey: basic ? g.swaps[boxes[i].value] : "" });
+          var name = boxes[i].getAttribute("data-label") || boxes[i].value, variant = "";
+          if (boxes[i].value === "spoons") {   /* how many and which style: "Mother-of-pearl spoons (4, wood handle)" */
+            var style = form.querySelector('input[name="spoonStyle"]:checked');
+            variant = v.spoonCount || "2";
+            name += " (" + variant + ", " + (style ? style.getAttribute("data-label") : "") + ")";
+          }
+          list.push({ key: boxes[i].value, name: name, variant: variant, swapFor: basic ? basic.getAttribute("data-short") || lowerFirst(basic.getAttribute("data-text")) : "", swapKey: basic ? g.swaps[boxes[i].value] : "" });
         }
         return { addons: list, qty: v.qty };
       },
       est: function (o) { return estHousewarming(o); }
     },
-    christening: {   /* the Confirmation gift box is "coming soon": shown as information, not orderable */
+    christening: {   /* the gown set (girls, ready to ship in 2–3 days) or a Confirmation gift box (ships after Nov 12) */
       product: "Christening & Confirmation Gifts",
-      read: function () { return {}; },
-      est: function () { var now = new Date().getTime(); renderGownSale(gownPrice(now)); return estChristeningGown({ now: now }); }   /* the tile and the estimate read one clock */
+      read: function (v) { return { set: v.set, figure: v.figure }; },
+      est: function (o) {
+        var now = new Date().getTime();
+        renderGownSale(gownPrice(now));   /* the gown tile and the estimate read one clock */
+        return o && o.set === "confirm" ? estConfirmation(o) : estChristeningGown({ now: now });
+      }
     },
     godparent: {
       product: "Godparent Gift Set",
@@ -453,7 +463,7 @@
       if (!swapWrap) return;
       var on = v.addons || [];
       for (var k in g.swaps) if (on.indexOf(k) === -1) delete g.swaps[k];
-      var sig = on.join(",");
+      var sig = on.join(",") + "|" + (v.spoonCount || "");   /* the swap prices follow how many spoons */
       if (swapWrap.getAttribute("data-sig") !== sig) {
         swapWrap.innerHTML = "";
         if (on.length) swapWrap.appendChild(el("p", { "class": "swaps-title", text: "For each add-on, choose:" }));
@@ -461,7 +471,7 @@
           var box2 = form.querySelector('input[name="addons"][value="' + val + '"]');
           var sid = art.id + "-swap-" + val;
           var sel = el("select", { id: sid, "data-swap": val });
-          var HW = PRICES.housewarming, add = HW.addons[val] || 0;
+          var HW = PRICES.housewarming, add = addonPrice(HW, { key: val, variant: v.spoonCount }) || 0;
           sel.appendChild(el("option", { value: "", text: "Add to the box (" + signed(add) + ")" }));
           for (var b = 0; b < basics.length; b++) {
             var bkey = basics[b].getAttribute("data-basic"), worth = HW.basics[bkey];

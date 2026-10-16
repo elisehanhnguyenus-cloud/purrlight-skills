@@ -898,10 +898,24 @@ mất chữ khách đã gõ → cùng món thì giữ form; gửi xong không cu
 đã có #pay → luôn cuộn; trang mở qua nửa đêm 25/10 còn hiện giá giảm → tự đổi về $89 (ô chọn, ước
 tính, link Tally); thêm "(Central Time)"; "$89" gạch ngang đủ tương phản; "Oct 25" không bị tách dòng.
 
+### Elise 16/10, tin nhắn 6 — đã làm
+- Popup Tally chạy tốt trên máy chị. **Giảm 25% đồng bộ**: Etsy và trang Shop (thẻ sản phẩm, trang sản
+  phẩm, Event Desk) đều ~~$89~~ $66.75 đến hết CN 25/10 (Central Time), tự về $89.
+- **Christening:** bộ váy cho bé gái, sẵn hàng, giao trong 2–3 ngày; đồ bé trai "coming 2027".
+- **Confirmation gift box** đặt được (giao sau 12/11): bước "Choose the saint" — thánh có sẵn 12 cm
+  $55 · thánh làm theo yêu cầu 12 cm $55 · St. Carlo Acutis 10 in $90 · St. Michael the Archangel
+  10 in $90; mọi tượng nhắm mắt; Tally `pick` ghi tên lựa chọn. Ảnh: dùng ảnh hộp Mary 12 cm có sẵn.
+- **Quy trình làm hàng** ("How it works" 4 bước): cọc → mockup thiết kế trước khi làm → báo đang
+  làm, cập nhật tiến độ sau ~1 tuần → ảnh thành phẩm, trả phần còn lại, giao/nhận.
+- **Muỗng xà cừ** (add-on hộp tân gia): 2 cái $12, 4 cái $24; 4 kiểu có ảnh; đổi món cũng tính chênh
+  lệch (vd. 4 muỗng thay rosary: +$14).
+
 ### Còn chờ chị
 1. "Turnaround: from X" → "ships within N" (FTC, xem 8j).
 2. Sau mùa lễ: thay ảnh hero/Giáng sinh, gỡ hạn đặt.
-3. Giảm giá bộ váy trên trang Shop (trang sản phẩm vẫn $89) — có cần hiện không?
+3. **Ảnh tượng thánh**: thư mục `C:\Users\thanh\Downloads\tượng thánh` nằm trên máy chị — em không
+   mở được; chị gửi ảnh vào cuộc trò chuyện để em thêm danh sách thánh có sẵn + ảnh Carlo Acutis,
+   St. Michael.
 
 ## 9. Link & tài nguyên
 

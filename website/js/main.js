@@ -4,6 +4,12 @@
   "use strict";
 
   var fmt = function (n) { return "$" + n.toFixed(2).replace(/\.00$/, ""); };
+  /* a price on sale (products.js SALES): the full price struck through, then the sale price */
+  var priceHTML = function (p, delta) {
+    var d = delta || 0;
+    if (!p.regular) return fmt(p.price + d);
+    return '<s><span class="visually-hidden">Was </span>' + fmt(p.regular + d) + '</s> <span class="visually-hidden">now </span>' + fmt(p.price + d);
+  };
 
   /* ---------- mobile nav ---------- */
   var toggle = document.querySelector(".nav-toggle");
@@ -57,7 +63,8 @@
       '<div class="card-body">' +
       '<p class="card-cat">' + p.category + "</p>" +
       "<h3>" + p.name + "</h3>" +
-      '<p class="price">' + fmt(p.price) + "</p>" +
+      '<p class="price">' + priceHTML(p) + "</p>" +
+      (p.sale ? '<p class="sale-note">' + p.sale.off + "% off through " + p.sale.through + "</p>" : "") +
       "</div></a>"
     );
   }
@@ -177,7 +184,14 @@
     set("[data-pdp-crumb]", p.name);
     set("[data-pdp-cat]", p.category);
     set("[data-pdp-name]", p.name);
-    set("[data-pdp-price]", fmt(p.price));
+    var priceEl = pdp.querySelector("[data-pdp-price]");
+    if (priceEl) priceEl.innerHTML = priceHTML(p);
+    if (p.sale && priceEl) {
+      var saleNote = document.createElement("p");
+      saleNote.className = "sale-note";
+      saleNote.textContent = p.sale.off + "% off through " + p.sale.through;
+      priceEl.insertAdjacentElement("afterend", saleNote);
+    }
     set("[data-pdp-desc]", p.desc);
     var img = pdp.querySelector("[data-pdp-img]");
     if (img) { img.src = p.img; img.alt = p.name; }
@@ -194,7 +208,7 @@
       addonWrap.hidden = false;
       sel.addEventListener("change", function () {
         var a = p.addons[Number(sel.value)] || p.addons[0];
-        set("[data-pdp-price]", fmt(p.price + a.delta));
+        if (priceEl) priceEl.innerHTML = priceHTML(p, a.delta);
       });
     }
 

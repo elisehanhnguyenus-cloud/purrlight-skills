@@ -142,6 +142,21 @@ const PRODUCTS = [
   }
 ];
 
+/* Sales (Elise 16/10: the same discount as on Etsy). While a sale runs, p.price is the sale price everywhere that reads
+   it (shop cards, the product page, the Event Desk) and p.regular keeps the full price for the struck-through display.
+   The Christening Gown Set sale is also in custom-orders/prices.js (gownSale) — change both together. */
+const SALES = {
+  "christening-gown-set": { off: 25, ends: "2026-10-26T05:00:00Z", through: "Sun, Oct 25 (Central Time)" }   /* midnight CDT */
+};
+PRODUCTS.forEach(function (p) {
+  const sale = SALES[p.id];
+  if (sale && Date.now() < Date.parse(sale.ends)) {
+    p.regular = p.price;
+    p.price = Math.round(p.price * (100 - sale.off)) / 100;
+    p.sale = sale;
+  }
+});
+
 /* Which pieces the standard care/safety copy applies to (shared by product.html and the Event Desk):
    NOT_HANDMADE     — digital patterns / printed-to-order / molded items: no "made by hand", no spot-clean care, no safety line.
    SAFETY_LINE_SKIP — a christening garment cannot carry "Not suitable for children under 3", and a rosary

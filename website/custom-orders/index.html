@@ -339,8 +339,28 @@
                 <div class="tile tile-info" data-soon="coldcut"><span class="tile-name">Cold cut box</span><span class="tile-note">(coming soon)</span><span class="tile-price">+$15</span></div>
                 <label class="tile"><input type="checkbox" name="addons" value="berry" data-label="3-berry fruit box"><span class="tile-name">3-berry fruit box</span><span class="tile-note">pickup only</span><span class="tile-price">+$10</span></label>
                 <label class="tile"><input type="checkbox" name="addons" value="chocolate" data-label="Chocolate box (6 pieces)"><span class="tile-name">Chocolate box (6 pieces)</span><span class="tile-price">+$20</span></label>
+                <label class="tile"><input type="checkbox" name="addons" value="spoons" data-label="Mother-of-pearl spoons"><span class="tile-name">Mother-of-pearl spoons</span><span class="tile-note">2 or 4 · four styles</span><span class="tile-price" data-price-by='{"key":"spoonCount","map":{"2":"+$12","4":"+$24"}}'>+$12</span></label>
               </div>
               <div class="swaps" data-swaps hidden></div>
+            </fieldset>
+            <fieldset class="step step-spoons" data-when="addons~spoons">
+              <legend><span class="step-n" aria-hidden="true">3</span> <span class="step-label">Your spoons</span></legend>
+              <fieldset class="subgroup">
+                <legend class="sub-legend">How many</legend>
+                <div class="tiles">
+                  <label class="tile"><input type="radio" name="spoonCount" value="2" checked><span class="tile-name">2 spoons</span><span class="tile-price">+$12</span></label>
+                  <label class="tile"><input type="radio" name="spoonCount" value="4"><span class="tile-name">4 spoons</span><span class="tile-price">+$24</span></label>
+                </div>
+              </fieldset>
+              <fieldset class="subgroup">
+                <legend class="sub-legend">Style</legend>
+                <div class="tiles cols-4">
+                  <label class="tile tile-pic"><input type="radio" name="spoonStyle" value="white" data-label="white, carved leaf" checked><img class="tile-thumb" src="../assets/img/custom/thumb-spoons-white-leaf.webp" alt="" width="240" height="240" loading="lazy" decoding="async"><span class="tile-name">White, carved leaf</span></label>
+                  <label class="tile tile-pic"><input type="radio" name="spoonStyle" value="brown" data-label="brown shell, carved leaf"><img class="tile-thumb" src="../assets/img/custom/thumb-spoons-brown-leaf.webp" alt="" width="240" height="240" loading="lazy" decoding="async"><span class="tile-name">Brown shell, carved leaf</span></label>
+                  <label class="tile tile-pic"><input type="radio" name="spoonStyle" value="wood" data-label="wood handle"><img class="tile-thumb" src="../assets/img/custom/thumb-spoons-wood.webp" alt="" width="240" height="240" loading="lazy" decoding="async"><span class="tile-name">Wood handle</span></label>
+                  <label class="tile tile-pic"><input type="radio" name="spoonStyle" value="blue" data-label="blue shell handle"><img class="tile-thumb" src="../assets/img/custom/thumb-spoons-blue.webp" alt="" width="240" height="240" loading="lazy" decoding="async"><span class="tile-name">Blue shell handle</span></label>
+                </div>
+              </fieldset>
             </fieldset>
             <fieldset class="step step-qty">
               <legend><span class="step-n" aria-hidden="true">3</span> <span class="step-label">How many boxes</span></legend>
@@ -359,6 +379,10 @@
           <div class="gift-preview">
             <figure class="gift-photo">
               <div class="shot"><img src="../assets/img/custom/housewarming-box.webp" alt="Sample round housewarming gift box with a bottle, honey, fruit, cold cuts and a crochet rosary chain" width="382" height="512" loading="lazy" decoding="async"><p class="shot-cap">Sample box with fruit and cold cuts (cold cut box coming soon). The basic set comes with non-alcoholic sparkling cider and a digital watercolor of your home.</p></div>
+              <div class="shot" data-shot="spoons-white" data-when="addons~spoons&amp;spoonStyle=white" data-on="spoonStyle" hidden><img src="../assets/img/custom/spoons-white-leaf.webp" alt="Four white mother-of-pearl spoons with carved leaf handles, each in a clear bag" width="720" height="960" loading="lazy" decoding="async"><p class="shot-cap">Mother-of-pearl spoons — white, carved leaf.</p></div>
+              <div class="shot" data-shot="spoons-brown" data-when="addons~spoons&amp;spoonStyle=brown" data-on="spoonStyle" hidden><img src="../assets/img/custom/spoons-brown-leaf.webp" alt="Four brown-shell mother-of-pearl spoons with carved leaf handles, each in a clear bag" width="720" height="960" loading="lazy" decoding="async"><p class="shot-cap">Mother-of-pearl spoons — brown shell, carved leaf.</p></div>
+              <div class="shot" data-shot="spoons-wood" data-when="addons~spoons&amp;spoonStyle=wood" data-on="spoonStyle" hidden><img src="../assets/img/custom/spoons-wood.webp" alt="Four mother-of-pearl spoons with wooden handles" width="720" height="960" loading="lazy" decoding="async"><p class="shot-cap">Mother-of-pearl spoons — wood handle.</p></div>
+              <div class="shot" data-shot="spoons-blue" data-when="addons~spoons&amp;spoonStyle=blue" data-on="spoonStyle" hidden><img src="../assets/img/custom/spoons-blue.webp" alt="Four mother-of-pearl spoons with blue shell-mosaic handles" width="720" height="960" loading="lazy" decoding="async"><p class="shot-cap">Mother-of-pearl spoons — blue shell handle.</p></div>
             </figure>
             <div class="gift-box">
               <h4 class="box-title">What's inside</h4>
@@ -384,25 +408,41 @@
             <h3 id="ch-h" class="gift-title">Christening &amp; Confirmation Gifts</h3>
             <p class="price">from $55</p>
             <p class="sale-line" data-sale-note="gown" hidden></p>
-            <p class="turnaround">Turnaround: from 1 week</p>
+            <p class="turnaround">Gown set: ready to ship in 2–3 days · Confirmation gift box: ships after Nov 12</p>
           </div>
           <form class="gift-steps" aria-label="Options — Christening &amp; Confirmation Gifts">
             <fieldset class="step">
               <legend><span class="step-n" aria-hidden="true">2</span> <span class="step-label">Choose your set</span></legend>
               <div class="tiles cols-1">
-                <label class="tile"><input type="radio" name="set" value="gown" checked><span class="tile-name">Christening Gown Set — lace &amp; satin</span><span class="tile-price" data-sale-price="gown">$89</span><span class="tile-note">A complete heirloom-quality set for her special day.</span></label>
-                <div class="tile tile-info"><span class="tile-name">Confirmation gift box</span><span class="tile-price">$55</span><span class="tile-note">(coming soon)</span><span class="tile-note">12 cm crochet saint figure + handmade rosary chain. Shipping included.</span><img class="tile-img" src="../assets/img/custom/confirmation-box.webp" alt="Confirmation gift box: a crochet Mary figure and a blue crochet rosary chain in a kraft box" width="320" height="389" loading="lazy" decoding="async"></div>
+                <label class="tile"><input type="radio" name="set" value="gown" checked><span class="tile-name">Christening Gown Set — lace &amp; satin</span><span class="tile-price" data-sale-price="gown">$89</span><span class="tile-note">A complete heirloom-quality set for her special day.</span><span class="tile-note">For girls · ready to ship in 2–3 days</span></label>
+                <label class="tile"><input type="radio" name="set" value="confirm"><span class="tile-name">Confirmation gift box</span><span class="tile-price">from $55</span><span class="tile-note">Saint figure + handmade rosary chain. Ships after Nov 12. Shipping included.</span></label>
+                <div class="tile tile-info"><span class="tile-name">Christening outfit for boys</span><span class="tile-note">(coming 2027)</span></div>
+              </div>
+            </fieldset>
+            <fieldset class="step" data-when="set=confirm">
+              <legend><span class="step-n" aria-hidden="true">3</span> <span class="step-label">Choose the saint</span></legend>
+              <p class="step-hint">Every figure is made with closed eyes. Tell us the saint in your order.</p>
+              <div class="tiles cols-1">
+                <label class="tile"><input type="radio" name="figure" value="ready" checked><span class="tile-name">A saint we have ready</span><span class="tile-note">12 cm</span><span class="tile-price">$55</span></label>
+                <label class="tile"><input type="radio" name="figure" value="made"><span class="tile-name">A saint made for you</span><span class="tile-note">12 cm · made to order</span><span class="tile-price">$55</span></label>
+                <label class="tile"><input type="radio" name="figure" value="carlo"><span class="tile-name">St. Carlo Acutis</span><span class="tile-note">10 in</span><span class="tile-price">$90</span></label>
+                <label class="tile"><input type="radio" name="figure" value="michael"><span class="tile-name">St. Michael the Archangel</span><span class="tile-note">10 in</span><span class="tile-price">$90</span></label>
               </div>
             </fieldset>
           </form>
           <div class="gift-preview">
             <figure class="gift-photo">
-              <div class="shot"><img src="../assets/img/custom/christening-confirmation.webp" alt="White christening gown, bonnet and mittens on a hanger inside a clear balloon with a satin bow, beside kraft Confirmation gift boxes with crochet saint figures and rosary chains" width="900" height="900" loading="lazy" decoding="async"><p class="shot-cap">Christening gown set, with Confirmation gift boxes (coming soon). The clear balloon display is for the photo only.</p></div>
+              <div class="shot"><img src="../assets/img/custom/christening-confirmation.webp" alt="White christening gown, bonnet and mittens on a hanger inside a clear balloon with a satin bow, beside kraft Confirmation gift boxes with crochet saint figures and rosary chains" width="900" height="900" loading="lazy" decoding="async"><p class="shot-cap">Christening gown set, with Confirmation gift boxes. The clear balloon display is for the photo only.</p></div>
+              <div class="shot" data-shot="confirm" data-when="set=confirm" data-on="set" hidden><img src="../assets/img/custom/confirmation-box.webp" alt="Sample Confirmation gift box: a crochet Mary figure and a blue crochet rosary chain in a kraft box" width="320" height="389" loading="lazy" decoding="async"><p class="shot-cap">Sample Confirmation gift box with a 12 cm Mary figure.</p></div>
             </figure>
             <div class="gift-box">
               <h4 class="box-title">What's inside</h4>
               <ul class="box">
-                <li class="incl">Gown, bonnet, mittens, booties and socks.</li>
+                <li class="incl" data-when="set=gown">Gown, bonnet, mittens, booties and socks.</li>
+                <li class="incl" data-when="set=confirm&amp;figure=ready,made">12 cm saint figure, made with closed eyes</li>
+                <li class="incl" data-when="set=confirm&amp;figure=carlo,michael">10 in saint figure, made with closed eyes</li>
+                <li class="incl" data-when="set=confirm">Handmade rosary chain</li>
+                <li class="incl" data-when="set=confirm">Gift box · shipping included</li>
               </ul>
               <div class="box-end">
                 <p><a class="btn btn-primary btn-block" data-order href="https://tally.so/r/M1KOkY">Place your order</a></p>
@@ -513,8 +553,9 @@
         <h2 id="how-h" class="section-title">How it works</h2>
         <ol class="steps">
           <li><span class="step-num" aria-hidden="true">1</span><p><strong>Send your photos.</strong> Face, full body, and any detail you want captured.</p></li>
-          <li><span class="step-num" aria-hidden="true">2</span><p><strong>Pay a 50% deposit.</strong> We make your piece and send you a photo to approve.</p></li>
-          <li><span class="step-num" aria-hidden="true">3</span><p><strong>Approve &amp; receive.</strong> Pay the balance, then it ships free in the U.S. — or pick it up at Pearland Town Center.</p></li>
+          <li><span class="step-num" aria-hidden="true">2</span><p><strong>Pay a 50% deposit.</strong> For every made-to-order or custom piece, we send you a design mockup before we start.</p></li>
+          <li><span class="step-num" aria-hidden="true">3</span><p><strong>We make it.</strong> We let you know when your piece is in the works, and can send you a progress update after about a week.</p></li>
+          <li><span class="step-num" aria-hidden="true">4</span><p><strong>Approve &amp; receive.</strong> We send you a photo of the finished piece. Pay the balance, then it ships free in the U.S. — or pick it up at Pearland Town Center.</p></li>
         </ol>
       </div>
     </section>

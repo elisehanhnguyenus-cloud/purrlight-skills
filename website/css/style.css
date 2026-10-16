@@ -503,6 +503,10 @@ h1, h2, h3, h4 {
   font-size: 15.5px;
   color: var(--purr-berry);
 }
+/* a price on sale (js/products.js SALES): the full price struck through in ink, then the sale price */
+.price s { font-weight: 400; font-size: 0.85em; color: var(--ink); margin-right: 2px; }
+.sale-note { font-size: 13.5px; font-weight: 600; color: var(--purr-berry); margin-top: 2px; }
+.pdp-info .sale-note { font-size: 15px; margin: -14px 0 20px; }
 
 .badge {
   position: absolute;

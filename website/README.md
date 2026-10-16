@@ -246,6 +246,16 @@ nhất trước (Pet portrait print $15 · Pet memorial $41 · Realtor closing &
 housewarming gift $70 · Christmas gift for friends & family $90).
 **Cách đọc còn để mở (ghi trong `prices.js`):** in tranh = giá đã gồm tranh
 (không cộng $10 file digital); hộp quà tranh chỉ với bản in; "second pet −$10" = con thứ hai cùng size & len.
+**Chốt 16/10, tin nhắn 6:** (1) giảm 25% bộ váy **đồng bộ cả trang Shop** (thẻ sản phẩm, trang
+sản phẩm, Event Desk) qua `SALES` trong `js/products.js` — tự hết hạn cùng lúc với `gownSale` trong
+`custom-orders/prices.js` (đổi thì đổi cả hai). (2) Bộ váy: **cho bé gái, ready to ship 2–3 ngày**;
+"Christening outfit for boys (coming 2027)". (3) **Confirmation gift box đặt được**, giao sau 12/11:
+tượng 12 cm (thánh có sẵn hoặc làm theo yêu cầu) $55 · St. Carlo Acutis / St. Michael the Archangel
+10 in $90; mọi tượng nhắm mắt; khách ghi tên thánh trong form. (4) "How it works" 4 bước: cọc →
+**mockup thiết kế trước khi làm** → báo đang làm, cập nhật tiến độ sau ~1 tuần → ảnh thành phẩm.
+(5) Add-on hộp tân gia: **muỗng xà cừ** 2 cái $12 · 4 cái $24 (chị chốt $24), 4 kiểu có ảnh (trắng
+chạm lá · vỏ nâu chạm lá · cán gỗ · cán xanh khảm); ảnh đổi theo kiểu khách chọn. Ảnh muỗng nhà cung
+cấp có watermark "TOPKIN" KHÔNG dùng.
 **Chốt 16/10, tin nhắn 5:** (1) **popup Tally** — nút "Place your order" mở form Tally ngay trên
 trang (góc phải dưới, rộng 376px; điện thoại: cao tối đa 62% màn hình), mang đủ ô ẩn như link (pick,
 product, total, deposit, delivery, utm), ẩn tiêu đề form (form còn dùng ở sự kiện, tiêu đề có "Meridian

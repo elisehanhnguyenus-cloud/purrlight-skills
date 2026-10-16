@@ -10,8 +10,9 @@ có sao thêu, yếm sage, ba lô xanh ô-liu, "the cat who takes notes". KHÔNG
 phải wizard cat (canon v1 sai đã bị Elise sửa — đừng đưa wizard trở lại).
 Nhân vật: Merlin (live) + Tâm, Bánh Mì, Mochi (joining soon). Motif: beret
 vàng, single white whisker (má trái), ba lô, notebook, đèn worktable
-("purr" + "light"), trăng/sao chỉ dùng trang trí. Email chính thức
-hello@purrlight.studio · domain purrlight.studio.
+("purr" + "light"), trăng/sao chỉ dùng trang trí. Email canon
+hello@purrlight.studio · domain purrlight.studio — **chưa đăng ký**, nên từ 16/10
+toàn site dùng tạm **purrlightstudiollc@gmail.com** (Elise chốt).
 Safe phrases: "From Merlin's notebook", "Sketched by Merlin, stitched by us",
 "the cat who takes notes". CẤM: magical/blessed/spell/manifest (TOS Etsy).
 
@@ -92,7 +93,7 @@ giá quá 15% bị cảnh báo (chủ trương: hạ size, không hạ giá); Pu
 claude.ai dùng chung một kho đơn cho mọi máy được share.
 
 **Trước sự kiện đầu tiên — bắt buộc:** (1) xác nhận hộp thư
-hello@purrlight.studio hoạt động và đăng nhập app Mail trên máy đứng booth
+purrlightstudiollc@gmail.com (tạm, tới khi có purrlight.studio) hoạt động và đăng nhập app Mail trên máy đứng booth
 bằng hộp thư đó (thư ký "Elise · Purrlight Studio", khách sẽ *reply* vào
 đó để gửi ảnh mèo); (2) chốt trạng thái permit thuế Texas → chọn chế độ thuế
 trong ⚙; (3) gửi thử cả hai loại thư từ chính điện thoại của chị (Gmail /
@@ -218,10 +219,18 @@ từng món, phím, nhớ lựa chọn, link #món, chế độ tắt JS, bấm 
 từng món (2–4: 5%, từ 5: 10%) trên cả món; godparent bộ 2 −$10; cọc 50% (nửa
 xu làm tròn lên ở tiền cọc); giấy in: giấy thường đã gồm · fine-art +$10 · Dó +$5.
 Số tiền ≥ $1,000 có dấu phẩy. Số lượng tối đa 50/đơn trên trang (hơn thì khách ghi
-số trong đơn — chưa phải quy định của chị, chờ chị xác nhận).
+số trong đơn — Elise đồng ý 16/10).
+**Chốt 16/10 (Elise):** hộp tân gia basic $60; add-on sen đá +$10 · nến thơm +$10 ·
+cold cut +$15 · 3-berry +$10 · chocolate (6 pieces) +$20; món tươi (cold cut, 3-berry)
+chỉ pickup; mọi món có bước **Pickup or shipping** (ship miễn phí trong Mỹ — khách ghi
+địa chỉ + giờ tiện nhận trong đơn — hoặc pickup tại Pearland Town Center thứ 7 / chủ
+nhật); **thuế 8.25% cộng vào mọi đơn** (`salesTaxBp: 825`), cọc 50% tính trên tổng
+có thuế — riêng doll giữ "sales tax … included" theo copy đã duyệt (`taxIncluded`,
+chờ chị xác nhận); khung: "We'll contact you to confirm your wooden frame."; mùa lễ
+2–4 tuần.
 **Cách đọc còn để mở (ghi trong `prices.js`):** in tranh = giá đã gồm tranh
 (không cộng $10 file digital); hộp quà tranh chỉ với bản in; "second pet −$10" = con thứ hai cùng size & len;
-"add or swap" cùng giá +$10.
+đổi món cơ bản = giá add-on (như thêm).
 
 **Ảnh (`assets/img/custom/`):** 9 file kit lấy lại từ asset của artifact v1
 (tên theo image map §4). Đang dùng: 01 collage, 03 tranh "Our 1st Home", 04
@@ -272,8 +281,8 @@ màu canon; muốn icon hồng thì đổi `src` sang `../assets/brand/favicon-6
    công qua email) thì bỏ badge và cập nhật mô tả. KHÔNG bỏ badge trước đó.
 8. **Partner program** — trang partners.html hướng creators vào TikTok
    Shop affiliate. Cần: (a) bật Open Collaboration trong TikTok Shop seller
-   center và đặt commission rate, (b) xác nhận hộp thư hello@purrlight.studio
-   đã hoạt động (email canon, chưa test).
+   center và đặt commission rate, (b) trang đang dùng purrlightstudiollc@gmail.com
+   (tạm, tới khi đăng ký purrlight.studio).
 9. **Event Desk** — xem mục riêng ở trên (hộp thư, permit thuế, gửi thử
    trên điện thoại thật). Trên Pages, Link + QR đã hoạt động.
 

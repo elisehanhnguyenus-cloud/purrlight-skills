@@ -246,6 +246,14 @@ nhất trước (Pet portrait print $15 · Pet memorial $41 · Realtor closing &
 housewarming gift $70 · Christmas gift for friends & family $90).
 **Cách đọc còn để mở (ghi trong `prices.js`):** in tranh = giá đã gồm tranh
 (không cộng $10 file digital); hộp quà tranh chỉ với bản in; "second pet −$10" = con thứ hai cùng size & len.
+**Chốt 16/10, tin nhắn 5:** (1) **popup Tally** — nút "Place your order" mở form Tally ngay trên
+trang (góc phải dưới, rộng 376px; điện thoại: cao tối đa 62% màn hình), mang đủ ô ẩn như link (pick,
+product, total, deposit, delivery, utm), ẩn tiêu đề form (form còn dùng ở sự kiện, tiêu đề có "Meridian
+Fall Event"), emoji 👋 vẫy tay theo ý chị (đứng yên khi máy khách bật "giảm chuyển động"). Script Tally
+tải sau trang; chưa tải/bị chặn thì nút vẫn mở trang form như cũ. Gửi xong popup đóng, trang chuyển tới
+"Pay your deposit". (2) **Christening Gown Set giảm 25% đến hết CN 25/10** (giờ Texas): $89 gạch → $66.75;
+từ 26/10 trang tự về $89 (`PRICES.christening.gownSale`). (3) Bộ váy rửa tội có thêm **socks** (trang
+Custom Orders + trang sản phẩm `js/products.js`).
 **Chốt 16/10, tin nhắn 3:** đổi món cơ bản trong hộp tân gia **chỉ tính phần chênh lệch**
 (giá add-on − giá bán món cơ bản; món rẻ hơn thì trừ lại, vd. −$5). Giá bán món cơ bản
 (`PRICES.housewarming.basics`): cider $15 · mứt/mật ong $5 · tranh nhà $15 (in 5×7 giấy
@@ -278,7 +286,7 @@ sau mùa lễ (không hồng — màu hồng chỉ xuất hiện một lần ở
 **Lệch so với brief — chủ ý, chị quyết:** (1) footer "Designed in Texas.
 Made in Vietnam." — bỏ "Finished in Texas" theo quyết định 09/10 của chị trên
 site chính; (2) "Baby girl baptism outfit set" → "Christening Gown Set — lace
-& satin — $89" + "Gown, bonnet, mittens and booties." theo chính brief §6
+& satin — $89" + "Gown, bonnet, mittens, booties and socks." theo chính brief §6 (socks: Elise thêm 16/10)
 (guardrail "baby"); (3) "curated" ×2 trong copy đã duyệt nhưng nằm trong danh
 sách từ cấm Canon — giữ nguyên văn, chờ chị; (4) "Etsy Star Seller ★ 4.9" lấy
 từ brief, chưa tự kiểm chứng được; (5) brief ghi "Merlin icon as the single

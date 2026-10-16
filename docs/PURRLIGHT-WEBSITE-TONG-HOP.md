@@ -873,9 +873,29 @@ Rà soát (2 góc + phản biện): mô hình tính tiền độc lập so với
 **0 sai lệch**; lỗi xác nhận duy nhất: README còn ghi quy tắc cũ (đã sửa). Dòng đổi món
 dùng tên ngắn (sparkling cider, jam or honey, home painting, rosary chain).
 
+### Popup Tally · giảm giá bộ váy rửa tội · socks (Elise 16/10, tin nhắn 5)
+- **Popup Tally:** nút "Place your order" (cả 11 nút) mở form ngay trên trang thay vì rời trang:
+  góc phải dưới, 376px, ẩn tiêu đề (form có "(Meridian Fall Event)" — chị chọn giữ, chỉ ẩn trong
+  popup), emoji 👋 vẫy tay (chị chọn giữ dù Brand Canon cấm emoji/nhún; đứng yên khi bật "giảm chuyển
+  động"). Điện thoại: popup cao tối đa 62% màn hình (Tally mặc định 70%) theo ý chị "nhỏ hơn".
+  Ô ẩn pick/product/total/deposit/delivery/utm đi theo popup giống hệt link (đã kiểm với script
+  thật của Tally). Thêm cho người dùng bàn phím: mở popup → con trỏ vào form; Esc (khi con trỏ ở
+  trang) đóng; đóng → con trỏ về nút. Gửi xong → đóng popup, chuyển tới "Pay your deposit".
+  Script Tally lỗi/bị chặn → nút vẫn mở trang form như cũ.
+- **Christening Gown Set −25% đến hết CN 25/10** (giờ Texas): ô chọn hiện ~~$89~~ $66.75, dòng
+  "Christening gown set: 25% off through Sun, Oct 25" dưới giá; thuế + cọc theo giá giảm
+  ($72.26, cọc $36.13); Tally `pick` ghi "(25% off $89 through Oct 25)". Từ 26/10 tự về $89.
+- **Socks:** "Gown, bonnet, mittens, booties and socks." (Custom Orders + trang sản phẩm).
+- **Tally hay Google Drive (Google Forms)?** → **Tally** cho form khách đặt hàng: khách tải ảnh không
+  cần đăng nhập (Google Forms bắt đăng nhập Google để tải file, file vào Drive của chủ form); có ô ẩn
+  nhận sẵn món/giá/cọc từ trang; popup; màu thương hiệu; miễn phí không giới hạn form/đơn, ảnh tới
+  10MB/file (Pro $29/tháng bỏ giới hạn + bỏ "Made with Tally"). Muốn có bảng đơn trong Google Drive:
+  bật **Tally → Google Sheets** (miễn phí, mỗi đơn một dòng).
+
 ### Còn chờ chị
 1. "Turnaround: from X" → "ships within N" (FTC, xem 8j).
 2. Sau mùa lễ: thay ảnh hero/Giáng sinh, gỡ hạn đặt.
+3. Giảm giá bộ váy trên trang Shop (trang sản phẩm vẫn $89) — có cần hiện không?
 
 ## 9. Link & tài nguyên
 

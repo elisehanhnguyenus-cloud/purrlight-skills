@@ -151,7 +151,7 @@ p { margin: 0; }
   .hero-side { margin-top: 24px; }
   .hero-pic { position: absolute; top: 0; right: 0; bottom: 0; width: 62%; }
   .hero-photo {
-    width: 100%; height: 100%; margin: 0; object-fit: cover; object-position: 55% 60%;
+    width: 100%; height: 100%; margin: 0; object-fit: cover; object-position: 55% 40%;   /* ultra-wide: crop the floor, not the ears */
     -webkit-mask-image: linear-gradient(to right, transparent 0, #000 34%), linear-gradient(to bottom, transparent 0, #000 16%, #000 82%, transparent 100%);
     -webkit-mask-composite: source-in;
     mask-image: linear-gradient(to right, transparent 0, #000 34%), linear-gradient(to bottom, transparent 0, #000 16%, #000 82%, transparent 100%);
@@ -466,16 +466,18 @@ p { margin: 0; }
 .deadlines strong { font-weight: 600; }
 .xmas-note { font-size: 16px; }
 .xmas-note .hand { font-family: var(--font-hand); font-weight: 600; font-size: 1.35em; line-height: 1; color: var(--ink); vertical-align: baseline; }
+/* 900–1023px: the words would run onto the photo (text contrast < 4.5:1) — the photos step back a little */
+@media (min-width: 900px) and (max-width: 1023px) { .hero-pic { width: 54%; } .xmas-pic { width: 52%; } }
 @media (min-width: 900px) {
   .christmas { padding: 0; min-height: clamp(480px, 38vw, 600px); display: flex; align-items: center; }
   .xmas-inner { max-width: var(--wrap); padding-top: 56px; padding-bottom: 56px; }
   .xmas-text { max-width: 430px; }
   .xmas-pic { position: absolute; top: 0; right: 0; bottom: 0; width: 60%; }
   .xmas-photo {
-    width: 100%; height: 100%; margin: 0; object-fit: cover; object-position: 50% 70%;
-    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 34%), linear-gradient(to bottom, transparent 0, #000 18%, #000 82%, transparent 100%);
+    width: 100%; height: 100%; margin: 0; object-fit: cover; object-position: 50% 30%;   /* the pine on the left stays clear of the order-by dates */
+    -webkit-mask-image: linear-gradient(to right, transparent 0, transparent 14%, #000 46%), linear-gradient(to bottom, transparent 0, #000 18%, #000 82%, transparent 100%);
     -webkit-mask-composite: source-in;
-    mask-image: linear-gradient(to right, transparent 0, #000 34%), linear-gradient(to bottom, transparent 0, #000 18%, #000 82%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, transparent 14%, #000 46%), linear-gradient(to bottom, transparent 0, #000 18%, #000 82%, transparent 100%);
     mask-composite: intersect;
   }
 }

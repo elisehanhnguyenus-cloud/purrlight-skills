@@ -189,7 +189,7 @@
       est: function (o) { return estGodparent(o); }
     },
     calendar: {
-      product: "Custom Watercolor Pet Calendar 2027", item: "2027 pet calendar",
+      product: "Custom Watercolor Pet Calendar 2027 — Digital Painting", item: "2027 pet calendar",
       read: function (v) { return { kind: v.kind, pages: Number(v.pages) }; },
       est: function (o) { return estCalendar(o); }
     }

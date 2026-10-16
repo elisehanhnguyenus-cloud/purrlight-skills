@@ -826,12 +826,30 @@ desktop: 2 cột) · "Ordering for Christmas?" = ảnh 15 (2 cột ở desktop) 
 vẫn giữ trong repo. Ảnh thumb ở bước 1 chuyển sang lazy (hero đẩy xuống dưới màn hình
 đầu trên điện thoại).
 
+### Elise trả lời tiếp (16/10, tin nhắn 3) — đã làm
+- **Hạn đặt Giáng sinh:** đồ móc len **CN 8/11**, tranh/lịch/hộp quà **CN 15/11**; đơn đặt
+  sau hạn **giao vào năm 2027** ("Orders placed after these dates will be delivered in
+  2027."). Sau 15/11 nên gỡ hai dòng hạn (hoặc đổi chữ) vì hạn đã qua.
+- **Sen đá:** giữ "ships within Texas". **"Premium Matte":** giữ (tên giấy) — audit
+  không còn cảnh báo.
+- **Tên lịch:** "Custom Watercolor Pet Calendar 2027 — Digital Painting" (ô chọn, tiêu đề,
+  Tally `product`, thanh đặt hàng).
+- **Ảnh full màn hình, "tệp" vào nền:** ảnh Merlin ở hero và mục Giáng sinh không còn là
+  khung bo góc mà thành **nền tràn mép**:
+  - Desktop: ảnh phủ ~60% bên phải, tràn ra mép màn hình, mép trái/trên/dưới mờ dần vào
+    nền kem (hero) / vàng bơ (Giáng sinh); chữ + nút nằm bên trái, trên ảnh.
+  - Điện thoại/tablet: ảnh tràn hết chiều ngang dưới nút đặt hàng, mép trên/dưới mờ dần.
+  - Màu trắng của sàn trong ảnh được kéo về đúng màu nền (kem `#FBF6EE` / vàng bơ
+    `#FAEFD8`) để chỗ mờ không lộ vệt; màu len, nơ, mèo gần như giữ nguyên.
+  - Brand Canon cấm gradient: đây là **mask làm mờ mép ảnh** (không tô màu chuyển sắc),
+    là ngoại lệ chị yêu cầu — ghi chú ở đầu `custom-orders.css`.
+  - File: `hero-merlin-wide-900/1376.webp` + `hero-merlin-phone-640/1024.webp`,
+    `xmas-merlin-wide-900/1376.webp` + `xmas-merlin-phone-640/1024.webp` (dùng `<picture>`:
+    ≥600px ảnh ngang, nhỏ hơn ảnh 4:3). Ảnh tròn Merlin cuối trang giữ nguyên.
+
 ### Còn chờ chị
-1. Hạn đặt Giáng sinh mới (gợi ý ~CN 8/11 móc len, ~CN 15/11 tranh/lịch/hộp quà).
-2. Sen đá: giữ "ships within Texas" hay chỉ pickup tại sự kiện?
-3. "Premium Matte" — Brand Canon cấm chữ "premium"; em giữ vì là tên giấy chị chọn.
-4. Tên lịch "Custom Watercolor Pet Calendar 2027" có thêm chữ "Digital" không?
-5. "Turnaround: from X" → "ships within N" (FTC, xem 8j).
+1. "Turnaround: from X" → "ships within N" (FTC, xem 8j).
+2. Sau mùa lễ: thay ảnh hero/Giáng sinh, gỡ hạn đặt.
 
 ## 9. Link & tài nguyên
 

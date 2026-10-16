@@ -261,9 +261,12 @@ này; `thumb-memorial.webp` (mèo trên giấy Dó) cho gói Pet memorial. 7 thu
 cho hàng chọn món (bước 1); ảnh godparent crop 4:5 bỏ tag "Handmade Blessings" ở
 góc. Ảnh kit không dùng (02 có tag lạ, 05 mockup) KHÔNG đưa lên web — bản
 gốc nằm trong thư mục kit (scratchpad) để đối chiếu.
-**Ảnh Merlin thật (16/10, chị gửi ảnh 12–16):** hero = `hero-merlin-holiday-720/1200.webp`
-(ảnh 14, srcset, tải ưu tiên); mục "Ordering for Christmas?" = `merlin-holiday-gifts.webp`
-(ảnh 15, cắt 4:3); CTA cuối = `merlin-portrait.webp` (ảnh 13, cắt tròn). Đây là ảnh
+**Ảnh Merlin thật (16/10, chị gửi ảnh 12–16):** hero = `hero-merlin-wide-900/1376.webp`
++ `hero-merlin-phone-640/1024.webp` (ảnh 14) và mục "Ordering for Christmas?" =
+`xmas-merlin-wide-*/xmas-merlin-phone-*` (ảnh 15) là **nền tràn mép**, mép ảnh mờ dần vào
+nền (mask — ngoại lệ "no gradients" theo yêu cầu của chị; sàn trắng trong ảnh đã kéo về
+màu nền); CTA cuối = `merlin-portrait.webp` (ảnh 13, cắt tròn). Hạn đặt Giáng sinh: CN 8/11
+(móc len), CN 15/11 (tranh, lịch, hộp quà); sau hạn giao năm 2027. Đây là ảnh
 **mùa lễ** — sau Giáng sinh thay ảnh hero/Christmas (ảnh 12 có chữ "Merrvest holidays"
 in sẵn nên không dùng). Minh hoạ cũ `merlin-closing.svg` vẫn giữ trong repo để dùng lại
 sau mùa lễ (không hồng — màu hồng chỉ xuất hiện một lần ở logo header).

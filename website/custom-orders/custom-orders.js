@@ -986,4 +986,62 @@
     var onScroll = function () { var show = window.scrollY > 420; bar.hidden = !show; document.body.classList.toggle("has-bar", show); document.documentElement.classList.toggle("has-bar", show); };
     window.addEventListener("scroll", onScroll); onScroll();
   }
+
+  /* ---------- motion (Elise 16/10 — her exception to the Canon's "no transforms"): each part fades and rises as it
+     comes into view (cards one after another), cards lift under the mouse (CSS), and on wide screens the two
+     background photos drift a little slower than the page. Nothing moves for visitors who ask for less motion;
+     without JavaScript or IntersectionObserver everything is simply there. ---------- */
+  var calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!calm && "IntersectionObserver" in window) {
+    document.documentElement.classList.add("motion");
+    var RISE = [".studio-head", ".pick-step", ".ideas-title", ".gift-photo", ".gift-box", ".how .section-title", ".pay .section-title", ".pay-lede",
+      ".xmas-text", ".favors .soon-tag", ".favors .section-title", ".favors-lede", ".favors .note", ".closing-inner > *"];
+    /* rows whose cards come in one after another — the row is watched, not each card, so cards still off to the
+       side in a sliding row on a phone come in with the rest */
+    var CASCADE = [".picker", ".ideas-list", ".steps", ".pay-ways", ".favors-row"];
+    var seen = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        if (e.target.hasAttribute("data-rv-row")) { var kids = e.target.children; for (var k = 0; k < kids.length; k++) kids[k].classList.add("in"); }
+        else e.target.classList.add("in");
+        seen.unobserve(e.target);
+      });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+    var mark = function (node, delay) {
+      node.classList.add("rv");
+      if (delay) node.style.setProperty("--rv-delay", delay + "ms");
+      seen.observe(node);
+    };
+    RISE.forEach(function (sel) { var ns = document.querySelectorAll(sel); for (var i = 0; i < ns.length; i++) mark(ns[i], 0); });
+    CASCADE.forEach(function (sel) {
+      var rows = document.querySelectorAll(sel);
+      for (var i = 0; i < rows.length; i++) {
+        var kids = rows[i].children;
+        for (var k = 0; k < kids.length; k++) { kids[k].classList.add("rv"); if (k) kids[k].style.setProperty("--rv-delay", Math.min(k, 6) * 70 + "ms"); }
+        rows[i].setAttribute("data-rv-row", "");
+        seen.observe(rows[i]);
+      }
+    });
+    /* a keyboard user who tabs ahead of the fade never meets an invisible control */
+    document.addEventListener("focusin", function (e) {
+      var r = e.target && e.target.closest ? e.target.closest(".rv:not(.in)") : null;
+      if (r) { r.classList.add("in"); seen.unobserve(r); }
+    });
+    /* the hero and Christmas photos drift: up to ±28px against the scroll, only while on screen, only where they are
+       backgrounds (900px and wider) */
+    var drift = [document.querySelector(".hero-photo"), document.querySelector(".xmas-photo")].filter(Boolean);
+    var wide = window.matchMedia("(min-width: 900px)"), ticking = false;
+    var place = function () {
+      ticking = false;
+      drift.forEach(function (img) {
+        if (!wide.matches) { img.style.transform = ""; return; }
+        var r = img.parentNode.getBoundingClientRect(), vh = window.innerHeight;
+        if (r.bottom < 0 || r.top > vh) return;
+        var t = (r.top + r.height / 2 - vh / 2) / (vh / 2 + r.height / 2);   /* −1 … 1 across the screen */
+        img.style.transform = "translate3d(0," + Math.round(Math.max(-1, Math.min(1, t)) * 28) + "px,0) scale(1.06)";
+      });
+    };
+    var onDrift = function () { if (!ticking) { ticking = true; window.requestAnimationFrame(place); } };
+    if (drift.length) { window.addEventListener("scroll", onDrift, { passive: true }); window.addEventListener("resize", onDrift); place(); }
+  }
 })();

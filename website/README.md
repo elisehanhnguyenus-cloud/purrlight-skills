@@ -246,6 +246,11 @@ nhất trước (Pet portrait print $15 · Pet memorial $41 · Realtor closing &
 housewarming gift $70 · Christmas gift for friends & family $90).
 **Cách đọc còn để mở (ghi trong `prices.js`):** in tranh = giá đã gồm tranh
 (không cộng $10 file digital); hộp quà tranh chỉ với bản in; "second pet −$10" = con thứ hai cùng size & len.
+**Chốt 16/10, tin nhắn 8 — hiệu ứng chuyển động (ngoại lệ Brand Canon "no transforms", chị duyệt):**
+các phần hiện dần + trượt lên khi cuộn tới (thẻ trong một hàng hiện lần lượt), thẻ nổi lên khi rê chuột
+(chỉ máy có chuột), ảnh nền hero / Giáng sinh trôi nhẹ khi cuộn (≥900px). Tắt hết khi máy khách bật
+"giảm chuyển động"; không JS thì mọi thứ hiện sẵn. Code: cuối `custom-orders.js` (html.motion, .rv/.in)
+và cuối `custom-orders.css`.
 **Chốt 16/10, tin nhắn 7:** mục **"Wedding & party favors" — Coming soon** (sau mục Giáng sinh):
 muỗng xà cừ buộc nơ satin trên thiệp cảm ơn, cho đám cưới / tiệc; 5 ảnh mẫu chị gửi (bản không
 watermark: `favors-*.webp`), chưa có giá, chưa đặt được. Bước chọn muỗng trong hộp tân gia có link

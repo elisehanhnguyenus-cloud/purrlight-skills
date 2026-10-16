@@ -345,7 +345,7 @@ p { margin: 0; }
 .ideas-list li { display: flex; position: relative; }   /* cards in a row share one height */
 .ideas-list li[hidden] { display: none; }
 /* thumb on the left; name, one short line, then the price on its own line — nothing squeezed into a third column */
-.idea { flex: 1; display: grid; grid-template-columns: 64px minmax(0, 1fr); align-items: start; gap: 14px; width: 100%; padding: 12px 14px 12px 12px; border: 1px solid var(--line-ui); border-radius: var(--radius); background: transparent; font: inherit; color: var(--ink); text-align: left; cursor: pointer; transition: border-color var(--ease), background-color var(--ease); }
+.idea { position: relative; flex: 1; display: grid; grid-template-columns: 64px minmax(0, 1fr); align-items: start; gap: 14px; width: 100%; padding: 12px 14px 12px 12px; border: 1px solid var(--line-ui); border-radius: var(--radius); background: transparent; font: inherit; color: var(--ink); text-align: left; cursor: pointer; transition: border-color var(--ease), background-color var(--ease); }
 .idea:hover { border-color: var(--ink-soft); background: #FFFFFF; }
 .idea img { width: 64px; height: 64px; object-fit: cover; border-radius: 8px; }
 .idea-text { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-width: 0; height: 100%; }
@@ -354,7 +354,7 @@ p { margin: 0; }
 .idea-price { margin-top: auto; padding-top: 4px; font-family: var(--font-head); font-weight: 500; font-size: 20px; line-height: 1.2; color: var(--berry); white-space: nowrap; }
 .idea-tax { font-family: var(--font-body); font-size: 13px; font-weight: 400; color: var(--ink-soft); }
 /* the easy first click: the lowest price, said plainly */
-.idea-badge { position: absolute; top: -9px; left: 90px; z-index: 1; pointer-events: none; padding: 1px 8px; border-radius: 999px; background: var(--glow-soft); color: var(--ink); font-size: 12px; font-weight: 600; line-height: 1.6; }
+.idea-badge { position: absolute; top: -10px; left: 89px; z-index: 1; pointer-events: none; padding: 1px 8px; border-radius: 999px; background: var(--glow-soft); color: var(--ink); font-size: 12px; font-weight: 600; line-height: 1.6; }
 .idea-first { border-color: var(--ink-soft); }
 /* phones: one row that slides sideways (like the picker above), so the four ideas don't push the studio down */
 @media (max-width: 599px) {
@@ -550,3 +550,21 @@ body.has-bar { padding-bottom: 88px; }
 @media (max-width: 576px) { .tally-popup iframe { max-height: 62vh !important; } }
 /* the wave holds still for visitors who ask for less motion */
 @media (prefers-reduced-motion: reduce) { .tally-popup .emoji { animation: none !important; } }
+
+/* ---------- motion (Elise 16/10 — her exception to "no transforms"; custom-orders.js adds html.motion only when the
+   visitor has not asked for reduced motion) ---------- */
+/* each part fades and rises into view; --rv-delay staggers cards one after another */
+html.motion .rv { opacity: 0; transform: translateY(18px); transition: opacity 520ms ease, transform 520ms cubic-bezier(0.2, 0.7, 0.2, 1); transition-delay: var(--rv-delay, 0ms); }
+html.motion .rv.in { opacity: 1; transform: none; }
+/* the drifting background photos (scale keeps their faded edges off the section's edge) */
+html.motion .hero-photo, html.motion .xmas-photo { will-change: transform; }
+/* cards lift under the mouse (mouse and trackpad only — a tap never leaves a card floating). The lift is on the card
+   inside each revealed item, so the reveal and the hover never fight over one transform. */
+@media (hover: hover) and (pointer: fine) {
+  html.motion .picker a, html.motion .idea, html.motion .tile:not(.tile-info), html.motion .favors-row img {
+    transition: transform 220ms ease, box-shadow 220ms ease, border-color var(--ease), background-color var(--ease);
+  }
+  html.motion .picker a:hover, html.motion .idea:hover, html.motion .tile:not(.tile-info):hover { transform: translateY(-3px); box-shadow: 0 8px 18px rgba(74, 66, 59, 0.12); }
+  html.motion .favors-row img:hover { transform: translateY(-4px); box-shadow: 0 10px 22px rgba(74, 66, 59, 0.16); }
+}
+@media print { html.motion .rv { opacity: 1; transform: none; } }

@@ -173,7 +173,7 @@
         var list = [], boxes = form ? form.querySelectorAll('input[name="addons"]') : [];
         for (var i = 0; i < boxes.length; i++) if (boxes[i].checked) {
           var basic = g && g.swaps[boxes[i].value] ? g.art.querySelector('[data-basic="' + g.swaps[boxes[i].value] + '"]') : null;
-          list.push({ key: boxes[i].value, name: boxes[i].getAttribute("data-label") || boxes[i].value, swapFor: basic ? lowerFirst(basic.getAttribute("data-name") || basic.getAttribute("data-text")) : "", swapKey: basic ? g.swaps[boxes[i].value] : "" });
+          list.push({ key: boxes[i].value, name: boxes[i].getAttribute("data-label") || boxes[i].value, swapFor: basic ? basic.getAttribute("data-short") || lowerFirst(basic.getAttribute("data-text")) : "", swapKey: basic ? g.swaps[boxes[i].value] : "" });
         }
         return { addons: list, qty: v.qty };
       },

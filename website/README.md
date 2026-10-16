@@ -245,8 +245,12 @@ của shop, không viện dẫn luật — em tự thêm, chị bỏ được ho
 nhất trước (Pet portrait print $15 · Pet memorial $41 · Realtor closing &
 housewarming gift $70 · Christmas gift for friends & family $90).
 **Cách đọc còn để mở (ghi trong `prices.js`):** in tranh = giá đã gồm tranh
-(không cộng $10 file digital); hộp quà tranh chỉ với bản in; "second pet −$10" = con thứ hai cùng size & len;
-đổi món cơ bản = giá add-on (như thêm).
+(không cộng $10 file digital); hộp quà tranh chỉ với bản in; "second pet −$10" = con thứ hai cùng size & len.
+**Chốt 16/10, tin nhắn 3:** đổi món cơ bản trong hộp tân gia **chỉ tính phần chênh lệch**
+(giá add-on − giá bán món cơ bản; món rẻ hơn thì trừ lại, vd. −$5). Giá bán món cơ bản
+(`PRICES.housewarming.basics`): cider $15 · mứt/mật ong $5 · tranh nhà $15 (in 5×7 giấy
+Premium Matte) · rosary $10. Hộp ghi rõ cách tính ("Scented candle $10 − rosary chain $10"),
+menu đổi món ghi giá chênh từng lựa chọn.
 
 **Ảnh (`assets/img/custom/`):** 9 file kit lấy lại từ asset của artifact v1
 (tên theo image map §4). Đang dùng: 01 collage, 03 tranh "Our 1st Home", 04

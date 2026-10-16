@@ -859,6 +859,20 @@ vẫn giữ trong repo. Ảnh thumb ở bước 1 chuyển sang lazy (hero đẩ
 Bác bỏ: dấu gạch dài trong tên lịch trùng dấu ngăn cách (chỉ là kiểu chữ); ô chọn lịch
 cao hơn (do tên dài chị chọn); hạn cho Godparent set / Confirmation box (đã rõ).
 
+### Hộp tân gia: đổi món chỉ tính phần chênh lệch (Elise 16/10, tin nhắn 4)
+Chị báo lỗi logic: trước đây đổi món cơ bản lấy add-on thì cộng **nguyên giá add-on**
+(vd. đổi rosary lấy nến +$10). Nay: **giá add-on − giá bán món cơ bản**, món rẻ hơn thì
+**trừ lại**. Giá bán món cơ bản: cider $15 · mứt/mật ong $5 · tranh nhà $15 (in 5×7 giấy
+Premium Matte — đã ghi vào dòng "Basic set") · rosary $10. Ví dụ: rosary → nến = $0
+($64.95 có thuế); cider → nến = −$5 ($59.54); mứt → chocolate = +$15. Trái cây đổi vào
+vẫn không chịu thuế (phần cider bị bỏ ra không còn bị tính thuế). Hộp ghi rõ cách tính
+("Scented candle $10 − rosary chain $10"), menu đổi món ghi giá chênh từng lựa chọn,
+Tally `pick` mang cả cách tính.
+Rà soát (2 góc + phản biện): mô hình tính tiền độc lập so với `prices.js` và trang thật —
+15,552 tổ hợp (mọi add-on × mọi cách đổi × số lượng 1–50 × ship/ngoài Texas/pickup),
+**0 sai lệch**; lỗi xác nhận duy nhất: README còn ghi quy tắc cũ (đã sửa). Dòng đổi món
+dùng tên ngắn (sparkling cider, jam or honey, home painting, rosary chain).
+
 ### Còn chờ chị
 1. "Turnaround: from X" → "ships within N" (FTC, xem 8j).
 2. Sau mùa lễ: thay ảnh hero/Giáng sinh, gỡ hạn đặt.

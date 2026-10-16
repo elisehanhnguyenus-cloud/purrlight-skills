@@ -918,6 +918,12 @@ lại, Event Desk đổi giá chip + đơn mới); Confirmation chọn pickup hi
 mục Giáng sinh "Every piece is made to order — 2–4 weeks" mâu thuẫn bộ váy giao 2–3 ngày → sửa câu.
 Bác bỏ: muỗng 4 cái $25 (chị đã chốt $24), ảnh hộp Confirmation hơi mờ (ảnh tạm), …
 
+### Wedding & party favors — coming soon (Elise 16/10, tin nhắn 7)
+Chị chọn cách 3: thêm mục "Wedding & party favors" (thẻ **Coming soon**) sau mục Giáng sinh — muỗng xà
+cừ buộc nơ satin trên thiệp cảm ơn, cho đám cưới / baby shower… (trang ghi "weddings, showers and
+parties"); 5 ảnh mẫu chị gửi (bản không watermark), chú thích "Sample photos.", chưa giá / chưa đặt.
+Khi mở bán: cần giá theo số lượng, có in tên + ngày lên thiệp không, và quyền dùng ảnh của nhà cung cấp.
+
 ### Còn chờ chị
 1. "Turnaround: from X" → "ships within N" (FTC, xem 8j).
 2. Sau mùa lễ: thay ảnh hero/Giáng sinh, gỡ hạn đặt.

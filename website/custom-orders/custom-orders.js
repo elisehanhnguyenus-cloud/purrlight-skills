@@ -991,7 +991,10 @@
      comes into view (cards one after another), cards lift under the mouse (CSS), and on wide screens the two
      background photos drift a little slower than the page. Nothing moves for visitors who ask for less motion;
      without JavaScript or IntersectionObserver everything is simply there. ---------- */
-  var calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var still = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null, calm = !!(still && still.matches);
+  /* the setting can change while the page is open: the CSS turns the reveal, lift and twinkle off by itself; the drift
+     and the snow listen here */
+  var onStill = function (fn) { if (!still) return; if (still.addEventListener) still.addEventListener("change", fn); else if (still.addListener) still.addListener(fn); };
   if (!calm && "IntersectionObserver" in window) {
     document.documentElement.classList.add("motion");
     var RISE = [".studio-head", ".pick-step", ".ideas-title", ".gift-photo", ".gift-box", ".how .section-title", ".pay .section-title", ".pay-lede",
@@ -1007,7 +1010,11 @@
         seen.unobserve(e.target);
       });
     }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+    /* a part already on screen when this script runs (late, on a slow connection) stays as it is — it never fades
+       out under the visitor's eyes. Parts in a hidden tab have no height, so they still rise in when shown. */
+    var shown = function (n) { var r = n.getBoundingClientRect(); return r.height > 0 && r.top < window.innerHeight && r.bottom > 0; };
     var mark = function (node, delay) {
+      if (shown(node)) return;
       node.classList.add("rv");
       if (delay) node.style.setProperty("--rv-delay", delay + "ms");
       seen.observe(node);
@@ -1016,6 +1023,7 @@
     CASCADE.forEach(function (sel) {
       var rows = document.querySelectorAll(sel);
       for (var i = 0; i < rows.length; i++) {
+        if (shown(rows[i])) continue;
         var kids = rows[i].children;
         for (var k = 0; k < kids.length; k++) { kids[k].classList.add("rv"); if (k) kids[k].style.setProperty("--rv-delay", Math.min(k, 6) * 70 + "ms"); }
         rows[i].setAttribute("data-rv-row", "");
@@ -1034,7 +1042,7 @@
     var place = function () {
       ticking = false;
       drift.forEach(function (img) {
-        if (!wide.matches) { img.style.transform = ""; return; }
+        if (!wide.matches || (still && still.matches)) { img.style.transform = ""; return; }
         var r = img.parentNode.getBoundingClientRect(), vh = window.innerHeight;
         if (r.bottom < 0 || r.top > vh) return;
         var t = (r.top + r.height / 2 - vh / 2) / (vh / 2 + r.height / 2);   /* −1 … 1 across the screen */
@@ -1042,7 +1050,7 @@
       });
     };
     var onDrift = function () { if (!ticking) { ticking = true; window.requestAnimationFrame(place); } };
-    if (drift.length) { window.addEventListener("scroll", onDrift, { passive: true }); window.addEventListener("resize", onDrift); place(); }
+    if (drift.length) { window.addEventListener("scroll", onDrift, { passive: true }); window.addEventListener("resize", onDrift); onStill(onDrift); place(); }
   }
 
   /* ---------- Christmas band (Elise 16/10, 9th message): a string of lights along the top — one bulb per 56px of
@@ -1100,7 +1108,7 @@
       frame = window.requestAnimationFrame(fall);
     };
     var snowing = function () {
-      var want = onScreen && !document.hidden;
+      var want = onScreen && !document.hidden && !(still && still.matches);
       if (want && !running) { running = true; last = 0; frame = window.requestAnimationFrame(fall); }
       else if (!want && running) { running = false; if (frame) window.cancelAnimationFrame(frame); frame = 0; }
     };
@@ -1108,5 +1116,6 @@
     if ("ResizeObserver" in window) new ResizeObserver(fit).observe(band); else window.addEventListener("resize", fit);
     new IntersectionObserver(function (es) { es.forEach(function (e) { onScreen = e.isIntersecting; }); snowing(); }).observe(band);
     document.addEventListener("visibilitychange", snowing);
+    onStill(snowing);   /* reduced motion turned on mid-visit: the snow stops (the CSS hides the canvas) */
   }
 })();

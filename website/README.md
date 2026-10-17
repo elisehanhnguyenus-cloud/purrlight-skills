@@ -272,7 +272,9 @@ Confirmation thánh làm theo yêu cầu = như búp bê (thời gian hàng len)
 3–7 ngày trong nước. Số của hộp quà/lịch/thánh có sẵn không phải số mùa lễ nên giữ sau mùa; len và tranh ngoài mùa vẫn
 "delivered within 15 days". Thẻ sản phẩm: "Turnaround: …" → **"Ships within 3 weeks"** (búp bê, thú cưng, godparent),
 **"Ships within 5 days"** (tranh, hộp tân gia) — chị đồng ý đề xuất FTC. Mục Giáng sinh: danh sách 4 dòng (`.xmas-times`)
-"Holiday timing, for orders placed by these dates". Sau hạn đặt (len 8/11; tranh, lịch, hộp quà kể cả thánh có sẵn
+"For orders placed by these dates", **gập sẵn** sau nút "See holiday timing" (chị 17/10: mục quá dài, cần tối giản —
+trên trang chỉ còn tiêu đề, hai hạn đặt, câu "delivered in 2027", nút xem thêm và câu "order early"; hộp "What's inside"
+của từng món vẫn ghi thời gian riêng). Sau hạn đặt (len 8/11; tranh, lịch, hộp quà kể cả thánh có sẵn
 15/11) hộp "What's inside" ghi "delivered in 2027" như câu của chị trong mục Giáng sinh, và dòng "Ships within …" trên
 thẻ sản phẩm đổi thành "Orders placed now are delivered in 2027" (tranh: "Prints & add-ons ordered now are delivered in
 2027 · digital files sent within 5 days"; Christening: "a saint made for you, ordered now, is delivered in 2027") để

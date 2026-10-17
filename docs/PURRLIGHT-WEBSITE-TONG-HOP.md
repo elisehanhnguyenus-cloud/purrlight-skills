@@ -1043,6 +1043,10 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   khi đã ra dưới thanh tiêu đề; (5) danh sách thời gian làm mục Giáng sinh cao hơn → ảnh Merlin bị phóng to (mờ) và lấn
   vào vùng mờ dần → trình duyệt chọn ảnh 1376px, khung ảnh dời sang trái (object-position 65%); (6) "Nov 12" / "2 days"
   bị xuống dòng giữa chừng.
+- **Chị 17/10: mục "Ordering for Christmas" quá dài, cần tối giản / nút See more** → trên trang chỉ còn tiêu đề, hai
+  hạn đặt, "Orders placed after these dates will be delivered in 2027.", nút **"See holiday timing"** (bấm mới mở danh
+  sách 4 dòng thời gian làm & giao) và câu "order early". Mục thấp lại như trước (khoảng 490px trên máy tính); thời gian
+  của từng món vẫn hiện trong hộp "What's inside" khi khách chọn gửi hàng.
 - Em tự chọn (chờ chị xác nhận, xem dưới): số của hộp quà/lịch/thánh có sẵn giữ cả sau mùa lễ (không phải số cao điểm);
   thánh có sẵn theo hạn 15/11 của "gift boxes"; Alaska/Hawaii ghi "longer".
 

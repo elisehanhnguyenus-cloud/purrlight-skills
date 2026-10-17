@@ -288,11 +288,11 @@ p { margin: 0; }
 
 /* "All pet prices" — the brief's table, folded away once the tiles work */
 .all-prices { border-top: 1px solid var(--line); padding-top: 10px; }
-.all-prices summary, .yarn-book summary { cursor: pointer; font-weight: 500; font-size: 15px; color: var(--berry); min-height: 44px; display: flex; align-items: center; gap: 8px; list-style: none; }
-.all-prices summary::-webkit-details-marker, .yarn-book summary::-webkit-details-marker { display: none; }
-.all-prices summary::before, .yarn-book summary::before { content: ""; width: 7px; height: 7px; border: solid currentColor; border-width: 0 2px 2px 0; transform: rotate(-45deg); margin: 0 4px 0 2px; }
-.all-prices[open] summary::before, .yarn-book[open] summary::before { transform: rotate(45deg); }
-.all-prices summary:hover, .yarn-book summary:hover { color: var(--ink); }
+.all-prices summary, .yarn-book summary, .xmas-times summary { cursor: pointer; font-weight: 500; font-size: 15px; color: var(--berry); min-height: 44px; display: flex; align-items: center; gap: 8px; list-style: none; }
+.all-prices summary::-webkit-details-marker, .yarn-book summary::-webkit-details-marker, .xmas-times summary::-webkit-details-marker { display: none; }
+.all-prices summary::before, .yarn-book summary::before, .xmas-times summary::before { content: ""; width: 7px; height: 7px; border: solid currentColor; border-width: 0 2px 2px 0; transform: rotate(-45deg); margin: 0 4px 0 2px; }
+.all-prices[open] summary::before, .yarn-book[open] summary::before, .xmas-times[open] summary::before { transform: rotate(45deg); }
+.all-prices summary:hover, .yarn-book summary:hover, .xmas-times summary:hover { color: var(--ink); }
 /* the yarn color book (Elise's catalogue pages): a row that slides on phones, three across on wide screens; each page
    opens full size to read the codes */
 .yarn-book { margin-top: 8px; }
@@ -512,7 +512,9 @@ p { margin: 0; }
 .deadlines dd { margin-left: auto; }
 .deadlines strong { font-weight: 600; }
 .xmas-note { font-size: 16px; }
-.xmas-times ul { margin: 6px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.xmas-times summary { width: fit-content; }   /* the hit area is the words, not the column */
+.xmas-times .xmas-note { margin: 2px 0 0; }
+.xmas-times ul { margin: 6px 0 4px; padding: 0; list-style: none; display: grid; gap: 6px; }
 .xmas-times li { position: relative; padding-left: 16px; font-size: 15px; line-height: 1.45; }
 .xmas-times li::before { content: ""; position: absolute; left: 2px; top: 0.6em; width: 6px; height: 6px; border-radius: 50%; background: var(--peach); }   /* a small peach dot: decoration only */
 .xmas-times strong { font-weight: 600; }

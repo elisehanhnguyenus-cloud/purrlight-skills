@@ -18,6 +18,14 @@
   var SEASON_END = new Date(2027, 0, 2);   /* Jan 2, 2027: through New Year's Day (Elise 16/10) */
   if (new Date() >= SEASON_END) document.documentElement.removeAttribute("data-season");
   var christmas = document.documentElement.getAttribute("data-season") === "christmas";
+  /* an order-by date from the Christmas band's own <time> (the dates live in one place): through the end of that day
+     in the visitor's time. Past it, that kind of piece is delivered in 2027 (the band says so, and so does the box). */
+  var orderBy = function (id) {
+    var t = christmas && document.getElementById(id), d = t && /^(\d{4})-(\d{2})-(\d{2})$/.exec(t.getAttribute("datetime") || "");
+    return d ? new Date(+d[1], +d[2] - 1, +d[3], 23, 59, 59) : null;
+  };
+  var ORDER_BY = { yarn: "xmas-by-crochet", paint: "xmas-by-paint" };   /* timingKind() → the band's <time> */
+  var isLate = function (kind) { var d = ORDER_BY[kind] ? orderBy(ORDER_BY[kind]) : null; return !!d && new Date() > d; };
 
   /* ---------- site nav (same behavior as the main site) ---------- */
   var toggle = document.querySelector(".nav-toggle");
@@ -671,8 +679,10 @@
       balanceRow.appendChild(el("span", { text: "Balance after you approve the photo" })); balanceRow.appendChild(el("span", { "class": "amt", text: db[1] }));
       if (fromUser) g.goneNote = "";
       var shipping = !est.digitalOnly && (v.getit === "ship" || v.getit === "out" || !GET_IT[v.getit]);
-      /* when it is made and delivered (Elise 16/10): the holiday timing by kind of piece in the season, 15 days after */
-      noteRow.textContent = [est.note, est.digitalOnly ? "" : (GET_IT[v.getit] || GET_IT.ship).short, shipping && !est.readyMade ? timingNote(key, v.getit, christmas) : ""].filter(Boolean).join(" · ") + (g.goneNote ? " " + g.goneNote : "");
+      /* when it is made and delivered (Elise 16/10): the holiday timing by kind of piece in the season ("delivered in
+         2027" past its order-by date), 15 days after the season */
+      var tk = timingKind(key, est);
+      noteRow.textContent = [est.note, est.digitalOnly ? "" : (GET_IT[v.getit] || GET_IT.ship).short, shipping && !est.readyMade ? timingNote(tk, v.getit, christmas, isLate(tk)) : ""].filter(Boolean).join(" · ") + (g.goneNote ? " " + g.goneNote : "");
       copied.textContent = "";
       if (fromUser) store(storeKey, { v: v, swaps: g.swaps, u: 1, auto: g.auto || 0 });   /* a plain page view remembers nothing */
       if (g === current) setBarThumb(g);
@@ -977,9 +987,8 @@
      Christmas band's own <time> (the date lives in one place), until the end of that day in the visitor's time — the
      same kind of badge as "Under $20" */
   var xIdea = christmas ? document.querySelector(".idea[data-order-by]") : null;
-  var xTime = xIdea ? document.getElementById(xIdea.getAttribute("data-order-by")) : null;
-  var xDay = xTime ? /^(\d{4})-(\d{2})-(\d{2})$/.exec(xTime.getAttribute("datetime") || "") : null;
-  if (xDay && new Date() <= new Date(+xDay[1], +xDay[2] - 1, +xDay[3], 23, 59, 59)) {
+  var xTime = xIdea ? document.getElementById(xIdea.getAttribute("data-order-by")) : null, xEnd = xTime ? orderBy(xTime.id) : null;
+  if (xEnd && new Date() <= xEnd) {
     var xBell = document.createElement("img");
     xBell.alt = ""; xBell.width = 69; xBell.height = 96; xBell.loading = "lazy"; xBell.decoding = "async";
     xBell.src = "../assets/img/custom/xmas-bell.webp";
@@ -1312,15 +1321,23 @@
     /* the bulbs run while the band shows; the snow while the canvas itself shows (on phones it sits well below the
        band's top) */
     new IntersectionObserver(function (es) { es.forEach(function (e) { bandOn = e.isIntersecting; }); snowing(); }).observe(band);
-    /* Merlin's bell swings once (about 1.4 s) the first time the bell itself is fully in view — not when paused, not on
-       a data-saver connection (Elise 16/10) */
+    /* Merlin's bell swings once (about 1.4 s) the first time the bell itself is fully in view — above the phone order
+       bar, not when paused, not on a data-saver connection (Elise 16/10). Measured while it is on screen: an observer's
+       "fully in view" misses a bell that sits half a pixel off the grid, and knows nothing of the bar. Each look waits a
+       moment, so the bar has shown up by then after a quick scroll. */
     var bellHang = band.querySelector(".xmas-hang"), bellImg = bellHang && bellHang.querySelector(".xmas-bell"), saver = navigator.connection && navigator.connection.saveData;
     if (bellImg && !saver) {
+      var bellT = 0;
+      var bellCheck = function () {
+        bellT = 0;
+        var r = bellImg.getBoundingClientRect(), floor = !bar.hidden && bar.offsetHeight ? bar.getBoundingClientRect().top : window.innerHeight;
+        if (paused || !r.height || r.top < -0.5 || r.bottom > floor + 0.5 || bellHang.classList.contains("ring")) return;
+        bellHang.classList.add("ring"); bellSeen.disconnect(); window.removeEventListener("scroll", bellLook);
+      };
+      var bellLook = function () { if (!bellT) bellT = setTimeout(bellCheck, 120); };
       var bellSeen = new IntersectionObserver(function (es) {
-        es.forEach(function (e) {
-          if (e.isIntersecting && e.intersectionRatio >= 0.99 && !paused) { bellHang.classList.add("ring"); bellSeen.disconnect(); }
-        });
-      }, { threshold: 1 });
+        es.forEach(function (e) { if (e.isIntersecting) { window.addEventListener("scroll", bellLook); bellLook(); } else window.removeEventListener("scroll", bellLook); });
+      });
       bellSeen.observe(bellImg);
     }
     new IntersectionObserver(function (es) { es.forEach(function (e) { onScreen = e.isIntersecting; }); snowing(); }).observe(snow);
@@ -1360,8 +1377,10 @@
     var heroShow = function (on) { heroVideo.className = "hero-video" + (on ? " on" : ""); };
     var heroPlay = function () {   /* play() buffers by itself (iOS waits for it before loading); a refusal leaves the photo and the button */
       var p = heroVideo.play();
+      heroLabel();   /* "Pause video" from the moment it is asked to play: a tap while it loads holds it */
       if (p && p.catch) p.catch(function () { heroShow(false); heroLabel(); });
     };
+    var heroMay = function () { return !(still && still.matches) && !(navigator.connection && navigator.connection.saveData); };
     var heroStart = function () {
       heroVideo = document.createElement("video");
       heroVideo.className = "hero-video";
@@ -1387,8 +1406,10 @@
       /* a phone turned sideways (or a window widened past 600px) gets the wide cut; the 4:3 cut would show Merlin cropped */
       var heroSwap = function () {
         if (!heroWide.matches || heroVideo.src.indexOf("phone-640") < 0) return;
-        heroStopped = true; heroVideo.pause(); heroShow(false);
-        heroVideo.src = heroFile(); heroVideo.load(); heroLabel();
+        if (heroVideo.ended) heroStopped = true;   /* already played once: it stays the photo */
+        heroVideo.pause(); heroShow(false);
+        heroVideo.src = heroFile(); heroVideo.load();
+        if (heroOn && !heroStopped) heroPlay(); else heroLabel();   /* playing (or about to) when turned: it goes on, from the start */
       };
       if (heroWide.addEventListener) heroWide.addEventListener("change", heroSwap); else if (heroWide.addListener) heroWide.addListener(heroSwap);
       onStill(function () { if (still.matches) { heroStopped = true; heroVideo.pause(); heroShow(false); } });
@@ -1398,11 +1419,11 @@
        first screen and the photo is below them */
     new IntersectionObserver(function (es) {
       es.forEach(function (e) { heroOn = e.isIntersecting; });
-      if (!heroVideo) { if (heroReady && heroOn) heroStart(); return; }   /* first view after load, wherever it happens */
+      if (!heroVideo) { if (heroReady && heroOn && heroMay()) heroStart(); return; }   /* first view after load, wherever it happens — unless less motion or data saving was asked for meanwhile */
       if (!heroOn && !heroVideo.paused) heroVideo.pause();                                   /* scrolled away: hold */
       else if (heroOn && heroVideo.paused && !heroVideo.ended && !heroStopped) heroPlay();   /* back (or first time): play */
     }, { threshold: 0.5 }).observe(heroImg);
-    var heroLater = function () { setTimeout(function () { heroReady = true; if (!heroVideo && heroOn) heroStart(); }, 600); };
+    var heroLater = function () { setTimeout(function () { heroReady = true; if (!heroVideo && heroOn && heroMay()) heroStart(); }, 600); };
     if (document.readyState === "complete") heroLater(); else window.addEventListener("load", heroLater);
   }
 })();

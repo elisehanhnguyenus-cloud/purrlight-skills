@@ -59,8 +59,10 @@
      elsewhere in the U.S.; paintings are made in 3–5 days, then delivered in 3 days–1 week
      (2–3 days in Pearland). Outside the holidays: delivered within 15 days. Shown with
      shipping only (not pickup, not digital files, not the ready-made gown set): timingNote().
-     Not given for gift boxes, calendars or the Confirmation box, so nothing is said for them
-     in the season.
+     Not given for gift boxes, calendars or the Confirmation box, so nothing is said for them,
+     in the season or after it. A painting with the crochet rosary add-on follows crochet's
+     timing (the rosary is crochet). Ordered after its order-by date in the Christmas band
+     (crochet Nov 8, paintings Nov 15): "delivered in 2027", as the band says.
    - Eyes (Elise 16/10, later): she makes both closed "sleeping" eyes and open eyes —
      the visitor picks for a saint made to order (12 cm made for you, St. Carlo,
      St. Michael), same price; a saint we have ready comes as it is. The page avoids
@@ -207,6 +209,7 @@ function estWatercolor(o) {
   if (o && o.rosary) lines.push({ label: "Crochet rosary add-on", amount: PRICES.watercolor.rosary });
   var r = applyQty(finish(lines), o && o.qty, "painting", "paintings");
   r.digitalOnly = !isPrint && !(o && o.rosary);   /* nothing ships */
+  r.crochet = !!(o && o.rosary);   /* the rosary is crochet: the order follows crochet's timing */
   r.note = r.qty > 1 ? "Estimate for " + r.qty + " paintings with the same options" : "Estimate for one painting";
   return r;
 }
@@ -266,14 +269,22 @@ var TIMING = {   /* Elise 16/10 (13th message) */
   yarn:  { make: "made in 2–3 weeks", ship: "delivered in 3 days–1 week", out: "delivered in 2–3 weeks" },
   paint: { make: "made in 3–5 days", ship: "delivered in 3 days–1 week", out: "delivered in 3 days–1 week" },
   offSeason: "delivered within 15 days",
+  late: "delivered in 2027",   /* ordered after its order-by date (the Christmas band) */
   kinds: { portraitDoll: "yarn", pet: "yarn", godparent: "yarn", watercolor: "paint" }
 };
-/* the timing line for a shipped piece: key = the gift (data-gift), getit = ship (Texas) / out (elsewhere in the U.S.),
-   season = the holiday season is on */
-function timingNote(key, getit, season) {
+/* which timing a gift follows: key = the gift (data-gift), est = its estimate ("" = none given for it) */
+function timingKind(key, est) {
+  var k = TIMING.kinds[key] || "";
+  return k && est && est.crochet ? "yarn" : k;
+}
+/* the timing line for a shipped piece: kind = timingKind(), getit = ship (Texas) / out (elsewhere in the U.S.),
+   season = the holiday season is on, late = ordered after that kind's order-by date */
+function timingNote(kind, getit, season, late) {
+  var t = TIMING[kind];
+  if (!t || !t.make) return "";
   if (!season) return TIMING.offSeason;
-  var t = TIMING[TIMING.kinds[key]];
-  return t ? t.make + " · " + (getit === "out" ? t.out : t.ship) : "";
+  if (late) return TIMING.late;
+  return t.make + " · " + (getit === "out" ? t.out : t.ship);
 }
 function estChristeningGown(o) {
   var g = gownPrice(o && o.now);
@@ -351,5 +362,5 @@ function summaryLine(product, est, how) {
 }
 
 if (typeof module !== "undefined") {
-  module.exports = { ORDER_FORM_URL: ORDER_FORM_URL, ORDER_FORM_PREFILL_ENTRY: ORDER_FORM_PREFILL_ENTRY, PAY: PAY, PRICES: PRICES, money: money, moneyPair: moneyPair, taxLabel: taxLabel, outOfTexas: outOfTexas, itemOff: itemOff, applyQty: applyQty, estPortraitDoll: estPortraitDoll, estPet: estPet, estWatercolor: estWatercolor, estHousewarming: estHousewarming, estCalendar: estCalendar, estGodparent: estGodparent, estChristeningGown: estChristeningGown, estConfirmation: estConfirmation, TIMING: TIMING, timingNote: timingNote, addonPrice: addonPrice, gownPrice: gownPrice, summaryLine: summaryLine };
+  module.exports = { ORDER_FORM_URL: ORDER_FORM_URL, ORDER_FORM_PREFILL_ENTRY: ORDER_FORM_PREFILL_ENTRY, PAY: PAY, PRICES: PRICES, money: money, moneyPair: moneyPair, taxLabel: taxLabel, outOfTexas: outOfTexas, itemOff: itemOff, applyQty: applyQty, estPortraitDoll: estPortraitDoll, estPet: estPet, estWatercolor: estWatercolor, estHousewarming: estHousewarming, estCalendar: estCalendar, estGodparent: estGodparent, estChristeningGown: estChristeningGown, estConfirmation: estConfirmation, TIMING: TIMING, timingKind: timingKind, timingNote: timingNote, addonPrice: addonPrice, gownPrice: gownPrice, summaryLine: summaryLine };
 }

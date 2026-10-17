@@ -59,7 +59,6 @@
      elsewhere in the U.S.; paintings are made in 3–5 days, then delivered in 3 days–1 week
      (2–3 days in Pearland). Outside the holidays: delivered within 15 days. Shown with
      shipping only (not pickup, not digital files, not the ready-made gown set): timingNote().
-     A painting with the crochet rosary add-on follows crochet's timing (the rosary is crochet).
      Ordered after its order-by date in the Christmas band (crochet Nov 8, paintings, calendars
      and gift boxes Nov 15): "delivered in 2027", as the band says.
    - Timing (Elise 16/10, 14th message): housewarming boxes and calendars are made in 3–5 days,
@@ -215,7 +214,6 @@ function estWatercolor(o) {
   if (o && o.rosary) lines.push({ label: "Crochet rosary add-on", amount: PRICES.watercolor.rosary });
   var r = applyQty(finish(lines), o && o.qty, "painting", "paintings");
   r.digitalOnly = !isPrint && !(o && o.rosary);   /* nothing ships */
-  r.crochet = !!(o && o.rosary);   /* the rosary is crochet: the order follows crochet's timing */
   r.note = r.qty > 1 ? "Estimate for " + r.qty + " paintings with the same options" : "Estimate for one painting";
   return r;
 }
@@ -280,11 +278,10 @@ var TIMING = {   /* Elise 16/10 (13th and 14th messages). holiday: these numbers
   late: "delivered in 2027",   /* ordered after its order-by date (the Christmas band) */
   kinds: { portraitDoll: "yarn", pet: "yarn", godparent: "yarn", watercolor: "paint", housewarming: "box", calendar: "box" }
 };
-/* which timing a gift follows: key = the gift (data-gift), est = its estimate (est.timing overrides the gift's kind;
-   est.crochet = a crochet piece comes with it) — "" = none given for it */
+/* which timing a gift follows: key = the gift (data-gift), est = its estimate (est.timing overrides the gift's kind)
+   — "" = none given for it */
 function timingKind(key, est) {
-  var k = (est && est.timing) || TIMING.kinds[key] || "";
-  return k && est && est.crochet ? "yarn" : k;
+  return (est && est.timing) || TIMING.kinds[key] || "";
 }
 /* the timing line for a shipped piece: kind = timingKind(), getit = ship (Texas) / out (elsewhere in the U.S.),
    season = the holiday season is on, late = ordered after that kind's order-by date */

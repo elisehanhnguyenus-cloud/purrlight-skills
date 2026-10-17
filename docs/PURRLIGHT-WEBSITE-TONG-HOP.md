@@ -1019,8 +1019,7 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 - Kiểm tra lại (bản 64dc8d5) tìm thêm, đã sửa: nút video ghi "Play video" trong lúc đang tải (bấm thì huỷ phát) → ghi
   "Pause video" ngay khi bắt đầu phát; xoay điện thoại khi video đang chạy làm video dừng hẳn → chạy tiếp bản ngang (khách
   đã bấm dừng thì vẫn dừng); bật giảm chuyển động trước khi thấy ảnh đầu trang vẫn tạo video → không tạo; ngoài mùa lễ
-  hộp quà/lịch/Confirmation hiện "15 ngày" dù chị chưa cho số → chỉ món có số; tranh digital + chuỗi tràng hạt (chỉ gửi
-  chuỗi móc len) hiện thời gian tranh → theo hàng len; chuông không bao giờ lắc ở màn 900–1100px (chuông lệch nửa điểm
+  hộp quà/lịch/Confirmation hiện "15 ngày" dù chị chưa cho số → chỉ món có số; chuông không bao giờ lắc ở màn 900–1100px (chuông lệch nửa điểm
   ảnh nên không bao giờ "hiện đủ 100%") và trên điện thoại lắc sau thanh đặt hàng → đo trực tiếp khi chuông trên màn hình,
   chỉ lắc khi đã ra khỏi thanh đặt hàng.
 
@@ -1035,6 +1034,14 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   2–3 days in Pearland, 3–6 days elsewhere" (ngoài Texas "delivered in 3–6 days (Alaska and Hawaii: longer)"); thánh có
   sẵn "delivered in 2 days in Pearland, 3–7 days elsewhere"; thánh làm theo yêu cầu = hàng len; tranh trong Texas thêm
   "(2–3 days in Pearland)". Mục Giáng sinh: danh sách 4 dòng (len · tranh · hộp tân gia & lịch · hàng có sẵn).
+- Kiểm tra độc lập (sau tin 14) tìm ra, đã sửa: (1) tranh kèm chuỗi tràng hạt bị em cho theo thời gian hàng len
+  (2–3 tuần, hạn 8/11) — chị chưa nói vậy, và trái với thẻ "Ships within 5 days" → về lại thời gian tranh; (2) sau hạn
+  đặt, thẻ "Ships within …" nằm ngay trên hộp ghi "delivered in 2027" → thẻ đổi thành "Orders placed now are delivered
+  in 2027" (xem câu hỏi 4 dưới); (3) dòng hộp tân gia & lịch trong mục Giáng sinh thiếu "(Alaska and Hawaii: longer)";
+  (4) chuông có thể lắc khi còn nằm dưới thanh tiêu đề dính trên cùng (lúc cuộn ngược lên) rồi không lắc lại → chỉ lắc
+  khi đã ra dưới thanh tiêu đề; (5) danh sách thời gian làm mục Giáng sinh cao hơn → ảnh Merlin bị phóng to (mờ) và lấn
+  vào vùng mờ dần → trình duyệt chọn ảnh 1376px, khung ảnh dời sang trái (object-position 65%); (6) "Nov 12" / "2 days"
+  bị xuống dòng giữa chừng.
 - Em tự chọn (chờ chị xác nhận, xem dưới): số của hộp quà/lịch/thánh có sẵn giữ cả sau mùa lễ (không phải số cao điểm);
   thánh có sẵn theo hạn 15/11 của "gift boxes"; Alaska/Hawaii ghi "longer".
 
@@ -1045,11 +1052,19 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 2. **Thánh có sẵn đặt sau 15/11:** vẫn kịp Giáng sinh (giao 2–7 ngày) hay cũng "giao năm 2027" như hạn của gift boxes?
    Trang hiện ghi "delivered in 2027" cho đơn sau 15/11 (an toàn hơn).
 3. **Alaska, Hawaii:** giao mất bao lâu, có ship không? Trang ghi "(Alaska and Hawaii: longer)".
-4. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
+4. **Đơn đặt sau hạn (sau 8/11 với len, sau 15/11 với tranh/lịch/hộp quà):** chị ship ngay như thường (vd. hộp tân gia
+   5 ngày) hay để sang tháng 1? Hai câu "Ships within …" và "delivered in 2027" không thể cùng đúng. Trang hiện theo câu
+   của chị "Orders placed after these dates will be delivered in 2027": qua hạn thì thẻ ghi "Orders placed now are
+   delivered in 2027". Nếu vẫn ship ngay, em đổi câu đó thành kiểu "may not arrive before Christmas".
+5. **Len Fluffy** (catalog ghi "thêm khoảng 2 tuần làm"): nếu đúng, thẻ "Ships within 3 weeks" ở thú cưng móc len sai
+   với đơn Fluffy — em sẽ ghi thêm "(Fluffy: within 5 weeks)".
+6. Event Desk (máy bán hàng ở booth) còn ghi thời gian làm hàng custom cũ (25/09: khoảng 2 tuần, mùa lễ khoảng 5 tuần,
+   giao 10–14 ngày) — chị muốn em đổi theo số mới không?
+7. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
-   cấp?). Trang Fluffy ghi "thêm khoảng 2 tuần làm" — trang web chưa đưa, chị xác nhận nếu muốn ghi.
-5. Video Merlin có tiếng nói không? Nếu chị muốn bật tiếng, gửi em lời thoại để làm phụ đề.
-6. Sau mùa lễ: thay ảnh hero (mục Giáng sinh + video tự ẩn từ 2/1/2027).
+   cấp?).
+8. Video Merlin có tiếng nói không? Nếu chị muốn bật tiếng, gửi em lời thoại để làm phụ đề.
+9. Sau mùa lễ: thay ảnh hero (mục Giáng sinh + video tự ẩn từ 2/1/2027).
 
 ## 9. Link & tài nguyên
 

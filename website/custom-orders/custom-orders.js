@@ -437,6 +437,7 @@
     var end = art.querySelector(".box-end");
     var storeKey = "purrlight-custom-pick:" + key;
     var g = { id: art.id, key: key, def: def, art: art, est: null, text: "", swaps: {} };
+    var turn = art.querySelector(".turnaround"), turnText = turn ? turn.textContent : "";
 
     /* estimate · deposit today · balance after the photo is approved */
     var totalRow = el("p", { "class": "box-total" });
@@ -682,6 +683,9 @@
       /* when it is made and delivered (Elise 16/10): the holiday timing by kind of piece in the season ("delivered in
          2027" past its order-by date), 15 days after the season */
       var tk = timingKind(key, est);
+      /* SEASONAL Christmas 2026: past the gift's order-by date its card's "Ships within …" would contradict "delivered
+         in 2027" — the card says the band's words instead (checked on every change: a page left open past midnight) */
+      if (turn && /^Ships within /.test(turnText)) turn.textContent = christmas && isLate(TIMING.kinds[key]) ? turnText.replace(/^Ships within [^·]*?(\s*·|$)/, "Orders placed now are delivered in 2027$1") : turnText;
       noteRow.textContent = [est.note, est.digitalOnly ? "" : (GET_IT[v.getit] || GET_IT.ship).short, shipping && !est.readyMade ? timingNote(tk, v.getit, christmas, isLate(tk)) : ""].filter(Boolean).join(" · ") + (g.goneNote ? " " + g.goneNote : "");
       copied.textContent = "";
       if (fromUser) store(storeKey, { v: v, swaps: g.swaps, u: 1, auto: g.auto || 0 });   /* a plain page view remembers nothing */
@@ -1322,16 +1326,17 @@
        band's top) */
     new IntersectionObserver(function (es) { es.forEach(function (e) { bandOn = e.isIntersecting; }); snowing(); }).observe(band);
     /* Merlin's bell swings once (about 1.4 s) the first time the bell itself is fully in view — above the phone order
-       bar, not when paused, not on a data-saver connection (Elise 16/10). Measured while it is on screen: an observer's
+       bar and below the sticky header, not when paused, not on a data-saver connection (Elise 16/10). Measured while it is on screen: an observer's
        "fully in view" misses a bell that sits half a pixel off the grid, and knows nothing of the bar. Each look waits a
        moment, so the bar has shown up by then after a quick scroll. */
     var bellHang = band.querySelector(".xmas-hang"), bellImg = bellHang && bellHang.querySelector(".xmas-bell"), saver = navigator.connection && navigator.connection.saveData;
     if (bellImg && !saver) {
-      var bellT = 0;
+      var bellT = 0, bellHead = document.querySelector(".site-header");
       var bellCheck = function () {
         bellT = 0;
         var r = bellImg.getBoundingClientRect(), floor = !bar.hidden && bar.offsetHeight ? bar.getBoundingClientRect().top : window.innerHeight;
-        if (paused || !r.height || r.top < -0.5 || r.bottom > floor + 0.5 || bellHang.classList.contains("ring")) return;
+        var ceil = bellHead ? Math.max(0, bellHead.getBoundingClientRect().bottom) : 0;   /* not under the sticky header either */
+        if (paused || !r.height || r.top < ceil - 0.5 || r.bottom > floor + 0.5 || bellHang.classList.contains("ring")) return;
         bellHang.classList.add("ring"); bellSeen.disconnect(); window.removeEventListener("scroll", bellLook);
       };
       var bellLook = function () { if (!bellT) bellT = setTimeout(bellCheck, 120); };

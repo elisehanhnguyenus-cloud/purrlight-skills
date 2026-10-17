@@ -273,8 +273,10 @@ Confirmation thánh làm theo yêu cầu = như búp bê (thời gian hàng len)
 "delivered within 15 days". Thẻ sản phẩm: "Turnaround: …" → **"Ships within 3 weeks"** (búp bê, thú cưng, godparent),
 **"Ships within 5 days"** (tranh, hộp tân gia) — chị đồng ý đề xuất FTC. Mục Giáng sinh: danh sách 4 dòng (`.xmas-times`)
 "Holiday timing, for orders placed by these dates". Sau hạn đặt (len 8/11; tranh, lịch, hộp quà kể cả thánh có sẵn
-15/11) hộp "What's inside" ghi "delivered in 2027" như câu của chị trong mục Giáng sinh. Tranh kèm chuỗi tràng hạt móc
-len theo thời gian hàng len. Code: `TIMING`, `timingKind()`, `timingNote()` trong `prices.js`; `orderBy()`/`isLate()`
+15/11) hộp "What's inside" ghi "delivered in 2027" như câu của chị trong mục Giáng sinh, và dòng "Ships within …" trên
+thẻ sản phẩm đổi thành "Orders placed now are delivered in 2027" (giữ "digital files sent within 5 days" ở tranh) để
+hai câu không trái nhau; hết mùa thì về như cũ. Tranh kèm chuỗi tràng hạt vẫn theo thời gian tranh (chị chưa cho số
+riêng cho chuỗi). Code: `TIMING`, `timingKind()`, `timingNote()` trong `prices.js`; `orderBy()`/`isLate()`
 đầu `custom-orders.js` đọc hai `<time>` (`#xmas-by-crochet`, `#xmas-by-paint`).
 **Chốt 16/10, tin nhắn 13 — thời gian làm & giao:** mùa lễ: hàng len làm 2–3 tuần, giao 3 ngày–1 tuần trong Texas /
 2–3 tuần nơi khác ở Mỹ; tranh làm 3–5 ngày, giao 3 ngày–1 tuần (2–3 ngày ở Pearland); ngoài mùa lễ giao tối đa 15 ngày.

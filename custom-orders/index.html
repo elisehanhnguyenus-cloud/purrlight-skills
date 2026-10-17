@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-season="christmas"><!-- SEASONAL Christmas 2026: this switch shows the Christmas band (its lights, snow and bell) and the order-by badge on the Christmas idea; custom-orders.js removes it by itself from SEASON_END (Jan 2) -->
+<html lang="en" data-season="christmas"><!-- SEASONAL Christmas 2026: this switch shows the Christmas band (its lights, snow, golden leaves, pine and bell), the pine behind Merlin in the closing and the order-by badge on the Christmas idea; custom-orders.js removes it by itself from SEASON_END (Jan 2) -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -123,7 +123,7 @@
               <li>Full doll accessories included — wings, flowers, outfit, fine embroidered details</li>
               <li>Display accessories &amp; U.S. shipping all included</li>
             </ul>
-            <p class="turnaround">Turnaround: from 2 weeks</p>
+            <p class="turnaround"><span data-late="yarn">Ships within 3 weeks</span></p>
           </div>
           <form class="gift-steps" aria-label="Options — Custom Portrait Crochet Doll">
             <fieldset class="step">
@@ -173,7 +173,7 @@
             <h3 id="pet-h" class="gift-title">Custom Cat / Dog / Pet Crochet</h3>
             <p class="price">from $40</p>
             <p class="desc">Your pet, in yarn. Show us three photos and we hand-crochet a portrait of that exact pet — your markings, your eye color, your coat. A beautiful memorial or a gift they will keep forever.</p>
-            <p class="turnaround">Turnaround: from 2 weeks · about 3 weeks in peak season</p>
+            <p class="turnaround"><span data-late="yarn">Ships within 3 weeks</span></p>
           </div>
           <form class="gift-steps" aria-label="Options — Custom Cat / Dog / Pet Crochet">
             <fieldset class="step">
@@ -191,6 +191,29 @@
                 <label class="tile"><input type="radio" name="yarn" value="Velvet"><span class="tile-name">Velvet</span><span class="tile-price" data-price-by='{"key":"size","map":{"Petite":"$48","Classic":"$67","Grand":"$105"}}'>$67</span></label>
                 <label class="tile"><input type="radio" name="yarn" value="Fluffy"><span class="tile-name">Fluffy</span><span class="tile-price" data-price-by='{"key":"size","map":{"Petite":"$55","Classic":"$79","Grand":"$120"}}'>$79</span></label>
               </div>
+              <!-- Yarn color book (Elise 16/10): only the yarn pages of her Canva catalogue — its price pages differ from this
+                   page, so the catalogue itself is not linked. Images load only when the book is opened. -->
+              <details class="yarn-book">
+                <summary>See every yarn color</summary>
+                <p class="step-hint">Find the shade that looks like your pet and write its code (for example C-25 or V-04) in your order. Printed colors can't match yarn exactly.</p>
+                <ul class="yarn-pages" tabindex="0" aria-label="Yarn color book pages">
+                  <li><a href="../assets/img/custom/yarn-book-cotton-1.webp" target="_blank" rel="noopener"><img src="../assets/img/custom/yarn-book-cotton-1.webp" alt="Yarn color book page: Cotton solid colors C-01 to C-20, each swatch with its code and name (listed as text below)" width="1100" height="1151" loading="lazy" decoding="async"></a><span class="yarn-cap">Cotton · solids 1 of 2</span></li>
+                  <li><a href="../assets/img/custom/yarn-book-cotton-2.webp" target="_blank" rel="noopener"><img src="../assets/img/custom/yarn-book-cotton-2.webp" alt="Yarn color book page: Cotton solid colors C-21 to C-40, each swatch with its code and name (listed as text below)" width="1100" height="1151" loading="lazy" decoding="async"></a><span class="yarn-cap">Cotton · solids 2 of 2</span></li>
+                  <li><a href="../assets/img/custom/yarn-book-cotton-mixes.webp" target="_blank" rel="noopener"><img src="../assets/img/custom/yarn-book-cotton-mixes.webp" alt="Yarn color book page: Cotton multi-shade mixes M-01 to M-21, each swatch with its code and name (listed as text below)" width="1100" height="1038" loading="lazy" decoding="async"></a><span class="yarn-cap">Cotton · mixes</span></li>
+                  <li><a href="../assets/img/custom/yarn-book-velvet-1.webp" target="_blank" rel="noopener"><img src="../assets/img/custom/yarn-book-velvet-1.webp" alt="Yarn color book page: Velvet colors V-01 to V-20, each swatch with its code and name (listed as text below)" width="1100" height="1151" loading="lazy" decoding="async"></a><span class="yarn-cap">Velvet 1 of 2</span></li>
+                  <li><a href="../assets/img/custom/yarn-book-velvet-2.webp" target="_blank" rel="noopener"><img src="../assets/img/custom/yarn-book-velvet-2.webp" alt="Yarn color book page: Velvet colors V-21 to V-39, each swatch with its code and name (listed as text below)" width="1100" height="1173" loading="lazy" decoding="async"></a><span class="yarn-cap">Velvet 2 of 2</span></li>
+                  <li><a href="../assets/img/custom/yarn-book-fluffy.webp" target="_blank" rel="noopener"><img src="../assets/img/custom/yarn-book-fluffy.webp" alt="Yarn color book page: Fluffy colors R-01 to R-04, each swatch with its code and name (listed as text below)" width="1100" height="1087" loading="lazy" decoding="async"></a><span class="yarn-cap">Fluffy</span></li>
+                </ul>
+                <details class="yarn-names">
+                  <summary>Codes and names as text</summary>
+                  <p><strong>Cotton · solids 1 of 2:</strong> C-01 Milk white · C-02 Pale pink · C-03 Dusty pink · C-04 True red · C-05 Roman red · C-06 Autumn gold · C-07 Pea green · C-08 Camel beige · C-09 Dark coffee · C-10 Warm grey · C-11 Charcoal · C-12 Navy · C-13 Black · C-14 Light grey · C-15 Egg yolk · C-16 Mulberry · C-17 Ice blue · C-18 Moss green · C-19 Orange red · C-20 Denim blue</p>
+                  <p><strong>Cotton · solids 2 of 2:</strong> C-21 Smoke grey · C-22 Water blue · C-23 Mint · C-24 Aqua · C-25 Classic blue · C-26 Amber · C-27 Pale yellow · C-28 Sage green · C-29 Coral red · C-30 Deep teal · C-31 Sky blue · C-32 Tangerine · C-33 Lilac · C-34 Cherry pink · C-35 Aster purple · C-36 Pure white · C-37 Watermelon · C-38 Autumn green · C-39 Rose red · C-40 Crimson</p>
+                  <p><strong>Cotton · mixes:</strong> M-01 Mint mix · M-02 Butter yellow mix · M-03 Lavender mix · M-04 Coral pink mix · M-05 Plum mix · M-06 Candy pastel · M-07 Meadow green · M-08 Macaron rainbow · M-09 Blue enamel · M-10 Macaron red · M-11 Starry blue · M-12 Country green · M-13 Aged wine · M-14 Country pink · M-15 Dust grey · M-16 Winter grey · M-17 Phantom blue · M-18 Ocean blue · M-19 Paris night · M-20 Korean red · M-21 Lantern red</p>
+                  <p><strong>Velvet 1 of 2:</strong> V-01 White · V-02 Lime cream · V-03 · V-04 Ivory · V-05 Grey · V-06 Sky blue · V-07 Mint · V-08 Dusty rose · V-09 Oat · V-10 Coral · V-11 Pink · V-12 Periwinkle · V-13 Lavender · V-14 Mauve · V-15 Royal blue · V-16 Teal · V-17 Yellow · V-18 Red · V-19 Camel · V-20 Brown</p>
+                  <p><strong>Velvet 2 of 2:</strong> V-21 Navy · V-22 Black · V-23 Blue mix · V-24 Pink mix · V-25 Charcoal · V-26 Iceblue mix · V-27 Mustard · V-28 Cream · V-29 Sand · V-30 Burgundy · V-31 Lime green · V-32 Orange · V-33 Pale mint · V-34 Olive · V-35 Raspberry · V-36 Hot pink · V-37 Lilac · V-38 Snowball · Speckled white · V-39 Chim Ruyi · White pink</p>
+                  <p><strong>Fluffy:</strong> R-01 Pastel yellow · R-02 Silver grey · R-03 Cream white · R-04 Taupe</p>
+                </details>
+              </details>
             </fieldset>
             <fieldset class="step">
               <legend><span class="step-n" aria-hidden="true">4</span> <span class="step-label">How many pets</span></legend>
@@ -247,7 +270,7 @@
             <p class="price">from $10</p>
             <p class="desc">A digital watercolor portrait of your pet or your home — a tender pet memorial, or a housewarming &amp; closing gift from your photos.</p>
             <p class="desc-note">Painted digitally on a tablet, not by hand — prints are made from that file.</p>
-            <p class="turnaround">Turnaround: 3–5 days</p>
+            <p class="turnaround"><span data-late="paint" data-late-text="Prints &amp; add-ons ordered now are delivered in 2027">Ships within 5 days</span> · digital files sent within 5 days</p>
           </div>
           <form class="gift-steps" aria-label="Options — Custom Digital Watercolor Painting">
             <fieldset class="step">
@@ -327,7 +350,7 @@
             <h3 id="hw-h" class="gift-title">Housewarming &amp; Closing Gift Box</h3>
             <p class="price">$60</p>
             <p class="desc">A curated welcome-home box — perfect for new neighbors, friends, and realtor closing gifts.</p>
-            <p class="turnaround">Turnaround: from 3 days</p>
+            <p class="turnaround"><span data-late="box">Ships within 5 days</span></p>
           </div>
           <form class="gift-steps" aria-label="Options — Housewarming &amp; Closing Gift Box">
             <fieldset class="step">
@@ -409,7 +432,7 @@
             <h3 id="ch-h" class="gift-title">Christening &amp; Confirmation Gifts</h3>
             <p class="price">from $55</p>
             <p class="sale-line" data-sale-note="gown" hidden></p>
-            <p class="turnaround">Gown set: ready to ship in 2–3 days · Confirmation gift box: ready after Nov 12</p>
+            <p class="turnaround">Gown set: ready to ship in 2–3 days · Confirmation gift box: ready after Nov 12; <span data-late="yarn" data-late-text="a saint made for you, ordered now, is delivered in 2027">a saint made for you takes 2–3 weeks</span></p>
           </div>
           <form class="gift-steps" aria-label="Options — Christening &amp; Confirmation Gifts">
             <fieldset class="step">
@@ -471,7 +494,7 @@
             <h3 id="gp-h" class="gift-title">Godparent Gift Set</h3>
             <p class="price">$95</p>
             <p class="desc">A meaningful thank-you for godparents: a custom crochet portrait doll of them, paired with a handmade crochet rosary chain.</p>
-            <p class="turnaround">Turnaround: from 2 weeks</p>
+            <p class="turnaround"><span data-late="yarn">Ships within 3 weeks</span></p>
           </div>
           <form class="gift-steps" aria-label="Options — Godparent Gift Set">
             <fieldset class="step">
@@ -602,23 +625,38 @@
     </section>
 
     <!-- 3.9 Christmas deadlines — SEASONAL Christmas 2026: after the season delete this whole section and
-         assets/img/custom/xmas-bell.webp (data-season on <html> already hides it) -->
+         assets/img/custom/xmas-bell.webp, xmas-pine-corner.webp, xmas-pine-ground.webp (data-season on <html> already hides it) -->
     <section class="christmas" aria-labelledby="xmas-h">
+      <img class="xmas-pine xmas-pine-corner" src="../assets/img/custom/xmas-pine-corner.webp" alt="" aria-hidden="true" width="253" height="206" loading="lazy" decoding="async">
+      <img class="xmas-pine xmas-pine-ground" src="../assets/img/custom/xmas-pine-ground.webp" alt="" aria-hidden="true" width="292" height="197" loading="lazy" decoding="async">
       <span class="xmas-hang" aria-hidden="true"><img class="xmas-bell" src="../assets/img/custom/xmas-bell.webp" alt="" width="69" height="96" loading="lazy" decoding="async"></span>
       <div class="wrap xmas-inner">
         <div class="xmas-text">
         <h2 id="xmas-h">Ordering for <span class="nw">Christmas?<span class="glints" aria-hidden="true"><i></i><i></i><i></i></span></span></h2>
-        <!-- Order-by dates: Elise 16/10 (2nd round). Orders after these dates are delivered in 2027. -->
+        <!-- Order-by dates: Elise 16/10 (2nd round). Orders after these dates are delivered in 2027. custom-orders.js reads both <time>s (by id): the order-by badge on the Christmas idea, and "delivered in 2027" in the box past them. -->
         <dl class="deadlines">
           <div><dt>Crochet dolls &amp; custom crochet — order by</dt><dd><strong><time id="xmas-by-crochet" datetime="2026-11-08">Sun, Nov 8</time></strong></dd></div>
-          <div><dt>Paintings, calendars &amp; gift boxes — order by</dt><dd><strong><time datetime="2026-11-15">Sun, Nov 15</time></strong></dd></div>
+          <div><dt>Paintings, calendars &amp; gift boxes — order by</dt><dd><strong><time id="xmas-by-paint" datetime="2026-11-15">Sun, Nov 15</time></strong></dd></div>
         </dl>
         <p class="xmas-after">Orders placed after these dates will be delivered in 2027.</p>
-        <p class="xmas-note">Orders placed by these dates: allow 2–4 weeks (the Christening gown set ships in 2–3 days). Most pieces are made to order — order <span class="hand">early</span> to secure your spot.</p>
+        <!-- Timing: Elise 16/10 (13th and 14th messages); the box shows the same per piece (prices.js TIMING) -->
+        <!-- Elise 17/10: the section stays short — the timing list opens with "See holiday timing" (each product's box
+             also shows its own timing) -->
+        <details class="xmas-times">
+          <summary>See holiday timing</summary>
+          <p class="xmas-note">For orders placed by these dates:</p>
+          <ul>
+            <li><strong>Crochet</strong> — dolls, pets and saints made for you: made in <span class="nw">2–3 weeks</span>, then <span class="nw">3 days–1 week</span> to reach you in Texas, or <span class="nw">2–3 weeks</span> elsewhere in the U.S.</li>
+            <li><strong>Paintings:</strong> made in <span class="nw">3–5 days</span>, then <span class="nw">3 days–1 week</span> (<span class="nw">2–3 days</span> in Pearland).</li>
+            <li><strong>Housewarming boxes &amp; calendars:</strong> made in <span class="nw">3–5 days</span>, then <span class="nw">2–3 days</span> in Pearland, or <span class="nw">3–6 days</span> elsewhere in the U.S. (Alaska and Hawaii: longer).</li>
+            <li><strong>Ready to ship:</strong> the Christening gown set in <span class="nw">2–3 days</span>; a saint we have ready from <span class="nw">Nov 12</span>&nbsp;— <span class="nw">2 days</span> in Pearland, <span class="nw">3–7 days</span> elsewhere.</li>
+          </ul>
+        </details>
+        <p class="xmas-note">Most pieces are made to order — order <span class="hand">early</span> to secure your spot.</p>
         </div>
       </div>
       <picture class="xmas-pic">
-        <source media="(min-width: 600px)" srcset="../assets/img/custom/xmas-merlin2-wide-900.webp 900w, ../assets/img/custom/xmas-merlin2-wide-1376.webp 1376w" sizes="(min-width: 900px) 60vw, 100vw" width="1376" height="768">
+        <source media="(min-width: 600px)" srcset="../assets/img/custom/xmas-merlin2-wide-900.webp 900w, ../assets/img/custom/xmas-merlin2-wide-1376.webp 1376w" sizes="(min-width: 900px) 1200px, 100vw" width="1376" height="768">
         <img class="xmas-photo" src="../assets/img/custom/xmas-merlin2-phone-640.webp" srcset="../assets/img/custom/xmas-merlin2-phone-640.webp 640w, ../assets/img/custom/xmas-merlin2-phone-1024.webp 1024w" sizes="100vw" alt="Merlin in a red holiday bow sits on a table of wrapped gifts and balls of red, cream and green yarn, with a lit Christmas tree behind" width="1024" height="737" loading="lazy" decoding="async">
       </picture>
     </section>
@@ -641,10 +679,10 @@
       </div>
     </section>
 
-    <!-- 3.10 Closing CTA -->
+    <!-- 3.10 Closing CTA (SEASONAL Christmas 2026: .xmas-bough, the pine behind Merlin — delete it and xmas-bough.webp after the season) -->
     <section class="closing" aria-labelledby="close-h">
       <div class="wrap closing-inner">
-        <span class="merlin-lamp"><img class="merlin-mark" src="../assets/img/custom/merlin-portrait.webp" alt="Merlin, our tuxedo cat, in a red holiday bow" width="240" height="240" loading="lazy" decoding="async"><span class="glints glints-lamp" aria-hidden="true"><i></i><i></i><i></i><i></i></span></span>
+        <span class="merlin-lamp"><img class="xmas-bough" src="../assets/img/custom/xmas-bough.webp" alt="" aria-hidden="true" width="202" height="242" loading="lazy" decoding="async"><img class="merlin-mark" src="../assets/img/custom/merlin-portrait.webp" alt="Merlin, our tuxedo cat, in a red holiday bow" width="240" height="240" loading="lazy" decoding="async"><span class="glints glints-lamp" aria-hidden="true"><i></i><i></i><i></i><i></i></span></span>
         <div class="closing-body">
           <h2 id="close-h" class="sr-only">Place your order</h2>
           <p><a class="btn btn-primary btn-large" data-order href="https://tally.so/r/M1KOkY">Place your order</a></p>

@@ -12,11 +12,20 @@
   "use strict";
 
   /* ---------- SEASONAL Christmas 2026: <html data-season="christmas"> shows the Christmas band (order-by dates, photo,
-     lights, snow, Merlin's bell). From SEASON_END (the visitor's local midnight) the page retires it by itself, even if
-     nobody edits it; deleting the attribute in index.html does the same at once. ---------- */
+     lights, snow, golden leaves, pine, Merlin's bell) and the pine behind Merlin in the closing. From SEASON_END (the
+     visitor's local midnight) the page retires it by itself, even if nobody edits it; deleting the attribute in
+     index.html does the same at once. ---------- */
   var SEASON_END = new Date(2027, 0, 2);   /* Jan 2, 2027: through New Year's Day (Elise 16/10) */
   if (new Date() >= SEASON_END) document.documentElement.removeAttribute("data-season");
   var christmas = document.documentElement.getAttribute("data-season") === "christmas";
+  /* an order-by date from the Christmas band's own <time> (the dates live in one place): through the end of that day
+     in the visitor's time. Past it, that kind of piece is delivered in 2027 (the band says so, and so does the box). */
+  var orderBy = function (id) {
+    var t = christmas && document.getElementById(id), d = t && /^(\d{4})-(\d{2})-(\d{2})$/.exec(t.getAttribute("datetime") || "");
+    return d ? new Date(+d[1], +d[2] - 1, +d[3], 23, 59, 59) : null;
+  };
+  var ORDER_BY = { yarn: "xmas-by-crochet", paint: "xmas-by-paint", box: "xmas-by-paint", saint: "xmas-by-paint" };   /* timingKind() → the band's <time>: crochet; paintings, calendars & gift boxes */
+  var isLate = function (kind) { var d = ORDER_BY[kind] ? orderBy(ORDER_BY[kind]) : null; return !!d && new Date() > d; };
 
   /* ---------- site nav (same behavior as the main site) ---------- */
   var toggle = document.querySelector(".nav-toggle");
@@ -428,6 +437,8 @@
     var end = art.querySelector(".box-end");
     var storeKey = "purrlight-custom-pick:" + key;
     var g = { id: art.id, key: key, def: def, art: art, est: null, text: "", swaps: {} };
+    /* SEASONAL Christmas 2026: the card's lead times that hold only until an order-by date (<span data-late="kind">) */
+    var lateBits = [].slice.call(art.querySelectorAll(".turnaround [data-late]")).map(function (s) { return { el: s, text: s.textContent }; });
 
     /* estimate · deposit today · balance after the photo is approved */
     var totalRow = el("p", { "class": "box-total" });
@@ -669,7 +680,17 @@
       depositRow.appendChild(el("span", { text: "Deposit today (50%)" })); depositRow.appendChild(el("strong", { "class": "amt", text: db[0] }));
       balanceRow.appendChild(el("span", { text: "Balance after you approve the photo" })); balanceRow.appendChild(el("span", { "class": "amt", text: db[1] }));
       if (fromUser) g.goneNote = "";
-      noteRow.textContent = [est.note, est.digitalOnly ? "" : (GET_IT[v.getit] || GET_IT.ship).short].filter(Boolean).join(" · ") + (g.goneNote ? " " + g.goneNote : "");
+      var shipping = !est.digitalOnly && (v.getit === "ship" || v.getit === "out" || !GET_IT[v.getit]);
+      /* when it is made and delivered (Elise 16/10): the holiday timing by kind of piece in the season ("delivered in
+         2027" past its order-by date), 15 days after the season */
+      var tk = timingKind(key, est);
+      /* SEASONAL Christmas 2026: past its order-by date a card's "Ships within …" would contradict "delivered in 2027" —
+         it says the band's words instead (its data-late-text, else "Orders placed now …"); checked whenever the box updates */
+      lateBits.forEach(function (b) {
+        var late = christmas && isLate(b.el.getAttribute("data-late"));
+        b.el.textContent = late ? b.el.getAttribute("data-late-text") || "Orders placed now are delivered in 2027" : b.text;
+      });
+      noteRow.textContent = [est.note, est.digitalOnly ? "" : (GET_IT[v.getit] || GET_IT.ship).short, shipping && !est.readyMade ? timingNote(tk, v.getit, christmas, isLate(tk)) : ""].filter(Boolean).join(" · ") + (g.goneNote ? " " + g.goneNote : "");
       copied.textContent = "";
       if (fromUser) store(storeKey, { v: v, swaps: g.swaps, u: 1, auto: g.auto || 0 });   /* a plain page view remembers nothing */
       if (g === current) setBarThumb(g);
@@ -974,9 +995,8 @@
      Christmas band's own <time> (the date lives in one place), until the end of that day in the visitor's time — the
      same kind of badge as "Under $20" */
   var xIdea = christmas ? document.querySelector(".idea[data-order-by]") : null;
-  var xTime = xIdea ? document.getElementById(xIdea.getAttribute("data-order-by")) : null;
-  var xDay = xTime ? /^(\d{4})-(\d{2})-(\d{2})$/.exec(xTime.getAttribute("datetime") || "") : null;
-  if (xDay && new Date() <= new Date(+xDay[1], +xDay[2] - 1, +xDay[3], 23, 59, 59)) {
+  var xTime = xIdea ? document.getElementById(xIdea.getAttribute("data-order-by")) : null, xEnd = xTime ? orderBy(xTime.id) : null;
+  if (xEnd && new Date() <= xEnd) {
     var xBell = document.createElement("img");
     xBell.alt = ""; xBell.width = 69; xBell.height = 96; xBell.loading = "lazy"; xBell.decoding = "async";
     xBell.src = "../assets/img/custom/xmas-bell.webp";
@@ -1062,11 +1082,12 @@
     var place = function () {
       ticking = false;
       drift.forEach(function (img) {
-        if (!wide.matches || (still && still.matches)) { img.style.transform = ""; return; }
+        if (!wide.matches || (still && still.matches)) { img.style.transform = ""; if (img.follower) img.follower.style.transform = ""; return; }
         var r = img.parentNode.getBoundingClientRect(), vh = window.innerHeight;
         if (r.bottom < 0 || r.top > vh) return;
         var t = (r.top + r.height / 2 - vh / 2) / (vh / 2 + r.height / 2);   /* −1 … 1 across the screen */
         img.style.transform = "translate3d(0," + Math.round(Math.max(-1, Math.min(1, t)) * 28) + "px,0) scale(1.06)";
+        if (img.follower) img.follower.style.transform = img.style.transform;   /* the hero video drifts with its photo */
       });
     };
     var onDrift = function () { if (!ticking) { ticking = true; window.requestAnimationFrame(place); } };
@@ -1076,7 +1097,7 @@
   /* ---------- small lights (Elise 16/10, 9th message). WCAG 2.2.2: nothing loops on its own for more than 5 s
      without a way to stop it. The stars by the headings twinkle twice as they come into view (.go), then rest lit.
      The Christmas band hangs a string of lights along its top (one bulb per 72px, on a hand-draped wire, with
-     Merlin's bell hung from it) and lets light snow fall over
+     Merlin's bell hung from it) and lets light snow and a few golden leaves fall over
      Merlin's photo — a canvas the photo's size, faded at the same edges. Both run only while the band is on screen
      (.is-live) and the tab is open, never for visitors who ask for less motion (also when they turn that on mid-visit),
      and the band's own button pauses them (remembered on this device). Decoration only: aria-hidden. ---------- */
@@ -1113,35 +1134,176 @@
     pause.type = "button";
     pause.className = "xmas-pause";
     band.appendChild(pause);
-    var pen = snow.getContext("2d"), flakes = [], sw = 0, sh = 0, running = false, onScreen = false, bandOn = false, last = 0, frame = 0;
+    /* SEASONAL Christmas 2026 (Elise 16/10: golden leaves and falling snow — in Texas, Christmas is golden leaves and
+       pine). Three things fall over Merlin's photo, all inside the photo's own fade: the soft snow dots (fewer than
+       before), a few six-arm snow crystals, and a few golden Texas leaves — cottonwood, a pecan leaflet, cedar elm — in
+       Merlin's beret gold with a cream edge, turning slowly as they fall (a few, one gold: never confetti). Crystals and
+       leaves keep out of Merlin's column, so only the faint dots ever cross him. Each piece is drawn once into a small
+       sprite (again only when the size class or the pixel ratio changes); a frame only moves them — no layout reads. */
+    var pen = snow.getContext("2d"), flakes = [], gems = [], leaves = [], sw = 0, sh = 0, dpr = 1, running = false, onScreen = false, bandOn = false, last = 0, frame = 0;
+    var MERLIN = { wide: [0.59, 0.77], phone: [0.47, 0.71] };   /* his column (ears to paws) in xmas-merlin2-wide-* and -phone-*, as fractions of the image width — measure again if the photo changes */
+    var GOLD = "#CA8D41", EDGE = "#FBF6EE", SHADE = "rgba(74, 66, 59, 0.13)", VEIN = "rgba(74, 66, 59, 0.42)";
+    var keep0 = -1, keep1 = -1, laneMin = 0, small = false, artKey = "", dotArt = [], gemArt = [], leafArt = [];
+    var sprite = function (w, h, draw) {
+      var c = document.createElement("canvas"), g;
+      c.width = Math.ceil(w * dpr); c.height = Math.ceil(h * dpr); c.w = w; c.h = h;
+      g = c.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.translate(w / 2, h / 2); draw(g); return c;
+    };
+    var dot = function (r) {   /* a soft snow dot, with a faint ink rim so it shows on the white window too */
+      return sprite(r * 2 + 3, r * 2 + 3, function (g) {
+        g.beginPath(); g.arc(0, 0, r + 0.8, 0, 6.2832); g.fillStyle = "rgba(74, 66, 59, 0.14)"; g.fill();
+        g.beginPath(); g.arc(0, 0, r, 0, 6.2832); g.fillStyle = "rgba(255, 255, 255, 0.92)"; g.fill();
+      });
+    };
+    var crystal = function (R) {   /* a six-arm snow crystal: white, with the same faint rim (small ones fork once, so
+                                       they stay a star of arms, not a blob) */
+      var forks = R < 5.5 ? [[0.56, 0.3]] : [[0.48, 0.3], [0.74, 0.2]];
+      return sprite(R * 2 + 4, R * 2 + 4, function (g) {
+        var arms = function () {
+          g.beginPath();
+          for (var k = 0; k < 6; k++) {
+            var a = k * Math.PI / 3, c = Math.cos(a), s = Math.sin(a);
+            g.moveTo(0, 0); g.lineTo(c * R, s * R);
+            for (var t = 0; t < forks.length; t++) {
+              var at = forks[t][0] * R, bl = forks[t][1] * R;
+              for (var sg = -1; sg <= 1; sg += 2) { var b = a + sg * Math.PI / 3; g.moveTo(c * at, s * at); g.lineTo(c * at + Math.cos(b) * bl, s * at + Math.sin(b) * bl); }
+            }
+          }
+        };
+        g.lineCap = "round";
+        arms(); g.strokeStyle = "rgba(74, 66, 59, 0.16)"; g.lineWidth = 2; g.stroke();
+        arms(); g.strokeStyle = "rgba(255, 255, 255, 0.95)"; g.lineWidth = 1; g.stroke();
+      });
+    };
+    /* half a leaf outline (stem end to tip) from quadratic segments, lightly toothed; the other half is its mirror.
+       The still leaves in the CSS (--leaf-cw) are this cottonwood, drawn the same way. */
+    var half = function (segs, n, tooth) {
+      var pts = [], s, i, t;
+      for (s = 0; s < segs.length; s++) {
+        var q = segs[s];
+        for (i = s ? 1 : 0; i <= n; i++) {
+          t = i / n;
+          var x = (1 - t) * (1 - t) * q[0] + 2 * (1 - t) * t * q[2] + t * t * q[4], y = (1 - t) * (1 - t) * q[1] + 2 * (1 - t) * t * q[3] + t * t * q[5];
+          if (tooth && s && i % 2 && i < n) { var dx = 2 * (1 - t) * (q[2] - q[0]) + 2 * t * (q[4] - q[2]), dy = 2 * (1 - t) * (q[3] - q[1]) + 2 * t * (q[5] - q[3]), d = Math.sqrt(dx * dx + dy * dy) || 1; x += dy / d * tooth; y -= dx / d * tooth; }
+          pts.push([x, y]);
+        }
+      }
+      return pts;
+    };
+    var leaf = function (kind, L) {   /* Texas fall leaves, tip up, stem down: beret gold, one side of the midrib a shade
+                                         deeper (a crease), a cream edge and a faint shadow so they read on the busy photo */
+      return sprite(L + 6, L + 6, function (g) {
+        var h = L / 2, pts, i, m = kind === 1 ? 0.8 : 1;   /* the pecan leaflet is lopsided */
+        if (kind === 0) pts = half([[0, 0.36 * h, 0.5 * h, 0.62 * h, 0.78 * h, 0.2 * h], [0.78 * h, 0.2 * h, 0.6 * h, -0.42 * h, 0, -h]], 9, 0.06 * h);   /* cottonwood: a toothed heart-shaped triangle, as long as it is wide */
+        else if (kind === 1) pts = half([[0, 0.72 * h, 0.34 * h, 0.4 * h, 0.27 * h, -0.2 * h], [0.27 * h, -0.2 * h, 0.2 * h, -0.7 * h, 0.04 * h, -h]], 8, 0);   /* pecan leaflet: a long lance */
+        else pts = half([[0, 0.62 * h, 0.44 * h, 0.5 * h, 0.44 * h, -0.05 * h], [0.44 * h, -0.05 * h, 0.42 * h, -0.6 * h, 0, -h]], 8, 0.04 * h);   /* cedar elm: a small toothed oval */
+        g.beginPath();
+        g.moveTo(pts[0][0], pts[0][1]);
+        for (i = 1; i < pts.length; i++) g.lineTo(pts[i][0], pts[i][1]);
+        for (i = pts.length - 2; i >= 0; i--) g.lineTo(-pts[i][0] * m, pts[i][1]);
+        g.closePath();
+        g.save();
+        g.shadowColor = "rgba(74, 66, 59, 0.3)"; g.shadowBlur = 2 * dpr; g.shadowOffsetY = 0.8 * dpr;   /* shadows ignore the transform */
+        g.strokeStyle = EDGE; g.lineWidth = 1.8; g.lineJoin = "round"; g.stroke();
+        g.restore();
+        g.fillStyle = GOLD; g.fill();
+        g.beginPath();   /* the crease: one half a shade deeper */
+        g.moveTo(pts[0][0], pts[0][1]);
+        for (i = 1; i < pts.length; i++) g.lineTo(pts[i][0], pts[i][1]);
+        g.closePath(); g.fillStyle = SHADE; g.fill();
+        /* midrib, a few side veins, a short stem */
+        var base = pts[0][1], v = kind === 0 ? [[0.12, 0.52, 0.16], [0.5, 0.34, 0.3]] : kind === 2 ? [[0.25, 0.3, 0.3], [0.62, 0.26, 0.3]] : [];
+        g.beginPath(); g.strokeStyle = VEIN; g.lineWidth = 0.8; g.lineCap = "round";
+        g.moveTo(0.06 * h, base + 0.3 * h); g.quadraticCurveTo(0, base + 0.12 * h, 0, base); g.lineTo(kind === 1 ? 0.03 * h : 0, -0.8 * h);
+        for (i = 0; i < v.length; i++) { var vy = base - v[i][0] * h, vl = v[i][1] * h, up = v[i][2] * h + vl * 0.5; g.moveTo(0, vy); g.lineTo(-vl, vy - up); g.moveTo(0, vy); g.lineTo(vl, vy - up); }
+        g.stroke();
+      });
+    };
+    var anyOf = function (list) { return list[Math.floor(Math.random() * list.length)]; };
+    var lane = function (pad) {   /* an x clear of Merlin's column (with room for the sway), or -1 if there is none */
+      var a0 = laneMin, a1 = Math.max(a0, keep0 - pad), b0 = Math.min(sw, keep1 + pad), b1 = sw - pad * 0.4, wa = Math.max(0, a1 - a0), wb = Math.max(0, b1 - b0);
+      if (wa + wb < 8) return -1;
+      var u = Math.random() * (wa + wb);
+      return u < wa ? a0 + u : b0 + (u - wa);
+    };
     var flake = function (anywhere) {
-      return { x: Math.random() * sw, y: anywhere ? Math.random() * sh : -4, r: 1 + Math.random() * 2.2, vy: 14 + Math.random() * 22, sway: 4 + Math.random() * 10, ph: Math.random() * 6.28 };
+      var art = anyOf(dotArt);
+      return { x: Math.random() * sw, y: anywhere ? Math.random() * sh : -art.h, art: art, vy: 14 + Math.random() * 22, sway: 4 + Math.random() * 10, ph: Math.random() * 6.28 };
+    };
+    var gem = function (anywhere) {
+      var art = anyOf(gemArt), sway = 5 + Math.random() * 8, x = lane(sway + art.w / 2);
+      return { x: x, y: anywhere ? Math.random() * sh : -art.h, art: art, vy: 11 + Math.random() * 9, sway: sway, ph: Math.random() * 6.28, rot: Math.random() * 1.05, spin: (Math.random() - 0.5) * 0.5, off: x < 0 };
+    };
+    var fallLeaf = function (anywhere) {
+      var art = anyOf(leafArt), sway = (small ? 14 : 20) + Math.random() * 12, x = lane(sway + art.w / 2);
+      return { x: x, y: anywhere ? Math.random() * sh : -art.h, art: art, vy: 24 + Math.random() * 12, sway: sway, ph: Math.random() * 6.28, rate: 0.55 + Math.random() * 0.3,
+        rot: (Math.random() - 0.5) * 1.2, spin: (Math.random() - 0.5) * 0.7, flip: Math.random() * 6.28, flipRate: 0.7 + Math.random() * 0.6, off: x < 0 };
     };
     var fit = function () {
-      var b = band.getBoundingClientRect(), p = snowPic.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var b = band.getBoundingClientRect(), p = snowPic.getBoundingClientRect(), img = snowPic.querySelector("img"), n, i;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
       sw = Math.round(p.width); sh = Math.round(p.height);
       snow.style.left = Math.round(p.left - b.left - band.clientLeft) + "px";
       snow.style.top = Math.round(p.top - b.top - band.clientTop) + "px";
       snow.style.width = sw + "px"; snow.style.height = sh + "px";
       snow.width = Math.round(sw * dpr); snow.height = Math.round(sh * dpr);
       pen.setTransform(dpr, 0, 0, dpr, 0, 0);
-      flakes.length = 0;
-      for (var n = Math.min(70, Math.round(sw * sh / 9000)), i = 0; i < n; i++) flakes.push(flake(true));
+      /* where Merlin sits on the canvas: the photo is cover-fitted (object-position) on wide screens, full width on phones */
+      keep0 = keep1 = -1; laneMin = 0;
+      if (img && img.naturalWidth && sw && sh) {
+        var nw = img.naturalWidth, nh = img.naturalHeight, cs = window.getComputedStyle(img), cover = cs.objectFit === "cover";
+        var scale = cover ? Math.max(sw / nw, sh / nh) : sw / nw, pos = parseFloat((cs.objectPosition || "50%").split(" ")[0]) / 100;
+        var ox = cover ? (sw - nw * scale) * (isNaN(pos) ? 0.5 : pos) : 0, col = nw / nh > 1.6 ? MERLIN.wide : MERLIN.phone;
+        keep0 = ox + col[0] * nw * scale; keep1 = ox + col[1] * nw * scale;
+        if (cover) laneMin = 0.34 * sw;   /* wide screens: not in the photo's faded left edge */
+      }
+      small = sw < 600;
+      var key = (small ? "s" : "w") + dpr;
+      if (key !== artKey) {   /* the sprites: once per size class and pixel ratio, not on every resize */
+        artKey = key;
+        dotArt = [dot(1.2), dot(1.8), dot(2.5), dot(3.2)];
+        gemArt = small ? [crystal(4.2), crystal(4.8), crystal(5.4)] : [crystal(4.8), crystal(5.6), crystal(6.4)];
+        leafArt = [];
+        for (var k = 0; k < 3; k++) for (var c = 0; c < 2; c++) leafArt.push(leaf(k, (small ? 28 : 33) + (k === 1 ? 5 : k === 2 ? -4 : 0) + c * 4));
+      }
+      var area = sw * sh;
+      flakes.length = gems.length = leaves.length = 0;
+      for (n = Math.min(44, Math.round(area / 12000)), i = 0; i < n; i++) flakes.push(flake(true));
+      for (n = Math.max(3, Math.min(small ? 3 : 6, Math.round(area / 38000))), i = 0; i < n; i++) gems.push(gem(true));
+      for (n = Math.max(4, Math.min(5, Math.round(area / 70000))), i = 0; i < n; i++) leaves.push(fallLeaf(true));
+    };
+    var draw = function (f, x, rot, sx) {
+      var c = Math.cos(rot), s = Math.sin(rot);
+      pen.setTransform(dpr * c * sx, dpr * s * sx, -dpr * s, dpr * c, dpr * x, dpr * f.y);
+      pen.drawImage(f.art, -f.art.w / 2, -f.art.h / 2, f.art.w, f.art.h);
     };
     var fall = function (now) {
       frame = 0;
       if (!running) return;
-      var dt = last ? Math.min((now - last) / 1000, 0.05) : 0;
+      var dt = last ? Math.min((now - last) / 1000, 0.05) : 0, i, f;
       last = now;
+      pen.setTransform(dpr, 0, 0, dpr, 0, 0);
       pen.clearRect(0, 0, sw, sh);
-      for (var i = 0; i < flakes.length; i++) {
-        var f = flakes[i];
+      for (i = 0; i < flakes.length; i++) {
+        f = flakes[i];
         f.y += f.vy * dt; f.ph += dt * 0.9;
-        if (f.y - f.r > sh) { flakes[i] = flake(false); continue; }
-        var x = f.x + Math.sin(f.ph) * f.sway;
-        pen.beginPath(); pen.arc(x, f.y, f.r + 0.8, 0, 6.2832); pen.fillStyle = "rgba(74, 66, 59, 0.14)"; pen.fill();   /* a faint rim, so a flake shows on white too */
-        pen.beginPath(); pen.arc(x, f.y, f.r, 0, 6.2832); pen.fillStyle = "rgba(255, 255, 255, 0.92)"; pen.fill();
+        if (f.y - f.art.h > sh) { flakes[i] = flake(false); continue; }
+        pen.drawImage(f.art, f.x + Math.sin(f.ph) * f.sway - f.art.w / 2, f.y - f.art.h / 2, f.art.w, f.art.h);
       }
+      for (i = 0; i < gems.length; i++) {
+        f = gems[i];
+        f.y += f.vy * dt; f.ph += dt * 0.8; f.rot += f.spin * dt;
+        if (f.y - f.art.h > sh) { gems[i] = gem(false); continue; }
+        if (!f.off) draw(f, f.x + Math.sin(f.ph) * f.sway, f.rot, 1);
+      }
+      for (i = 0; i < leaves.length; i++) {
+        f = leaves[i];
+        f.y += f.vy * dt; f.ph += dt * f.rate; f.rot += f.spin * dt; f.flip += dt * f.flipRate;
+        if (f.y - f.art.h > sh) { leaves[i] = fallLeaf(false); continue; }
+        var fl = Math.cos(f.flip);   /* it turns over as it falls, but never edge-on: a leaf, not a gold sliver */
+        if (!f.off) draw(f, f.x + Math.sin(f.ph) * f.sway, f.rot + Math.sin(f.ph * 1.3) * 0.45, (fl < 0 ? -1 : 1) * Math.max(0.55, Math.abs(fl)));
+      }
+      pen.setTransform(dpr, 0, 0, dpr, 0, 0);
       frame = window.requestAnimationFrame(fall);
     };
     var snowing = function () {
@@ -1149,7 +1311,7 @@
       band.classList.toggle("is-live", bandOn);
       band.classList.toggle("is-paused", paused);
       /* a plain button named for what it will do (Pause / Play) — no aria-pressed, which would read "Play…, pressed" while stopped */
-      pause.textContent = paused ? "Play the lights & snow" : "Pause the lights & snow";
+      pause.textContent = paused ? "Play the lights, snow & leaves" : "Pause the lights, snow & leaves";
       if (want && !running) { running = true; last = 0; frame = window.requestAnimationFrame(fall); }
       else if (!want && running) { running = false; if (frame) window.cancelAnimationFrame(frame); frame = 0; pen.clearRect(0, 0, sw, sh); }
     };
@@ -1166,17 +1328,111 @@
     if ("ResizeObserver" in window) new ResizeObserver(fit).observe(band); else window.addEventListener("resize", fit);
     /* the bulbs run while the band shows; the snow while the canvas itself shows (on phones it sits well below the
        band's top) */
-    /* Merlin's bell swings once (about 1.4 s) the first time the band comes into view — not when paused, not on a
-       data-saver connection (Elise 16/10) */
-    var bellHang = band.querySelector(".xmas-hang"), rang = false, saver = navigator.connection && navigator.connection.saveData;
-    new IntersectionObserver(function (es) {
-      es.forEach(function (e) { bandOn = e.isIntersecting; });
-      if (bandOn && !rang && bellHang && !paused && !saver) { rang = true; bellHang.classList.add("ring"); }
-      snowing();
-    }).observe(band);
+    new IntersectionObserver(function (es) { es.forEach(function (e) { bandOn = e.isIntersecting; }); snowing(); }).observe(band);
+    /* Merlin's bell swings once (about 1.4 s) the first time the bell itself is fully in view — above the phone order
+       bar and below the sticky header, not when paused, not on a data-saver connection (Elise 16/10). Measured while it is on screen: an observer's
+       "fully in view" misses a bell that sits half a pixel off the grid, and knows nothing of the bar. Each look waits a
+       moment, so the bar has shown up by then after a quick scroll. */
+    var bellHang = band.querySelector(".xmas-hang"), bellImg = bellHang && bellHang.querySelector(".xmas-bell"), saver = navigator.connection && navigator.connection.saveData;
+    if (bellImg && !saver) {
+      var bellT = 0, bellHead = document.querySelector(".site-header");
+      var bellCheck = function () {
+        bellT = 0;
+        var r = bellImg.getBoundingClientRect(), floor = !bar.hidden && bar.offsetHeight ? bar.getBoundingClientRect().top : window.innerHeight;
+        var ceil = bellHead ? Math.max(0, bellHead.getBoundingClientRect().bottom) : 0;   /* not under the sticky header either */
+        if (paused || !r.height || r.top < ceil - 0.5 || r.bottom > floor + 0.5 || bellHang.classList.contains("ring")) return;
+        bellHang.classList.add("ring"); bellSeen.disconnect(); window.removeEventListener("scroll", bellLook);
+      };
+      var bellLook = function () { if (!bellT) bellT = setTimeout(bellCheck, 120); };
+      var bellSeen = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting) { window.addEventListener("scroll", bellLook); bellLook(); } else window.removeEventListener("scroll", bellLook); });
+      });
+      bellSeen.observe(bellImg);
+    }
     new IntersectionObserver(function (es) { es.forEach(function (e) { onScreen = e.isIntersecting; }); snowing(); }).observe(snow);
     document.addEventListener("visibilitychange", snowing);
     onStill(snowing);   /* reduced motion turned on mid-visit: the snow stops (the CSS hides the canvas and the button) */
     snowing();
+  }
+
+  /* ---------- SEASONAL Christmas 2026 — Merlin says hello (Elise 16/10, 12th message: her video, "put it where it fits").
+     The hero photo comes alive: the same scene (its first frame is the photo, tone-matched), played once (10 s, muted —
+     the sound is not used), then it fades back to the photo. It starts after the page has loaded, only while the hero is
+     on screen, never for visitors who ask for less motion or save data, and a button pauses it or plays it again
+     (WCAG 2.2.2). Phones get a 4:3 cut of it, like the phone photo. Decoration only: the photo's alt text says it all. */
+  var heroPic = document.querySelector(".hero-pic"), heroImg = heroPic && heroPic.querySelector(".hero-photo"), heroBox = document.querySelector(".hero");
+  var probe = document.createElement("video");
+  /* WebM (VP9) where it plays, else MP4 (H.264): between them every current browser */
+  var heroType = !probe.canPlayType ? "" : probe.canPlayType('video/webm; codecs="vp9"') ? ".webm" : probe.canPlayType('video/mp4; codecs="avc1.640028"') ? ".mp4" : "";
+  if (christmas && heroImg && heroBox && heroType && !calm && !(navigator.connection && navigator.connection.saveData) && "IntersectionObserver" in window) {
+    var heroWide = window.matchMedia("(min-width: 600px)"), heroBg = window.matchMedia("(min-width: 900px)");   /* wide cut from 600px; the photo is a background (absolute) from 900px */
+    var heroOn = false, heroReady = false, heroStopped = false, heroVideo = null, heroBtn = null;
+    var heroFile = function () { return "../assets/video/" + (heroWide.matches ? "hero-merlin-960" : "hero-merlin-phone-640") + heroType; };
+    /* the video sits exactly on the photo's box — inside it, never a pixel larger (so the photo stays the page's
+       largest paint), and with the photo's own drift transform */
+    var heroFit = function () {
+      if (!heroVideo) return;
+      var b = heroBox.getBoundingClientRect(), r = (heroBg.matches ? heroPic : heroImg).getBoundingClientRect();
+      var L = Math.ceil(r.left - b.left), T = Math.ceil(r.top - b.top);
+      heroVideo.style.left = L + "px"; heroVideo.style.top = T + "px";
+      heroVideo.style.width = Math.max(0, Math.floor(r.right - b.left) - L) + "px"; heroVideo.style.height = Math.max(0, Math.floor(r.bottom - b.top) - T) + "px";
+      heroVideo.style.transform = heroImg.style.transform;
+    };
+    var heroLabel = function () {
+      var playing = heroVideo && !heroVideo.paused && !heroVideo.ended;
+      heroBtn.textContent = playing ? "Pause video" : "Play video";
+      heroBtn.className = "hero-play" + (playing ? "" : " is-stopped");
+    };
+    var heroShow = function (on) { heroVideo.className = "hero-video" + (on ? " on" : ""); };
+    var heroPlay = function () {   /* play() buffers by itself (iOS waits for it before loading); a refusal leaves the photo and the button */
+      var p = heroVideo.play();
+      heroLabel();   /* "Pause video" from the moment it is asked to play: a tap while it loads holds it */
+      if (p && p.catch) p.catch(function () { heroShow(false); heroLabel(); });
+    };
+    var heroMay = function () { return !(still && still.matches) && !(navigator.connection && navigator.connection.saveData); };
+    var heroStart = function () {
+      heroVideo = document.createElement("video");
+      heroVideo.className = "hero-video";
+      heroVideo.muted = true; heroVideo.defaultMuted = true; heroVideo.setAttribute("muted", "");
+      heroVideo.setAttribute("playsinline", ""); heroVideo.setAttribute("aria-hidden", "true"); heroVideo.setAttribute("tabindex", "-1");
+      heroVideo.preload = "auto";
+      heroVideo.src = heroFile();
+      heroPic.parentNode.insertBefore(heroVideo, heroPic.nextSibling);
+      heroImg.follower = heroVideo;
+      heroBtn = document.createElement("button");
+      heroBtn.type = "button";
+      heroBox.appendChild(heroBtn);
+      heroFit();
+      heroVideo.addEventListener("playing", function () { heroShow(true); heroLabel(); });   /* fade in on a real frame */
+      heroVideo.addEventListener("ended", function () { heroShow(false); heroLabel(); });
+      heroVideo.addEventListener("pause", heroLabel);
+      heroBtn.addEventListener("click", function () {
+        if (heroVideo.paused || heroVideo.ended) { heroStopped = false; if (heroVideo.ended) heroVideo.currentTime = 0; heroPlay(); }
+        else { heroStopped = true; heroVideo.pause(); }
+      });
+      heroLabel();
+      if ("ResizeObserver" in window) new ResizeObserver(heroFit).observe(heroBox); else window.addEventListener("resize", heroFit);
+      /* a phone turned sideways (or a window widened past 600px) gets the wide cut; the 4:3 cut would show Merlin cropped */
+      var heroSwap = function () {
+        if (!heroWide.matches || heroVideo.src.indexOf("phone-640") < 0) return;
+        if (heroVideo.ended) heroStopped = true;   /* already played once: it stays the photo */
+        heroVideo.pause(); heroShow(false);
+        heroVideo.src = heroFile(); heroVideo.load();
+        if (heroOn && !heroStopped) heroPlay(); else heroLabel();   /* playing (or about to) when turned: it goes on, from the start */
+      };
+      if (heroWide.addEventListener) heroWide.addEventListener("change", heroSwap); else if (heroWide.addListener) heroWide.addListener(heroSwap);
+      onStill(function () { if (still.matches) { heroStopped = true; heroVideo.pause(); heroShow(false); } });
+      if (heroOn) heroPlay();
+    };
+    /* the photo itself is watched (half of it in view), not the whole hero: on a landscape phone the words fill the
+       first screen and the photo is below them */
+    new IntersectionObserver(function (es) {
+      es.forEach(function (e) { heroOn = e.isIntersecting; });
+      if (!heroVideo) { if (heroReady && heroOn && heroMay()) heroStart(); return; }   /* first view after load, wherever it happens — unless less motion or data saving was asked for meanwhile */
+      if (!heroOn && !heroVideo.paused) heroVideo.pause();                                   /* scrolled away: hold */
+      else if (heroOn && heroVideo.paused && !heroVideo.ended && !heroStopped) heroPlay();   /* back (or first time): play */
+    }, { threshold: 0.5 }).observe(heroImg);
+    var heroLater = function () { setTimeout(function () { heroReady = true; if (!heroVideo && heroOn && heroMay()) heroStart(); }, 600); };
+    if (document.readyState === "complete") heroLater(); else window.addEventListener("load", heroLater);
   }
 })();

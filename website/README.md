@@ -266,18 +266,28 @@ quả thông** cắt từ ảnh Merlin của chị (ảnh 15) treo góc trái d�
 ảnh Merlin, viền vầng sáng 3px. Ảnh: `xmas-pine-corner.webp`, `xmas-pine-ground.webp`, `xmas-bough.webp` (18–24 KB).
 Mọi thứ theo công tắc mùa, gỡ cùng mục Giáng sinh. Không làm: lá/tuyết rơi trên ảnh đầu trang (đè video Merlin), cành
 thông ở tiêu đề "Build your gift", vòng hoa hộp quà (lặp ảnh).
+**Chốt 16/10, tin nhắn 14 — thời gian giao còn lại + "Ships within":** hộp quà tân gia và lịch làm 3–5 ngày, giao
+2–3 ngày ở Pearland, 3–6 ngày nơi khác ở Mỹ (trừ Alaska, Hawaii — trang ghi "Alaska and Hawaii: longer"); hộp
+Confirmation thánh làm theo yêu cầu = như búp bê (thời gian hàng len); thánh có sẵn giao từ 12/11: 2 ngày ở Pearland,
+3–7 ngày trong nước. Số của hộp quà/lịch/thánh có sẵn không phải số mùa lễ nên giữ sau mùa; len và tranh ngoài mùa vẫn
+"delivered within 15 days". Thẻ sản phẩm: "Turnaround: …" → **"Ships within 3 weeks"** (búp bê, thú cưng, godparent),
+**"Ships within 5 days"** (tranh, hộp tân gia) — chị đồng ý đề xuất FTC. Mục Giáng sinh: danh sách 4 dòng (`.xmas-times`)
+"Holiday timing, for orders placed by these dates". Sau hạn đặt (len 8/11; tranh, lịch, hộp quà kể cả thánh có sẵn
+15/11) hộp "What's inside" ghi "delivered in 2027" như câu của chị trong mục Giáng sinh. Tranh kèm chuỗi tràng hạt móc
+len theo thời gian hàng len. Code: `TIMING`, `timingKind()`, `timingNote()` trong `prices.js`; `orderBy()`/`isLate()`
+đầu `custom-orders.js` đọc hai `<time>` (`#xmas-by-crochet`, `#xmas-by-paint`).
 **Chốt 16/10, tin nhắn 13 — thời gian làm & giao:** mùa lễ: hàng len làm 2–3 tuần, giao 3 ngày–1 tuần trong Texas /
 2–3 tuần nơi khác ở Mỹ; tranh làm 3–5 ngày, giao 3 ngày–1 tuần (2–3 ngày ở Pearland); ngoài mùa lễ giao tối đa 15 ngày.
-Code: `TIMING` + `timingNote()` trong `prices.js` (hộp "What's inside" khi ship), câu "Holiday timing" trong mục Giáng sinh.
+Code: `TIMING` + `timingNote()` trong `prices.js` (hộp "What's inside" khi ship), danh sách "Holiday timing" trong mục Giáng sinh.
 **Chốt 16/10, tin nhắn 12:** (1) Thánh có sẵn không chọn mắt — đúng ý chị. (2) **Bảng màu len** từ catalog Canva
 của chị: chỉ lấy 6 trang chọn len (cotton trơn ×2, cotton mix, velvet ×2, fluffy — trang fluffy ghi "+$15–30", khớp
 giá Fluffy trên trang), **không gắn link catalog** (các trang giá lệch giá trang). Ở bước "Yarn" của Custom Pet
 Crochet: "See every yarn color" (đóng sẵn, ảnh chỉ tải khi mở; mỗi trang mở cỡ lớn để đọc mã), khách ghi mã màu (vd.
 C-25, V-04) trong đơn. Ảnh: `assets/img/custom/yarn-book-*.webp` (render 2x từ trang Canva, cắt bỏ thanh công cụ).
-(3) **Thời gian giao**: "delivery takes 2–3 weeks after it's finished" (chị: Thanksgiving, Christmas làm vận chuyển
-chậm) — trong "How it works" bước 4 (`.xmas-only`) và dòng ghi chú trong hộp "What's inside" khi chọn ship (không hiện
-khi nhận tại chỗ, file digital, bộ váy làm sẵn); **theo công tắc mùa**; tạm không ghi trong mục Giáng sinh (chờ chị chốt
-hạn đặt, xem TONG-HOP "Còn chờ chị" 1). Trang len đã cắt chỉ còn lưới màu (bỏ chữ "COLOURS", "overleaf", chữ lỗi trang
+(3) **Thời gian giao**: chị nói giao 2–3 tuần sau khi làm xong (Thanksgiving, Christmas làm vận chuyển chậm) — **đã
+thay bằng số chi tiết của tin nhắn 13 và 14 ở trên**: dòng ghi chú trong hộp "What's inside" khi chọn ship (không hiện
+khi nhận tại chỗ, file digital, bộ váy làm sẵn) và danh sách trong mục Giáng sinh; "How it works" không ghi số cố định.
+Trang len đã cắt chỉ còn lưới màu (bỏ chữ "COLOURS", "overleaf", chữ lỗi trang
 Fluffy, dòng hội chợ, tên "Baby pink" của V-03, ô trống) + danh sách mã và tên dạng chữ ("Codes and names as text"). Câu "allow 2–4 weeks" (thời gian làm, chị chốt 16/10) giữ
 nguyên. (4) **Video Merlin** (`assets/video/hero-merlin-960.{webm,mp4}` + bản điện thoại 4:3
 `hero-merlin-phone-640.*`, 260–470 KB): ảnh đầu trang "sống dậy" — khung đầu = ảnh hero (đã chỉnh tông khớp ảnh), phát

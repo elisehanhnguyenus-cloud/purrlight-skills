@@ -512,6 +512,10 @@ p { margin: 0; }
 .deadlines dd { margin-left: auto; }
 .deadlines strong { font-weight: 600; }
 .xmas-note { font-size: 16px; }
+.xmas-times ul { margin: 6px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.xmas-times li { position: relative; padding-left: 16px; font-size: 15px; line-height: 1.45; }
+.xmas-times li::before { content: ""; position: absolute; left: 2px; top: 0.6em; width: 6px; height: 6px; border-radius: 50%; background: var(--peach); }   /* a small peach dot: decoration only */
+.xmas-times strong { font-weight: 600; }
 .xmas-note .hand { font-family: var(--font-hand); font-weight: 600; font-size: 1.35em; line-height: 1; color: var(--ink); vertical-align: baseline; }
 /* 900–1023px: the words would run onto the photo (text contrast < 4.5:1) — the photos step back a little */
 @media (min-width: 900px) and (max-width: 1023px) { .hero-pic { width: 54%; } .xmas-pic { width: 52%; } }

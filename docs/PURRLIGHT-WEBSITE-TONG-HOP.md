@@ -1012,14 +1012,39 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   weeks to make, then 3 days–1 week to reach you in Texas, or 2–3 weeks elsewhere in the U.S. Paintings take 3–5 days,
   then 3 days–1 week (2–3 days in Pearland)." Bỏ câu "allow 2–4 weeks". "How it works" không ghi số cố định.
 - Kiểm tra hạn đặt với số mới: len đặt 8/11 → làm ≤3 tuần + giao ≤3 tuần → ≤20/12 (trước Giáng sinh); tranh đặt 15/11
-  → ≤27/11. Không còn mâu thuẫn.
+  → ≤27/11. Hai hạn đặt khớp với số mới. **Còn một chỗ vênh (kiểm tra lại tìm ra, đã sửa):** đơn đặt *sau* hạn vẫn hiện
+  thời gian mùa lễ (vd. búp bê đặt 20/11 "made in 2–3 weeks · delivered in 3 days–1 week", tức tới trước Giáng sinh),
+  trái với câu "Orders placed after these dates will be delivered in 2027" → câu thời gian trong mục Giáng sinh giờ ghi
+  rõ "for orders placed by these dates", và qua hạn thì hộp ghi "delivered in 2027".
+- Kiểm tra lại (bản 64dc8d5) tìm thêm, đã sửa: nút video ghi "Play video" trong lúc đang tải (bấm thì huỷ phát) → ghi
+  "Pause video" ngay khi bắt đầu phát; xoay điện thoại khi video đang chạy làm video dừng hẳn → chạy tiếp bản ngang (khách
+  đã bấm dừng thì vẫn dừng); bật giảm chuyển động trước khi thấy ảnh đầu trang vẫn tạo video → không tạo; ngoài mùa lễ
+  hộp quà/lịch/Confirmation hiện "15 ngày" dù chị chưa cho số → chỉ món có số; tranh digital + chuỗi tràng hạt (chỉ gửi
+  chuỗi móc len) hiện thời gian tranh → theo hàng len; chuông không bao giờ lắc ở màn 900–1100px (chuông lệch nửa điểm
+  ảnh nên không bao giờ "hiện đủ 100%") và trên điện thoại lắc sau thanh đặt hàng → đo trực tiếp khi chuông trên màn hình,
+  chỉ lắc khi đã ra khỏi thanh đặt hàng.
+
+### Elise 16/10, tin nhắn 14 — thời gian giao còn lại, đồng ý "Ships within"
+- **Hộp quà tân gia & lịch:** làm 3–5 ngày; giao 2–3 ngày ở Pearland, 3–6 ngày thành phố / tiểu bang khác (trừ Alaska,
+  Hawaii). **Hộp Confirmation:** thánh làm theo yêu cầu y như búp bê (ship từ VN 2–3 tuần dịp cuối năm); thánh có sẵn
+  (ready to ship) từ 12/11: 2 ngày ở Pearland, 3–7 ngày trong nước Mỹ. **Hàng custom, khách ở Pearland:** tối đa 15 ngày
+  nếu hàng phải ship từ xưởng ở Việt Nam. **"ok đề xuất shipping"** = đồng ý đổi "Turnaround" thành "Ships within".
+- Trang: thẻ sản phẩm "Ships within 3 weeks" (búp bê, thú cưng, godparent), "Ships within 5 days · digital files sent
+  within 5 days" (tranh), "Ships within 5 days" (hộp tân gia), Christening: "… Confirmation gift box: ready after Nov 12;
+  a saint made for you takes 2–3 weeks". Hộp "What's inside" khi ship: hộp tân gia/lịch "made in 3–5 days · delivered in
+  2–3 days in Pearland, 3–6 days elsewhere" (ngoài Texas "delivered in 3–6 days (Alaska and Hawaii: longer)"); thánh có
+  sẵn "delivered in 2 days in Pearland, 3–7 days elsewhere"; thánh làm theo yêu cầu = hàng len; tranh trong Texas thêm
+  "(2–3 days in Pearland)". Mục Giáng sinh: danh sách 4 dòng (len · tranh · hộp tân gia & lịch · hàng có sẵn).
+- Em tự chọn (chờ chị xác nhận, xem dưới): số của hộp quà/lịch/thánh có sẵn giữ cả sau mùa lễ (không phải số cao điểm);
+  thánh có sẵn theo hạn 15/11 của "gift boxes"; Alaska/Hawaii ghi "longer".
 
 ### Còn chờ chị
-1. Ý 3 tin nhắn của chị bị cắt: "Hàng custom Khách tại Pearland thì tối đa 15 ngày nếu hàng phải ship từ Wo…" — ship từ
-   đâu? (để em ghi đúng cho khách nhận tại Pearland)
-2. Hộp quà (tân gia), lịch, hộp Confirmation: thời gian làm & giao mùa lễ?
-3. **FTC (16 CFR 435, xem 8j):** đổi "Turnaround: from 2 weeks" thành "ships within 3 weeks" (len, mùa lễ) / "ships
-   within 5 days" (tranh) theo số chị vừa cho — chị đồng ý không?
+1. **Khách ở Pearland, hàng từ xưởng VN "tối đa 15 ngày":** 15 ngày tính từ lúc nào — (a) từ khi làm xong (tức hàng len
+   mùa lễ = làm 2–3 tuần + tối đa 15 ngày), hay (b) tổng từ lúc đặt? Và khách ở chỗ khác trong Texas: vẫn 3 ngày–1 tuần
+   (tin 13) hay cũng chờ hàng từ VN? Trang hiện vẫn ghi theo tin 13 (Texas 3 ngày–1 tuần), chưa đưa số 15 ngày.
+2. **Thánh có sẵn đặt sau 15/11:** vẫn kịp Giáng sinh (giao 2–7 ngày) hay cũng "giao năm 2027" như hạn của gift boxes?
+   Trang hiện ghi "delivered in 2027" cho đơn sau 15/11 (an toàn hơn).
+3. **Alaska, Hawaii:** giao mất bao lâu, có ship không? Trang ghi "(Alaska and Hawaii: longer)".
 4. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
    cấp?). Trang Fluffy ghi "thêm khoảng 2 tuần làm" — trang web chưa đưa, chị xác nhận nếu muốn ghi.

@@ -19,12 +19,13 @@
   if (new Date() >= SEASON_END) document.documentElement.removeAttribute("data-season");
   var christmas = document.documentElement.getAttribute("data-season") === "christmas";
   /* an order-by date from the Christmas band's own <time> (the dates live in one place): through the end of that day
-     in the visitor's time. Past it, that kind of piece is delivered in 2027 (the band says so, and so does the box). */
+     in the visitor's time. Past it, that kind of piece still ships as usual but may not arrive by Christmas (the band
+     says so, and so does the box). */
   var orderBy = function (id) {
     var t = christmas && document.getElementById(id), d = t && /^(\d{4})-(\d{2})-(\d{2})$/.exec(t.getAttribute("datetime") || "");
     return d ? new Date(+d[1], +d[2] - 1, +d[3], 23, 59, 59) : null;
   };
-  var ORDER_BY = { yarn: "xmas-by-crochet", paint: "xmas-by-paint", box: "xmas-by-paint", saint: "xmas-by-paint" };   /* timingKind() → the band's <time>: crochet; paintings, calendars & gift boxes */
+  var ORDER_BY = { yarn: "xmas-by-crochet", fluffy: "xmas-by-crochet", paint: "xmas-by-paint", box: "xmas-by-paint" };   /* timingKind() → the band's <time>: crochet; paintings, calendars & gift boxes. A saint we have ready arrives in the holidays whenever ordered (Elise 17/10) */
   var isLate = function (kind) { var d = ORDER_BY[kind] ? orderBy(ORDER_BY[kind]) : null; return !!d && new Date() > d; };
 
   /* ---------- site nav (same behavior as the main site) ---------- */
@@ -437,8 +438,6 @@
     var end = art.querySelector(".box-end");
     var storeKey = "purrlight-custom-pick:" + key;
     var g = { id: art.id, key: key, def: def, art: art, est: null, text: "", swaps: {} };
-    /* SEASONAL Christmas 2026: the card's lead times that hold only until an order-by date (<span data-late="kind">) */
-    var lateBits = [].slice.call(art.querySelectorAll(".turnaround [data-late]")).map(function (s) { return { el: s, text: s.textContent }; });
 
     /* estimate · deposit today · balance after the photo is approved */
     var totalRow = el("p", { "class": "box-total" });
@@ -680,17 +679,12 @@
       depositRow.appendChild(el("span", { text: "Deposit today (50%)" })); depositRow.appendChild(el("strong", { "class": "amt", text: db[0] }));
       balanceRow.appendChild(el("span", { text: "Balance after you approve the photo" })); balanceRow.appendChild(el("span", { "class": "amt", text: db[1] }));
       if (fromUser) g.goneNote = "";
-      var shipping = !est.digitalOnly && (v.getit === "ship" || v.getit === "out" || !GET_IT[v.getit]);
-      /* when it is made and delivered (Elise 16/10): the holiday timing by kind of piece in the season ("delivered in
-         2027" past its order-by date), 15 days after the season */
+      /* when it is made and delivered (Elise 16–17/10): the holiday timing by kind of piece in the season ("may not
+         arrive by Christmas" added past its order-by date), 15 days after the season; nothing for a digital file or a
+         piece already made (it says its own "Ready …") */
+      var how = est.digitalOnly || est.readyMade ? "" : v.getit === "sat" || v.getit === "sun" ? "pickup" : v.getit === "out" ? "out" : "ship";
       var tk = timingKind(key, est);
-      /* SEASONAL Christmas 2026: past its order-by date a card's "Ships within …" would contradict "delivered in 2027" —
-         it says the band's words instead (its data-late-text, else "Orders placed now …"); checked whenever the box updates */
-      lateBits.forEach(function (b) {
-        var late = christmas && isLate(b.el.getAttribute("data-late"));
-        b.el.textContent = late ? b.el.getAttribute("data-late-text") || "Orders placed now are delivered in 2027" : b.text;
-      });
-      noteRow.textContent = [est.note, est.digitalOnly ? "" : (GET_IT[v.getit] || GET_IT.ship).short, shipping && !est.readyMade ? timingNote(tk, v.getit, christmas, isLate(tk)) : ""].filter(Boolean).join(" · ") + (g.goneNote ? " " + g.goneNote : "");
+      noteRow.textContent = [est.note, est.digitalOnly ? "" : (GET_IT[v.getit] || GET_IT.ship).short, how ? timingNote(tk, how, christmas, isLate(tk)) : ""].filter(Boolean).join(" · ") + (g.goneNote ? " " + g.goneNote : "");
       copied.textContent = "";
       if (fromUser) store(storeKey, { v: v, swaps: g.swaps, u: 1, auto: g.auto || 0 });   /* a plain page view remembers nothing */
       if (g === current) setBarThumb(g);
@@ -1143,7 +1137,7 @@
     var pen = snow.getContext("2d"), flakes = [], gems = [], leaves = [], sw = 0, sh = 0, dpr = 1, running = false, onScreen = false, bandOn = false, last = 0, frame = 0;
     var MERLIN = { wide: [0.59, 0.77], phone: [0.47, 0.71] };   /* his column (ears to paws) in xmas-merlin2-wide-* and -phone-*, as fractions of the image width — measure again if the photo changes */
     var GOLD = "#CA8D41", EDGE = "#FBF6EE", SHADE = "rgba(74, 66, 59, 0.13)", VEIN = "rgba(74, 66, 59, 0.42)";
-    var keep0 = -1, keep1 = -1, laneMin = 0, small = false, artKey = "", dotArt = [], gemArt = [], leafArt = [];
+    var keep0 = -1, keep1 = -1, laneMin = 0, small = false, artKey = "", fitKey = "", dotArt = [], gemArt = [], leafArt = [];
     var sprite = function (w, h, draw) {
       var c = document.createElement("canvas"), g;
       c.width = Math.ceil(w * dpr); c.height = Math.ceil(h * dpr); c.w = w; c.h = h;
@@ -1245,6 +1239,10 @@
       sw = Math.round(p.width); sh = Math.round(p.height);
       snow.style.left = Math.round(p.left - b.left - band.clientLeft) + "px";
       snow.style.top = Math.round(p.top - b.top - band.clientTop) + "px";
+      /* the band grew or shrank around a photo of the same size ("See holiday timing", phones): the flakes stay put */
+      var size = sw + "x" + sh + "@" + dpr + (img && img.naturalWidth ? "+" : "") + (img ? window.getComputedStyle(img).objectPosition : "");
+      if (size === fitKey) return;
+      fitKey = size;
       snow.style.width = sw + "px"; snow.style.height = sh + "px";
       snow.width = Math.round(sw * dpr); snow.height = Math.round(sh * dpr);
       pen.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -1353,6 +1351,13 @@
     document.addEventListener("visibilitychange", snowing);
     onStill(snowing);   /* reduced motion turned on mid-visit: the snow stops (the CSS hides the canvas and the button) */
     snowing();
+  }
+
+  /* print: the holiday timing list opens for the paper, then goes back the way the reader left it */
+  var xTimes = document.querySelector(".xmas-times"), xTimesOpen = false;
+  if (xTimes) {
+    window.addEventListener("beforeprint", function () { xTimesOpen = xTimes.open; xTimes.open = true; });
+    window.addEventListener("afterprint", function () { xTimes.open = xTimesOpen; });
   }
 
   /* ---------- SEASONAL Christmas 2026 — Merlin says hello (Elise 16/10, 12th message: her video, "put it where it fits").

@@ -76,8 +76,10 @@ chỉ đường).
 **Cấu hình** — tất cả ở đầu `js/event-desk.js` (`DESK_CONFIG`) và trong nút
 ⚙ trên trang (tên sự kiện, tên người đứng booth, mã máy, chế độ thuế). Mỗi con
 số/câu chữ đều có chú thích nguồn ngay cạnh: bảng giá custom (Elise duyệt
-25/09/2026), điều khoản cọc 50% (25/09), lead time 2 tuần / 5 tuần mùa lễ
-(25/09), câu "10–14 days once it leaves our workshop" (skill CSKH), dòng
+25/09/2026), điều khoản cọc 50% (25/09), thời gian làm & giao (Elise 16–17/10, giống trang
+Custom Orders: hàng custom mùa lễ làm 2–3 tuần — len Fluffy thêm khoảng 2 tuần — rồi 2–3 tuần
+từ xưởng Việt Nam tới khách, trong 15 ngày tới Pearland; ngoài mùa lễ tới khách trong 15 ngày;
+hàng làm theo đơn ngoài mùa lễ vẫn "typically 10–14 days" của skill CSKH), dòng
 safety nguyên văn (Brand Canon v2).
 
 **Luật đã cài cứng trong tool** (đừng gỡ): không có ô nhập ngày giao — chỉ có
@@ -266,6 +268,17 @@ quả thông** cắt từ ảnh Merlin của chị (ảnh 15) treo góc trái d�
 ảnh Merlin, viền vầng sáng 3px. Ảnh: `xmas-pine-corner.webp`, `xmas-pine-ground.webp`, `xmas-bough.webp` (18–24 KB).
 Mọi thứ theo công tắc mùa, gỡ cùng mục Giáng sinh. Không làm: lá/tuyết rơi trên ảnh đầu trang (đè video Merlin), cành
 thông ở tiêu đề "Build your gift", vòng hoa hộp quà (lặp ảnh).
+**Chốt 17/10 — chị trả lời các câu hỏi về thời gian giao:** (1) chờ hàng từ xưởng Việt Nam chỉ áp dụng cho **hàng len
+móc làm theo đơn**; hàng có sẵn giao ngay → len làm theo đơn: làm 2–3 tuần, rồi **2–3 tuần tới khách, trong 15 ngày
+ở Pearland** (cả khách nhận tại Pearland Town Center: "ready for pickup within 15 days after that"); câu "3 ngày–1 tuần
+trong Texas" của tin 13 không còn dùng cho len làm theo đơn. (2) **Đơn sau hạn vẫn gửi như thường** → bỏ "delivered in
+2027": mục Giáng sinh ghi "Orders placed after these dates still ship, but may not arrive by Christmas.", hộp thêm
+"may not arrive by Christmas" (nhận tại chỗ: "may not be ready by Christmas"); thẻ "Ships within …" giữ nguyên quanh năm.
+(3) Thánh có sẵn đặt sau 15/11 vẫn giao kịp mùa lễ → không ghi gì thêm. (4) **Alaska, Hawaii: 7–8 ngày trở lên** (hộp khi
+ship ngoài Texas; dòng riêng trong danh sách mục Giáng sinh). (5) **Len Fluffy thêm khoảng 2 tuần** → thẻ "Ships within
+3 weeks · Fluffy yarn: within 5 weeks", ô Fluffy ghi "about 2 weeks more to make", hộp "made in 4–5 weeks". (6) Event
+Desk đổi theo số mới (`timelines` trong `js/event-desk.js`). Mục Giáng sinh: danh sách thời gian gập sau nút
+"See holiday timing" (17/10, chị đồng ý), mục đứng yên khi mở (căn trên, không căn giữa), in ra thì tự mở danh sách.
 **Chốt 16/10, tin nhắn 14 — thời gian giao còn lại + "Ships within":** hộp quà tân gia và lịch làm 3–5 ngày, giao
 2–3 ngày ở Pearland, 3–6 ngày nơi khác ở Mỹ (trừ Alaska, Hawaii — trang ghi "Alaska and Hawaii: longer"); hộp
 Confirmation thánh làm theo yêu cầu = như búp bê (thời gian hàng len); thánh có sẵn giao từ 12/11: 2 ngày ở Pearland,

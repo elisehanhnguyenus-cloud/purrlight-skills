@@ -522,7 +522,7 @@ p { margin: 0; }
 /* 900–1023px: the words would run onto the photo (text contrast < 4.5:1) — the photos step back a little */
 @media (min-width: 900px) and (max-width: 1023px) { .hero-pic { width: 54%; } .xmas-pic { width: 52%; } }
 @media (min-width: 900px) {
-  .christmas { padding: 0; min-height: clamp(480px, 38vw, 600px); display: flex; align-items: center; }
+  .christmas { padding: 0; min-height: clamp(480px, 38vw, 600px); display: flex; align-items: flex-start; }   /* top, not centred: "See holiday timing" opens downward and stays under the pointer */
   .xmas-inner { max-width: var(--wrap); padding-top: 88px; padding-bottom: 56px; }   /* 88px: below Merlin's bell (it ends 78px down) even when large text makes the band taller than its min-height */
   .xmas-text { max-width: 430px; }
   .xmas-pic { position: absolute; top: 0; right: 0; bottom: 0; width: 60%; }
@@ -771,4 +771,4 @@ html[data-season="christmas"] .glints-lamp i:nth-child(1), html[data-season="chr
 @media (prefers-reduced-motion: reduce) { .xmas-snow { display: none; } }
 @keyframes co-twinkle { 0%, 100% { opacity: 1; transform: scale(1) rotate(0); } 50% { opacity: 0.35; transform: scale(0.6) rotate(25deg); } }
 @keyframes co-bulb { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }   /* a soft breath, not a blink */
-@media print { .xmas-snow { display: none; } }
+@media print { .xmas-snow { display: none; } .xmas-times[open] > summary { display: none; } }   /* printing opens the timing list (custom-orders.js); the toggle means nothing on paper */

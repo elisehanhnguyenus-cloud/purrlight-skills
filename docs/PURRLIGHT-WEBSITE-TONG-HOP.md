@@ -276,9 +276,10 @@ hello@purrlight.studio):
 **Số liệu và câu chữ có nguồn** (ghi ngay trong `DESK_CONFIG`): bảng giá
 custom cat Petite 40/48/55 · Classic 55/67/79 · Grand 90/105/120 (Yaoh
 Cotton / Chenille Velvet / Rabbit Fluff Fur), doll Petite 45/85 · Classic
-85/160 · Grand 130/245 (Elise 25/09/2026); lead time 2 tuần, +3 tuần mùa
-Tạ ơn–Giáng sinh (Elise 25/09); "typically 10–14 days once it leaves our
-workshop, though customs can add time" (skill CSKH); thuế 8.25% (P&L hội
+85/160 · Grand 130/245 (Elise 25/09/2026); thời gian làm & giao **đổi 17/10** theo số mới
+của chị (như trang Custom Orders): hàng custom mùa lễ làm 2–3 tuần (Fluffy thêm khoảng 2 tuần),
+rồi 2–3 tuần từ xưởng tới khách, trong 15 ngày tới Pearland; ngoài mùa lễ tới khách trong 15 ngày;
+hàng làm theo đơn ngoài mùa lễ "typically 10–14 days … though customs can add time" (skill CSKH); thuế 8.25% (P&L hội
 chợ 05/09) nhưng **mặc định không ghi thuế** vì permit chưa có (Booth Kit
 18/09); thanh toán Cash / Card (Square) / Zelle (Booth Kit 25/09).
 
@@ -1050,26 +1051,31 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 - Em tự chọn (chờ chị xác nhận, xem dưới): số của hộp quà/lịch/thánh có sẵn giữ cả sau mùa lễ (không phải số cao điểm);
   thánh có sẵn theo hạn 15/11 của "gift boxes"; Alaska/Hawaii ghi "longer".
 
+### Elise 17/10 — trả lời câu hỏi thời gian giao; mục Giáng sinh gọn lại
+- **Mục "Ordering for Christmas" quá dài → tối giản:** trên trang chỉ còn tiêu đề, hai hạn đặt, câu sau hạn, nút **"See
+  holiday timing"** (chị: để chữ nào cũng được) và câu "order early". Kiểm tra độc lập tìm ra, đã sửa: mở danh sách làm cả
+  mục nhảy (nút chạy khỏi con trỏ, ảnh Merlin phóng to, tuyết xếp lại) → mục căn trên; in trang mất danh sách → khi in tự
+  mở danh sách và ẩn nút.
+- **Chờ hàng từ xưởng Việt Nam chỉ với hàng len móc làm theo đơn; hàng có sẵn giao ngay.** Trang: len làm theo đơn "made
+  in 2–3 weeks · delivered in 2–3 weeks (within 15 days in Pearland)"; ngoài Texas "delivered in 2–3 weeks"; nhận tại
+  Pearland Town Center "ready for pickup within 15 days after that". Em hiểu **15 ngày tính từ khi làm xong** (chị chép
+  lại câu hỏi của em kèm dấu hỏi — nếu sai chị nói em sửa).
+- **Đơn sau hạn vẫn gửi như thường** → "Orders placed after these dates still ship, but may not arrive by Christmas.";
+  hộp thêm "may not arrive by Christmas"; thẻ "Ships within …" không đổi nữa.
+- **Thánh có sẵn sau 15/11 vẫn kịp mùa lễ** → không ghi gì thêm. **Alaska, Hawaii: 7–8 ngày trở lên.**
+- **Len Fluffy thêm khoảng 2 tuần** (chị OK): thẻ thú cưng "Ships within 3 weeks · Fluffy yarn: within 5 weeks", ô Fluffy
+  "about 2 weeks more to make", hộp "made in 4–5 weeks".
+- **Event Desk** đổi theo số mới (câu khách đọc trong tin nhắn / trang xác nhận đơn) + cập nhật bản dùng ở booth.
+
 ### Còn chờ chị
-1. **Khách ở Pearland, hàng từ xưởng VN "tối đa 15 ngày":** 15 ngày tính từ lúc nào — (a) từ khi làm xong (tức hàng len
-   mùa lễ = làm 2–3 tuần + tối đa 15 ngày), hay (b) tổng từ lúc đặt? Và khách ở chỗ khác trong Texas: vẫn 3 ngày–1 tuần
-   (tin 13) hay cũng chờ hàng từ VN? Trang hiện vẫn ghi theo tin 13 (Texas 3 ngày–1 tuần), chưa đưa số 15 ngày.
-2. **Thánh có sẵn đặt sau 15/11:** vẫn kịp Giáng sinh (giao 2–7 ngày) hay cũng "giao năm 2027" như hạn của gift boxes?
-   Trang hiện ghi "delivered in 2027" cho đơn sau 15/11 (an toàn hơn).
-3. **Alaska, Hawaii:** giao mất bao lâu, có ship không? Trang ghi "(Alaska and Hawaii: longer)".
-4. **Đơn đặt sau hạn (sau 8/11 với len, sau 15/11 với tranh/lịch/hộp quà):** chị ship ngay như thường (vd. hộp tân gia
-   5 ngày) hay để sang tháng 1? Hai câu "Ships within …" và "delivered in 2027" không thể cùng đúng. Trang hiện theo câu
-   của chị "Orders placed after these dates will be delivered in 2027": qua hạn thì thẻ ghi "Orders placed now are
-   delivered in 2027". Nếu vẫn ship ngay, em đổi câu đó thành kiểu "may not arrive before Christmas".
-5. **Len Fluffy** (catalog ghi "thêm khoảng 2 tuần làm"): nếu đúng, thẻ "Ships within 3 weeks" ở thú cưng móc len sai
-   với đơn Fluffy — em sẽ ghi thêm "(Fluffy: within 5 weeks)".
-6. Event Desk (máy bán hàng ở booth) còn ghi thời gian làm hàng custom cũ (25/09: khoảng 2 tuần, mùa lễ khoảng 5 tuần,
-   giao 10–14 ngày) — chị muốn em đổi theo số mới không?
-7. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
+1. **Hạn đặt cho len Fluffy:** làm 4–5 tuần + giao 2–3 tuần → đặt 8/11 chậm nhất có thể tới khoảng 3/1, sau Giáng sinh. Chị
+   muốn thêm hạn riêng cho Fluffy không? (25/10 thì chậm nhất tới khoảng 20/12, như các món len khác)
+2. **Ngoài mùa lễ, len Fluffy** mất bao lâu? (từ 2/1/2027 hộp không ghi gì cho Fluffy, các món len khác ghi "within 15 days").
+3. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
    cấp?).
-8. Video Merlin có tiếng nói không? Nếu chị muốn bật tiếng, gửi em lời thoại để làm phụ đề.
-9. Sau mùa lễ: thay ảnh hero (mục Giáng sinh + video tự ẩn từ 2/1/2027).
+4. Video Merlin có tiếng nói không? Nếu chị muốn bật tiếng, gửi em lời thoại để làm phụ đề.
+5. Sau mùa lễ: thay ảnh hero (mục Giáng sinh + video tự ẩn từ 2/1/2027).
 
 ## 9. Link & tài nguyên
 

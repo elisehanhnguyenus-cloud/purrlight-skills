@@ -106,17 +106,20 @@ var DESK_CONFIG = {
 
   /* Timelines the customer reads. Ranges + conditions only — never a date.
      First person singular, the way every approved customer letter is written.
-     The "made" wording carries the approved 10–14-day phrase from the
-     customer-service skill; the year-end customs caveat is the studio's own
-     known risk (a shipment was held in 8/2026). */
+     The "made" wording keeps the approved 10–14-day phrase from the
+     customer-service skill for the rest of the year, with its customs caveat
+     (a shipment was held in 8/2026). */
   timelines: [
     { key: "stock",  label: "Ready now — ships from our Texas studio",
       text: "Your piece is ready at our Texas studio. It ships with tracking, and I'll message you the tracking number the moment it's on its way." },
+    /* holiday numbers per Elise 16–17/10/2026 (the same as the Custom Orders page): made-to-order crochet comes from
+       the Vietnam workshop — made in 2–3 weeks in the holiday season (Fluffy yarn about 2 weeks more), then 2–3 weeks
+       to arrive, within 15 days to Pearland; the rest of the year a custom piece arrives within 15 days. Never promise
+       faster. */
     { key: "made",   label: "Made to order — ships from our Vietnam workshop",
-      text: "Your piece will be made by hand in small batches. I'll message you when it leaves our workshop; from there, delivery typically takes 10–14 days, though customs can add time, especially toward the end of the year." },
-    { key: "custom", label: "Custom piece — about 2 weeks (5 in the holiday season)",
-      /* lead time per Elise 25/09/2026: 2 weeks; Thanksgiving–Christmas +3 weeks. Never promise faster. */
-      text: "Custom pieces are usually ready in about two weeks — about five weeks in the Thanksgiving–Christmas season — and I'll send you a photo to approve before anything ships. From there, delivery typically takes 10–14 days once it leaves our workshop, though customs can add time, especially toward the end of the year." }
+      text: "Your piece will be made by hand in small batches. I'll message you when it leaves our workshop; from there, delivery takes 2–3 weeks in the Thanksgiving–Christmas season (within 15 days to Pearland) and typically 10–14 days the rest of the year, though customs can add time." },
+    { key: "custom", label: "Custom piece — 2–3 weeks to make, 2–3 to arrive (holidays)",
+      text: "Custom pieces are made by hand in our Vietnam workshop, and I'll send you a photo to approve before anything ships. In the Thanksgiving–Christmas season they take 2–3 weeks to make (Fluffy yarn about 2 weeks more), then 2–3 weeks to reach you — within 15 days to Pearland. The rest of the year, your piece reaches you within 15 days." }
   ],
 
   /* Shown when a balance remains on an order WITHOUT a custom piece. There is

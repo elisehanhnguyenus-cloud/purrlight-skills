@@ -272,8 +272,10 @@ giá Fluffy trên trang), **không gắn link catalog** (các trang giá lệch 
 Crochet: "See every yarn color" (đóng sẵn, ảnh chỉ tải khi mở; mỗi trang mở cỡ lớn để đọc mã), khách ghi mã màu (vd.
 C-25, V-04) trong đơn. Ảnh: `assets/img/custom/yarn-book-*.webp` (render 2x từ trang Canva, cắt bỏ thanh công cụ).
 (3) **Thời gian giao**: "delivery takes 2–3 weeks after it's finished" (chị: Thanksgiving, Christmas làm vận chuyển
-chậm) — trong "How it works" bước 4, ghi chú mục Giáng sinh, và dòng ghi chú trong hộp "What's inside" khi chọn ship
-(không hiện khi nhận tại chỗ, file digital, bộ váy làm sẵn). Câu "allow 2–4 weeks" (thời gian làm, chị chốt 16/10) giữ
+chậm) — trong "How it works" bước 4 (`.xmas-only`) và dòng ghi chú trong hộp "What's inside" khi chọn ship (không hiện
+khi nhận tại chỗ, file digital, bộ váy làm sẵn); **theo công tắc mùa**; tạm không ghi trong mục Giáng sinh (chờ chị chốt
+hạn đặt, xem TONG-HOP "Còn chờ chị" 1). Trang len đã cắt chỉ còn lưới màu (bỏ chữ "COLOURS", "overleaf", chữ lỗi trang
+Fluffy, dòng hội chợ, tên "Baby pink" của V-03, ô trống) + danh sách mã và tên dạng chữ ("Codes and names as text"). Câu "allow 2–4 weeks" (thời gian làm, chị chốt 16/10) giữ
 nguyên. (4) **Video Merlin** (`assets/video/hero-merlin-960.{webm,mp4}` + bản điện thoại 4:3
 `hero-merlin-phone-640.*`, 260–470 KB): ảnh đầu trang "sống dậy" — khung đầu = ảnh hero (đã chỉnh tông khớp ảnh), phát
 **1 lần** 10 giây, **không tiếng** (âm thanh gốc bỏ), rồi mờ về ảnh; nút "Pause video" / "Play video"; chỉ chạy sau

@@ -990,12 +990,32 @@ kỹ thuật) → chọn hướng tối giản + ghép ý hay:
 - **Video Merlin** (Gemini, chị gửi): ảnh đầu trang chuyển thành video 10 giây, phát 1 lần, không tiếng, có nút
   dừng/phát lại; khung đầu khớp ảnh nên chuyển liền mạch; nhẹ 260–470 KB (bản gốc 2,9 MB); theo công tắc mùa.
 
+Rà soát (video + nội dung, có phản biện) — 14 lỗi xác nhận, đã sửa: video có thể thành "ảnh lớn nhất" (LCP) vì to
+hơn ảnh 0,4px → khung video nằm trọn trong khung ảnh; video chưa nhận độ "trôi" của ảnh lúc bắt đầu (Merlin co lại
+khi chuyển) → copy ngay; xoay điện thoại sang ngang giữ bản 4:3 → đổi sang bản rộng; vào trang bằng link giữa trang
+(#pet-crochet) thì video tải mà không bao giờ phát → chỉ tạo khi ảnh đầu trang hiện; iPhone có thể không tự phát vì
+chờ "canplaythrough" → gọi play() thẳng; video theo dõi cả phần đầu trang (điện thoại ngang phát khi ảnh chưa hiện)
+→ theo dõi chính ảnh. Trang len: trang Fluffy có chữ lỗi ("Onlyfourfornow", câu lặp, "ndash;"), "Baby pink" (từ cấm),
+"COLOURS" kiểu Anh, dòng chỉ dành cho hội chợ ("the ball is on the table, ask"), "overleaf", ô trống → **cắt chỉ còn
+lưới màu**, xoá tên V-03 (chờ chị đặt tên mới), xoá ô trống; thêm **danh sách mã + tên dạng chữ** (104 màu) cho trình
+đọc màn hình. Câu giao hàng 2–3 tuần **theo công tắc mùa** (chị nói do mùa lễ) và **tạm bỏ khỏi mục Giáng sinh** vì
+cộng với "2–4 tuần" thì đơn 15/11 có thể tới 3/1/2027, trái với "đặt sau các ngày này mới giao năm 2027" — chờ chị
+chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang màu yếm sage của Merlin (#93A898, có trong Brand Canon).
+
 ### Còn chờ chị
-1. Hạn đặt Giáng sinh: CN 8/11 + làm 2–4 tuần + giao 2–3 tuần → chậm nhất ~27/12 (sau Giáng sinh). "2–4 tuần" là
-   thời gian làm hay đã gồm cả giao? Có cần dời hạn sớm hơn không?
-2. Nhận tại Pearland (pickup): cũng cần 2–3 tuần sau khi làm xong (hàng từ Việt Nam) không?
-3. Video Merlin có tiếng nói không? Nếu chị muốn bật tiếng, gửi em lời thoại để làm phụ đề.
-4. Sau mùa lễ: thay ảnh hero (mục Giáng sinh + video tự ẩn từ 2/1/2027).
+1. **Hạn đặt Giáng sinh** — theo số trên trang: CN 8/11 + làm tối đa 4 tuần + giao tối đa 3 tuần → ~27/12 (sau Giáng
+   sinh); CN 15/11 → ~3/1/2027 (trái với câu "Orders placed after these dates will be delivered in 2027"). Chị chọn:
+   (a) "2–4 tuần" đã gồm cả giao → trang ghi rõ "allow 2–4 weeks in all"; hoặc (b) đó là thời gian làm → dời hạn đặt
+   sớm hơn (giao trước Giáng sinh cần ~5/11; giao trong năm 2026 cần ~12/11 cho tranh/lịch/hộp quà).
+2. Giao 2–3 tuần sau khi làm xong: chỉ mùa lễ hay **quanh năm**? (trang đang để theo mùa, tự ẩn từ 2/1/2027).
+3. Nhận tại Pearland (pickup): cũng cần 2–3 tuần sau khi làm xong (hàng từ Việt Nam) không?
+4. **FTC (16 CFR 435, xem 8j):** các dòng "Turnaround: from 2 weeks" chưa ghi hạn gửi hàng → chị đặt N cho "ships
+   within N" từng món.
+5. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
+   "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
+   cấp?). Trang Fluffy ghi "thêm khoảng 2 tuần làm" — trang web chưa đưa, chị xác nhận nếu muốn ghi.
+6. Video Merlin có tiếng nói không? Nếu chị muốn bật tiếng, gửi em lời thoại để làm phụ đề.
+7. Sau mùa lễ: thay ảnh hero (mục Giáng sinh + video tự ẩn từ 2/1/2027).
 
 ## 9. Link & tài nguyên
 

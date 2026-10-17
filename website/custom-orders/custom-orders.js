@@ -671,7 +671,8 @@
       balanceRow.appendChild(el("span", { text: "Balance after you approve the photo" })); balanceRow.appendChild(el("span", { "class": "amt", text: db[1] }));
       if (fromUser) g.goneNote = "";
       var shipping = !est.digitalOnly && (v.getit === "ship" || v.getit === "out" || !GET_IT[v.getit]);
-      noteRow.textContent = [est.note, est.digitalOnly ? "" : (GET_IT[v.getit] || GET_IT.ship).short, shipping && !est.readyMade ? DELIVERY_NOTE : ""].filter(Boolean).join(" · ") + (g.goneNote ? " " + g.goneNote : "");
+      /* SEASONAL Christmas 2026: Elise gave the 2–3 weeks as the year-end holiday delay */
+      noteRow.textContent = [est.note, est.digitalOnly ? "" : (GET_IT[v.getit] || GET_IT.ship).short, shipping && !est.readyMade && christmas ? DELIVERY_NOTE : ""].filter(Boolean).join(" · ") + (g.goneNote ? " " + g.goneNote : "");
       copied.textContent = "";
       if (fromUser) store(storeKey, { v: v, swaps: g.swaps, u: 1, auto: g.auto || 0 });   /* a plain page view remembers nothing */
       if (g === current) setBarThumb(g);
@@ -1310,14 +1311,18 @@
     if ("ResizeObserver" in window) new ResizeObserver(fit).observe(band); else window.addEventListener("resize", fit);
     /* the bulbs run while the band shows; the snow while the canvas itself shows (on phones it sits well below the
        band's top) */
-    /* Merlin's bell swings once (about 1.4 s) the first time the band comes into view — not when paused, not on a
-       data-saver connection (Elise 16/10) */
-    var bellHang = band.querySelector(".xmas-hang"), rang = false, saver = navigator.connection && navigator.connection.saveData;
-    new IntersectionObserver(function (es) {
-      es.forEach(function (e) { bandOn = e.isIntersecting; });
-      if (bandOn && !rang && bellHang && !paused && !saver) { rang = true; bellHang.classList.add("ring"); }
-      snowing();
-    }).observe(band);
+    new IntersectionObserver(function (es) { es.forEach(function (e) { bandOn = e.isIntersecting; }); snowing(); }).observe(band);
+    /* Merlin's bell swings once (about 1.4 s) the first time the bell itself is fully in view — not when paused, not on
+       a data-saver connection (Elise 16/10) */
+    var bellHang = band.querySelector(".xmas-hang"), bellImg = bellHang && bellHang.querySelector(".xmas-bell"), saver = navigator.connection && navigator.connection.saveData;
+    if (bellImg && !saver) {
+      var bellSeen = new IntersectionObserver(function (es) {
+        es.forEach(function (e) {
+          if (e.isIntersecting && e.intersectionRatio >= 0.99 && !paused) { bellHang.classList.add("ring"); bellSeen.disconnect(); }
+        });
+      }, { threshold: 1 });
+      bellSeen.observe(bellImg);
+    }
     new IntersectionObserver(function (es) { es.forEach(function (e) { onScreen = e.isIntersecting; }); snowing(); }).observe(snow);
     document.addEventListener("visibilitychange", snowing);
     onStill(snowing);   /* reduced motion turned on mid-visit: the snow stops (the CSS hides the canvas and the button) */
@@ -1334,57 +1339,70 @@
   /* WebM (VP9) where it plays, else MP4 (H.264): between them every current browser */
   var heroType = !probe.canPlayType ? "" : probe.canPlayType('video/webm; codecs="vp9"') ? ".webm" : probe.canPlayType('video/mp4; codecs="avc1.640028"') ? ".mp4" : "";
   if (christmas && heroImg && heroBox && heroType && !calm && !(navigator.connection && navigator.connection.saveData) && "IntersectionObserver" in window) {
-    var heroWide = window.matchMedia("(min-width: 600px)"), heroOn = false, heroStopped = false, heroVideo = null, heroBtn = null;
+    var heroWide = window.matchMedia("(min-width: 600px)"), heroBg = window.matchMedia("(min-width: 900px)");   /* wide cut from 600px; the photo is a background (absolute) from 900px */
+    var heroOn = false, heroReady = false, heroStopped = false, heroVideo = null, heroBtn = null;
+    var heroFile = function () { return "../assets/video/" + (heroWide.matches ? "hero-merlin-960" : "hero-merlin-phone-640") + heroType; };
+    /* the video sits exactly on the photo's box — inside it, never a pixel larger (so the photo stays the page's
+       largest paint), and with the photo's own drift transform */
     var heroFit = function () {
       if (!heroVideo) return;
-      var b = heroBox.getBoundingClientRect(), r = (wideEnough() ? heroPic : heroImg).getBoundingClientRect();
-      heroVideo.style.left = Math.round(r.left - b.left) + "px"; heroVideo.style.top = Math.round(r.top - b.top) + "px";
-      heroVideo.style.width = Math.round(r.width) + "px"; heroVideo.style.height = Math.round(r.height) + "px";
+      var b = heroBox.getBoundingClientRect(), r = (heroBg.matches ? heroPic : heroImg).getBoundingClientRect();
+      var L = Math.ceil(r.left - b.left), T = Math.ceil(r.top - b.top);
+      heroVideo.style.left = L + "px"; heroVideo.style.top = T + "px";
+      heroVideo.style.width = Math.max(0, Math.floor(r.right - b.left) - L) + "px"; heroVideo.style.height = Math.max(0, Math.floor(r.bottom - b.top) - T) + "px";
+      heroVideo.style.transform = heroImg.style.transform;
     };
-    var wideEnough = function () { return window.matchMedia("(min-width: 900px)").matches; };   /* the photo is a background (absolute) from 900px */
     var heroLabel = function () {
       var playing = heroVideo && !heroVideo.paused && !heroVideo.ended;
       heroBtn.textContent = playing ? "Pause video" : "Play video";
       heroBtn.className = "hero-play" + (playing ? "" : " is-stopped");
     };
     var heroShow = function (on) { heroVideo.className = "hero-video" + (on ? " on" : ""); };
+    var heroPlay = function () {   /* play() buffers by itself (iOS waits for it before loading); a refusal leaves the photo and the button */
+      var p = heroVideo.play();
+      if (p && p.catch) p.catch(function () { heroShow(false); heroLabel(); });
+    };
     var heroStart = function () {
       heroVideo = document.createElement("video");
       heroVideo.className = "hero-video";
       heroVideo.muted = true; heroVideo.defaultMuted = true; heroVideo.setAttribute("muted", "");
       heroVideo.setAttribute("playsinline", ""); heroVideo.setAttribute("aria-hidden", "true"); heroVideo.setAttribute("tabindex", "-1");
       heroVideo.preload = "auto";
-      heroVideo.src = "../assets/video/" + (heroWide.matches ? "hero-merlin-960" : "hero-merlin-phone-640") + heroType;
+      heroVideo.src = heroFile();
       heroPic.parentNode.insertBefore(heroVideo, heroPic.nextSibling);
       heroImg.follower = heroVideo;
       heroBtn = document.createElement("button");
       heroBtn.type = "button";
       heroBox.appendChild(heroBtn);
       heroFit();
-      heroVideo.addEventListener("canplaythrough", function () { if (heroOn && !heroStopped && heroVideo.paused && !heroVideo.ended && heroVideo.currentTime === 0) heroPlay(); });
+      heroVideo.addEventListener("playing", function () { heroShow(true); heroLabel(); });   /* fade in on a real frame */
       heroVideo.addEventListener("ended", function () { heroShow(false); heroLabel(); });
       heroVideo.addEventListener("pause", heroLabel);
-      heroVideo.addEventListener("play", heroLabel);
       heroBtn.addEventListener("click", function () {
         if (heroVideo.paused || heroVideo.ended) { heroStopped = false; if (heroVideo.ended) heroVideo.currentTime = 0; heroPlay(); }
         else { heroStopped = true; heroVideo.pause(); }
       });
       heroLabel();
       if ("ResizeObserver" in window) new ResizeObserver(heroFit).observe(heroBox); else window.addEventListener("resize", heroFit);
+      /* a phone turned sideways (or a window widened past 600px) gets the wide cut; the 4:3 cut would show Merlin cropped */
+      var heroSwap = function () {
+        if (!heroWide.matches || heroVideo.src.indexOf("phone-640") < 0) return;
+        heroStopped = true; heroVideo.pause(); heroShow(false);
+        heroVideo.src = heroFile(); heroVideo.load(); heroLabel();
+      };
+      if (heroWide.addEventListener) heroWide.addEventListener("change", heroSwap); else if (heroWide.addListener) heroWide.addListener(heroSwap);
       onStill(function () { if (still.matches) { heroStopped = true; heroVideo.pause(); heroShow(false); } });
+      if (heroOn) heroPlay();
     };
-    var heroPlay = function () {
-      heroShow(true);
-      var p = heroVideo.play();
-      if (p && p.catch) p.catch(function () { heroShow(false); heroLabel(); });   /* autoplay refused: the photo stays, the button can start it */
-    };
+    /* the photo itself is watched (half of it in view), not the whole hero: on a landscape phone the words fill the
+       first screen and the photo is below them */
     new IntersectionObserver(function (es) {
       es.forEach(function (e) { heroOn = e.isIntersecting; });
-      if (!heroVideo) return;
-      if (!heroOn && !heroVideo.paused) heroVideo.pause();                       /* scrolled away: hold */
-      else if (heroOn && heroVideo.paused && !heroVideo.ended && !heroStopped && heroVideo.currentTime > 0) heroPlay();   /* back: carry on */
-    }, { threshold: 0.25 }).observe(heroBox);
-    var heroLater = function () { setTimeout(function () { if (!heroVideo) heroStart(); }, 600); };
+      if (!heroVideo) { if (heroReady && heroOn) heroStart(); return; }   /* first view after load, wherever it happens */
+      if (!heroOn && !heroVideo.paused) heroVideo.pause();                                   /* scrolled away: hold */
+      else if (heroOn && heroVideo.paused && !heroVideo.ended && !heroStopped) heroPlay();   /* back (or first time): play */
+    }, { threshold: 0.5 }).observe(heroImg);
+    var heroLater = function () { setTimeout(function () { heroReady = true; if (!heroVideo && heroOn) heroStart(); }, 600); };
     if (document.readyState === "complete") heroLater(); else window.addEventListener("load", heroLater);
   }
 })();

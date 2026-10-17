@@ -20,6 +20,7 @@
   --butter-soft: #FAEFD8;  /* Christmas band */
   --glow-soft: #F6DCC4;    /* selected chip / table cell fill — Ink on it 7.7:1 */
   --beret: #CA8D41;        /* Merlin's beret (Brand Canon v2) — only in the small lights, never for text */
+  --bib-sage: #93A898;     /* Merlin's bib (Brand Canon v2.1) — only the green Christmas bulb */
   --line: rgba(74, 66, 59, 0.18);   /* Ink hairline */
   --line-soft: rgba(74, 66, 59, 0.10);
   --line-ui: rgba(74, 66, 59, 0.6);   /* control boundaries ≥3:1 on cream (WCAG 1.4.11) */
@@ -303,6 +304,11 @@ p { margin: 0; }
 .yarn-pages a:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
 .yarn-pages img { display: block; width: 100%; height: auto; }
 .yarn-cap { font-size: 13px; color: var(--caption); }
+/* every code and name as text — for screen readers, and to read without zooming into the pages */
+.yarn-names { margin-top: 6px; }
+.yarn-names summary { cursor: pointer; font-size: 14px; font-weight: 500; color: var(--berry); min-height: 44px; display: inline-flex; align-items: center; }
+.yarn-names summary:hover { color: var(--ink); }
+.yarn-names p { margin: 0 0 10px; font-size: 14px; line-height: 1.6; color: var(--ink); }
 @media (min-width: 600px) { .yarn-pages { grid-auto-columns: 44%; } }
 @media (min-width: 900px) { .yarn-pages { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0; padding: 0; overflow: visible; } }
 .price-table { border-collapse: collapse; width: 100%; table-layout: fixed; font-size: 15px; margin-top: 4px; }
@@ -643,7 +649,7 @@ body.has-bar { padding-bottom: 88px; }
    the photo. The wire is one 360px tile with three uneven swags; custom-orders.js hangs one bulb per 72px and each of
    the five bulbs in a tile sits on the wire (--y) with its own small tilt (--r). The wire starts one tile left of the
    text column (--xl), so the bell always hangs from the same point of the wire, above "Christmas". ===== */
-html:not([data-season="christmas"]) .christmas, html:not([data-season="christmas"]) .idea-badge-xmas, html:not([data-season="christmas"]) .xmas-bough { display: none; }   /* the one switch */
+html:not([data-season="christmas"]) .christmas, html:not([data-season="christmas"]) .idea-badge-xmas, html:not([data-season="christmas"]) .xmas-bough, html:not([data-season="christmas"]) .xmas-only { display: none; }   /* the one switch */
 .christmas { --xl: calc(max(0px, (100% - 640px) / 2) + var(--gutter)); }   /* left edge of .xmas-inner's text */
 @media (min-width: 900px) { .christmas { --xl: calc(max(0px, (100% - var(--wrap)) / 2) + var(--gutter)); } }
 .xmas-lights { position: absolute; top: 0; left: calc(var(--xl) - 360px); right: 0; z-index: 2; height: 60px; display: flex; align-items: flex-start; overflow: hidden; pointer-events: none;
@@ -668,9 +674,9 @@ html:not([data-season="christmas"]) .christmas, html:not([data-season="christmas
 .xmas-hang::before { content: ""; position: absolute; left: -0.5px; top: 0; width: 1px; height: calc(var(--thread) + var(--h) * 0.15); background: rgba(74, 66, 59, 0.55); }
 .xmas-bell { position: absolute; left: 0; top: var(--thread); width: auto; height: var(--h); max-width: none; transform: translateX(-57%); }
 @media (min-width: 900px) { .xmas-hang { --h: 40px; --thread: 22px; } }
-/* one red and one green bulb in every five (Elise 16/10): berry beside the bell, a pine green two bulbs on */
+/* one red and one green bulb in every five (Elise 16/10): berry beside the bell, Merlin's bib sage two bulbs on */
 .xmas-lights i:nth-child(5n+3)::after { background: var(--berry); border-color: rgba(142, 27, 58, 0.6); box-shadow: 0 0 5px 2px rgba(180, 34, 73, 0.3), 0 0 14px 5px rgba(180, 34, 73, 0.28); }
-.xmas-lights i:nth-child(5n)::after { background: #6E8B5F; border-color: rgba(78, 99, 70, 0.7); box-shadow: 0 0 5px 2px rgba(110, 139, 95, 0.35), 0 0 14px 5px rgba(78, 99, 70, 0.28); }
+.xmas-lights i:nth-child(5n)::after { background: var(--bib-sage); border-color: rgba(78, 99, 70, 0.7); box-shadow: 0 0 5px 2px rgba(147, 168, 152, 0.4), 0 0 14px 5px rgba(78, 99, 70, 0.28); }
 /* the bell swings once when the band first comes into view (custom-orders.js adds .ring) */
 @keyframes co-ring { 0% { transform: rotate(0); } 18% { transform: rotate(10deg); } 40% { transform: rotate(-7deg); } 62% { transform: rotate(4deg); } 82% { transform: rotate(-1.5deg); } 100% { transform: rotate(0); } }
 @media (prefers-reduced-motion: no-preference) { html.motion .christmas:not(.is-paused) .xmas-hang.ring { animation: co-ring 1.4s ease-out 1 both; transform-origin: 0 0; } }

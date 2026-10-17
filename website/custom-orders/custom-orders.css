@@ -631,20 +631,19 @@ body.has-bar { padding-bottom: 88px; }
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='28'%3E%3Cpath d='M0 14C10 8 30 20 40 14' fill='none' stroke='%23E8A87C' stroke-width='1.6' stroke-linecap='round' stroke-dasharray='5 4'/%3E%3C/svg%3E") repeat-x left center / 40px 28px; }
 /* the worktable lamp's glow behind Merlin: a flat disc */
 .merlin-lamp { position: relative; display: inline-grid; place-items: center; }
-.merlin-lamp::before { content: ""; position: absolute; inset: -6px; border-radius: 50%; background: var(--glow-soft); }   /* a thin ring of lamp-light (Elise 16/10: thinner) */
+.merlin-lamp::before { content: ""; position: absolute; inset: -3px; border-radius: 50%; background: var(--glow-soft); }   /* a thin ring of lamp-light (Elise 16/10: thinner — now 3px) */
 .merlin-lamp .merlin-mark { position: relative; }
 .glints-lamp { position: absolute; inset: 0; width: auto; height: auto; margin: 0; }
 .glints-lamp i:nth-child(1) { left: -28%; top: -6%; --s: 20px; }   /* round the ring, clear of the words beside it */
 .glints-lamp i:nth-child(2) { left: 88%; top: -18%; --s: 13px; }
 .glints-lamp i:nth-child(3) { left: 96%; top: 94%; --s: 10px; }
 .glints-lamp i:nth-child(4) { left: -20%; top: 80%; --s: 10px; }
-@media (min-width: 900px) { .merlin-lamp::before { inset: -8px; } }
 /* ===== SEASONAL Christmas 2026 — remove after the season together with the band (index.html) and xmas-bell.webp.
    A string of warm-white lights on a dark, hand-draped wire (Elise's 29.gif), Merlin's bell hung from it, snow over
    the photo. The wire is one 360px tile with three uneven swags; custom-orders.js hangs one bulb per 72px and each of
    the five bulbs in a tile sits on the wire (--y) with its own small tilt (--r). The wire starts one tile left of the
    text column (--xl), so the bell always hangs from the same point of the wire, above "Christmas". ===== */
-html:not([data-season="christmas"]) .christmas, html:not([data-season="christmas"]) .idea-badge-xmas { display: none; }   /* the one switch */
+html:not([data-season="christmas"]) .christmas, html:not([data-season="christmas"]) .idea-badge-xmas, html:not([data-season="christmas"]) .xmas-bough { display: none; }   /* the one switch */
 .christmas { --xl: calc(max(0px, (100% - 640px) / 2) + var(--gutter)); }   /* left edge of .xmas-inner's text */
 @media (min-width: 900px) { .christmas { --xl: calc(max(0px, (100% - var(--wrap)) / 2) + var(--gutter)); } }
 .xmas-lights { position: absolute; top: 0; left: calc(var(--xl) - 360px); right: 0; z-index: 2; height: 60px; display: flex; align-items: flex-start; overflow: hidden; pointer-events: none;
@@ -690,6 +689,36 @@ html:not([data-season="christmas"]) .christmas, html:not([data-season="christmas
     mask-composite: intersect;
   }
 }
+/* SEASONAL Christmas 2026 — pine and golden leaves (Elise 16/10: in Texas, Christmas is golden leaves and pine), the
+   pine cut from her own photos. A spruce sprig with two cones (15.jpg, turned so its cut edge sits on the band's top
+   edge) hangs in the band's top-left corner under the string of lights, a golden cottonwood leaf caught in it; on wide
+   screens a long-needle pine (16.jpg) lies in the bottom-left corner, left of the words. In the closing a fir bough with
+   a cone (15.jpg) is tucked behind Merlin's portrait (its cut end hidden under the photo), with one more leaf. The leaves
+   falling over the photo are the snow canvas's (custom-orders.js). All of these hold still, so they stay with reduced
+   motion and when paused. Decoration only: alt="", aria-hidden, no pointer events, never over the words. Remove with the
+   band, together with xmas-pine-corner.webp, xmas-pine-ground.webp and xmas-bough.webp. */
+:root { --leaf-cw: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2038%2038'%3E%3Cpath%20d='M19%2024.76L20.73%2025.55L22.38%2026.07L23.94%2026.32L25.42%2026.31L26.8%2026.02L28.1%2025.47L29.32%2024.65L30.44%2023.56L31.48%2022.2L29.86%2020.34L29.87%2017.82L27.96%2016.11L27.59%2013.51L25.42%2011.92L24.65%209.26L22.21%207.78L21.05%205.07L19%203L16.95%205.07L15.79%207.78L13.35%209.26L12.58%2011.92L10.41%2013.51L10.04%2016.11L8.13%2017.82L8.14%2020.34L6.52%2022.2L7.56%2023.56L8.68%2024.65L9.9%2025.47L11.2%2026.02L12.58%2026.31L14.06%2026.32L15.62%2026.07L17.27%2025.55L19%2024.76Z'%20fill='%23CA8D41'%20stroke='%23FBF6EE'%20stroke-width='1.8'%20stroke-linejoin='round'%20paint-order='stroke'/%3E%3Cpath%20d='M19%2024.76L20.73%2025.55L22.38%2026.07L23.94%2026.32L25.42%2026.31L26.8%2026.02L28.1%2025.47L29.32%2024.65L30.44%2023.56L31.48%2022.2L29.86%2020.34L29.87%2017.82L27.96%2016.11L27.59%2013.51L25.42%2011.92L24.65%209.26L22.21%207.78L21.05%205.07L19%203Z'%20fill='%234A423B'%20fill-opacity='.13'/%3E%3Cpath%20d='M19.96%2029.56Q19%2026.68%2019%2024.76L19%206.2M19%2022.84L10.68%2016.12M19%2022.84L27.32%2016.12M19%2016.76L13.56%209.24M19%2016.76L24.44%209.24'%20fill='none'%20stroke='%234A423B'%20stroke-opacity='.42'%20stroke-width='.8'%20stroke-linecap='round'/%3E%3C/svg%3E"); }   /* the falling cottonwood, still (the same outline, custom-orders.js) */
+.christmas { --pine: 84px; }   /* the corner sprig's width: 84 x 68 on phones, clear of the title (76px down) */
+@media (min-width: 900px) { .christmas { --pine: clamp(82px, calc((var(--xl) + 10px) * 0.82), 138px); } }   /* left of the text column */
+.xmas-pine { position: absolute; z-index: 1; display: block; height: auto; max-width: none; pointer-events: none; -webkit-user-select: none; user-select: none; }
+.xmas-pine-corner { top: 0; left: 0; width: var(--pine); }
+.xmas-pine-ground { display: none; left: 0; bottom: 0; }
+@media (min-width: 1260px) { .xmas-pine-ground { display: block; width: min(200px, calc(var(--xl) - 24px)); } }   /* only where the margin left of the words is 106px or more */
+.christmas::after { content: ""; position: absolute; z-index: 1; left: calc(var(--pine) * 0.5); top: calc(var(--pine) * 0.42); width: calc(var(--pine) * 0.34); height: calc(var(--pine) * 0.34);
+  background: var(--leaf-cw) center / contain no-repeat; transform: rotate(150deg); filter: drop-shadow(0 0.8px 1px rgba(74, 66, 59, 0.3)); pointer-events: none; }   /* the leaf caught in the sprig */
+/* the closing: the bough sits behind the ring and the portrait; its only cut (the stem end, on its right edge 45–100%
+   down) pivots on a point inside the photo's lower left, so the round photo always covers it */
+html[data-season="christmas"] .merlin-lamp { isolation: isolate; }
+.xmas-bough { position: absolute; z-index: -1; display: block; width: 74px; height: auto; max-width: none; right: calc(50% + 24px); top: calc(50% + 6px - 0.72 * 74px * 242 / 202);
+  transform-origin: 100% 72%; transform: rotate(-20deg); pointer-events: none; -webkit-user-select: none; user-select: none; }
+html[data-season="christmas"] .merlin-lamp::after { content: ""; position: absolute; left: -54px; top: 50%; width: 28px; height: 28px; pointer-events: none;
+  background: var(--leaf-cw) center / contain no-repeat; transform: rotate(-62deg); filter: drop-shadow(0 0.8px 1px rgba(74, 66, 59, 0.3)); }
+@media (min-width: 900px) {
+  .xmas-bough { width: 92px; right: calc(50% + 30px); top: calc(50% + 18px - 0.72 * 92px * 242 / 202); }
+  html[data-season="christmas"] .merlin-lamp::after { left: -68px; top: 58%; width: 32px; height: 32px; }
+}
+html[data-season="christmas"] .glints-lamp i:nth-child(1), html[data-season="christmas"] .glints-lamp i:nth-child(4) { display: none; }   /* the bough takes the left side: two stars stay on the right */
+@media print { .xmas-pine, .christmas::after, .xmas-bough, .merlin-lamp::after { display: none; } }
 /* WCAG 2.2.2: nothing here loops on its own for more than 5 s without a way to stop it. The stars twinkle twice when
    they come into view (.go, set by custom-orders.js) and then rest, lit. The bulbs and the snow run only while the
    Christmas band is on screen (.is-live), and the band has a button that pauses them (.is-paused, remembered). */

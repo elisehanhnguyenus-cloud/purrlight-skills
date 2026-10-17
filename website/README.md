@@ -257,6 +257,15 @@ dùng GIF động (50–275 KB/icon, không dừng được theo WCAG 2.2.2); 2 
 kikki.K/Google là tác phẩm của người khác — chỉ tham khảo. **Công tắc mùa:** `data-season="christmas"` trên `<html>`;
 từ 0h ngày **26/12** (giờ máy khách) trang tự ẩn cả mục Giáng sinh (chờ chị chọn 26/12 hay 2/1: `SEASON_END` đầu
 `custom-orders.js`). Mọi chỗ cần gỡ sau mùa ghi "SEASONAL Christmas 2026".
+**Chốt 16/10, tin nhắn 11b — lá vàng, bông tuyết, cây thông (Giáng sinh Texas; panel 3 hướng + 3 giám khảo):** tất cả
+nằm trong mục Giáng sinh. Canvas tuyết cũ giờ rơi 3 thứ: chấm tuyết nhỏ (≤44), **bông tuyết 6 cánh** (≤6 máy tính / ≤3
+điện thoại) và **lá vàng Texas** vẽ tay (cottonwood, pecan, cedar elm; màu vàng beret #CA8D41, viền kem; 5 lá máy tính /
+4 lá điện thoại), tránh cột của Merlin và chữ; dùng chung nút **"Pause the lights, snow & leaves"**. **Cành vân sam +
+quả thông** cắt từ ảnh Merlin của chị (ảnh 15) treo góc trái dưới dây đèn, có 1 lá vàng đứng yên; **cành thông lá dài**
+(ảnh 16, thông loblolly Đông Texas) góc trái dưới, chỉ ≥1260px; cuối trang **cành thông + quả thông + 1 lá vàng** sau
+ảnh Merlin, viền vầng sáng 3px. Ảnh: `xmas-pine-corner.webp`, `xmas-pine-ground.webp`, `xmas-bough.webp` (18–24 KB).
+Mọi thứ theo công tắc mùa, gỡ cùng mục Giáng sinh. Không làm: lá/tuyết rơi trên ảnh đầu trang (đè video Merlin), cành
+thông ở tiêu đề "Build your gift", vòng hoa hộp quà (lặp ảnh).
 **Chốt 16/10, tin nhắn 12:** (1) Thánh có sẵn không chọn mắt — đúng ý chị. (2) **Bảng màu len** từ catalog Canva
 của chị: chỉ lấy 6 trang chọn len (cotton trơn ×2, cotton mix, velvet ×2, fluffy — trang fluffy ghi "+$15–30", khớp
 giá Fluffy trên trang), **không gắn link catalog** (các trang giá lệch giá trang). Ở bước "Yarn" của Custom Pet

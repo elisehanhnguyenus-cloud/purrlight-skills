@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-season="christmas"><!-- SEASONAL Christmas 2026: this switch shows the Christmas band (its lights, snow and bell) and the order-by badge on the Christmas idea; custom-orders.js removes it by itself from SEASON_END (Jan 2) -->
+<html lang="en" data-season="christmas"><!-- SEASONAL Christmas 2026: this switch shows the Christmas band (its lights, snow, golden leaves, pine and bell), the pine behind Merlin in the closing and the order-by badge on the Christmas idea; custom-orders.js removes it by itself from SEASON_END (Jan 2) -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -616,8 +616,10 @@
     </section>
 
     <!-- 3.9 Christmas deadlines — SEASONAL Christmas 2026: after the season delete this whole section and
-         assets/img/custom/xmas-bell.webp (data-season on <html> already hides it) -->
+         assets/img/custom/xmas-bell.webp, xmas-pine-corner.webp, xmas-pine-ground.webp (data-season on <html> already hides it) -->
     <section class="christmas" aria-labelledby="xmas-h">
+      <img class="xmas-pine xmas-pine-corner" src="../assets/img/custom/xmas-pine-corner.webp" alt="" aria-hidden="true" width="253" height="206" loading="lazy" decoding="async">
+      <img class="xmas-pine xmas-pine-ground" src="../assets/img/custom/xmas-pine-ground.webp" alt="" aria-hidden="true" width="292" height="197" loading="lazy" decoding="async">
       <span class="xmas-hang" aria-hidden="true"><img class="xmas-bell" src="../assets/img/custom/xmas-bell.webp" alt="" width="69" height="96" loading="lazy" decoding="async"></span>
       <div class="wrap xmas-inner">
         <div class="xmas-text">
@@ -655,10 +657,10 @@
       </div>
     </section>
 
-    <!-- 3.10 Closing CTA -->
+    <!-- 3.10 Closing CTA (SEASONAL Christmas 2026: .xmas-bough, the pine behind Merlin — delete it and xmas-bough.webp after the season) -->
     <section class="closing" aria-labelledby="close-h">
       <div class="wrap closing-inner">
-        <span class="merlin-lamp"><img class="merlin-mark" src="../assets/img/custom/merlin-portrait.webp" alt="Merlin, our tuxedo cat, in a red holiday bow" width="240" height="240" loading="lazy" decoding="async"><span class="glints glints-lamp" aria-hidden="true"><i></i><i></i><i></i><i></i></span></span>
+        <span class="merlin-lamp"><img class="xmas-bough" src="../assets/img/custom/xmas-bough.webp" alt="" aria-hidden="true" width="202" height="242" loading="lazy" decoding="async"><img class="merlin-mark" src="../assets/img/custom/merlin-portrait.webp" alt="Merlin, our tuxedo cat, in a red holiday bow" width="240" height="240" loading="lazy" decoding="async"><span class="glints glints-lamp" aria-hidden="true"><i></i><i></i><i></i><i></i></span></span>
         <div class="closing-body">
           <h2 id="close-h" class="sr-only">Place your order</h2>
           <p><a class="btn btn-primary btn-large" data-order href="https://tally.so/r/M1KOkY">Place your order</a></p>

@@ -57,16 +57,24 @@ body{
 .stage{
   --spd:1;              /* hệ số tốc độ  */
   --play:running;       /* trạng thái chạy */
+  --spokeOp:1;          /* độ rõ nan hoa / răng líp — giảm khi nhoè tốc độ */
+  --blurOp:0;           /* đĩa nhoè tốc độ trên bánh xe                    */
 
-  /* chu kỳ gốc — mọi chuyển động neo theo bộ này */
-  --tWheel:.70s;        /* bánh xe quay 1 vòng            */
-  --tCrank:1.05s;       /* đùi đĩa + chân đạp 1 vòng      */
-  --tBob:.525s;         /* thân nhún (2 nhịp / vòng đạp)  */
-  --tRoad:1.63s;        /* mặt đường trôi hết 1 tile      */
-  --tBush:3.10s;        /* bụi cây gần                    */
-  --tTree:5.20s;        /* hàng cây xa                    */
-  --tHill:11s;          /* đồi                            */
-  --tCloud:26s;         /* mây                            */
+  /* ĐỒNG HỒ GỐC DUY NHẤT là nhịp đạp. Mọi chu kỳ khác SUY RA từ nó
+     theo hình học chiếc xe, nên các bộ phận luôn ăn khớp với nhau:
+     xích chạy đúng tốc độ đĩa, bánh quay đúng tỉ số răng, và cảnh trôi
+     đúng tốc độ mép vỏ xe ⇒ bánh LĂN trên đường, không trượt. */
+  --tCrank:1.05s;                          /* 1 vòng đạp ≈ 57 vòng/phút          */
+  --tWheel:calc(var(--tCrank) / 1.4);      /* đĩa r21 : líp r15 ⇒ ×1.4           */
+  --tChain:calc(var(--tCrank) * .2728);    /* 36px xích ÷ chu vi đĩa (2π·21)     */
+  --tRoad: calc(var(--tWheel) * 3.0804);   /* tile 1200 ÷ chu vi vỏ (2π·62)      */
+  --tBob:  calc(var(--tCrank) / 2);        /* thân nhún 2 nhịp / vòng đạp        */
+  --tWind: calc(var(--tRoad) * .355);      /* khăn phấp phới theo tốc độ gió     */
+  /* thị sai: càng xa càng trôi chậm, cùng tỉ lệ với mặt đường */
+  --tBush: calc(var(--tRoad) * 1.9);
+  --tTree: calc(var(--tRoad) * 3.2);
+  --tHill: calc(var(--tRoad) * 6.75);
+  --tCloud:calc(var(--tRoad) * 16);
 
   width:min(1120px,100%);
   border-radius:26px;
@@ -112,7 +120,7 @@ body{
 }
 
 body:has(#sp-slow:checked) .stage{ --spd:2.1; }
-body:has(#sp-fast:checked) .stage{ --spd:.58; }
+body:has(#sp-fast:checked) .stage{ --spd:.58; --spokeOp:.22; --blurOp:1; }
 body:has(#sp-stop:checked) .stage{ --play:paused; }
 
 .note{ font-size:12px; color:var(--ink-soft); text-align:center; max-width:640px; margin:0; }
@@ -147,7 +155,7 @@ body:has(#sp-stop:checked) .stage{ --play:paused; }
 
 /* --- xích chạy --- */
 @keyframes chainRun{ to{ stroke-dashoffset:-36; } }
-.chain{ animation:chainRun calc(var(--tWheel) * .26 * var(--spd)) linear infinite; }
+.chain{ animation:chainRun calc(var(--tChain) * var(--spd)) linear infinite; }
 
 /* --- chân đạp: góc khớp tính bằng nghịch động học (IK) --- */
 .thigh{ animation:thighCycle calc(var(--tCrank) * var(--spd)) linear infinite; will-change:transform; }
@@ -267,9 +275,9 @@ body:has(#sp-stop:checked) .stage{ --play:paused; }
 @keyframes flut1{ 0%,100%{ transform:rotate(-5deg);} 50%{ transform:rotate(6deg);} }
 @keyframes flut2{ 0%,100%{ transform:rotate(8deg);} 50%{ transform:rotate(-9deg);} }
 @keyframes flut3{ 0%,100%{ transform:rotate(-11deg);} 50%{ transform:rotate(12deg);} }
-.sc1{ animation:flut1 .82s ease-in-out infinite; }
-.sc2{ animation:flut2 .82s ease-in-out infinite; animation-delay:-.14s; }
-.sc3{ animation:flut3 .82s ease-in-out infinite; animation-delay:-.28s; }
+.sc1{ animation:flut1 calc(var(--tWind) * var(--spd)) ease-in-out infinite; }
+.sc2{ animation:flut2 calc(var(--tWind) * var(--spd)) ease-in-out infinite; animation-delay:calc(var(--tWind) * var(--spd) * -.17); }
+.sc3{ animation:flut3 calc(var(--tWind) * var(--spd)) ease-in-out infinite; animation-delay:calc(var(--tWind) * var(--spd) * -.34); }
 
 /* --- núm len trên beret nảy nhẹ --- */
 @keyframes pom{ 0%,100%{ transform:translate(0,0) rotate(-6deg);} 50%{ transform:translate(-1px,-2.2px) rotate(6deg);} }
@@ -294,9 +302,9 @@ body:has(#sp-stop:checked) .stage{ --play:paused; }
   70% { opacity:.5; }
   100%{ transform:translateX(-760px); opacity:0; }
 }
-.whoosh{ animation:whoosh 1.25s linear infinite; }
-.whoosh:nth-of-type(2){ animation-delay:-.42s; animation-duration:1.55s; }
-.whoosh:nth-of-type(3){ animation-delay:-.86s; animation-duration:1.05s; }
+.whoosh{ animation:whoosh calc(var(--tRoad) * .76 * var(--spd)) linear infinite; }
+.whoosh:nth-of-type(2){ animation-duration:calc(var(--tRoad) * .94 * var(--spd)); animation-delay:calc(var(--tRoad) * -.25 * var(--spd)); }
+.whoosh:nth-of-type(3){ animation-duration:calc(var(--tRoad) * .64 * var(--spd)); animation-delay:calc(var(--tRoad) * -.53 * var(--spd)); }
 
 /* --- cánh hoa bay --- */
 @keyframes petal{
@@ -305,10 +313,10 @@ body:has(#sp-stop:checked) .stage{ --play:paused; }
   90% { opacity:1; }
   100%{ transform:translate(-1360px,42px) rotate(-520deg); opacity:0; }
 }
-.petal{ animation:petal 3.4s linear infinite; }
-.petal:nth-of-type(2){ animation-delay:-1.1s; animation-duration:4.2s; }
-.petal:nth-of-type(3){ animation-delay:-2.3s; animation-duration:3.0s; }
-.petal:nth-of-type(4){ animation-delay:-.6s;  animation-duration:4.8s; }
+.petal{ animation:petal calc(var(--tRoad) * 2.1 * var(--spd)) linear infinite; }
+.petal:nth-of-type(2){ animation-duration:calc(var(--tRoad) * 2.58 * var(--spd)); animation-delay:calc(var(--tRoad) * -.67 * var(--spd)); }
+.petal:nth-of-type(3){ animation-duration:calc(var(--tRoad) * 1.84 * var(--spd)); animation-delay:calc(var(--tRoad) * -1.41 * var(--spd)); }
+.petal:nth-of-type(4){ animation-duration:calc(var(--tRoad) * 2.94 * var(--spd)); animation-delay:calc(var(--tRoad) * -.37 * var(--spd)); }
 
 /* --- nắng lấp lánh --- */
 @keyframes sunspin{ to{ transform:rotate(360deg);} }
@@ -390,6 +398,12 @@ body:has(#sp-stop:checked) .stage{ --play:paused; }
   </pattern>
 
   <!-- ░░ BỘ LỌC ░░ -->
+  <radialGradient id="gSpokeBlur" cx=".5" cy=".5" r=".5">
+    <stop offset=".2"  stop-color="#F3E8D2" stop-opacity="0"/>
+    <stop offset=".62" stop-color="#F3E8D2" stop-opacity=".34"/>
+    <stop offset=".96" stop-color="#E9DBC0" stop-opacity=".58"/>
+    <stop offset="1"   stop-color="#E9DBC0" stop-opacity="0"/>
+  </radialGradient>
   <filter id="fFuzz" x="-14%" y="-14%" width="128%" height="128%">
     <feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="7" result="n"/>
     <feDisplacementMap in="SourceGraphic" in2="n" scale="3.6" xChannelSelector="R" yChannelSelector="G"/>
@@ -450,10 +464,12 @@ body:has(#sp-stop:checked) .stage{ --play:paused; }
   <g id="gWheel">
     <circle r="56.5" fill="none" stroke="#33333F" stroke-width="11"/>
     <circle r="56.5" fill="none" stroke="#4A4A5A" stroke-width="11"
-            stroke-dasharray="6 9"/>
+            stroke-dasharray="7.9 11.822" style="opacity:var(--spokeOp,1)"/>
     <circle r="50" fill="none" stroke="#F6EEDC" stroke-width="4.6"/>
     <circle r="50" fill="none" stroke="#C9B893" stroke-width="1"/>
+    <circle r="49" fill="url(#gSpokeBlur)" style="opacity:var(--blurOp,0)"/>
     <path fill="none" stroke="#F3E8D2" stroke-width="1.6" stroke-linecap="round"
+          style="opacity:var(--spokeOp,1)"
           d="M9.0 4.4L50.0 0.0M9.9 -1.0L47.0 17.1M4.1 9.1L38.3 32.1M8.3 5.6L25.0 43.3M-2.8 9.6L8.7 49.2M2.8 9.6L-8.7 49.2M-8.3 5.6L-25.0 43.3M-4.1 9.1L-38.3 32.1M-9.9 -1.0L-47.0 17.1M-9.0 4.4L-50.0 0.0M-6.9 -7.2L-47.0 -17.1M-9.7 -2.4L-38.3 -32.1M-0.7 -10.0L-25.0 -43.3M-5.9 -8.1L-8.7 -49.2M5.9 -8.1L8.7 -49.2M0.7 -10.0L25.0 -43.3M9.7 -2.4L38.3 -32.1M6.9 -7.2L47.0 -17.1"/>
     <circle r="9.5" fill="#F6EEDC" stroke="#C9B893" stroke-width="1.2"/>
     <circle r="4"   fill="#6E6E82"/>
@@ -654,8 +670,8 @@ body:has(#sp-stop:checked) .stage{ --play:paused; }
     <!-- xích (tiếp tuyến ngoài giữa đĩa và líp) -->
     <g class="chain" fill="none" stroke="#5A5A6C" stroke-width="3.6"
        stroke-dasharray="5 4" stroke-linecap="round">
-      <path d="M468 475 L604 478"/>
-      <path d="M466 497 L600 522"/>
+      <path d="M466.9 471.0 L601.2 479.0"/>   <!-- nhánh trên: líp → đĩa -->
+      <path d="M596.9 520.8 L463.8 500.8"/>   <!-- nhánh dưới: đĩa → líp -->
     </g>
 
     <!-- khung -->
@@ -683,8 +699,9 @@ body:has(#sp-stop:checked) .stage{ --play:paused; }
     <!-- líp sau -->
     <g transform="translate(466,486)">
       <g class="wheel">
-        <circle r="11" fill="#8A8A9C"/>
-        <circle r="11" fill="none" stroke="#5A5A6C" stroke-width="2.8" stroke-dasharray="2 2.4"/>
+        <circle r="15" fill="#8A8A9C"/>
+        <circle r="15" fill="none" stroke="#5A5A6C" stroke-width="2.8" stroke-dasharray="2.6 3.2905"
+                style="opacity:var(--spokeOp,1)"/>
       </g>
     </g>
 
@@ -734,8 +751,9 @@ body:has(#sp-stop:checked) .stage{ --play:paused; }
   <!-- ░░░ ĐÙI ĐĨA GẦN + ĐĨA XÍCH ░░░ -->
   <g transform="translate(600,500)">
     <g class="crank">
-      <circle r="22" fill="#D4D4E2"/>
-      <circle r="22" fill="none" stroke="#8A8A9C" stroke-width="3.2" stroke-dasharray="2.8 3.2"/>
+      <circle r="21" fill="#D4D4E2"/>
+      <circle r="21" fill="none" stroke="#8A8A9C" stroke-width="3.2" stroke-dasharray="2.8 3.1976"
+              style="opacity:var(--spokeOp,1)"/>
       <circle r="8"  fill="#8A8A9C"/>
       <rect x="-6" y="-6" width="43" height="12" rx="6" fill="#EE7358"/>
       <rect x="-3" y="-3.2" width="37" height="3.2" rx="1.6" fill="#FFA98F"/>

@@ -233,7 +233,8 @@ Nguồn: Notion "🔧 Website Brand Fix Brief" + "🎨 Brand Canon v2" + Brand B
   chữ nhấn — 6.33:1) · --beret #CA8D41. Taglines: "Made by hand. Made to be
   kept." (footer) · "For one, and for thousands." (Partners) · hero mới
   "A cat with a tiny backpack. A studio with two homes."
-- **Email** hello@purrlight.studio · domain đã chốt purrlight.studio.
+- **Email** hello@purrlight.studio · domain đã chốt purrlight.studio. *(16/10: tên miền chưa đăng ký → toàn site tạm dùng
+  purrlightstudiollc@gmail.com.)*
 - **Acceptance checks của Morgan: PASS** (suitcase/7FA3CC/tên cũ/SAMPLE
   reviews/email cũ = 0; "toy" chỉ còn trong dòng an toàn; ages 3+ luôn kèm
   khung người lớn).
@@ -263,7 +264,7 @@ https://claude.ai/artifact/JDd4fYwxtDvRmpf1UGs5rW — kho đơn dùng chung cho
 mọi máy được share (db), xuất CSV/JSON.
 
 **Hai luồng, hai lá thư** (giọng Elise, ký "Elise · Purrlight Studio",
-hello@purrlight.studio):
+purrlightstudiollc@gmail.com — từ 16/10, thay hello@purrlight.studio):
 - *Thank you* — khách mua cầm về: tên khách, đúng món (+ dòng story của món
   từ products.js), dòng cá nhân do nhân sự gõ, care line + safety line nguyên
   văn, số tiền đã trả. Không xin review, không nhắc Purrks, không code.
@@ -290,8 +291,8 @@ line; email cũ .com = 0. Bản hosted không có nút Print (host chặn) và k
 có QR (trang private, khách không mở được) — hai thứ này chỉ có trên site.
 
 **Việc Elise phải chốt trước sự kiện 11/10 (Vianney):** hộp thư
-hello@purrlight.studio hoạt động + app Mail trên máy booth đăng nhập bằng
-hộp đó · permit thuế Texas → chọn chế độ thuế · gửi thử 2 lá thư từ điện
+purrlightstudiollc@gmail.com hoạt động (17/10: hướng dẫn nhân sự trên Notion
+đã đổi theo) + app Mail trên máy booth đăng nhập bằng hộp đó · permit thuế Texas → chọn chế độ thuế · gửi thử 2 lá thư từ điện
 thoại thật · giá 4 món tồn kho Pearland (stress ball set, linen doll bag
 charm, Americana doll, catnip ball) nếu muốn điền sẵn.
 

@@ -1037,7 +1037,8 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 - Kiểm tra độc lập (sau tin 14) tìm ra, đã sửa: (1) tranh kèm chuỗi tràng hạt bị em cho theo thời gian hàng len
   (2–3 tuần, hạn 8/11) — chị chưa nói vậy, và trái với thẻ "Ships within 5 days" → về lại thời gian tranh; (2) sau hạn
   đặt, thẻ "Ships within …" nằm ngay trên hộp ghi "delivered in 2027" → thẻ đổi thành "Orders placed now are delivered
-  in 2027" (xem câu hỏi 4 dưới); (3) dòng hộp tân gia & lịch trong mục Giáng sinh thiếu "(Alaska and Hawaii: longer)";
+  in 2027" (tranh: "Prints & add-ons ordered now…", file digital không bị ảnh hưởng; Christening: "a saint made for
+  you, ordered now, is delivered in 2027" — lần kiểm tra thứ hai tìm ra hai chỗ này) (xem câu hỏi 4 dưới); (3) dòng hộp tân gia & lịch trong mục Giáng sinh thiếu "(Alaska and Hawaii: longer)";
   (4) chuông có thể lắc khi còn nằm dưới thanh tiêu đề dính trên cùng (lúc cuộn ngược lên) rồi không lắc lại → chỉ lắc
   khi đã ra dưới thanh tiêu đề; (5) danh sách thời gian làm mục Giáng sinh cao hơn → ảnh Merlin bị phóng to (mờ) và lấn
   vào vùng mờ dần → trình duyệt chọn ảnh 1376px, khung ảnh dời sang trái (object-position 65%); (6) "Nov 12" / "2 days"

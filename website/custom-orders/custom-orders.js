@@ -437,7 +437,8 @@
     var end = art.querySelector(".box-end");
     var storeKey = "purrlight-custom-pick:" + key;
     var g = { id: art.id, key: key, def: def, art: art, est: null, text: "", swaps: {} };
-    var turn = art.querySelector(".turnaround"), turnText = turn ? turn.textContent : "";
+    /* SEASONAL Christmas 2026: the card's lead times that hold only until an order-by date (<span data-late="kind">) */
+    var lateBits = [].slice.call(art.querySelectorAll(".turnaround [data-late]")).map(function (s) { return { el: s, text: s.textContent }; });
 
     /* estimate · deposit today · balance after the photo is approved */
     var totalRow = el("p", { "class": "box-total" });
@@ -683,9 +684,12 @@
       /* when it is made and delivered (Elise 16/10): the holiday timing by kind of piece in the season ("delivered in
          2027" past its order-by date), 15 days after the season */
       var tk = timingKind(key, est);
-      /* SEASONAL Christmas 2026: past the gift's order-by date its card's "Ships within …" would contradict "delivered
-         in 2027" — the card says the band's words instead (checked on every change: a page left open past midnight) */
-      if (turn && /^Ships within /.test(turnText)) turn.textContent = christmas && isLate(TIMING.kinds[key]) ? turnText.replace(/^Ships within [^·]*?(\s*·|$)/, "Orders placed now are delivered in 2027$1") : turnText;
+      /* SEASONAL Christmas 2026: past its order-by date a card's "Ships within …" would contradict "delivered in 2027" —
+         it says the band's words instead (its data-late-text, else "Orders placed now …"); checked whenever the box updates */
+      lateBits.forEach(function (b) {
+        var late = christmas && isLate(b.el.getAttribute("data-late"));
+        b.el.textContent = late ? b.el.getAttribute("data-late-text") || "Orders placed now are delivered in 2027" : b.text;
+      });
       noteRow.textContent = [est.note, est.digitalOnly ? "" : (GET_IT[v.getit] || GET_IT.ship).short, shipping && !est.readyMade ? timingNote(tk, v.getit, christmas, isLate(tk)) : ""].filter(Boolean).join(" · ") + (g.goneNote ? " " + g.goneNote : "");
       copied.textContent = "";
       if (fromUser) store(storeKey, { v: v, swaps: g.swaps, u: 1, auto: g.auto || 0 });   /* a plain page view remembers nothing */

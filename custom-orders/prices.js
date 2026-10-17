@@ -59,8 +59,9 @@
      elsewhere in the U.S.; paintings are made in 3–5 days, then delivered in 3 days–1 week
      (2–3 days in Pearland). Outside the holidays: delivered within 15 days. Shown with
      shipping only (not pickup, not digital files, not the ready-made gown set): timingNote().
-     Ordered after its order-by date in the Christmas band (crochet Nov 8, paintings, calendars
-     and gift boxes Nov 15): "delivered in 2027", as the band says.
+     Past its order-by date in the Christmas band (crochet Nov 8; paintings, calendars and gift
+     boxes Nov 15) a piece still ships as usual (Elise 17/10): the box adds "may not arrive by
+     Christmas".
    - Timing (Elise 16/10, 14th message): housewarming boxes and calendars are made in 3–5 days,
      then delivered in 2–3 days in Pearland, 3–6 days to other cities or states (not Alaska or
      Hawaii). A Confirmation box with a saint made to order goes exactly like a doll (shipped
@@ -68,6 +69,12 @@
      Nov 12: 2 days in Pearland, 3–7 days in the U.S. These are not holiday numbers, so they
      stay after the season. Product cards say "Ships within …" (FTC Mail Order Rule): crochet
      3 weeks, paintings and housewarming boxes 5 days (her OK to the proposal).
+   - Timing (Elise 17/10): made-to-order crochet comes from the Vietnam workshop — once made it
+     takes 2–3 weeks to reach the customer, within 15 days in Pearland (also for pickup at
+     Pearland Town Center); the "3 days–1 week in Texas" is for pieces in stock, which ship right
+     away. Late orders ship as usual. A saint we have ready ordered after Nov 15 still arrives in
+     the holidays. Alaska and Hawaii: about 7–8 days or more. Fluffy yarn takes about 2 weeks
+     more to make (her catalog; OK 17/10): made in 4–5 weeks, ships within 5 weeks.
    - Eyes (Elise 16/10, later): she makes both closed "sleeping" eyes and open eyes —
      the visitor picks for a saint made to order (12 cm made for you, St. Carlo,
      St. Michael), same price; a saint we have ready comes as it is. The page avoids
@@ -196,9 +203,9 @@ function estPet(o) {
     lines.push({ label: "Second pet on the same order (" + size + " · " + yarn + ", −$" + PRICES.pet.secondPetOff + ")", amount: each - PRICES.pet.secondPetOff });
     r = finish(lines);
     r.note = "Second pet priced at the same size and yarn — estimate";
-    return r;
-  }
-  return finish(lines);
+  } else r = finish(lines);
+  if (yarn === "Fluffy") r.timing = "fluffy";   /* about 2 weeks more to make (Elise 17/10) */
+  return r;
 }
 
 function estWatercolor(o) {
@@ -269,13 +276,17 @@ function gownPrice(now) {
   var on = !!sale && t < Date.parse(sale.ends);
   return { price: on ? Math.round(C.gownSet * (100 - sale.off)) / 100 : C.gownSet, regular: C.gownSet, sale: on ? sale : null };
 }
-var TIMING = {   /* Elise 16/10 (13th and 14th messages). holiday: these numbers hold in the season only (then offSeason) */
-  yarn:  { make: "made in 2–3 weeks", ship: "delivered in 3 days–1 week", out: "delivered in 2–3 weeks", holiday: true },
-  paint: { make: "made in 3–5 days", ship: "delivered in 3 days–1 week (2–3 days in Pearland)", out: "delivered in 3 days–1 week", holiday: true },
-  box:   { make: "made in 3–5 days", ship: "delivered in 2–3 days in Pearland, 3–6 days elsewhere", out: "delivered in 3–6 days (Alaska and Hawaii: longer)" },
-  saint: { make: "", ship: "delivered in 2 days in Pearland, 3–7 days elsewhere", out: "delivered in 3–7 days" },   /* a saint we have ready */
+var AKHI = " (Alaska and Hawaii: 7–8 days or more)";
+var TIMING = {   /* Elise 16–17/10. holiday: these numbers hold in the season only (then offSeason, if any) */
+  yarn:   { make: "made in 2–3 weeks", ship: "delivered in 2–3 weeks (within 15 days in Pearland)", out: "delivered in 2–3 weeks",
+            pickup: "ready for pickup within 15 days after that", offPickup: "ready for pickup within 15 days", holiday: true },   /* from the Vietnam workshop */
+  fluffy: { make: "made in 4–5 weeks", ship: "delivered in 2–3 weeks (within 15 days in Pearland)", out: "delivered in 2–3 weeks",
+            pickup: "ready for pickup within 15 days after that", holiday: true, offSeason: "" },   /* no off-season number given for Fluffy */
+  paint:  { make: "made in 3–5 days", ship: "delivered in 3 days–1 week (2–3 days in Pearland)", out: "delivered in 3 days–1 week" + AKHI, holiday: true },
+  box:    { make: "made in 3–5 days", ship: "delivered in 2–3 days in Pearland, 3–6 days elsewhere", out: "delivered in 3–6 days" + AKHI },
+  saint:  { make: "", ship: "delivered in 2 days in Pearland, 3–7 days elsewhere", out: "delivered in 3–7 days" + AKHI },   /* a saint we have ready */
   offSeason: "delivered within 15 days",
-  late: "delivered in 2027",   /* ordered after its order-by date (the Christmas band) */
+  late: { ship: "may not arrive by Christmas", out: "may not arrive by Christmas", pickup: "may not be ready by Christmas" },   /* past its order-by date: still ships as usual */
   kinds: { portraitDoll: "yarn", pet: "yarn", godparent: "yarn", watercolor: "paint", housewarming: "box", calendar: "box" }
 };
 /* which timing a gift follows: key = the gift (data-gift), est = its estimate (est.timing overrides the gift's kind)
@@ -283,14 +294,13 @@ var TIMING = {   /* Elise 16/10 (13th and 14th messages). holiday: these numbers
 function timingKind(key, est) {
   return (est && est.timing) || TIMING.kinds[key] || "";
 }
-/* the timing line for a shipped piece: kind = timingKind(), getit = ship (Texas) / out (elsewhere in the U.S.),
-   season = the holiday season is on, late = ordered after that kind's order-by date */
+/* the timing line: kind = timingKind(), getit = ship (Texas) / out (elsewhere in the U.S.) / pickup (Pearland Town
+   Center), season = the holiday season is on, late = ordered after that kind's order-by date */
 function timingNote(kind, getit, season, late) {
-  var t = kind === "kinds" ? null : TIMING[kind];
-  if (!t || !t.ship) return "";
-  if (season && late) return TIMING.late;
-  if (!season && t.holiday) return TIMING.offSeason;
-  return [t.make, getit === "out" ? t.out : t.ship].filter(Boolean).join(" · ");
+  var t = kind === "kinds" || kind === "late" ? null : TIMING[kind], how = getit === "out" || getit === "pickup" ? getit : "ship";
+  if (!t || !t.ship || (how === "pickup" && !t.pickup)) return "";
+  if (!season && t.holiday) return how === "pickup" ? t.offPickup || "" : t.offSeason !== undefined ? t.offSeason : TIMING.offSeason;
+  return [t.make, t[how], season && late ? TIMING.late[how] : ""].filter(Boolean).join(" · ");
 }
 function estChristeningGown(o) {
   var g = gownPrice(o && o.now);

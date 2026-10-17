@@ -671,8 +671,8 @@
       balanceRow.appendChild(el("span", { text: "Balance after you approve the photo" })); balanceRow.appendChild(el("span", { "class": "amt", text: db[1] }));
       if (fromUser) g.goneNote = "";
       var shipping = !est.digitalOnly && (v.getit === "ship" || v.getit === "out" || !GET_IT[v.getit]);
-      /* SEASONAL Christmas 2026: Elise gave the 2–3 weeks as the year-end holiday delay */
-      noteRow.textContent = [est.note, est.digitalOnly ? "" : (GET_IT[v.getit] || GET_IT.ship).short, shipping && !est.readyMade && christmas ? DELIVERY_NOTE : ""].filter(Boolean).join(" · ") + (g.goneNote ? " " + g.goneNote : "");
+      /* when it is made and delivered (Elise 16/10): the holiday timing by kind of piece in the season, 15 days after */
+      noteRow.textContent = [est.note, est.digitalOnly ? "" : (GET_IT[v.getit] || GET_IT.ship).short, shipping && !est.readyMade ? timingNote(key, v.getit, christmas) : ""].filter(Boolean).join(" · ") + (g.goneNote ? " " + g.goneNote : "");
       copied.textContent = "";
       if (fromUser) store(storeKey, { v: v, swaps: g.swaps, u: 1, auto: g.auto || 0 });   /* a plain page view remembers nothing */
       if (g === current) setBarThumb(g);

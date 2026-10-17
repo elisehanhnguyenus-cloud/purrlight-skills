@@ -266,6 +266,9 @@ quả thông** cắt từ ảnh Merlin của chị (ảnh 15) treo góc trái d�
 ảnh Merlin, viền vầng sáng 3px. Ảnh: `xmas-pine-corner.webp`, `xmas-pine-ground.webp`, `xmas-bough.webp` (18–24 KB).
 Mọi thứ theo công tắc mùa, gỡ cùng mục Giáng sinh. Không làm: lá/tuyết rơi trên ảnh đầu trang (đè video Merlin), cành
 thông ở tiêu đề "Build your gift", vòng hoa hộp quà (lặp ảnh).
+**Chốt 16/10, tin nhắn 13 — thời gian làm & giao:** mùa lễ: hàng len làm 2–3 tuần, giao 3 ngày–1 tuần trong Texas /
+2–3 tuần nơi khác ở Mỹ; tranh làm 3–5 ngày, giao 3 ngày–1 tuần (2–3 ngày ở Pearland); ngoài mùa lễ giao tối đa 15 ngày.
+Code: `TIMING` + `timingNote()` trong `prices.js` (hộp "What's inside" khi ship), câu "Holiday timing" trong mục Giáng sinh.
 **Chốt 16/10, tin nhắn 12:** (1) Thánh có sẵn không chọn mắt — đúng ý chị. (2) **Bảng màu len** từ catalog Canva
 của chị: chỉ lấy 6 trang chọn len (cotton trơn ×2, cotton mix, velvet ×2, fluffy — trang fluffy ghi "+$15–30", khớp
 giá Fluffy trên trang), **không gắn link catalog** (các trang giá lệch giá trang). Ở bước "Yarn" của Custom Pet

@@ -54,9 +54,13 @@
    - Confirmation gift box can be ordered now, shipping after Nov 12: a saint figure
      + rosary chain — 12 cm figure $55 (a saint we have ready, or one made for you),
      or St. Carlo Acutis / St. Michael the Archangel at 10 in, $90.
-   - Delivery (Elise 16/10, 12th message): 2–3 weeks from the day a piece is finished —
-     year-end shipping runs into Thanksgiving and Christmas. Shown with shipping (not
-     pickup, not digital files, not the ready-made gown set): DELIVERY_NOTE.
+   - Timing (Elise 16/10, 13th message), holiday season (until Jan 2 2027): crochet pieces are
+     made in 2–3 weeks (holiday peak), then delivered in 3 days–1 week in Texas or 2–3 weeks
+     elsewhere in the U.S.; paintings are made in 3–5 days, then delivered in 3 days–1 week
+     (2–3 days in Pearland). Outside the holidays: delivered within 15 days. Shown with
+     shipping only (not pickup, not digital files, not the ready-made gown set): timingNote().
+     Not given for gift boxes, calendars or the Confirmation box, so nothing is said for them
+     in the season.
    - Eyes (Elise 16/10, later): she makes both closed "sleeping" eyes and open eyes —
      the visitor picks for a saint made to order (12 cm made for you, St. Carlo,
      St. Michael), same price; a saint we have ready comes as it is. The page avoids
@@ -258,7 +262,19 @@ function gownPrice(now) {
   var on = !!sale && t < Date.parse(sale.ends);
   return { price: on ? Math.round(C.gownSet * (100 - sale.off)) / 100 : C.gownSet, regular: C.gownSet, sale: on ? sale : null };
 }
-var DELIVERY_NOTE = "delivery 2–3 weeks after it's finished";   /* Elise 16/10 (12th message) */
+var TIMING = {   /* Elise 16/10 (13th message) */
+  yarn:  { make: "made in 2–3 weeks", ship: "delivered in 3 days–1 week", out: "delivered in 2–3 weeks" },
+  paint: { make: "made in 3–5 days", ship: "delivered in 3 days–1 week", out: "delivered in 3 days–1 week" },
+  offSeason: "delivered within 15 days",
+  kinds: { portraitDoll: "yarn", pet: "yarn", godparent: "yarn", watercolor: "paint" }
+};
+/* the timing line for a shipped piece: key = the gift (data-gift), getit = ship (Texas) / out (elsewhere in the U.S.),
+   season = the holiday season is on */
+function timingNote(key, getit, season) {
+  if (!season) return TIMING.offSeason;
+  var t = TIMING[TIMING.kinds[key]];
+  return t ? t.make + " · " + (getit === "out" ? t.out : t.ship) : "";
+}
 function estChristeningGown(o) {
   var g = gownPrice(o && o.now);
   var r = finish([{ label: "Christening Gown Set — lace & satin" + (g.sale ? " (" + g.sale.off + "% off " + money(g.regular) + " through " + g.sale.through + " CT)" : ""), amount: g.price }]);
@@ -335,5 +351,5 @@ function summaryLine(product, est, how) {
 }
 
 if (typeof module !== "undefined") {
-  module.exports = { ORDER_FORM_URL: ORDER_FORM_URL, ORDER_FORM_PREFILL_ENTRY: ORDER_FORM_PREFILL_ENTRY, PAY: PAY, PRICES: PRICES, money: money, moneyPair: moneyPair, taxLabel: taxLabel, outOfTexas: outOfTexas, itemOff: itemOff, applyQty: applyQty, estPortraitDoll: estPortraitDoll, estPet: estPet, estWatercolor: estWatercolor, estHousewarming: estHousewarming, estCalendar: estCalendar, estGodparent: estGodparent, estChristeningGown: estChristeningGown, estConfirmation: estConfirmation, DELIVERY_NOTE: DELIVERY_NOTE, addonPrice: addonPrice, gownPrice: gownPrice, summaryLine: summaryLine };
+  module.exports = { ORDER_FORM_URL: ORDER_FORM_URL, ORDER_FORM_PREFILL_ENTRY: ORDER_FORM_PREFILL_ENTRY, PAY: PAY, PRICES: PRICES, money: money, moneyPair: moneyPair, taxLabel: taxLabel, outOfTexas: outOfTexas, itemOff: itemOff, applyQty: applyQty, estPortraitDoll: estPortraitDoll, estPet: estPet, estWatercolor: estWatercolor, estHousewarming: estHousewarming, estCalendar: estCalendar, estGodparent: estGodparent, estChristeningGown: estChristeningGown, estConfirmation: estConfirmation, TIMING: TIMING, timingNote: timingNote, addonPrice: addonPrice, gownPrice: gownPrice, summaryLine: summaryLine };
 }

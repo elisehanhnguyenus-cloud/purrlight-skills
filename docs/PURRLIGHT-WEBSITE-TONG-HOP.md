@@ -1002,20 +1002,29 @@ lưới màu**, xoá tên V-03 (chờ chị đặt tên mới), xoá ô trống;
 cộng với "2–4 tuần" thì đơn 15/11 có thể tới 3/1/2027, trái với "đặt sau các ngày này mới giao năm 2027" — chờ chị
 chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang màu yếm sage của Merlin (#93A898, có trong Brand Canon).
 
+### Elise 16/10, tin nhắn 13 — thời gian làm & giao (mùa lễ)
+- **Hàng len** (búp bê, thú cưng móc len, bộ godparent): làm 2–3 tuần (tùy cao điểm lễ); giao **3 ngày–1 tuần trong
+  Texas / Pearland**, **2–3 tuần nơi khác ở Mỹ**. **Tranh**: làm 3–5 ngày; giao 3 ngày–1 tuần trong nước, 2–3 ngày ở
+  Pearland. Chỉ áp dụng **mùa lễ**; ngoài mùa lễ giao **tối đa 15 ngày**.
+- Trang: dòng ghi chú trong hộp "What's inside" khi chọn ship ghi đúng loại hàng (vd. "made in 2–3 weeks · delivered in
+  2–3 weeks" khi ship ngoài Texas); hộp quà, lịch, hộp Confirmation chưa có số nên không ghi; nhận tại chỗ không ghi;
+  từ 2/1/2027 tự đổi thành "delivered within 15 days". Mục Giáng sinh ghi "Holiday timing: crochet pieces take 2–3
+  weeks to make, then 3 days–1 week to reach you in Texas, or 2–3 weeks elsewhere in the U.S. Paintings take 3–5 days,
+  then 3 days–1 week (2–3 days in Pearland)." Bỏ câu "allow 2–4 weeks". "How it works" không ghi số cố định.
+- Kiểm tra hạn đặt với số mới: len đặt 8/11 → làm ≤3 tuần + giao ≤3 tuần → ≤20/12 (trước Giáng sinh); tranh đặt 15/11
+  → ≤27/11. Không còn mâu thuẫn.
+
 ### Còn chờ chị
-1. **Hạn đặt Giáng sinh** — theo số trên trang: CN 8/11 + làm tối đa 4 tuần + giao tối đa 3 tuần → ~27/12 (sau Giáng
-   sinh); CN 15/11 → ~3/1/2027 (trái với câu "Orders placed after these dates will be delivered in 2027"). Chị chọn:
-   (a) "2–4 tuần" đã gồm cả giao → trang ghi rõ "allow 2–4 weeks in all"; hoặc (b) đó là thời gian làm → dời hạn đặt
-   sớm hơn (giao trước Giáng sinh cần ~5/11; giao trong năm 2026 cần ~12/11 cho tranh/lịch/hộp quà).
-2. Giao 2–3 tuần sau khi làm xong: chỉ mùa lễ hay **quanh năm**? (trang đang để theo mùa, tự ẩn từ 2/1/2027).
-3. Nhận tại Pearland (pickup): cũng cần 2–3 tuần sau khi làm xong (hàng từ Việt Nam) không?
-4. **FTC (16 CFR 435, xem 8j):** các dòng "Turnaround: from 2 weeks" chưa ghi hạn gửi hàng → chị đặt N cho "ships
-   within N" từng món.
-5. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
+1. Ý 3 tin nhắn của chị bị cắt: "Hàng custom Khách tại Pearland thì tối đa 15 ngày nếu hàng phải ship từ Wo…" — ship từ
+   đâu? (để em ghi đúng cho khách nhận tại Pearland)
+2. Hộp quà (tân gia), lịch, hộp Confirmation: thời gian làm & giao mùa lễ?
+3. **FTC (16 CFR 435, xem 8j):** đổi "Turnaround: from 2 weeks" thành "ships within 3 weeks" (len, mùa lễ) / "ships
+   within 5 days" (tranh) theo số chị vừa cho — chị đồng ý không?
+4. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
    cấp?). Trang Fluffy ghi "thêm khoảng 2 tuần làm" — trang web chưa đưa, chị xác nhận nếu muốn ghi.
-6. Video Merlin có tiếng nói không? Nếu chị muốn bật tiếng, gửi em lời thoại để làm phụ đề.
-7. Sau mùa lễ: thay ảnh hero (mục Giáng sinh + video tự ẩn từ 2/1/2027).
+5. Video Merlin có tiếng nói không? Nếu chị muốn bật tiếng, gửi em lời thoại để làm phụ đề.
+6. Sau mùa lễ: thay ảnh hero (mục Giáng sinh + video tự ẩn từ 2/1/2027).
 
 ## 9. Link & tài nguyên
 

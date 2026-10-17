@@ -25,7 +25,7 @@
     var t = christmas && document.getElementById(id), d = t && /^(\d{4})-(\d{2})-(\d{2})$/.exec(t.getAttribute("datetime") || "");
     return d ? new Date(+d[1], +d[2] - 1, +d[3], 23, 59, 59) : null;
   };
-  var ORDER_BY = { yarn: "xmas-by-crochet", fluffy: "xmas-by-crochet", paint: "xmas-by-paint", box: "xmas-by-paint" };   /* timingKind() → the band's <time>: crochet; paintings, calendars & gift boxes. A saint we have ready arrives in the holidays whenever ordered (Elise 17/10) */
+  var ORDER_BY = { yarn: "xmas-by-crochet", fluffy: "xmas-by-crochet", paint: "xmas-by-paint", box: "xmas-by-paint" };   /* timingKind() → the band's <time>: crochet; paintings, calendars & housewarming boxes. A saint we have ready arrives in the holidays whenever ordered (Elise 17/10) */
   var isLate = function (kind) { var d = ORDER_BY[kind] ? orderBy(ORDER_BY[kind]) : null; return !!d && new Date() > d; };
 
   /* ---------- site nav (same behavior as the main site) ---------- */

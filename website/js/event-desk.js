@@ -109,17 +109,22 @@ var DESK_CONFIG = {
      The "made" wording keeps the approved 10–14-day phrase from the
      customer-service skill for the rest of the year, with its customs caveat
      (a shipment was held in 8/2026). */
+  /* the holiday timing holds for orders placed before this day (the order's own date, local) — the same season as the
+     Custom Orders page (custom-orders.js SEASON_END) */
+  seasonEnd: "2027-01-02",
   timelines: [
     { key: "stock",  label: "Ready now — ships from our Texas studio",
       text: "Your piece is ready at our Texas studio. It ships with tracking, and I'll message you the tracking number the moment it's on its way." },
-    /* holiday numbers per Elise 16–17/10/2026 (the same as the Custom Orders page): made-to-order crochet comes from
-       the Vietnam workshop — made in 2–3 weeks in the holiday season (Fluffy yarn about 2 weeks more), then 2–3 weeks
-       to arrive, within 15 days to Pearland; the rest of the year a custom piece arrives within 15 days. Never promise
-       faster. */
+    /* Elise 16–17/10/2026, the same numbers as the Custom Orders page. text = orders placed before seasonEnd: made-to-order
+       crochet comes from the Vietnam workshop, made in 2–3 weeks (Rabbit Fluff Fur — the page's "Fluffy" — about 2
+       weeks more), then 2–3 weeks to arrive, within 15 days to Pearland. offText = from seasonEnd: a custom piece
+       arrives within 15 days. Never promise faster. */
     { key: "made",   label: "Made to order — ships from our Vietnam workshop",
-      text: "Your piece will be made by hand in small batches. I'll message you when it leaves our workshop; from there, delivery takes 2–3 weeks in the Thanksgiving–Christmas season (within 15 days to Pearland) and typically 10–14 days the rest of the year, though customs can add time." },
-    { key: "custom", label: "Custom piece — 2–3 weeks to make, 2–3 to arrive (holidays)",
-      text: "Custom pieces are made by hand in our Vietnam workshop, and I'll send you a photo to approve before anything ships. In the Thanksgiving–Christmas season they take 2–3 weeks to make (Fluffy yarn about 2 weeks more), then 2–3 weeks to reach you — within 15 days to Pearland. The rest of the year, your piece reaches you within 15 days." }
+      text: "Your piece will be made by hand in small batches. I'll message you when it leaves our workshop; from there, it reaches you in 2–3 weeks — within 15 days to Pearland.",
+      offText: "Your piece will be made by hand in small batches. I'll message you when it leaves our workshop; from there, delivery typically takes 10–14 days, though customs can add time." },
+    { key: "custom", label: "Custom piece — 2–3 weeks to make, 2–3 to arrive", offLabel: "Custom piece — arrives within 15 days",
+      text: "Custom pieces are made by hand in our Vietnam workshop, and I'll send you a photo to approve before anything ships. Yours takes 2–3 weeks to make (about 2 weeks more in Rabbit Fluff Fur), then 2–3 weeks to reach you — within 15 days to Pearland.",
+      offText: "Custom pieces are made by hand in our Vietnam workshop, and I'll send you a photo to approve before anything ships. Yours reaches you within 15 days (Rabbit Fluff Fur takes about 2 weeks more to make)." }
   ],
 
   /* Shown when a balance remains on an order WITHOUT a custom piece. There is
@@ -310,6 +315,8 @@ var DESK_CONFIG = {
      date. No "safe"/"non-toxic". No policy the studio hasn't written.
      ============================================================ */
 
+  /* a timeline's words for an order placed on ymd ("YYYY-MM-DD"): the holiday text before CFG.seasonEnd, offText from it */
+  function timelineText(tl, ymd) { return tl.offText && ymd && ymd >= CFG.seasonEnd ? tl.offText : tl.text; }
   function timelineFor(key) {
     for (var i = 0; i < CFG.timelines.length; i++) if (CFG.timelines[i].key === key) return CFG.timelines[i];
     return CFG.timelines[1];
@@ -412,7 +419,7 @@ var DESK_CONFIG = {
     if (o.totals.balance > 0 && !hasCustom(o)) p.push(CFG.balanceLine);
     var sh = shipLines(o.ship);
     p.push(sh ? "Ship to:\n" + sh : "I'll confirm your shipping address by message before anything ships.");
-    p.push(tl.text);
+    p.push(timelineText(tl, localYmd(o.createdAt)));
     if (hasCustom(o)) {
       var pets = petNames(o);
       p.push(CFG.photoLine.replace("{pet}", pets.length ? pets.join(" and ") : "the one we're making").replace("{email}", CFG.studioEmail));
@@ -516,7 +523,7 @@ var DESK_CONFIG = {
       '</div>';
     if (isOrder) {
       var tl = timelineFor(p.tl);
-      html += '<div class="confirm-section"><h2>What happens next</h2><p>' + esc(tl.text) + '</p>' +
+      html += '<div class="confirm-section"><h2>What happens next</h2><p>' + esc(timelineText(tl, p.d)) + '</p>' +
         (t.balance > 0 && !p.cu ? '<p>' + esc(CFG.balanceLine) + '</p>' : '') +
         (p.sh ? '<p>Shipping to ' + esc(p.sh) + ' — I\'ll confirm the full address with you by message.</p>' : '') + '</div>';
       if (p.cu) html += '<div class="confirm-section"><h2>Your custom piece</h2><p>' + esc(CFG.photoLine.replace("{pet}", p.cu === 1 ? "the one we're making" : p.cu).replace("{email}", CFG.studioEmail)) + '</p><p>' + esc(customTermsFor(t)) + '</p></div>';
@@ -592,6 +599,7 @@ var DESK_CONFIG = {
     }).join("");
   }
   renderChips(el.payChips, "pay", CFG.payMethods, settings.lastPay || CFG.payMethods[0]);
+  if (localYmd() >= CFG.seasonEnd) CFG.timelines.forEach(function (t) { if (t.offLabel) t.label = t.offLabel; });   /* the chips say what an order placed today is told */
   renderChips(el.tlChips, "timeline", CFG.timelines, "made");
   function chipValue(root) { var c = $("input:checked", root); return c ? c.value : ""; }
   var timelineTouched = false;

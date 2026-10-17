@@ -50,7 +50,7 @@ website/
     ├── fonts/        # File .woff2 (đã tải sẵn, có subset tiếng Việt)
     └── img/          # Minh họa SVG (brand art, tile "soon")
         ├── etsy/     # ★ ẢNH LISTING THẬT tải từ Etsy — tên file = listing id (vd 4337395489.jpg)
-        └── custom/   # Ảnh trang Custom Orders (WebP ≤ 200 KB) + og-custom-orders.jpg
+        └── custom/   # Ảnh trang Custom Orders (WebP ≤ 200 KB) + og-custom-orders-merlin.jpg (ảnh share link từ 17/10; og-custom-orders.jpg cũ giữ cho link đã share)
 ```
 
 ## Event Desk — bàn bán hàng tại sự kiện (`event.html`)
@@ -79,7 +79,9 @@ số/câu chữ đều có chú thích nguồn ngay cạnh: bảng giá custom (
 25/09/2026), điều khoản cọc 50% (25/09), thời gian làm & giao (Elise 16–17/10, giống trang
 Custom Orders: hàng custom mùa lễ làm 2–3 tuần — len Fluffy thêm khoảng 2 tuần — rồi 2–3 tuần
 từ xưởng Việt Nam tới khách, trong 15 ngày tới Pearland; ngoài mùa lễ tới khách trong 15 ngày;
-hàng làm theo đơn ngoài mùa lễ vẫn "typically 10–14 days" của skill CSKH), dòng
+hàng làm theo đơn ngoài mùa lễ vẫn "typically 10–14 days" của skill CSKH — câu khách đọc chọn theo **ngày của đơn**:
+đơn trước `seasonEnd` 2/1/2027 nhận số mùa lễ, từ đó nhận `offText`; len Fluffy gọi đúng tên trong desk "Rabbit Fluff
+Fur"), dòng
 safety nguyên văn (Brand Canon v2).
 
 **Luật đã cài cứng trong tool** (đừng gỡ): không có ô nhập ngày giao — chỉ có

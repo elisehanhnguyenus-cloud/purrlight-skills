@@ -1067,6 +1067,12 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 - **Len Fluffy thêm khoảng 2 tuần** (chị OK): thẻ thú cưng "Ships within 3 weeks · Fluffy yarn: within 5 weeks", ô Fluffy
   "about 2 weeks more to make", hộp "made in 4–5 weeks".
 - **Event Desk** đổi theo số mới (câu khách đọc trong tin nhắn / trang xác nhận đơn) + cập nhật bản dùng ở booth.
+  Kiểm tra độc lập tìm ra, đã sửa: câu chỉ áp số mùa lễ "in the Thanksgiving–Christmas season" → đơn tại booth từ 17/10
+  tới 25/11 đọc thành "trong 15 ngày", nhanh hơn trang web → desk chọn câu theo ngày của đơn (trước 2/1/2027: số mùa lễ;
+  từ 2/1: 15 ngày); "Fluffy" → "Rabbit Fluff Fur" (tên len trong desk); dòng hạn 15/11 "Paintings, calendars & gift
+  boxes" đổi thành "… & housewarming boxes" vì thánh có sẵn đặt sau 15/11 vẫn kịp (thánh làm theo yêu cầu theo hạn len).
+- **Ảnh khi share link** (chị 17/10): đổi từ ảnh ghép búp bê sang **ảnh Merlin ở đầu trang** (1200×630,
+  `og-custom-orders-merlin.jpg`, tên file mới để app không giữ ảnh cũ). Ảnh mùa Giáng sinh → đổi cùng ảnh hero sau mùa.
 
 ### Còn chờ chị
 1. **Hạn đặt cho len Fluffy:** làm 4–5 tuần + giao 2–3 tuần → đặt 8/11 chậm nhất có thể tới khoảng 3/1, sau Giáng sinh. Chị
@@ -1076,7 +1082,7 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
    cấp?).
 4. Video Merlin có tiếng nói không? Nếu chị muốn bật tiếng, gửi em lời thoại để làm phụ đề.
-5. Sau mùa lễ: thay ảnh hero (mục Giáng sinh + video tự ẩn từ 2/1/2027).
+5. Sau mùa lễ: thay ảnh hero và ảnh share link (mục Giáng sinh + video tự ẩn từ 2/1/2027).
 
 ## 9. Link & tài nguyên
 

@@ -25,7 +25,7 @@
     var t = christmas && document.getElementById(id), d = t && /^(\d{4})-(\d{2})-(\d{2})$/.exec(t.getAttribute("datetime") || "");
     return d ? new Date(+d[1], +d[2] - 1, +d[3], 23, 59, 59) : null;
   };
-  var ORDER_BY = { yarn: "xmas-by-crochet", fluffy: "xmas-by-crochet", paint: "xmas-by-paint", box: "xmas-by-paint" };   /* timingKind() → the band's <time>: crochet; paintings, calendars & housewarming boxes. A saint we have ready arrives in the holidays whenever ordered (Elise 17/10) */
+  var ORDER_BY = { yarn: "xmas-by-crochet", fluffy: "xmas-by-fluffy", paint: "xmas-by-paint", box: "xmas-by-paint" };   /* timingKind() → the band's <time>: crochet; paintings, calendars & housewarming boxes. A saint we have ready arrives in the holidays whenever ordered (Elise 17/10) */
   var isLate = function (kind) { var d = ORDER_BY[kind] ? orderBy(ORDER_BY[kind]) : null; return !!d && new Date() > d; };
 
   /* ---------- site nav (same behavior as the main site) ---------- */
@@ -1361,18 +1361,21 @@
   }
 
   /* ---------- SEASONAL Christmas 2026 — Merlin says hello (Elise 16/10, 12th message: her video, "put it where it fits").
-     The hero photo comes alive: the same scene (its first frame is the photo, tone-matched), played once (10 s, muted —
-     the sound is not used), then it fades back to the photo. It starts after the page has loaded, only while the hero is
-     on screen, never for visitors who ask for less motion or save data, and a button pauses it or plays it again
-     (WCAG 2.2.2). Phones get a 4:3 cut of it, like the phone photo. Decoration only: the photo's alt text says it all. */
+     The hero photo comes alive: the same scene (its first frame is the photo, tone-matched), played once (10 s), then it
+     fades back to the photo. It starts after the page has loaded, muted (browsers only autoplay muted video), only while
+     the hero is on screen, never for visitors who ask for less motion or save data. Buttons: "Sound on" plays Merlin's
+     voice from the first word (Elise 18/10: "the video has no sound"), "Pause video" / "Play video" (WCAG 2.2.2); what
+     he says shows as captions while it plays (WCAG 1.2.2). Phones get a 4:3 cut of it, like the phone photo. */
   var heroPic = document.querySelector(".hero-pic"), heroImg = heroPic && heroPic.querySelector(".hero-photo"), heroBox = document.querySelector(".hero");
   var probe = document.createElement("video");
-  /* WebM (VP9) where it plays, else MP4 (H.264): between them every current browser */
-  var heroType = !probe.canPlayType ? "" : probe.canPlayType('video/webm; codecs="vp9"') ? ".webm" : probe.canPlayType('video/mp4; codecs="avc1.640028"') ? ".mp4" : "";
+  /* WebM (VP9 + Opus) where it plays, else MP4 (H.264 + AAC): between them every current browser */
+  var heroType = !probe.canPlayType ? "" : probe.canPlayType('video/webm; codecs="vp9, opus"') ? ".webm" : probe.canPlayType('video/mp4; codecs="avc1.640028, mp4a.40.2"') ? ".mp4" : "";
   if (christmas && heroImg && heroBox && heroType && !calm && !(navigator.connection && navigator.connection.saveData) && "IntersectionObserver" in window) {
     var heroWide = window.matchMedia("(min-width: 600px)"), heroBg = window.matchMedia("(min-width: 900px)");   /* wide cut from 600px; the photo is a background (absolute) from 900px */
-    var heroOn = false, heroReady = false, heroStopped = false, heroVideo = null, heroBtn = null;
-    var heroFile = function () { return "../assets/video/" + (heroWide.matches ? "hero-merlin-960" : "hero-merlin-phone-640") + heroType; };
+    var heroOn = false, heroReady = false, heroStopped = false, heroAway = false, heroVideo = null, heroBtn = null, heroSound = null, heroCC = null, heroCtrls = null;
+    var heroFile = function () { return "../assets/video/" + (heroWide.matches ? "hero-merlin-voice-960" : "hero-merlin-voice-phone-640") + heroType; };
+    /* what Merlin says (the video's own words, Elise 16/10), in seconds */
+    var HERO_CC = [[0.6, 3.5, "Christmas is coming very close now."], [3.5, 6.6, "Wishing you a very peaceful holiday season,"], [6.6, 9.2, "warmth with your family and loved ones."]];   /* back to back: no blink between lines */
     /* the video sits exactly on the photo's box — inside it, never a pixel larger (so the photo stays the page's
        largest paint), and with the photo's own drift transform */
     var heroFit = function () {
@@ -1382,6 +1385,21 @@
       heroVideo.style.left = L + "px"; heroVideo.style.top = T + "px";
       heroVideo.style.width = Math.max(0, Math.floor(r.right - b.left) - L) + "px"; heroVideo.style.height = Math.max(0, Math.floor(r.bottom - b.top) - T) + "px";
       heroVideo.style.transform = heroImg.style.transform;
+      /* the captions: over the photo, above the buttons — on wide screens over its clear part (the left of it fades) */
+      var W = Math.floor(r.right - b.left) - L, H = Math.floor(r.bottom - b.top) - T;
+      heroCC.style.left = Math.round(L + W * (heroBg.matches ? 0.56 : 0.5)) + "px";
+      var cr = heroCtrls.getBoundingClientRect();   /* above the buttons, however tall they are (large text: two rows) */
+      heroCC.style.top = Math.round(cr.height ? Math.min(T + H - 60, cr.top - b.top - 12) : T + H - 60) + "px";
+      heroCC.style.maxWidth = Math.round(Math.min(W * (heroBg.matches ? 0.56 : 0.9), 440)) + "px";
+    };
+    var heroLine = function () {   /* the caption for this moment, only while the video shows and plays */
+      var t = heroVideo.currentTime, on = heroVideo.className.indexOf(" on") > -1 && !heroVideo.paused && !heroVideo.ended, line = "";
+      for (var i = 0; on && i < HERO_CC.length; i++) if (t >= HERO_CC[i][0] && t < HERO_CC[i][1]) line = HERO_CC[i][2];
+      if (heroCC.textContent !== line) heroCC.textContent = line;
+    };
+    var heroSoundLabel = function () {
+      heroSound.lastChild.textContent = heroVideo.muted ? "Sound on" : "Sound off";
+      heroSound.className = "hero-sound" + (heroVideo.muted ? " is-muted" : "");
     };
     var heroLabel = function () {
       var playing = heroVideo && !heroVideo.paused && !heroVideo.ended;
@@ -1404,19 +1422,48 @@
       heroVideo.src = heroFile();
       heroPic.parentNode.insertBefore(heroVideo, heroPic.nextSibling);
       heroImg.follower = heroVideo;
+      var ctrls = heroCtrls = document.createElement("div");
+      ctrls.className = "hero-ctrls";
+      heroSound = document.createElement("button");
+      heroSound.type = "button";
+      heroSound.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 6h3l4-3v10l-4-3H2z" fill="currentColor"/>' +
+        '<path class="wave" d="M11 5.5a3.5 3.5 0 0 1 0 5M12.8 3.8a6 6 0 0 1 0 8.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>' +
+        '<path class="cross" d="M11 6l4 4M15 6l-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span></span>';
       heroBtn = document.createElement("button");
       heroBtn.type = "button";
-      heroBox.appendChild(heroBtn);
+      ctrls.appendChild(heroSound); ctrls.appendChild(heroBtn);
+      heroBox.appendChild(ctrls);
+      heroCC = document.createElement("p");
+      heroCC.className = "hero-cc";
+      heroCC.setAttribute("aria-hidden", "true");   /* captions for the eye; the video itself is decoration */
+      heroBox.appendChild(heroCC);
       heroFit();
-      heroVideo.addEventListener("playing", function () { heroShow(true); heroLabel(); });   /* fade in on a real frame */
-      heroVideo.addEventListener("ended", function () { heroShow(false); heroLabel(); });
-      heroVideo.addEventListener("pause", heroLabel);
+      heroVideo.addEventListener("playing", function () { heroShow(true); heroLabel(); heroLine(); });   /* fade in on a real frame */
+      heroVideo.addEventListener("ended", function () { heroShow(false); heroLabel(); heroLine(); });
+      heroVideo.addEventListener("pause", function () { heroLabel(); heroLine(); });
+      heroVideo.addEventListener("timeupdate", heroLine);
+      heroVideo.addEventListener("volumechange", heroSoundLabel);
       heroBtn.addEventListener("click", function () {
         if (heroVideo.paused || heroVideo.ended) { heroStopped = false; if (heroVideo.ended) heroVideo.currentTime = 0; heroPlay(); }
         else { heroStopped = true; heroVideo.pause(); }
       });
-      heroLabel();
-      if ("ResizeObserver" in window) new ResizeObserver(heroFit).observe(heroBox); else window.addEventListener("resize", heroFit);
+      /* sound on: Merlin's voice from his first word (a tap is what lets a browser play sound); sound off: muted again */
+      heroSound.addEventListener("click", function () {
+        if (heroVideo.muted) {
+          heroVideo.muted = false;
+          if (heroVideo.ended || heroVideo.currentTime > 0.4) heroVideo.currentTime = 0;
+          heroStopped = false;
+          if (heroVideo.paused || heroVideo.ended) heroPlay();
+        } else heroVideo.muted = true;
+        heroSoundLabel();
+      });
+      /* a tab put away holds the video (and its sound); back, it goes on if it was playing */
+      document.addEventListener("visibilitychange", function () {
+        if (document.hidden) { if (!heroVideo.paused) { heroAway = true; heroVideo.pause(); } }
+        else if (heroAway) { heroAway = false; if (heroOn && !heroStopped && !heroVideo.ended) heroPlay(); }
+      });
+      heroLabel(); heroSoundLabel();
+      if ("ResizeObserver" in window) { var heroRO = new ResizeObserver(heroFit); heroRO.observe(heroBox); heroRO.observe(ctrls); } else window.addEventListener("resize", heroFit);
       /* a phone turned sideways (or a window widened past 600px) gets the wide cut; the 4:3 cut would show Merlin cropped */
       var heroSwap = function () {
         if (!heroWide.matches || heroVideo.src.indexOf("phone-640") < 0) return;
@@ -1432,11 +1479,11 @@
     /* the photo itself is watched (half of it in view), not the whole hero: on a landscape phone the words fill the
        first screen and the photo is below them */
     new IntersectionObserver(function (es) {
-      es.forEach(function (e) { heroOn = e.isIntersecting; });
+      es.forEach(function (e) { heroOn = e.isIntersecting && e.intersectionRatio >= 0.5; });
       if (!heroVideo) { if (heroReady && heroOn && heroMay()) heroStart(); return; }   /* first view after load, wherever it happens — unless less motion or data saving was asked for meanwhile */
       if (!heroOn && !heroVideo.paused) heroVideo.pause();                                   /* scrolled away: hold */
       else if (heroOn && heroVideo.paused && !heroVideo.ended && !heroStopped) heroPlay();   /* back (or first time): play */
-    }, { threshold: 0.5 }).observe(heroImg);
+    }, { threshold: [0, 0.5] }).observe(heroImg);   /* 0 too: playing started by a button with the photo half off screen still holds once it is gone */
     var heroLater = function () { setTimeout(function () { heroReady = true; if (!heroVideo && heroOn && heroMay()) heroStart(); }, 600); };
     if (document.readyState === "complete") heroLater(); else window.addEventListener("load", heroLater);
   }

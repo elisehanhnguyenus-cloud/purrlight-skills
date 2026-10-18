@@ -118,13 +118,14 @@ var DESK_CONFIG = {
     /* Elise 16–17/10/2026, the same numbers as the Custom Orders page. text = orders placed before seasonEnd: made-to-order
        crochet comes from the Vietnam workshop, made in 2–3 weeks (Rabbit Fluff Fur — the page's "Fluffy" — about 2
        weeks more), then 2–3 weeks to arrive, within 15 days to Pearland. offText = from seasonEnd: a custom piece
-       arrives within 15 days. Never promise faster. */
+       arrives within 15 days, in Rabbit Fluff Fur 2–3 weeks depending on the design (Elise 18/10). Never promise
+       faster. */
     { key: "made",   label: "Made to order — ships from our Vietnam workshop",
       text: "Your piece will be made by hand in small batches. I'll message you when it leaves our workshop; from there, it reaches you in 2–3 weeks — within 15 days to Pearland.",
       offText: "Your piece will be made by hand in small batches. I'll message you when it leaves our workshop; from there, delivery typically takes 10–14 days, though customs can add time." },
     { key: "custom", label: "Custom piece — 2–3 weeks to make, 2–3 to arrive", offLabel: "Custom piece — arrives within 15 days",
       text: "Custom pieces are made by hand in our Vietnam workshop, and I'll send you a photo to approve before anything ships. Yours takes 2–3 weeks to make (about 2 weeks more in Rabbit Fluff Fur), then 2–3 weeks to reach you — within 15 days to Pearland.",
-      offText: "Custom pieces are made by hand in our Vietnam workshop, and I'll send you a photo to approve before anything ships. Yours reaches you within 15 days (Rabbit Fluff Fur takes about 2 weeks more to make)." }
+      offText: "Custom pieces are made by hand in our Vietnam workshop, and I'll send you a photo to approve before anything ships. Yours reaches you within 15 days — in Rabbit Fluff Fur, 2–3 weeks, depending on the design." }
   ],
 
   /* Shown when a balance remains on an order WITHOUT a custom piece. There is

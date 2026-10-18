@@ -1374,7 +1374,7 @@
     var heroWide = window.matchMedia("(min-width: 600px)"), heroBg = window.matchMedia("(min-width: 900px)");   /* wide cut from 600px; the photo is a background (absolute) from 900px */
     var heroOn = false, heroReady = false, heroStopped = false, heroAway = false, heroVideo = null, heroBtn = null, heroSound = null, heroCC = null, heroCtrls = null;
     var heroFile = function () { return "../assets/video/" + (heroWide.matches ? "hero-merlin-voice-960" : "hero-merlin-voice-phone-640") + heroType; };
-    /* what Merlin says (the video's own words, Elise 16/10), in seconds */
+    /* what Merlin says (the video's own words — Elise checked them 18/10), in seconds */
     var HERO_CC = [[0.6, 3.5, "Christmas is coming very close now."], [3.5, 6.6, "Wishing you a very peaceful holiday season,"], [6.6, 9.2, "warmth with your family and loved ones."]];   /* back to back: no blink between lines */
     /* the video sits exactly on the photo's box — inside it, never a pixel larger (so the photo stays the page's
        largest paint), and with the photo's own drift transform */

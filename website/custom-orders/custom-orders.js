@@ -1372,10 +1372,10 @@
   var heroType = !probe.canPlayType ? "" : probe.canPlayType('video/webm; codecs="vp9, opus"') ? ".webm" : probe.canPlayType('video/mp4; codecs="avc1.640028, mp4a.40.2"') ? ".mp4" : "";
   if (christmas && heroImg && heroBox && heroType && !calm && !(navigator.connection && navigator.connection.saveData) && "IntersectionObserver" in window) {
     var heroWide = window.matchMedia("(min-width: 600px)"), heroBg = window.matchMedia("(min-width: 900px)");   /* wide cut from 600px; the photo is a background (absolute) from 900px */
-    var heroOn = false, heroReady = false, heroStopped = false, heroAway = false, heroVideo = null, heroBtn = null, heroSound = null, heroCC = null;
+    var heroOn = false, heroReady = false, heroStopped = false, heroAway = false, heroVideo = null, heroBtn = null, heroSound = null, heroCC = null, heroCtrls = null;
     var heroFile = function () { return "../assets/video/" + (heroWide.matches ? "hero-merlin-voice-960" : "hero-merlin-voice-phone-640") + heroType; };
     /* what Merlin says (the video's own words, Elise 16/10), in seconds */
-    var HERO_CC = [[0.6, 3.3, "Christmas is coming very close now."], [3.5, 6.5, "Wishing you a very peaceful holiday season,"], [6.6, 9.2, "warmth with your family and loved ones."]];
+    var HERO_CC = [[0.6, 3.5, "Christmas is coming very close now."], [3.5, 6.6, "Wishing you a very peaceful holiday season,"], [6.6, 9.2, "warmth with your family and loved ones."]];   /* back to back: no blink between lines */
     /* the video sits exactly on the photo's box — inside it, never a pixel larger (so the photo stays the page's
        largest paint), and with the photo's own drift transform */
     var heroFit = function () {
@@ -1388,7 +1388,8 @@
       /* the captions: over the photo, above the buttons — on wide screens over its clear part (the left of it fades) */
       var W = Math.floor(r.right - b.left) - L, H = Math.floor(r.bottom - b.top) - T;
       heroCC.style.left = Math.round(L + W * (heroBg.matches ? 0.56 : 0.5)) + "px";
-      heroCC.style.top = Math.round(T + H - 60) + "px";
+      var cr = heroCtrls.getBoundingClientRect();   /* above the buttons, however tall they are (large text: two rows) */
+      heroCC.style.top = Math.round(cr.height ? Math.min(T + H - 60, cr.top - b.top - 12) : T + H - 60) + "px";
       heroCC.style.maxWidth = Math.round(Math.min(W * (heroBg.matches ? 0.56 : 0.9), 440)) + "px";
     };
     var heroLine = function () {   /* the caption for this moment, only while the video shows and plays */
@@ -1421,7 +1422,7 @@
       heroVideo.src = heroFile();
       heroPic.parentNode.insertBefore(heroVideo, heroPic.nextSibling);
       heroImg.follower = heroVideo;
-      var ctrls = document.createElement("div");
+      var ctrls = heroCtrls = document.createElement("div");
       ctrls.className = "hero-ctrls";
       heroSound = document.createElement("button");
       heroSound.type = "button";
@@ -1462,7 +1463,7 @@
         else if (heroAway) { heroAway = false; if (heroOn && !heroStopped && !heroVideo.ended) heroPlay(); }
       });
       heroLabel(); heroSoundLabel();
-      if ("ResizeObserver" in window) new ResizeObserver(heroFit).observe(heroBox); else window.addEventListener("resize", heroFit);
+      if ("ResizeObserver" in window) { var heroRO = new ResizeObserver(heroFit); heroRO.observe(heroBox); heroRO.observe(ctrls); } else window.addEventListener("resize", heroFit);
       /* a phone turned sideways (or a window widened past 600px) gets the wide cut; the 4:3 cut would show Merlin cropped */
       var heroSwap = function () {
         if (!heroWide.matches || heroVideo.src.indexOf("phone-640") < 0) return;
@@ -1478,11 +1479,11 @@
     /* the photo itself is watched (half of it in view), not the whole hero: on a landscape phone the words fill the
        first screen and the photo is below them */
     new IntersectionObserver(function (es) {
-      es.forEach(function (e) { heroOn = e.isIntersecting; });
+      es.forEach(function (e) { heroOn = e.isIntersecting && e.intersectionRatio >= 0.5; });
       if (!heroVideo) { if (heroReady && heroOn && heroMay()) heroStart(); return; }   /* first view after load, wherever it happens — unless less motion or data saving was asked for meanwhile */
       if (!heroOn && !heroVideo.paused) heroVideo.pause();                                   /* scrolled away: hold */
       else if (heroOn && heroVideo.paused && !heroVideo.ended && !heroStopped) heroPlay();   /* back (or first time): play */
-    }, { threshold: 0.5 }).observe(heroImg);
+    }, { threshold: [0, 0.5] }).observe(heroImg);   /* 0 too: playing started by a button with the photo half off screen still holds once it is gone */
     var heroLater = function () { setTimeout(function () { heroReady = true; if (!heroVideo && heroOn && heroMay()) heroStart(); }, 600); };
     if (document.readyState === "complete") heroLater(); else window.addEventListener("load", heroLater);
   }

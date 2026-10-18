@@ -773,7 +773,7 @@ html[data-season="christmas"] .glints-lamp i:nth-child(1), html[data-season="chr
 .hero-sound:not(.is-muted) .wave { display: inline; }
 .hero-sound:not(.is-muted) .cross { display: none; }
 /* what Merlin says, while the video plays (custom-orders.js places it over the photo, above the buttons) */
-.hero-cc { position: absolute; z-index: 2; margin: 0; padding: 6px 12px; border-radius: 10px; background: rgba(74, 66, 59, 0.88); color: var(--cream);
+.hero-cc { position: absolute; z-index: 2; margin: 0; width: -webkit-max-content; width: max-content; padding: 6px 12px;   /* its own width (custom-orders.js caps it), not the room right of its centre */ border-radius: 10px; background: rgba(74, 66, 59, 0.88); color: var(--cream);
   font: 500 15px/1.35 var(--font-body); text-align: center; pointer-events: none; transform: translate(-50%, -100%); }
 .hero-cc:empty { display: none; }
 @media (prefers-reduced-motion: reduce) { .hero-video, .hero-play, .hero-ctrls, .hero-cc { display: none; } }

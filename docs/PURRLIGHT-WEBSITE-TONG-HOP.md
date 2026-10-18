@@ -1086,6 +1086,15 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   ghi "delivered in 2–3 weeks, depending on the design" (nhận tại chỗ: "ready for pickup in 2–3 weeks, …"); Event Desk
   đơn từ 2/1: "within 15 days — in Rabbit Fluff Fur, 2–3 weeks, depending on the design".
 
+### 18/10 — quét khoá / mật khẩu; .gitignore, .env.example; deploy an toàn
+- Quét toàn bộ 126 commit, 6 nhánh (kể cả gh-pages) + file hiện có, 3 cách (dò mẫu mọi phiên bản file, gitleaks, detect-
+  secrets): **không có khoá API / mật khẩu**. Repo **public**. Link Tally, Square, email Zelle/Gmail là công khai có chủ đích.
+- Thêm `.gitignore` (chặn `.env`, `*.pem`, `*.key`, `credentials*.json`…) và `.env.example` (mẫu, không có giá trị thật).
+- `website/deploy-pages.sh`: chỉ đưa file đã commit (`git archive`), dừng nếu thấy file tên giống khoá — trước đây nó copy
+  cả file chưa commit / bị ignore trong website/ lên trang công khai.
+- Đặt trần $10 trên console (Anthropic workspace spend limit; OpenAI project hard limit / trả trước; Google: budget chỉ cảnh
+  báo) — chị tự làm khi tạo khoá, các bước ở `website/README.md` mục "Khoá (API key)…". Hiện chưa có khoá nào để giới hạn.
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung

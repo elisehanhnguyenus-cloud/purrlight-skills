@@ -1,0 +1,28 @@
+# ---- Secrets: never commit (Elise 18/10/2026) ---------------------------------------------
+# Keys, passwords and tokens go in .env on your own computer (copy .env.example to .env).
+# website/ is published as-is to a PUBLIC site: nothing secret may ever live in it, even ignored.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+id_rsa*
+id_ed25519*
+credentials*.json
+service-account*.json
+*-service-account.json
+client_secret*.json
+.secrets/
+secrets/
+.npmrc
+.netrc
+
+# ---- Local clutter ----------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+node_modules/
+__pycache__/
+*.log

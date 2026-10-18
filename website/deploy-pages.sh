@@ -16,11 +16,20 @@ git -C "$ROOT" fetch origin gh-pages
 git -C "$ROOT" branch -f gh-pages origin/gh-pages 2>/dev/null || true
 git -C "$ROOT" worktree add "$TMP" gh-pages
 
-# thay toàn bộ nội dung bằng bản copy của website/ (trừ file nội bộ)
+# chỉ đưa lên những file ĐÃ COMMIT trong website/ (git archive), không bao giờ copy file chưa commit hay file
+# trong .gitignore — một .env / khoá lỡ để trong website/ sẽ không lên trang công khai (Elise 18/10/2026)
+if [ -n "$(git -C "$ROOT" status --porcelain -- website)" ]; then
+  echo "Lưu ý: website/ có thay đổi chưa commit — chúng KHÔNG được đưa lên. Commit trước rồi chạy lại nếu cần."
+fi
 cd "$TMP"
 git rm -rq --ignore-unmatch . >/dev/null
-cp -R "$SRC"/. .
+git -C "$ROOT" archive HEAD:website | tar -x -C "$TMP"
 rm -f README.md deploy-pages.sh
+# chặn chót: tên file giống khoá / mật khẩu thì dừng, không đẩy gì cả
+BAD="$(find . -path ./.git -prune -o -type f \( -name '.env' -o -name '.env.*' -o -name '*.pem' -o -name '*.key' -o -name '*.p12' -o -name 'id_rsa*' -o -name 'credentials*.json' -o -name '*service-account*.json' -o -name 'client_secret*.json' \) -print)"
+if [ -n "$BAD" ]; then
+  echo "DỪNG: có file giống khoá bí mật trong website/ — không deploy:"; echo "$BAD"; exit 1
+fi
 touch .nojekyll            # Pages phục vụ file y nguyên, không chạy Jekyll
 git add -A
 if git diff --cached --quiet; then

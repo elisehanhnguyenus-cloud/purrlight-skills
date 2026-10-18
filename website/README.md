@@ -463,3 +463,31 @@ màu canon; muốn icon hồng thì đổi `src` sang `../assets/brand/favicon-6
 Đổi màu thương hiệu tại `:root` trong `css/style.css`:
 `--cream` (nền), `--ink` (chữ), `--glow` (peach — màu nhấn chính),
 `--night` (lilac), `--sage`, `--butter`, `--blush`.
+
+## Khoá (API key), mật khẩu & giới hạn chi tiêu (18/10/2026)
+
+**Đã quét 18/10:** toàn bộ 126 commit trên cả 6 nhánh (kể cả `gh-pages` đang chạy trang web) và mọi file hiện có, bằng 3
+cách độc lập — dò mẫu khoá trong mọi phiên bản của mọi file, **gitleaks 8.21.2**, **detect-secrets** → **không có khoá
+API hay mật khẩu nào.** Repo này **công khai** (public): ai cũng đọc được mọi thứ từng commit.
+
+Công khai có chủ đích (khách cần, không phải bí mật): link form Tally, link thanh toán Square, email Zelle / Gmail studio.
+
+**Quy tắc:**
+- Khoá / mật khẩu chỉ để trong `.env` trên máy mình: `cp .env.example .env` rồi điền. `.gitignore` chặn `.env`, file
+  `.pem`/`.key`, `credentials*.json`… không cho lên GitHub.
+- **Không bao giờ để khoá trong `website/`** — đó là trang công khai, file nào cũng xem được, dù có `.env` hay không.
+  Trang hiện tại không cần khoá nào. Khoá chỉ dùng ở server / script chạy trên máy.
+- `deploy-pages.sh` chỉ đưa lên **file đã commit** (`git archive`), không bao giờ copy file chưa commit hay bị
+  `.gitignore`; thấy file tên giống khoá (`.env`, `*.pem`, `*.key`…) thì **dừng, không deploy**.
+
+**Trước khi tạo khoá ở đâu — đặt trần $10 để lỡ lộ cũng không mất quá $10** (phải đăng nhập console của chị):
+- **Claude API** (console.anthropic.com): tạo một **workspace riêng** (vd. "website"), đặt **Spend limit $10/tháng**
+  cho workspace đó, rồi tạo khoá **trong** workspace đó (khoá gắn với workspace, không chuyển được; mỗi lần gọi đều xét cả
+  giới hạn workspace lẫn tổ chức). Nên đặt thêm giới hạn cho cả tổ chức.
+- **OpenAI**: tạo Project riêng → Project settings → Limits → monthly spend limit **$10** + bật **Enforce a hard limit**;
+  hoặc chỉ nạp trước $10 credit và **tắt auto-recharge**. Hệ thống chặn hơi trễ nên có thể vượt một chút.
+- **Google Cloud** (Gemini, Maps…): **Budget chỉ gửi email cảnh báo, không chặn chi tiêu** → giới hạn khoá (API
+  restrictions + HTTP referrer), đặt quota thấp; nếu console có tuỳ chọn "spend cap enforcement" khi tạo budget thì bật.
+
+**Nếu lỡ lộ khoá:** vào console **thu hồi (revoke / delete) khoá ngay** rồi tạo khoá mới. Xoá khoá khỏi code hay khỏi
+lịch sử git **không đủ** — repo public, có thể đã bị đọc / clone. Sau đó xem trang usage có gọi lạ không.

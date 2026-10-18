@@ -1082,13 +1082,15 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   là nghe Merlin nói từ đầu. Phụ đề hiện khi video chạy: *"Christmas is coming very close now. Wishing you a very peaceful
   holiday season, warmth with your family and loved ones."* (em chép bằng phần mềm nghe — chị xem đúng lời không).
 
+- **Chị xác nhận 18/10:** phụ đề đúng lời Merlin. **Ngoài mùa lễ, len Fluffy mất 2–3 tuần tùy độ khó** → từ 2/1/2027 hộp
+  ghi "delivered in 2–3 weeks, depending on the design" (nhận tại chỗ: "ready for pickup in 2–3 weeks, …"); Event Desk
+  đơn từ 2/1: "within 15 days — in Rabbit Fluff Fur, 2–3 weeks, depending on the design".
+
 ### Còn chờ chị
-1. **Lời Merlin nói trong video** — đúng như phụ đề trên không?
-2. **Ngoài mùa lễ, len Fluffy** mất bao lâu? (từ 2/1/2027 hộp không ghi gì cho Fluffy, các món len khác ghi "within 15 days").
-3. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
+1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
    cấp?).
-4. Sau mùa lễ: thay ảnh hero và ảnh share link (mục Giáng sinh + video tự ẩn từ 2/1/2027).
+2. Sau mùa lễ: thay ảnh hero và ảnh share link (mục Giáng sinh + video tự ẩn từ 2/1/2027).
 
 ## 9. Link & tài nguyên
 

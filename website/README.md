@@ -270,7 +270,8 @@ quả thông** cắt từ ảnh Merlin của chị (ảnh 15) treo góc trái d�
 ảnh Merlin, viền vầng sáng 3px. Ảnh: `xmas-pine-corner.webp`, `xmas-pine-ground.webp`, `xmas-bough.webp` (18–24 KB).
 Mọi thứ theo công tắc mùa, gỡ cùng mục Giáng sinh. Không làm: lá/tuyết rơi trên ảnh đầu trang (đè video Merlin), cành
 thông ở tiêu đề "Build your gift", vòng hoa hộp quà (lặp ảnh).
-**Chốt 18/10:** hạn đặt **len Fluffy 25/10** (dòng đầu trong mục Giáng sinh, `#xmas-by-fluffy`; qua hạn hộp ghi "may not
+**Chốt 18/10:** phụ đề video đúng lời (chị xác nhận); ngoài mùa lễ len Fluffy 2–3 tuần tùy độ khó (`TIMING.fluffy.offSeason`,
+Event Desk `offText`); hạn đặt **len Fluffy 25/10** (dòng đầu trong mục Giáng sinh, `#xmas-by-fluffy`; qua hạn hộp ghi "may not
 arrive by Christmas"); video Merlin có tiếng + phụ đề (xem (4) ở tin 12).
 **Chốt 17/10 — chị trả lời các câu hỏi về thời gian giao:** (1) chờ hàng từ xưởng Việt Nam chỉ áp dụng cho **hàng len
 móc làm theo đơn**; hàng có sẵn giao ngay → len làm theo đơn: làm 2–3 tuần, rồi **2–3 tuần tới khách, trong 15 ngày

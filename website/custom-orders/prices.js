@@ -74,7 +74,8 @@
      Pearland Town Center); the "3 days–1 week in Texas" is for pieces in stock, which ship right
      away. Late orders ship as usual. A saint we have ready ordered after Nov 15 still arrives in
      the holidays. Alaska and Hawaii: about 7–8 days or more. Fluffy yarn takes about 2 weeks
-     more to make (her catalog; OK 17/10): made in 4–5 weeks, ships within 5 weeks.
+     more to make (her catalog; OK 17/10): made in 4–5 weeks, ships within 5 weeks; order by Oct 25 for
+     Christmas (18/10). Outside the holidays Fluffy takes 2–3 weeks, depending on the design (18/10).
    - Eyes (Elise 16/10, later): she makes both closed "sleeping" eyes and open eyes —
      the visitor picks for a saint made to order (12 cm made for you, St. Carlo,
      St. Michael), same price; a saint we have ready comes as it is. The page avoids
@@ -281,7 +282,8 @@ var TIMING = {   /* Elise 16–17/10. holiday: these numbers hold in the season 
   yarn:   { make: "made in 2–3 weeks", ship: "delivered in 2–3 weeks (within 15 days in Pearland)", out: "delivered in 2–3 weeks",
             pickup: "ready for pickup within 15 days after that", offPickup: "ready for pickup within 15 days", holiday: true },   /* from the Vietnam workshop */
   fluffy: { make: "made in 4–5 weeks", ship: "delivered in 2–3 weeks (within 15 days in Pearland)", out: "delivered in 2–3 weeks",
-            pickup: "ready for pickup within 15 days after that", holiday: true, offSeason: "" },   /* no off-season number given for Fluffy */
+            pickup: "ready for pickup within 15 days after that", holiday: true,
+            offSeason: "delivered in 2–3 weeks, depending on the design", offPickup: "ready for pickup in 2–3 weeks, depending on the design" },   /* off season: Elise 18/10 */
   paint:  { make: "made in 3–5 days", ship: "delivered in 3 days–1 week (2–3 days in Pearland)", out: "delivered in 3 days–1 week" + AKHI, holiday: true },
   box:    { make: "made in 3–5 days", ship: "delivered in 2–3 days in Pearland, 3–6 days elsewhere", out: "delivered in 3–6 days" + AKHI },
   saint:  { make: "", ship: "delivered in 2 days in Pearland, 3–7 days elsewhere", out: "delivered in 3–7 days" + AKHI },   /* a saint we have ready */

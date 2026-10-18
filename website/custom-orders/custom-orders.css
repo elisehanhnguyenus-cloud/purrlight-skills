@@ -743,10 +743,10 @@ html[data-season="christmas"] .glints-lamp i:nth-child(1), html[data-season="chr
   html.motion .christmas.is-live:not(.is-paused) .xmas-lights i:nth-child(2n)::after { animation-duration: 2.8s; animation-delay: -1.1s; }
   html.motion .christmas.is-live:not(.is-paused) .xmas-lights i:nth-child(5n+1)::after { animation-duration: 4.2s; animation-delay: -2s; }
 }
-.xmas-pause, .hero-play { position: absolute; right: var(--gutter); bottom: 12px; z-index: 2; display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 4px 12px;
+.xmas-pause, .hero-play, .hero-sound { position: absolute; right: var(--gutter); bottom: 12px; z-index: 2; display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 4px 12px;
   border: 1px solid var(--line-ui); border-radius: 999px; background: rgba(251, 246, 238, 0.92); color: var(--ink); font: 500 13px/1.2 var(--font-body); cursor: pointer; }
-.xmas-pause:hover, .hero-play:hover { background: var(--cream); border-color: var(--ink); }
-.xmas-pause:focus-visible, .hero-play:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.xmas-pause:hover, .hero-play:hover, .hero-sound:hover { background: var(--cream); border-color: var(--ink); }
+.xmas-pause:focus-visible, .hero-play:focus-visible, .hero-sound:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
 .xmas-pause::before, .hero-play::before { content: ""; width: 8px; height: 10px; border-left: 3px solid currentColor; border-right: 3px solid currentColor; box-sizing: border-box; }   /* pause bars */
 .christmas.is-paused .xmas-pause::before, .hero-play.is-stopped::before { width: 0; height: 0; border-style: solid; border-width: 5px 0 5px 9px; border-color: transparent transparent transparent currentColor; }   /* play triangle */
 @media (forced-colors: active) { .xmas-pause::before, .hero-play::before { forced-color-adjust: none; } }
@@ -764,8 +764,20 @@ html[data-season="christmas"] .glints-lamp i:nth-child(1), html[data-season="chr
     mask-composite: intersect; }
 }
 .hero-play { bottom: 16px; }
-@media (prefers-reduced-motion: reduce) { .hero-video, .hero-play { display: none; } }
-@media print { .hero-video, .hero-play { display: none; } }   /* keeps the triangle's clear borders clear in High Contrast (else it draws as a square) */
+/* the video's buttons sit together at the hero's bottom right: sound (Elise 18/10: the video has Merlin's voice), then
+   pause / play */
+.hero-ctrls { position: absolute; right: var(--gutter); bottom: 16px; z-index: 2; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+.hero-ctrls .hero-play, .hero-ctrls .hero-sound { position: static; }
+.hero-sound svg { width: 14px; height: 14px; flex: none; }
+.hero-sound .wave { display: none; }
+.hero-sound:not(.is-muted) .wave { display: inline; }
+.hero-sound:not(.is-muted) .cross { display: none; }
+/* what Merlin says, while the video plays (custom-orders.js places it over the photo, above the buttons) */
+.hero-cc { position: absolute; z-index: 2; margin: 0; padding: 6px 12px; border-radius: 10px; background: rgba(74, 66, 59, 0.88); color: var(--cream);
+  font: 500 15px/1.35 var(--font-body); text-align: center; pointer-events: none; transform: translate(-50%, -100%); }
+.hero-cc:empty { display: none; }
+@media (prefers-reduced-motion: reduce) { .hero-video, .hero-play, .hero-ctrls, .hero-cc { display: none; } }
+@media print { .hero-video, .hero-play, .hero-ctrls, .hero-cc { display: none; } }   /* keeps the triangle's clear borders clear in High Contrast (else it draws as a square) */
 @media (prefers-reduced-motion: reduce) { .xmas-pause { display: none; } }
 @media print { .xmas-pause { display: none; } }
 @media (prefers-reduced-motion: reduce) { .xmas-snow { display: none; } }

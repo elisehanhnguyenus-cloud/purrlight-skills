@@ -1074,15 +1074,21 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 - **Ảnh khi share link** (chị 17/10): đổi từ ảnh ghép búp bê sang **ảnh Merlin ở đầu trang** (1200×630,
   `og-custom-orders-merlin.jpg`, tên file mới để app không giữ ảnh cũ). Ảnh mùa Giáng sinh → đổi cùng ảnh hero sau mùa.
 
+### Elise 18/10 — hạn len Fluffy; video Merlin có tiếng
+- **Hạn đặt len Fluffy: Sun, Oct 25** (chị OK) — dòng đầu trong mục Giáng sinh; qua hạn, hộp "What's inside" của thú cưng
+  len Fluffy ghi "may not arrive by Christmas" (các món len khác vẫn hạn 8/11).
+- **"Video Merlin trên web mở không có tiếng"** → lúc làm video em đã bỏ tiếng (tưởng chỉ để trang trí); giờ ghép lại tiếng
+  gốc của chị. Trình duyệt chỉ cho video tự chạy khi tắt tiếng, nên video vẫn tự chạy không tiếng; khách bấm **"Sound on"**
+  là nghe Merlin nói từ đầu. Phụ đề hiện khi video chạy: *"Christmas is coming very close now. Wishing you a very peaceful
+  holiday season, warmth with your family and loved ones."* (em chép bằng phần mềm nghe — chị xem đúng lời không).
+
 ### Còn chờ chị
-1. **Hạn đặt cho len Fluffy:** làm 4–5 tuần + giao 2–3 tuần → đặt 8/11 chậm nhất có thể tới khoảng 3/1, sau Giáng sinh. Chị
-   muốn thêm hạn riêng cho Fluffy không? (25/10 thì chậm nhất tới khoảng 20/12, như các món len khác)
+1. **Lời Merlin nói trong video** — đúng như phụ đề trên không?
 2. **Ngoài mùa lễ, len Fluffy** mất bao lâu? (từ 2/1/2027 hộp không ghi gì cho Fluffy, các món len khác ghi "within 15 days").
 3. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
    cấp?).
-4. Video Merlin có tiếng nói không? Nếu chị muốn bật tiếng, gửi em lời thoại để làm phụ đề.
-5. Sau mùa lễ: thay ảnh hero và ảnh share link (mục Giáng sinh + video tự ẩn từ 2/1/2027).
+4. Sau mùa lễ: thay ảnh hero và ảnh share link (mục Giáng sinh + video tự ẩn từ 2/1/2027).
 
 ## 9. Link & tài nguyên
 

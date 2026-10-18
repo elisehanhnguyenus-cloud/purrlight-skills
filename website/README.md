@@ -270,6 +270,8 @@ quả thông** cắt từ ảnh Merlin của chị (ảnh 15) treo góc trái d�
 ảnh Merlin, viền vầng sáng 3px. Ảnh: `xmas-pine-corner.webp`, `xmas-pine-ground.webp`, `xmas-bough.webp` (18–24 KB).
 Mọi thứ theo công tắc mùa, gỡ cùng mục Giáng sinh. Không làm: lá/tuyết rơi trên ảnh đầu trang (đè video Merlin), cành
 thông ở tiêu đề "Build your gift", vòng hoa hộp quà (lặp ảnh).
+**Chốt 18/10:** hạn đặt **len Fluffy 25/10** (dòng đầu trong mục Giáng sinh, `#xmas-by-fluffy`; qua hạn hộp ghi "may not
+arrive by Christmas"); video Merlin có tiếng + phụ đề (xem (4) ở tin 12).
 **Chốt 17/10 — chị trả lời các câu hỏi về thời gian giao:** (1) chờ hàng từ xưởng Việt Nam chỉ áp dụng cho **hàng len
 móc làm theo đơn**; hàng có sẵn giao ngay → len làm theo đơn: làm 2–3 tuần, rồi **2–3 tuần tới khách, trong 15 ngày
 ở Pearland** (cả khách nhận tại Pearland Town Center: "ready for pickup within 15 days after that"); câu "3 ngày–1 tuần
@@ -310,9 +312,13 @@ thay bằng số chi tiết của tin nhắn 13 và 14 ở trên**: dòng ghi ch
 khi nhận tại chỗ, file digital, bộ váy làm sẵn) và danh sách trong mục Giáng sinh; "How it works" không ghi số cố định.
 Trang len đã cắt chỉ còn lưới màu (bỏ chữ "COLOURS", "overleaf", chữ lỗi trang
 Fluffy, dòng hội chợ, tên "Baby pink" của V-03, ô trống) + danh sách mã và tên dạng chữ ("Codes and names as text"). Câu "allow 2–4 weeks" (thời gian làm, chị chốt 16/10) giữ
-nguyên. (4) **Video Merlin** (`assets/video/hero-merlin-960.{webm,mp4}` + bản điện thoại 4:3
-`hero-merlin-phone-640.*`, 260–470 KB): ảnh đầu trang "sống dậy" — khung đầu = ảnh hero (đã chỉnh tông khớp ảnh), phát
-**1 lần** 10 giây, **không tiếng** (âm thanh gốc bỏ), rồi mờ về ảnh; nút "Pause video" / "Play video"; chỉ chạy sau
+nguyên. (4) **Video Merlin** (`assets/video/hero-merlin-voice-960.{webm,mp4}` + bản điện thoại 4:3
+`hero-merlin-voice-phone-640.*`, 380–590 KB): ảnh đầu trang "sống dậy" — khung đầu = ảnh hero (đã chỉnh tông khớp ảnh), phát
+**1 lần** 10 giây, rồi mờ về ảnh. **Có tiếng từ 18/10** (chị: "video mở không có tiếng"): tự chạy thì tắt tiếng (trình duyệt
+chỉ cho tự chạy khi tắt tiếng), nút **"Sound on"** phát giọng Merlin từ đầu ("Sound off" để tắt); WebM có tiếng Opus, MP4
+tiếng AAC (Safari/iPhone). **Phụ đề** hiện khi video chạy (WCAG 1.2.2): "Christmas is coming very close now. / Wishing you a
+very peaceful holiday season, / warmth with your family and loved ones." — chép bằng Whisper (3 mô hình cùng ra một câu),
+`HERO_CC` trong `custom-orders.js`. Chuyển tab thì video (và tiếng) dừng. Nút "Pause video" / "Play video"; chỉ chạy sau
 khi trang tải xong, khi đầu trang đang hiện; không chạy khi khách bật giảm chuyển động / tiết kiệm dữ liệu, và hết mùa
 (2/1/2027) thì thôi. Code: cuối `custom-orders.js` ("Merlin says hello").
 **Chốt 16/10, tin nhắn 11:** mục Giáng sinh tự gỡ **hết dịp năm mới** — từ 0h **2/1/2027** (giờ máy khách);

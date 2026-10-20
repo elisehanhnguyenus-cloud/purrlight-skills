@@ -1,0 +1,152 @@
+# Purrlight admin (Sveltia CMS) — spike 0a, 20/10/2026.
+# Plan: docs/ADMIN-DASHBOARD-PLAN-2026-10-20.md · how to sign in: docs/ADMIN-SPIKE-0A-HUONG-DAN.md
+# One collection for now: the "follow" photo strip above the footer (website/content/follow.json).
+# Save = a branch cms/… + a pull request into the branch below; Publish = merge it. Nothing reaches the live
+# site until the site is deployed again (bash website/deploy-pages.sh; automatic from Admin P0).
+
+backend:
+  name: github
+  repo: elisehanhnguyenus-cloud/purrlight-skills
+  branch: claude/purrlight-studio-website-kcsuen
+  auth_methods: [token] # sign in with a fine-grained token only (no OAuth server yet — plan P1)
+
+publish_mode: editorial_workflow
+
+site_url: https://elisehanhnguyenus-cloud.github.io/purrlight-skills/
+display_url: https://elisehanhnguyenus-cloud.github.io/purrlight-skills/
+logo:
+  src: https://elisehanhnguyenus-cloud.github.io/purrlight-skills/assets/brand/logo-flat.png
+
+# uploads land in the repo under website/assets/uploads/…; the site reads them as assets/uploads/…
+media_folder: /website/assets/uploads
+public_folder: /assets/uploads
+
+media_libraries:
+  stock_assets:
+    providers: [] # real photos only (Brand Canon v2): no Unsplash/Pexels/Pixabay/Picsum
+  default:
+    config:
+      max_file_size: 26214400 # 25 MB (bytes), so an original iPhone photo or a short reel fits
+      slugify_filename: true # IMG_4532.HEIC → img-4532.webp
+  all:
+    transformations:
+      raster_image: # JPEG, PNG and iPhone HEIC are turned into WebP in the browser before upload
+        format: webp
+        quality: 85
+        width: 2048
+        height: 2048
+
+collections:
+  - name: follow
+    label: Ảnh cuối trang (Follow)
+    description: Dải ảnh vuông ngay trên footer của mọi trang khách. Đổi ảnh, link mạng xã hội, chữ tiêu đề.
+    files:
+      - name: follow
+        label: Dải ảnh "follow"
+        file: website/content/follow.json
+        media_folder: /website/assets/uploads/follow
+        public_folder: /assets/uploads/follow
+        fields:
+          - name: kicker
+            label: Dòng chữ nhỏ phía trên
+            widget: string
+            required: false
+            maxlength: 40
+            hint: 'Tiếng Anh, chữ thường, ấm áp. Ví dụ: follow the glow'
+            pattern:
+              - '/^(?![\s\S]*\b(safe|safely|non-?toxic|hypoallergenic|cpsia|astm|tested|toys?|plush|plushie|nursery|for kids|bab(y|ies)|toddlers?|newborns?|disney|pok[eé]mon|hello kitty|made in (the )?(usa|america|us|texas))\b)[\s\S]*$/i'
+              - 'Có chữ không được dùng (an toàn / đồ chơi / trẻ em / tên thương hiệu khác / Made in USA) — luật chữ Brand Canon v2.'
+          - name: title
+            label: Tiêu đề
+            widget: string
+            maxlength: 60
+            hint: 'Tiếng Anh. Ví dụ: Purrlight, daily'
+            pattern:
+              - '/^(?![\s\S]*\b(safe|safely|non-?toxic|hypoallergenic|cpsia|astm|tested|toys?|plush|plushie|nursery|for kids|bab(y|ies)|toddlers?|newborns?|disney|pok[eé]mon|hello kitty|made in (the )?(usa|america|us|texas))\b)[\s\S]*$/i'
+              - 'Có chữ không được dùng (an toàn / đồ chơi / trẻ em / tên thương hiệu khác / Made in USA) — luật chữ Brand Canon v2.'
+          - name: profiles
+            label: Trang mạng xã hội của shop
+            widget: object
+            collapsed: true
+            hint: Ô nào để trống thì nút đó không hiện. Link phải bắt đầu bằng https://
+            fields:
+              - name: instagram
+                label: Instagram
+                widget: string
+                required: false
+                hint: 'Chỉ điền khi chắc đây là tài khoản của shop (@purrlightstudio trên Instagram là của người khác).'
+                pattern: ['^(https://(www\.)?instagram\.com/[A-Za-z0-9._]+/?)?$', 'Dán link dạng https://www.instagram.com/tên-tài-khoản']
+              - name: tiktok
+                label: TikTok
+                widget: string
+                required: false
+                pattern: ['^(https://(www\.)?tiktok\.com/@[A-Za-z0-9._]+/?)?$', 'Dán link dạng https://www.tiktok.com/@tên-tài-khoản']
+              - name: pinterest
+                label: Pinterest
+                widget: string
+                required: false
+                pattern: ['^(https://(www\.)?pinterest\.com/[A-Za-z0-9._-]+/?)?$', 'Dán link dạng https://www.pinterest.com/tên-tài-khoản']
+              - name: facebook
+                label: Facebook
+                widget: string
+                required: false
+                pattern: ['^(https://(www\.)?facebook\.com/[A-Za-z0-9.]+/?)?$', 'Dán link dạng https://www.facebook.com/tên-trang']
+          - name: tiles
+            label: Ô ảnh
+            label_singular: ô ảnh
+            widget: list
+            min: 3
+            max: 12
+            collapsed: true
+            summary: '{{fields.network}} · {{fields.alt}}'
+            hint: 'Nên để 6 ô (máy tính 6 ô một hàng, điện thoại 3 × 2). Kéo để đổi thứ tự.'
+            fields:
+              - name: image
+                label: Ảnh
+                widget: image
+                hint: 'Ảnh vuông đẹp nhất. Kéo ảnh từ máy hoặc iPhone vào — tự đổi sang WebP, tối đa 1080 px. Ảnh sạch, không chữ đè.'
+                media_libraries:
+                  all:
+                    transformations:
+                      raster_image:
+                        format: webp
+                        quality: 82
+                        width: 1080
+                        height: 1080
+              - name: alt
+                label: Mô tả ảnh (tiếng Anh)
+                widget: string
+                maxlength: 125
+                hint: 'Tả như kể cho người không nhìn thấy. Không mở đầu bằng "image of". Ví dụ: Crochet Maine Coon cat on a bookshelf'
+                pattern:
+                  - '/^(?![\s\S]*\b(safe|safely|non-?toxic|hypoallergenic|cpsia|astm|tested|toys?|plush|plushie|nursery|for kids|bab(y|ies)|toddlers?|newborns?|disney|pok[eé]mon|hello kitty|made in (the )?(usa|america|us|texas))\b)[\s\S]*$/i'
+                  - 'Có chữ không được dùng (an toàn / đồ chơi / trẻ em / tên thương hiệu khác / Made in USA) — luật chữ Brand Canon v2.'
+              - name: network
+                label: Bấm vào ảnh thì mở
+                widget: select
+                default: tiktok
+                options:
+                  - { label: TikTok, value: tiktok }
+                  - { label: Pinterest, value: pinterest }
+                  - { label: Facebook, value: facebook }
+                  - { label: Instagram, value: instagram }
+              - name: link
+                label: Link bài cụ thể (không bắt buộc)
+                widget: string
+                required: false
+                hint: Bỏ trống thì ảnh mở trang hồ sơ của mạng đã chọn.
+                pattern: ['^(https://\S+)?$', 'Link phải bắt đầu bằng https://']
+              - name: rights
+                label: Ảnh của ai
+                widget: select
+                default: own
+                options:
+                  - { label: 'Ảnh của shop', value: own }
+                  - { label: 'Ảnh khách (đã xin phép)', value: customer }
+              - name: credit
+                label: Ghi công (khi là ảnh khách)
+                widget: string
+                required: false
+                maxlength: 40
+                hint: '@tên-tài-khoản của khách — hiện "photo: @…" trên ảnh. Bắt buộc với ảnh khách.'
+                pattern: ['^(@[A-Za-z0-9._]{1,30})?$', 'Ghi dạng @tên-tài-khoản (không dấu cách)']

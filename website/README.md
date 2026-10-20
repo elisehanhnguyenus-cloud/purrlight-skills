@@ -29,6 +29,7 @@ website/
 ├── partners.html     # Partner/affiliate program cho shopper curators
 ├── event.html        # ★ EVENT DESK — bàn bán hàng tại sự kiện (nội bộ, noindex)
 ├── confirm.html      # Trang khách mở từ link/QR: thank-you hoặc order confirmation
+├── admin/            # ★ ADMIN (Sveltia CMS, spike 0a 20/10): index.html (bản ghim 0.233.0) + config.yml
 ├── content/
 │   └── follow.json   # ★ DẢI ẢNH "FOLLOW" cuối mọi trang khách: tiêu đề, link mạng xã hội, 3–12 ô ảnh
 ├── manifest.webmanifest  # "Add to Home Screen" cho event.html trên điện thoại
@@ -72,6 +73,20 @@ website/
 - An toàn: link chỉ nhận `https://` (link lạ bị bỏ, về trang hồ sơ); chữ đưa vào bằng textContent, không innerHTML.
   Không có dữ liệu hoặc mở bằng file:// → dải ảnh ẩn, trang vẫn bình thường.
 - Dải "Purrlight, daily" cũ ở giữa trang chủ đã gỡ (nội dung chuyển vào dải mới, không lặp 2 lần).
+
+## Admin (Sveltia CMS) — spike 0a (20/10/2026)
+
+- `admin/index.html` nạp Sveltia **0.233.0** từ unpkg, có `integrity` (sha384). Nâng cấp = đổi version **và** hash cùng
+  lúc, thử trên branch trước. `admin/config.yml`: backend GitHub, branch `claude/purrlight-studio-website-kcsuen`,
+  `editorial_workflow` (Lưu = nhánh `cms/…` + Pull Request, Xuất bản = merge), chỉ đăng nhập bằng token, tắt ảnh stock.
+- Ảnh upload tự thành WebP trong trình duyệt (kể cả HEIC iPhone): mặc định ≤ 2048 px, ô ảnh "follow" ≤ 1080 px; lưu ở
+  `website/assets/uploads/<mục>/`, JSON ghi `/assets/uploads/…` (follow.js tự nối đúng thư mục site).
+- Ô chữ có `pattern` chặn từ cấm (an toàn / đồ chơi / trẻ em / thương hiệu khác / Made in USA), lấy từ danh sách
+  `bannedInNote` của Event Desk. Khi làm P0, danh sách này chuyển sang một file chung `content/rules/banned.json`.
+- Hiện chỉ có 1 mục: "Ảnh cuối trang (Follow)" → `content/follow.json`. Sau khi chị Xuất bản, thay đổi nằm trên GitHub;
+  site chỉ đổi khi chạy lại `bash website/deploy-pages.sh` (P0 sẽ tự động bằng GitHub Actions).
+- Hướng dẫn cho chị: `docs/ADMIN-SPIKE-0A-HUONG-DAN.md`. Test: `test-admin.js` (scratchpad, chạy với backend thử
+  `test-repo` của Sveltia — không đụng repo thật).
 
 ## Event Desk — bàn bán hàng tại sự kiện (`event.html`)
 

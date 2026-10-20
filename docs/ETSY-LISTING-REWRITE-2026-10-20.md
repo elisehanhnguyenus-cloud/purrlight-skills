@@ -34,6 +34,73 @@ hiện tại (không bịa fact), rồi một agent khác đối chiếu từng 
 Những fact em không chắc (mâu thuẫn trong listing gốc) đều ghi ở **Chị cần làm thêm** — chị sửa theo đúng thực tế.
 
 
+## Hội đồng soát (Morgan · Hải Đăng · Linh Trần · Minh Triết · Prue)
+
+Theo lời chị dặn, việc content được 5 agent soát lại. Mỗi người đọc cả 27 bản theo chuyên môn của mình; 59 chỗ được sửa vào bản dưới đây, 10 góp ý không áp dụng (lý do ghi cuối mục).
+
+**Morgan Chen — Marketing Manager** · Duyệt, kèm sửa (21 góp ý phải sửa)
+
+> KẾT LUẬN: APPROVE_WITH_CHANGES. 27 bản đã đúng định vị keepsake cho người lớn. Còn 11 listing cần sửa nhỏ (20 chỗ, chỗ nào cũng là copy-paste), em đã chạy check.py = OK. Chị Elise duyệt rồi mới publish.
+> 1. Dấu hiệu "hàng trẻ em" còn sót, đều kế thừa từ bản gốc kiểu nursery: 'Pastel Safari'/'jungle' (giraffe), 'party favors'/'stocking stuffer' (linen doll), 'Senior Night' (soccer), 'all your feelings are welcome here' (feelings faces), 'Mini Romper' (Siamese).
+> 2. Sai mùa: Q4 là Christmas nhưng duck đang bán 'Spring/Easter', Washington còn '4th of July', angel còn 'Mother's Day', Saint Joan chỉ có Confirmation/feast day. Em đổi sang tag hoặc câu Christmas, không hứa ngày giao.
+> 3. Sale tới 25/10 (Maine Coon, Saint Joan, rosary): không câu nào nhắc giá, % hay hạn, nên 26/10 không có gì sai.
+> 4. Voice: phần thân đồng đều; chỉ khối ABOUT cuối bài có khoảng 7 kiểu. Chuẩn hoá ở vòng sau, không chặn publish.
+> 5. Thời gian của chị: ước tính ~20 phút để dán hết, không có việc mới hằng ngày.
+> Câu hỏi: chị có muốn em làm thêm vòng "Christmas tag pass" cho 7 bé mèo (mỗi listing đổi 1 tag, tháng 1 đổi lại) không?
+> — Morgan Chen, Marketing Manager
+
+**Hải Đăng — Ecommerce Executive** · Duyệt, kèm sửa (11 góp ý phải sửa)
+
+> Elise, kết luận: APPROVE_WITH_CHANGES. 27/27 listing qua check.py: không còn toy/kids/safe/hypoallergenic, không IP watchlist, standard line đúng 1 lần ở 26 bản vật lý (số liệu: đếm trong review này).
+> Current state: SEO giữ được phần cầu chính của buyer người lớn. 7/7 title mèo mở bằng 'Crochet [giống] Cat' kèm 'Amigurumi', 'cat lover gift' có ở 6/7. Cầu bị mất là plush/stuffed animal/nursery/stress ball, chủ yếu là người mua cho trẻ em, mất là đáng (qualitative estimate, không có keyword tool).
+> Recommendations: 11 mục must-fix trên 9 listing. Nặng nhất là production partner: George Washington ghi 'our Vietnamese-American artisan team' và 'handmade by Purrlight Studio' trong khi hàng gửi từ VN. Bride & Groom thì 'Ships from Texas' + 'finished in our Pearland studio' dễ thành ngụ ý Made in USA, chị cần xác nhận nơi móc.
+> Tiếp theo: linen doll bỏ tag 'stocking stuffer' và 'party favor' (cùng lý do team đã bỏ ở bộ Animal Friends). Duck bỏ 'Spring', 'Easter' và 'travel pillow' vì đang Q4 và sai intent. Thêm 'jane austen doll' cho 2 bộ Austen, front-load lại title Woodland và Grand pet.
+> Implementation: chị paste bản đã sửa. Trên Etsy chị làm tay: chuyển category khỏi Toys/Baby, đổi section 'Nursery & Baby Plushies', đổi tên variation 'Premium'/'Deluxe', tick Production partner cho mọi món làm ở VN, cho processing time khớp mô tả, giữ 5 sale đến 25/10.
+> Expected impact: rủi ro CPSIA/FTC/Etsy TOS giảm rõ. Traffic từ cụm 'plush toy' sẽ giảm nhưng conversion của khách người lớn giữ hoặc tăng (qualitative estimate). Em đề xuất đo bằng Etsy Stats 30 ngày sau khi đổi rồi báo chị số thật.
+
+**Linh Trần — Social Media Executive** · Duyệt, kèm sửa (6 góp ý phải sửa)
+
+> Elise ơi, Linh duyệt có chỉnh (APPROVE_WITH_CHANGES): copy của cả 27 listing chị dán lên Etsy được luôn, phần cần sửa chỉ nằm ở ghi chú ảnh (notes_vi).
+> Brand voice ổn: ấm, có câu chuyện, không hard sell, không fake urgency; 160 ký tự đầu listing nào cũng nói rõ món gì, cho ai, đúng snippet Etsy. Cả bộ chỉ có 1 emoji (✝️ ở label Saint Joan), giá sale đến 25/10 không ghi vào mô tả — đúng.
+> Ảnh pattern rồng đang nằm trong phòng em bé (gấu bông, khối gỗ, decal mây): chị crop sát con rồng, listing vẫn để low-key như chị muốn.
+> Ảnh feelings faces (bảng 'Happy Hook Pouches', dấu 'Grateful') và mèo Grand (nhãn 'Bespoke by L.V.') có thể là ảnh của người khác: chị xác nhận giúp Linh, và tuyệt đối đừng xoá watermark của họ rồi dùng tiếp.
+> Ảnh cừu và thiên thần chị đã quyết giữ — Linh chỉ xin tên/handle chủ ảnh để thêm một dòng credit.
+> Búp bê vải: ảnh đầu nên là bản không chữ, ít nhất phải bỏ 'Freegift'.
+> Dấu 'Grateful' có trên ảnh 3 listing (feelings faces, Washington, thiên thần) — chị chỉ cần trả lời một câu 'dấu này của ai' là Linh xử lý cả ba.
+> — Linh Trần, Social Media Executive
+
+**Minh Triết — R&D Manager** · Duyệt, kèm sửa (16 góp ý phải sửa)
+
+> NÊN LÀM, nhưng duyệt có sửa: Elise có thể dán 27 listing sau khi áp 16 chỗ sửa. Tất cả đều là sửa chữ, không tốn tiền, không cần công cụ mới.
+> • Đã đạt: 27/27 qua check.py. Size, chất liệu, tuỳ chọn và thời gian xử lý đều lần được về etsy_description gốc. Các chỗ mâu thuẫn đã được trung hoà và đưa vào notes_vi. Credit 'Pattern by Anna_Crochet' giữ nguyên, listing pattern vẫn low-key đúng ý chị.
+> • Nặng nhất là IP. Mô tả Thiên thần 4467697803 đang lấy bé trong ảnh làm mẫu tay nghề, trong khi chị đã xác nhận ảnh đó không phải của mình. Phải bỏ mục đó và bỏ chữ 'Flower Bouquet' ở tiêu đề.
+> • Báo động IP, chuyển Prue + Elise: con dấu 'Be thankful · Grateful · be blessed' của ảnh thiên thần cũng có trên ảnh Washington và ảnh Feelings Faces; ảnh mèo Grand có nhãn 'Bespoke by L.V.'. SUY LUẬN là ảnh từ bên ngoài, và quyết định ngày 20/10 của chị chưa bao gồm mấy ảnh này.
+> • Ảnh AI không được trình như ảnh thật: bỏ câu 'studio lighting' ở 5 listing có ảnh AI và câu 'differences from the photos' ở listing Sense and Sensibility.
+> • CHƯA BIẾT: bộ đồ của mèo Ginger, Tuxedo và White chỉ lấy từ prompt AI. Notes phải hỏi thẳng chị trước khi để trong tiêu đề.
+> Minh Triết, R&D, cổng IP.
+
+**Prue — Strategic Advisor & HR/Ops** · Duyệt, kèm sửa (8 góp ý phải sửa)
+
+> [Nhận định] Elise, em DUYỆT CÓ SỬA. 26/26 món vật lý có đúng 1 dòng keepsake chuẩn ở cuối, mẫu rồng PDF không có; check.py OK cả 4 file; không còn toy/kids/baby/safe/ages, gần như không còn chỗ nào coi trẻ em là người dùng hay người nhận.
+> [Cảnh báo rủi ro] (1) Maine Coon và Sense & Sensibility vẫn hứa "nothing to pay on delivery". Shop không kiểm soát được thuế/phí thu tại cửa (Canada thường thu GST + phí bưu điện), khách bị thu là mở case. (2) Búp bê linen còn "party favors / stocking stuffers": búp bê vải nhỏ mà quảng cáo vậy thì dễ bị đọc là quà tiệc trẻ em. (3) Ảnh thiên thần không phải của chị, mà mô tả lại hứa làm được chi tiết y như ảnh. (4) Ảnh búp bê cầu thủ có huy hiệu, mặt giống cầu thủ thật: đây là rủi ro IP, đẩy ảnh xuống sau không hết. (5) Web ghi "Spot clean only" trong khi Etsy cho giặt tay ở 5 món; web bỏ dòng an toàn ở chuỗi Mân Côi; trang sản phẩm hứa "duties and import fees already paid".
+> [Giải pháp thực chiến] Sửa 8 chỗ trong must_fix (em đã chạy check.py, OK); chị chỉ phải dán lại text cho 4 listing. Đổi dòng an toàn trên web thành câu Etsy + "Keep away from open flame.", còn hướng dẫn giặt ghi theo từng món. Sticker POD và sách in tại nhà: viết cho người lớn, không dán dòng keepsake handmade, khai production partner trên Etsy.
+> [Câu hỏi ngược] 1) Bên vận chuyển có trả trước thuế (DDP) cho Mỹ và Canada không, chị có giấy tờ không? 2) Cặp cô dâu chú rể có phải móc ở Việt Nam không? Ảnh có dấu "be blessed" và nhãn "Bespoke by L.V." có phải ảnh của chị không?
+
+<details><summary>Góp ý không áp dụng (10)</summary>
+
+- 4378892426 description (WAYS TO USE IT line): Hải Đăng's '…birthday gifts and Christmas gifts for friends' and Morgan Chen's edit 1 '…birthday or Christmas gifts for a friend' not used. Three reviewers rewrote the same line, so I took the safer option: Prue's version, which has no Christmas or stocking wording at all (CPSC factor 2; legal > SEO). Morgan's edit 2 was applied.
+- 4378892426 tags: Hải Đăng's 'party favor'->'bridal party gift' not used. Morgan and Prue agree on 'bridal shower favor', and Prue is the legal reviewer.
+- 4378892426 tags: for 'stocking stuffer', Hải Đăng's 'handbag charm' and Morgan Chen's 'christmas gift idea' not used. I took Prue's 'christmas ornament': the legal reviewer's choice, backed by the listing's own 'adorn a Christmas tree', and 'handbag charm' would nearly repeat the existing 'purse charm'.
+- 4427983754 tags: Morgan Chen's 'spring decor'->'christmas gift idea' and 'easter mantel decor'->'cozy winter decor' not used. They conflict with Hải Đăng on the same two tags (SEO only). I took Hải Đăng's year-round set because the listing states no processing time or ship-from, so a Christmas-search tag invites a holiday-delivery expectation it cannot back. His set also fixes 'travel pillow'. Morgan's description line was applied.
+- 4467726345 notes_vi[2]: Hải Đăng's replacement not used. It conflicts with Prue on the same note. Prue's is safer: it treats disclosing where the couple is made as required, not optional, and already covers his points (the 'Ships from Texas' opening, the suggested Vietnam sentence, the Etsy production-partner field).
+- 4467697803 description: Prue's re-caption ('The photo shows one example of the style…') not applied. It conflicts with Minh Triết's fix, which deletes the whole 'THE ANGEL IN THE PHOTO' block. Removing it is safer than captioning it, since it stops presenting another maker's piece as our sample, and after the removal the line Prue edits no longer exists.
+- 4548879570 notes_vi[0]: Linh Trần's full replacement not used word for word. Minh Triết also replaced this note, and his is safer: replace the photo with one the workshop takes, with no route to keep a third-party photo with credit. Linh's warning not to erase someone else's watermark was added to it.
+- 4364432946 notes_vi[2]: Linh Trần's full replacement not used word for word. Minh Triết also replaced this note; I used his and added Linh's 'the first photo should not show the tag either way'. Linh's 'or credit it if the owner permits' option was dropped: a credited photo of another maker's piece still shows something the shop did not make.
+- 4467697803 notes_vi[3] (Linh Trần): applied with changed wording, not word for word. Her text pointed to the 'THE ANGEL IN THE PHOTO' section, which no longer exists after Minh Triết's fix, so it now asks for a credit line at the end of the description.
+- 4558481857 notes_vi (Morgan Chen, 'Add the line'): not added as a 5th note, because the BRIEF caps notes_vi at 0–4. The text was added word for word to notes_vi[2] instead.
+
+</details>
+
 ## Danh sách (theo thứ tự shop)
 
 1. [Crochet Maine Coon Cat, Handmade Amigurumi Shelf Decor, Ragdoll Colorway Option, Long-Haired Cat Lover Gift, Knitted Scarf, 10 in](#l4337395489) — Handmade Amigurumi Maine Coon Crochet Cat – Fluffy Plushie, …
@@ -44,23 +111,23 @@ Những fact em không chắc (mâu thuẫn trong listing gốc) đều ghi ở 
 6. [Crochet Ginger Tabby Cat, Handmade Amigurumi Orange Tabby, 10 in Home Decor, Outfit with Removable Accessories, Cat Lover Gift](#l4337392483) — Ginger Tabby Cat crochet Amigurumi: Handmade Plush Toy, 10in…
 7. [Crochet Decade Rosary Car and Bag Charm, Rearview Mirror Rosary, Custom Color Catholic Keepsake, Catholic Gift for Adults](#l4592186429) — Crochet Decade Rosary Car and Bag Charm, Rearview Mirror Ros…
 8. [George Washington Crochet Doll, Founding Father Amigurumi, History Teacher Gift, Patriotic Decor, 250th Anniversary 1776–2026 Keepsake](#l4467723974) — George Washington Crochet Doll, History Teacher Gift, Foundi…
-9. [Custom Crochet Pet Portrait from Photos, Jumbo Cat Likeness 16-21 Inch, Personalized Cat Lover Gift, Handmade Grand Size Decor](#l4364432946) — Personalize Jumbo Cat & Pet Plushie crochet gift: Handmade D…
+9. [Custom Crochet Pet Portrait from Photos, Large Crochet Cat Look Alike 16-21 in, Personalized Cat Lover Gift, Pet Memorial Keepsake](#l4364432946) — Personalize Jumbo Cat & Pet Plushie crochet gift: Handmade D…
 10. [Crochet British Shorthair Cat, Sherlock Holmes Inspired Outfit, Handmade Amigurumi Gray and White Decor, Detective Cat Gift for Book Lovers](#l4337895128) — British Shorthair Cat Crochet Amigurumi Plush: Custom Fluffy…
 11. [Crochet Dragon Pattern PDF, Sleeping Dragon Amigurumi, Super Bulky Chenille Yarn, 47 Inch Giant Crochet Project, US Terms Digital Download](#l4399784660) — Crochet Dragon Plush Toy, Stuffed Animal Dragon, Nursery Dec…
 12. [Large Knitted Horse Decor, Hand-Knitted Fluffy Pony Pillow, Farmhouse Sofa Accent, Equestrian Gift, Horse Lover Shelf Decor](#l4368649382) — Large Horse Plushie pillow for kids, Knitting Pony Toy, Fluf…
-13. [Knitted Giraffe Decor, Large 60 cm Hand-Knitted Soft Sculpture, Pastel Safari Home Decor, Giraffe Lover Gift, Boho Sofa Accent](#l4364454125) — Hand-Knitted Giraffe Plush Toy, Soft Yarn Safari Animal, Nur…
+13. [Knitted Giraffe Decor, Large 60 cm Hand-Knitted Soft Sculpture, Pastel Living Room Decor, Giraffe Lover Gift, Boho Sofa Accent](#l4364454125) — Hand-Knitted Giraffe Plush Toy, Soft Yarn Safari Animal, Nur…
 14. [Crochet Feelings Faces, Set of 3 or 6 Squeeze Balls, Office Desk Fidget, Hand-Embroidered Cotton Mood Faces, Coworker Gift](#l4548879570) — Emotional Support Stress Ball Set, Crochet Feelings Faces, S…
 15. [Crochet Tuxedo Cat from Your Photo, Custom Amigurumi Pet Portrait, Handmade Black and White Cat Lover Gift, Personalized, 10 in](#l1889976910) — Tuxedo Cat Crochet Amigurumi Plush: Custom Handmade Toy cat …
-16. [Knitted Woodland Garden Collection, Hand-Knitted Mushroom, Hedgehog, Carrot, Tree, Acorn, Cottagecore Shelf Decor, Tiered Tray Accent](#l4427969443) — Hand-Knitted Woodland Garden Plushie Set, Mushroom, Hedgehog…
-17. [Hand-Knitted Duck with Floppy Legs, Daisy Pocket and White Scarf, Cottagecore Farmhouse Decor, Spring Sofa Pillow, Duck Lover Gift](#l4427983754) — Hand-Knitted Duck Plushie, Floppy Legs, Cottagecore Goose To…
+16. [Knitted Mushroom and Woodland Decor, Hand-Knitted Hedgehog, Carrot, Tree, Acorn, Pumpkin, Cottagecore Shelf Accent, Fall Tiered Tray Decor](#l4427969443) — Hand-Knitted Woodland Garden Plushie Set, Mushroom, Hedgehog…
+17. [Hand-Knitted Duck with Floppy Legs, Daisy Pocket and White Scarf, Cottagecore Farmhouse Decor, Cozy Sofa Pillow, Duck Lover Gift](#l4427983754) — Hand-Knitted Duck Plushie, Floppy Legs, Cottagecore Goose To…
 18. [Hand-Knitted Sheep, Fluffy Lamb Bag Charm or Shelf Decor, Curly Fleece Knit, Farmhouse Accent, Sheep Lover Gift, Cream, Red, Caramel](#l4361808711) — Hand-Knitted Sheep Plush Toy, Fluffy Lamb Bag Charm, Farm Nu…
-19. [Crochet Siamese Cat, Handmade Amigurumi Home Decor, Mini Romper or Body Only, Cat Lover Gift for Siamese Owners](#l4337384028) — Siamese Cat Crochet Amigurumi Plush Toy like photos, Custom …
+19. [Crochet Siamese Cat, Handmade Amigurumi Home Decor, Dressed or Body Only, Cat Lover Gift for Siamese Owners](#l4337384028) — Siamese Cat Crochet Amigurumi Plush Toy like photos, Custom …
 20. [Crochet Animal Friends Amigurumi, Cat, Dog, Bear and Bunny in Cozy Outfits, Collectible Shelf Decor, Cat Lover Gift, Christmas Gift](#l4335293461) — Handmade Animal Plush Toy Set crochet: Cat, Dog, Capybara, L…
 21. [Saint Joan of Arc Crochet Doll, Catholic Confirmation Gift, Name Saint Keepsake, Handmade Jeanne d'Arc, Feast Day Gift for Adults](#l4558481857) — Saint Joan of Arc Crochet Doll - Catholic Confirmation Name …
 22. [Personalized Bride and Groom Crochet Couple, Anniversary Gift for Newlyweds and Parents, Wedding Keepsake, 50th Golden Anniversary Decor](#l4467726345) — Personalized Bride and Groom Crochet Couple, Anniversary Gif…
 23. [Crochet White Cat, Handmade Amigurumi Kitty in an Outfit, 10 in Home Decor, Pink Nose, Cat Lover Gift, Removable Accessories](#l4336898722) — Custom White Cat Crochet Amigurumi Plush Like photos: Custom…
-24. [Custom Soccer Player Crochet Doll from Photo, Personalized Football Amigurumi, Removable Team Jersey, Coach Gift, Senior Night Keepsake](#l4467740813) — Custom Removable Outfit Soccer Player, Team Jersey Crochet D…
-25. [Custom Crochet Angel Portrait Doll, Memorial Keepsake for Mom, Dad or Grandma, Amigurumi Angel Figurine, Sympathy Gift, Flower Bouquet](#l4467697803) — Custom Amigurumi Angel Mother & Dad Doll, Portrait Crochet F…
+24. [Custom Soccer Player Crochet Doll from Photo, Personalized Football Amigurumi, Removable Team Jersey, Coach Gift, Soccer Fan Gift for Him](#l4467740813) — Custom Removable Outfit Soccer Player, Team Jersey Crochet D…
+25. [Custom Crochet Angel Portrait Doll, Memorial Keepsake for Mom, Dad or Grandma, Amigurumi Angel Figurine, Sympathy Gift, Wooden Stand](#l4467697803) — Custom Amigurumi Angel Mother & Dad Doll, Portrait Crochet F…
 26. [Crochet Christmas Elf, Handmade Nordic Holiday Decor, Amigurumi Elf Figurine, Tiered Tray Decor, Christmas Mantel Display, 10 in](#l4382239441) — Handmade Crochet Christmas Elf: Nordic Holiday Decor
 27. [Crochet Calico Cat, Handmade Amigurumi Tricolor Kitty, 10 in Shelf Decor with Minidress, Cat Lover Gift, Calico Mom Present](#l4336274863) — Calico Cat crochet Amigurumi Plush Toy: Handmade plushie kit…
 
@@ -103,7 +170,7 @@ Message us if you want a colorway in a yarn that is not listed.
 SHIPPING & DUTIES
 • Ready to ship: boxed, and leaves our studio in Nha Trang, Vietnam in 1–3 business days, tracked door to door
 • Estimated delivery: USA 9–15 days, UK & EU 10–20, Canada 10–20, Australia 10–20, elsewhere 10–30
-• Import duties are included in the price you see; nothing to pay on delivery
+• Import duties are included in the price you see
 
 CARE
 • Spot clean with a damp cloth, then air dry
@@ -132,7 +199,7 @@ Purrlight Studio LLC is a Texas company. Our cats are designed here and crochete
 - Listing cũ vừa ghi 'sẵn hàng, gửi trong 1–3 ngày' vừa ghi 'mọi bé đều làm theo đơn' (tiêu đề có 'Custom Order'). Em giữ 'sẵn hàng, gửi trong 1–3 ngày làm việc' như bản trên web; nếu bản len lông dài (+$20) phải móc mới thì chị cho em thời gian làm để em thêm vào.
 - Mô tả cũ ghi 'chọn 1 trong 3 loại len' nhưng chỉ kể 2 loại (chenille nhung, lông dài +$20). Em ghi 2 loại; nếu còn loại thứ 3 chị cho em tên và giá.
 - Ảnh chính trông như dựng bằng AI và bày cạnh kệ kiểu phòng em bé (vịt, gấu, chăn nhỏ) — CPSC coi cách trưng bày là một dấu hiệu 'hàng trẻ em'. Theo ý chị vẫn giữ ảnh, nhưng đừng gắn listing này thành hàng Feature; nếu có ảnh thật bé trên kệ sách/sofa thì nên để làm ảnh đầu.
-- Chị xác nhận câu 'đã gồm thuế nhập khẩu, không trả thêm khi nhận' đúng cho mọi nước. Đang giảm 25% ($41.25) đến hết 25/10 — Etsy tự hiện giá nên mô tả không nhắc. Nếu listing đang ở danh mục Toys/Stuffed Animals thì chuyển sang Home & Living > Home Décor.
+- Em bỏ vế 'nothing to pay on delivery' (không phải trả gì khi nhận): shop không kiểm soát được thuế/phí thu tại cửa ở mọi nước (Canada thường thu GST/HST + phí xử lý của bưu điện), chỉ giữ 'đã gồm thuế nhập khẩu'. Chị hỏi bên vận chuyển xem có trả trước thuế (DDP) cho từng nước không; đúng cho mọi nước thì mới thêm lại vế đó. Đang giảm 25% ($41.25) đến hết 25/10 — Etsy tự hiện giá nên mô tả không nhắc. Nếu listing đang ở danh mục Toys/Stuffed Animals thì chuyển sang Home & Living > Home Décor.
 
 
 <a id="l4378892426"></a>
@@ -175,13 +242,13 @@ WAYS TO USE IT
 • Hang it as a bag charm, or let it travel in your backpack
 • Hang it on the Christmas tree
 • Sit it on a shelf as cottagecore or vintage-style decor
-• Wedding favors, party favors, bridesmaid proposals, birthday gifts and Christmas stocking stuffers
+• Wedding favors, bridesmaid proposals and birthday gifts for friends
 
 GIFT-READY
 • Ships in gift packaging
 • Add a gift message and we print it on a mini card
 • Gift wrap and an optional name tag are available
-• Need a set for party favors, bridesmaid proposals or a boutique? Message us for bulk pricing and lead times.
+• Need a set for wedding favors, bridesmaid proposals or a boutique? Message us for bulk pricing and lead times.
 
 PROCESSING & SHIPPING
 • In-stock styles: 1–3 business days
@@ -196,7 +263,7 @@ CARE
 A handmade decorative keepsake for adults and collectors. Not a toy and not tested as a children's product; keep away from young children.
 ```
 
-**Tags (13):** `cottagecore decor`, `linen rag doll`, `purse charm`, `mini doll charm`, `fabric doll`, `bridesmaid proposal`, `party favor`, `stocking stuffer`, `gift for her`, `vintage style doll`, `floral cloth doll`, `handmade doll gift`, `backpack charm`
+**Tags (13):** `cottagecore decor`, `linen rag doll`, `purse charm`, `mini doll charm`, `fabric doll`, `bridesmaid proposal`, `bridal shower favor`, `christmas ornament`, `gift for her`, `vintage style doll`, `floral cloth doll`, `handmade doll gift`, `backpack charm`
 
 **Đã đổi gì:**
 - 'Waldorf-Inspired Toy', 'tiny linen baby dolls', 'a first doll' and 'open-ended play' removed: toy and children's-product framing; now a bag charm and decor piece
@@ -208,7 +275,7 @@ A handmade decorative keepsake for adults and collectors. Not a toy and not test
 - 'sewn by hand' (method not stated in the listing) back to 'handmade in small batches'; 'What's included: 1 doll' and birthday gifting restored from the original
 
 **Chị cần làm thêm:**
-- Ảnh chính có nhãn 'Freegift', 'Keychain', 'Ornament', '8+ options color' nhưng mô tả không nhắc khoen móc khóa/dây treo hay quà tặng kèm. Chị bỏ nhãn 'Freegift' (Brand Canon cấm) và cho em biết búp bê có khoen/dây treo không để em thêm vào DETAILS.
+- Ảnh chính phủ nhiều chữ: 'Little Sunshine Sisters', 'Doll Bagcharm 6–7"', 'Keychain', 'Ornament', '8+ options color', 'Freegift' và chữ 'D'. Ảnh đầu nên là bản không chữ (ít nhất phải bỏ 'Freegift' vì Brand Canon cấm). Mô tả không nhắc khoen móc khóa hay dây treo: chị cho em biết búp bê có kèm không để em thêm vào DETAILS; nếu không kèm thì bỏ luôn chữ 'Keychain' và 'Ornament' trên ảnh.
 - Kích thước listing cũ lệch nhau (14–17 cm, 15–17 cm, 5–7 in, tiêu đề 6 in). Em ghi 14–17 cm / 5.5–6.7 in — chị xác nhận giúp em.
 - Gói quà: listing cũ vừa ghi 'miễn phí gói quà khi mua từ 2 búp bê' vừa ghi 'gói quà kèm theo' cho 1 búp bê, nên em chỉ ghi 'có gói quà và thẻ tên'. Dòng 'US Storage (Pearland, Texas hub)' em giữ là kho ở Pearland — chị xác nhận mẫu nào gửi từ Texas.
 - Trong Etsy, nếu listing đang ở danh mục Toys/Dolls hoặc thuộc tính người nhận là Babies/Children, chị chuyển sang Accessories (bag charm) hoặc Home Décor và bỏ thuộc tính đó.
@@ -321,7 +388,7 @@ THE SET
 • Edward's top hat is removable
 • Yarn: cotton
 • Filling: polyester fiberfill
-• Made by hand; small differences from the photos are part of that, not a flaw
+• Made by hand; small differences in stitch and expression are part of that, not a flaw
 
 A COLLECTIBLE FOR DISPLAY
 Made for a bookshelf, a reading nook, or a desk beside a well-loved copy of the novel.
@@ -330,7 +397,7 @@ MADE TO ORDER & SHIPPING
 • Crocheted for you over 3–4 weeks
 • Shipped tracked from our artisan partners in Vietnam
 • Estimated US and Canada delivery: 9–15 days
-• Import duties are included in the price; nothing to pay on delivery
+• Import duties are included in the price
 
 CARE
 • Dust gently or spot clean with a damp cloth, then air dry
@@ -338,7 +405,7 @@ CARE
 • Keep out of direct sun to protect the colors
 
 COMPLETE THE SHELF
-Our Literary & Story Dolls collection also has Elizabeth Bennet and Mr Darcy from Pride and Prejudice.
+Elizabeth Bennet and Mr Darcy from Pride and Prejudice are also in our shop, in the Book Lover Gift section.
 
 A handmade decorative keepsake for adults and collectors. Not a toy and not tested as a children's product; keep away from young children.
 
@@ -348,7 +415,7 @@ Hand-crocheted by the artisan partners we work with in Vietnam, for Purrlight St
 Original design © Purrlight Studio LLC. Inspired by Jane Austen's novel of 1811, which is in the public domain. Not affiliated with, endorsed by, or licensed by any film, television or publishing company.
 ```
 
-**Tags (13):** `jane austen fan gift`, `austen collectible`, `regency couple`, `period drama gift`, `bookish gift for her`, `gift for reader`, `literary art doll`, `crochet couple doll`, `bookshelf decor`, `dark academia decor`, `reading nook decor`, `christmas book gift`, `classic novel gift`
+**Tags (13):** `jane austen fan gift`, `austen collectible`, `regency couple`, `period drama gift`, `bookish gift for her`, `gift for reader`, `literary art doll`, `crochet couple doll`, `bookshelf decor`, `dark academia decor`, `reading nook decor`, `jane austen doll`, `classic novel gift`
 
 **Đã đổi gì:**
 - Launch-price line ($69.99 for the first three sets, then $78) removed: it conflicts with Etsy's $40.99 and goes stale after three sales
@@ -418,7 +485,7 @@ Purrlight Studio is a small Vietnamese-American studio in Pearland, Texas. We de
 Original design © Purrlight Studio LLC. Inspired by Jane Austen's Pride and Prejudice (1813), which is in the public domain. Not affiliated with, endorsed by, or licensed by any film, television or publishing company.
 ```
 
-**Tags (13):** `jane austen fan gift`, `darcy and lizzy`, `austen collectible`, `regency couple`, `period drama gift`, `bookish gift for her`, `gift for reader`, `literary art doll`, `crochet couple doll`, `dark academia decor`, `doll with stand`, `reading nook decor`, `english lit gift`
+**Tags (13):** `jane austen fan gift`, `darcy and lizzy`, `austen collectible`, `regency couple`, `period drama gift`, `bookish gift for her`, `gift for reader`, `literary art doll`, `crochet couple doll`, `dark academia decor`, `jane austen doll`, `reading nook decor`, `english lit gift`
 
 **Đã đổi gì:**
 - 'stands on your bookshelf, not in a toy box' and 'COLLECTIBLE, NOT A TOY' reworded: no toy wording outside the standard line
@@ -471,7 +538,7 @@ MADE TO ORDER & SHIPPING
 • Other countries: 10–30 days by post
 
 GOOD TO KNOW
-• Studio lighting can make colors look slightly different on your screen
+• Colors can look slightly different from one screen to another
 • Every cat is handmade, so size and shape vary a little; the differences are minor
 
 A handmade decorative keepsake for adults and collectors. Not a toy and not tested as a children's product; keep away from young children.
@@ -490,7 +557,7 @@ Thank you for shopping with Viet Delight.
 
 **Chị cần làm thêm:**
 - Em bỏ dòng 'In-stock USA: upcoming (September 2025)' vì đã quá hạn — nếu giờ có sẵn hàng ở Mỹ chị báo em thêm lại.
-- Ảnh chính: bé không mặc đồ, không phụ kiện, len vàng mù tạt hơn là cam, chân không trắng như mô tả, và có thể là ảnh AI. Theo ý chị vẫn giữ ảnh, nhưng đừng gắn listing này thành hàng Feature; nếu có 1 ảnh thật (có trang phục) thì nên để làm ảnh đầu để khách nhận đúng món.
+- Ảnh chính: bé không mặc đồ, không phụ kiện, len vàng mù tạt hơn là cam, chân không trắng như mô tả, và có thể là ảnh AI. 'Bộ đồ + phụ kiện tháo rời' chỉ lấy từ đoạn prompt AI cũ ('should be dressed…'), chưa có gì xác nhận (CHƯA BIẾT) mà tiêu đề lại nêu ngay: chị xác nhận bé gửi đi có kèm bộ đồ và phụ kiện không; nếu không, em bỏ khỏi tiêu đề và mô tả. Theo ý chị vẫn giữ ảnh, nhưng đừng gắn listing này thành hàng Feature.
 - Nếu listing đang ở danh mục Toys/Stuffed Animals trên Etsy thì chuyển sang Home & Living > Home Décor.
 
 
@@ -544,7 +611,7 @@ GOOD TO KNOW
 A handmade devotional keepsake for adults. Not a toy and not tested as a children's product; keep away from young children.
 ```
 
-**Tags (13):** `car rosary`, `one decade rosary`, `crochet rosary`, `catholic car charm`, `mirror hanging`, `prayer beads`, `religious gift`, `new car gift`, `photo charm rosary`, `wood bead rosary`, `rosary keychain`, `catholic mom gift`, `confirmation gift`
+**Tags (13):** `car rosary`, `one decade rosary`, `crochet rosary`, `catholic car charm`, `mirror hanging`, `prayer beads`, `religious gift`, `new car gift`, `photo charm rosary`, `wood bead rosary`, `rosary keychain`, `catholic mom gift`, `catholic christmas`
 
 **Đã đổi gì:**
 - 'Choose "Set of 2" to get Freeshipping' removed: no free-shipping wording in the copy (Etsy shows shipping itself); Set of 2 kept as a menu option
@@ -605,7 +672,7 @@ CARE
 • Keep away from moisture; do not machine wash
 
 SHIPPING
-• Handcrafted to order by our Vietnamese-American artisan team
+• Handcrafted to order by the artisan partners we work with in Vietnam
 • Processing time: 3–5 business days
 • Ships from Vietnam (about 10–14 business days to the US), or from Pearland, Texas, for in-stock dolls
 • Want it for a specific date? Message us first and we'll confirm.
@@ -613,12 +680,12 @@ SHIPPING
 A handmade decorative keepsake for adults and collectors. Not a toy and not tested as a children's product; keep away from young children.
 
 ABOUT PURRLIGHT STUDIO
-A Texas-based Vietnamese-American artisan studio. Every piece is designed in Pearland, TX, and handcrafted by our artisan team with intention, detail and love.
+A Texas-based Vietnamese-American studio. Every piece is designed in Pearland, TX, and handcrafted by the artisan partners we work with in Vietnam, with intention, detail and love.
 
-A historical-figure tribute, handmade by Purrlight Studio. An independent artisan collectible, not affiliated with or endorsed by any film, musical or stage production.
+A historical-figure tribute, designed by Purrlight Studio. An independent artisan collectible, not affiliated with or endorsed by any film, musical or stage production.
 ```
 
-**Tags (13):** `history buff gift`, `social studies gift`, `american history`, `founding fathers`, `1776 2026`, `semiquincentennial`, `4th of july decor`, `independence day`, `gift for dad`, `teacher desk decor`, `revolutionary war`, `teacher retirement`, `us history gift`
+**Tags (13):** `history buff gift`, `social studies gift`, `american history`, `founding fathers`, `1776 2026`, `semiquincentennial`, `teacher xmas gift`, `patriotic gift`, `gift for dad`, `teacher desk decor`, `revolutionary war`, `teacher retirement`, `us history gift`
 
 **Đã đổi gì:**
 - First line's 'George Washington, Thomas Jefferson, Franklin Benjamin crochet doll trio set' replaced: the listing sells one Washington doll in two sizes; the reversed 'Franklin Benjamin' is gone
@@ -631,23 +698,23 @@ A historical-figure tribute, handmade by Purrlight Studio. An independent artisa
 - 'with tracking' removed from the ship-from line and 'from the collection' cut from the photo note: neither is stated in the listing (tracking never mentioned; Jefferson/Franklin availability unconfirmed)
 
 **Chị cần làm thêm:**
-- Ảnh chính: 3 búp bê trong hộp mica với bảng 'Fathers Founding United State America 250th Birthday' (sai ngữ pháp), trông như dựng bằng AI, có watermark 'Grateful / be blessed' không phải logo shop. Listing chỉ bán 1 Washington: chị giữ ảnh nhưng không để làm ảnh đầu, và cho em biết hộp mica/bảng có kèm không.
+- Ảnh chính: 3 búp bê trong hộp mica với bảng 'Fathers Founding United State America 250th Birthday' (sai ngữ pháp), trông như dựng bằng AI. Con dấu 'Be thankful · Grateful · be blessed' trên ảnh giống hệt con dấu trên ảnh thiên thần mà chị đã xác nhận không phải ảnh của chị, nên nhiều khả năng cùng một nguồn bên ngoài (SUY LUẬN). Chị xác nhận ảnh này có phải của mình không; nếu không, xử lý như ảnh thiên thần. Listing chỉ bán 1 Washington: đừng để ảnh này làm ảnh đầu, và cho em biết hộp mica/bảng có kèm không.
 - Em bỏ câu 'Jefferson & Franklin join the collection in 2026' (giờ đã tháng 10/2026). Nếu Jefferson/Franklin đã có listing, chị gửi link để em thêm mục 'Complete the set'.
 - Vận chuyển cũ mâu thuẫn ('pre-order' vs 'xử lý 3–5 ngày'; 'gửi từ VN' vs 'từ giữa 7/2026 gửi từ Pearland'). Em ghi: làm theo đơn, xử lý 3–5 ngày làm việc, gửi từ VN (10–14 ngày làm việc tới US) hoặc từ Pearland với hàng sẵn — chị xác nhận hiện tại gửi từ đâu.
 - Em bỏ câu 'NOT AI … our photos show our actual work' vì một số ảnh dựng bằng AI; giữ câu đó là tuyên bố sai theo FTC/Etsy. Nếu chị có ảnh chụp thật, đặt ảnh đó lên đầu.
 
 
 <a id="l4364432946"></a>
-### Custom Crochet Pet Portrait from Photos, Jumbo Cat Likeness 16-21 Inch, Personalized Cat Lover Gift, Handmade Grand Size Decor
+### Custom Crochet Pet Portrait from Photos, Large Crochet Cat Look Alike 16-21 in, Personalized Cat Lover Gift, Pet Memorial Keepsake
 
 Listing: https://www.etsy.com/listing/4364432946 · giá hiện tại $150.00 · section Etsy: —
 
 Title cũ: *Personalize Jumbo Cat & Pet Plushie crochet gift: Handmade Design, Hugging and, 16" - 21"*
 
-**Title mới** (126 ký tự):
+**Title mới** (130 ký tự):
 
 ```text
-Custom Crochet Pet Portrait from Photos, Jumbo Cat Likeness 16-21 Inch, Personalized Cat Lover Gift, Handmade Grand Size Decor
+Custom Crochet Pet Portrait from Photos, Large Crochet Cat Look Alike 16-21 in, Personalized Cat Lover Gift, Pet Memorial Keepsake
 ```
 
 **Description:**
@@ -687,7 +754,7 @@ Questions about your photos or the size? Message us through Etsy before you orde
 **Chị cần làm thêm:**
 - Mô tả Etsy cũ chỉ có 1 dòng; em viết đầy đủ từ tiêu đề + trang site. Chị cần thêm: thời gian làm (processing time), cách gửi ảnh (ô Personalization hay nhắn tin, mấy ảnh, góc nào) và chất liệu len/nhồi — em chưa ghi vì listing chưa có.
 - 'Làm từ ảnh khách gửi' và 'lau bằng khăn ẩm' lấy từ trang site, không có trong listing Etsy — chị xác nhận giúp. Kích thước: tiêu đề ghi 16–21" nhưng mô tả cũ ghi 'trên 14"' — chị chốt một khoảng.
-- Ảnh đầu có nhãn da 'Bespoke by L.V. 30 yrs' — không phải nhãn Viet Delight/Purrlight, và 'Bespoke' là chữ Canon v2 tránh; khách có thể tưởng bé đi kèm nhãn đó. Nếu có ảnh không thấy nhãn thì nên để làm ảnh đầu.
+- Ảnh đầu có nhãn da 'Bespoke by L.V. 30 yrs', không phải nhãn Viet Delight/Purrlight, nên bé trong ảnh có thể là sản phẩm của một người thợ khác (SUY LUẬN). Chị xác nhận bé này do xưởng mình làm hoặc mình được phép dùng ảnh; nếu không, thay ảnh. Ngoài ra khách có thể tưởng bé đi kèm nhãn đó, và 'Bespoke' là chữ Canon v2 tránh. Dù thế nào, ảnh đầu cũng nên là ảnh không thấy nhãn.
 - Listing chưa nằm trong section nào — nên cho vào section mèo/Merlin. Nếu đang ở danh mục Toys/Stuffed Animals thì chuyển sang Home & Living > Home Décor.
 
 
@@ -728,7 +795,7 @@ MADE TO ORDER & SHIPPING
 • Other countries: 10–30 days by post
 
 NOTES
-• Colors in photos can shift slightly under studio lighting
+• Colors can look slightly different from one screen to another
 • Handmade, so size and shape vary a little from cat to cat; the differences are minor
 
 A handmade decorative keepsake for adults and collectors. Not a toy and not tested as a children's product; keep away from young children.
@@ -851,6 +918,7 @@ Feel free to share your make and tag us so we can cheer you on.
 - Ảnh là rồng màu trắng/kem nhưng phần vật liệu ghi màu chính Nâu + phụ Vàng gà. Chị cân nhắc thêm một dòng 'mẫu trong ảnh làm màu kem' hoặc một ảnh màu nâu để khách khỏi thắc mắc.
 - Nếu listing đang ở danh mục Toys trên Etsy, chuyển sang Craft Supplies & Tools > Patterns & How To. Section 'Digital Service' giữ nguyên được.
 - Mô tả giữ đơn giản, không kêu gọi mua, đúng ý chị để thử xem khách của shop có muốn mua pattern không. Dòng credit 'Pattern by Anna_Crochet – Sleeping Dragon' giữ nguyên như chị xác nhận. Tag lấy từ khối keyword nội bộ đã xoá.
+- Ảnh chính đặt con rồng trong phòng em bé (decal mây và sao trên tường, gấu bông, khối gỗ đồ chơi trên kệ) — đúng bối cảnh mà bản viết lại đã bỏ khỏi chữ. Theo ý chị vẫn giữ ảnh AI và để listing này yên ắng, nhưng ảnh đầu nên crop sát con rồng cho mất gấu, khối gỗ và decal (hoặc dùng ảnh rồng nâu/vàng nếu có, khớp luôn với phần vật liệu).
 
 
 <a id="l4368649382"></a>
@@ -909,7 +977,7 @@ A handmade decorative keepsake for adults and collectors. Not a toy and not test
 
 
 <a id="l4364454125"></a>
-### Knitted Giraffe Decor, Large 60 cm Hand-Knitted Soft Sculpture, Pastel Safari Home Decor, Giraffe Lover Gift, Boho Sofa Accent
+### Knitted Giraffe Decor, Large 60 cm Hand-Knitted Soft Sculpture, Pastel Living Room Decor, Giraffe Lover Gift, Boho Sofa Accent
 
 Listing: https://www.etsy.com/listing/4364454125 · giá hiện tại $55.00 · section Etsy: Nursery & Baby Plushies
 
@@ -918,7 +986,7 @@ Title cũ: *Hand-Knitted Giraffe Plush Toy, Soft Yarn Safari Animal, Nursery Dec
 **Title mới** (126 ký tự):
 
 ```text
-Knitted Giraffe Decor, Large 60 cm Hand-Knitted Soft Sculpture, Pastel Safari Home Decor, Giraffe Lover Gift, Boho Sofa Accent
+Knitted Giraffe Decor, Large 60 cm Hand-Knitted Soft Sculpture, Pastel Living Room Decor, Giraffe Lover Gift, Boho Sofa Accent
 ```
 
 **Description:**
@@ -935,7 +1003,7 @@ DETAILS
 • Colors: pastel pink, blue or yellow
 
 STYLE IT / GIFT IDEAS
-• A soft statement piece for a boho, Scandinavian or safari-style living room
+• A soft statement piece for a boho or Scandinavian living room
 • A gift for a giraffe lover, a knitter or anyone who appreciates the craft of hand-knitting
 • At home on a bed, an armchair or a wide bookshelf
 
@@ -950,7 +1018,7 @@ A handmade decorative keepsake for adults and collectors. Not a toy and not test
 Explore more handmade pieces at our shop: https://vietdelightfinds.etsy.com
 ```
 
-**Tags (13):** `giraffe gift`, `handmade giraffe`, `boho living room`, `pastel room decor`, `jungle home decor`, `tall animal decor`, `knit soft sculpture`, `fiber art decor`, `reading nook decor`, `sofa styling`, `scandi decor`, `gift for knitter`, `animal lover gift`
+**Tags (13):** `giraffe gift`, `handmade giraffe`, `boho living room`, `pastel room decor`, `housewarming gift`, `tall animal decor`, `knit soft sculpture`, `fiber art decor`, `reading nook decor`, `sofa styling`, `scandi decor`, `gift for knitter`, `animal lover gift`
 
 **Đã đổi gì:**
 - Title: removed 'Plush Toy', 'Nursery Decor' and 'Toddler Snuggle Toy'; now leads with 'Knitted Giraffe Decor' for home styling
@@ -984,7 +1052,7 @@ Crochet Feelings Faces, Set of 3 or 6 Squeeze Balls, Office Desk Fidget, Hand-Em
 ```text
 Crochet feelings faces for your desk: a set of 3 or 6 palm-sized cotton squeeze balls, each with a hand-embroidered mood, for grown-ups who like a little fidget at work.
 
-Some days are happy. Some are angry, sleepy, dizzy or worried, and that's okay. Each ball wears one expression, so you can set out the mood you're in today. Keep them on your desk as a daily mood check-in, pass one to a coworker, or give a set as a gift that says "all your feelings are welcome here."
+Happy, sad, angry, sleepy, dizzy, worried: each ball wears one expression, so you can set out the mood you're in today. Keep them on your desk as a daily mood check-in, pass one to a coworker, or give a set to the work friend who shares your sense of humor.
 
 CHOOSE YOUR SET
 • Set of 3 or Set of 6 hand-embroidered emotion balls, with a drawstring "Emotion Sacks" pouch
@@ -1013,7 +1081,7 @@ ABOUT VIET DELIGHT
 A Vietnamese-American studio crocheting little things that carry big feelings, from our hands to your heart.
 ```
 
-**Tags (13):** `cubicle decor`, `office desk decor`, `office gift`, `emotion faces`, `mood balls`, `crochet squeeze ball`, `mood check in`, `cotton crochet`, `fidget for adults`, `work from home gift`, `palm sized fidget`, `feelings gift`, `crochet emoji`
+**Tags (13):** `cubicle decor`, `office desk decor`, `office gift`, `emotion faces`, `mood balls`, `crochet squeeze ball`, `mood check in`, `secret santa gift`, `fidget for adults`, `work from home gift`, `palm sized fidget`, `feelings gift`, `crochet emoji`
 
 **Đã đổi gì:**
 - Title: removed 'Emotional Support', 'Stress Ball', 'Sensory' and 'Calm Down Corner Toy'; re-aimed as an office desk fidget and coworker gift
@@ -1024,7 +1092,7 @@ A Vietnamese-American studio crocheting little things that carry big feelings, f
 - Kept set sizes, fill options, size, emotions, care, processing time, Pearland ship-from and USPS estimate
 
 **Chị cần làm thêm:**
-- Ảnh chính có sticker 'FREE SHIPPING', con dấu 'be blessed' của bên thứ ba, bảng 'Happy Hook Pouches' và chữ 'Stress-Relief' ở dải dưới; chữ trên ảnh cũng tính là quảng cáo, nên thay bằng ảnh sạch.
+- Ảnh chính có sticker 'FREE SHIPPING', chữ 'Stress-Relief' ở dải dưới, bảng ghi 'Happy Hook Pouches' và con dấu 'Be thankful · Grateful · be blessed'. Con dấu này giống hệt trên ảnh thiên thần mà chị đã xác nhận không phải ảnh của chị, còn 'Happy Hook Pouches' có thể là tên shop khác (SUY LUẬN). Chị xác nhận ảnh này có phải của mình không; dù có hay không, chữ trên ảnh cũng tính là quảng cáo, nên thay bằng ảnh sạch do xưởng chụp. Nếu ảnh không phải của mình thì đừng xoá dấu rồi dùng tiếp (xoá watermark của người khác là vi phạm bản quyền).
 - Chưa rõ bộ gồm 1 túi 'Emotion Sacks' hay mỗi bóng là một túi rút (ảnh có dây rút trên từng bóng); em giữ nguyên câu cũ, chị xác nhận.
 - Trong category picker bỏ nhóm Toys (Fidget toys...) và chọn nhóm Home & Living hoặc Office; bỏ các attribute lớp học/trẻ em nếu có.
 - Listing không ghi giá Set of 6 và giá bản nhồi đậu / nhồi bông; $14 hiện là mức thấp nhất. Chị kiểm tra variations trên Etsy đã có giá đúng cho từng lựa chọn (bộ 3/bộ 6 × kiểu nhồi).
@@ -1071,7 +1139,7 @@ MADE TO ORDER & SHIPPING
 • Other countries: 10–30 days by post
 
 GOOD TO KNOW
-• Colors may look slightly different on screen because of studio lighting
+• Colors may look slightly different from one screen to another
 • Handmade, so size and shape vary slightly from one cat to the next; the differences are minor
 
 A handmade decorative keepsake for adults and collectors. Not a toy and not tested as a children's product; keep away from young children.
@@ -1091,20 +1159,20 @@ Thank you for shopping with Viet Delight.
 **Chị cần làm thêm:**
 - Listing không nói khách gửi ảnh bằng cách nào và có thêu tên không (ảnh có chữ 'Azul' trên bụng, tiêu đề ghi 'personalized'). Em chỉ viết 'làm theo ảnh mèo khách gửi', không ghi gửi lúc nào hay bằng cách nào; chị cho em biết cách (ô Personalization hay tin nhắn) và có thêu tên/tính thêm tiền không để em thêm.
 - Em bỏ 'In-stock USA: Pearland' vì mâu thuẫn với 'làm theo đơn 1–2 tuần' (mèo theo ảnh khách không thể có sẵn). Nếu có bé tuxedo làm sẵn ở Pearland, chị báo để em ghi riêng.
-- Ảnh chính có watermark 'Viet Delight', không có bộ đồ/túi quà, có sợi trắng mờ vắt ngang — có thể là ảnh AI; theo ý chị vẫn giữ ảnh, nhưng đừng gắn listing này thành hàng Feature. Nếu listing đang ở danh mục Toys thì chuyển sang Home & Living > Home Décor.
+- Ảnh chính có watermark 'Viet Delight', không có bộ đồ/túi quà, có sợi trắng mờ vắt ngang, có thể là ảnh AI; theo ý chị vẫn giữ ảnh, nhưng đừng gắn listing này thành hàng Feature. 'Bộ đồ có túi quà nhỏ + phụ kiện tháo rời' chỉ lấy từ đoạn prompt AI cũ (CHƯA BIẾT): chị xác nhận có kèm không; nếu không, em bỏ. Nếu listing đang ở danh mục Toys thì chuyển sang Home & Living > Home Décor.
 
 
 <a id="l4427969443"></a>
-### Knitted Woodland Garden Collection, Hand-Knitted Mushroom, Hedgehog, Carrot, Tree, Acorn, Cottagecore Shelf Decor, Tiered Tray Accent
+### Knitted Mushroom and Woodland Decor, Hand-Knitted Hedgehog, Carrot, Tree, Acorn, Pumpkin, Cottagecore Shelf Accent, Fall Tiered Tray Decor
 
 Listing: https://www.etsy.com/listing/4427969443 · giá hiện tại $16.00 · section Etsy: Nursery & Baby Plushies
 
 Title cũ: *Hand-Knitted Woodland Garden Plushie Set, Mushroom, Hedgehog, Carrot, Montessori Toy*
 
-**Title mới** (133 ký tự):
+**Title mới** (138 ký tự):
 
 ```text
-Knitted Woodland Garden Collection, Hand-Knitted Mushroom, Hedgehog, Carrot, Tree, Acorn, Cottagecore Shelf Decor, Tiered Tray Accent
+Knitted Mushroom and Woodland Decor, Hand-Knitted Hedgehog, Carrot, Tree, Acorn, Pumpkin, Cottagecore Shelf Accent, Fall Tiered Tray Decor
 ```
 
 **Description:**
@@ -1144,7 +1212,7 @@ Discover more handmade pieces at our shop: https://vietdelightfinds.etsy.com
 **Tags (13):** `tiered tray decor`, `fall harvest decor`, `mushroom decor`, `hedgehog gift`, `knitted vegetables`, `cottagecore kitchen`, `farmhouse shelf`, `gardener gift`, `acorn decor`, `pumpkin decor`, `plant lover gift`, `mantel decor`, `knit fruit decor`
 
 **Đã đổi gì:**
-- Title: removed 'Plushie Set' and 'Montessori Toy'; now 'Knitted Woodland Garden Collection' for shelf and tiered-tray decor
+- Title: removed 'Plushie Set' and 'Montessori Toy'; now 'Knitted Mushroom and Woodland Decor' for shelf and tiered-tray decor
 - Removed the pasted second keyword line ('Veggie Toys, Kawaii Baby Shower Gift Box...')
 - 'hypoallergenic', 'Gentle on Baby's Skin', 'Montessori principles' and 'sized for little hands' removed — untested and child-focused claims
 - Nursery, baby shower and toddler birthday gift ideas replaced with cottagecore, fall harvest and gardener gift ideas
@@ -1160,16 +1228,16 @@ Discover more handmade pieces at our shop: https://vietdelightfinds.etsy.com
 
 
 <a id="l4427983754"></a>
-### Hand-Knitted Duck with Floppy Legs, Daisy Pocket and White Scarf, Cottagecore Farmhouse Decor, Spring Sofa Pillow, Duck Lover Gift
+### Hand-Knitted Duck with Floppy Legs, Daisy Pocket and White Scarf, Cottagecore Farmhouse Decor, Cozy Sofa Pillow, Duck Lover Gift
 
 Listing: https://www.etsy.com/listing/4427983754 · giá hiện tại $40.00 · section Etsy: Nursery & Baby Plushies
 
 Title cũ: *Hand-Knitted Duck Plushie, Floppy Legs, Cottagecore Goose Toy, Soft Animal Pillow*
 
-**Title mới** (130 ký tự):
+**Title mới** (128 ký tự):
 
 ```text
-Hand-Knitted Duck with Floppy Legs, Daisy Pocket and White Scarf, Cottagecore Farmhouse Decor, Spring Sofa Pillow, Duck Lover Gift
+Hand-Knitted Duck with Floppy Legs, Daisy Pocket and White Scarf, Cottagecore Farmhouse Decor, Cozy Sofa Pillow, Duck Lover Gift
 ```
 
 **Description:**
@@ -1189,7 +1257,7 @@ DETAILS
 STYLE IT / GIFT IDEAS
 • A gift for duck, goose and farm animal lovers
 • A cottagecore or farmhouse accent for the sofa, the bed or a reading chair
-• A soft touch for a spring or Easter mantel
+• A cozy Christmas gift for a cottagecore or farmhouse friend
 • A cozy travel pillow companion
 • For anyone who loves cute, kawaii room decor
 
@@ -1204,14 +1272,14 @@ A handmade decorative keepsake for adults and collectors. Not a toy and not test
 Explore more hand-knitted and amigurumi pieces at our shop: https://vietdelightfinds.etsy.com
 ```
 
-**Tags (13):** `goose lover gift`, `spring decor`, `easter mantel decor`, `daisy decor`, `farm animal decor`, `knit duck pillow`, `travel pillow`, `vintage style decor`, `cottage decor`, `sofa decor`, `farmhouse gift`, `fiber art duck`, `duck decor`
+**Tags (13):** `goose lover gift`, `hygge decor`, `duck mom gift`, `daisy decor`, `farm animal decor`, `knit duck pillow`, `kawaii room decor`, `vintage style decor`, `cottage decor`, `sofa decor`, `farmhouse gift`, `fiber art duck`, `duck decor`
 
 **Đã đổi gì:**
 - Size left out: the listing says both 30 cm (11.8 in) and 40 cm (15.7 in); copy now says 'large' and invites buyers to ask for the exact measurement
 - Title: removed 'Plushie' and 'Goose Toy'; one animal name (duck) and adult decor phrases instead
 - Removed the pasted second keyword line ('Large Hand-Knitted Duck Stuffed Animal 30cm...')
 - 'Hypoallergenic ... completely safe for babies and sensitive skin' and 'clean, eco-friendly fiberfill' removed — untested safety and green claims
-- Nursery, baby shower, first birthday and Easter basket ideas replaced with sofa, bed, spring mantel and travel pillow ideas
+- Nursery, baby shower, first birthday and Easter basket ideas replaced with sofa, bed, Christmas gift and travel pillow ideas
 - 'Perfect', 'premium', '100%', 'snuggle', 'perfect gift' removed — Canon v2 and child-focused wording
 - Kept yarn, details (legs, scarf, daisy pocket), made in Vietnam, care, tracked shipping and shop link; added the standard keepsake line
 
@@ -1283,19 +1351,20 @@ Explore more hand-knitted pieces at our shop: https://vietdelightfinds.etsy.com
 - Chị đã quyết giữ ảnh cừu (không phải ảnh của chị) và không đưa lên đầu trang web. Riêng trên Etsy: ảnh chính là cừu xám/tím nhạt khăn đỏ, không thuộc 3 màu đang bán (Cream White, Cherry Red, Warm Caramel); khách dễ tưởng mua được màu xám. Nếu có ảnh 1 trong 3 màu này thì nên để làm ảnh đầu tiên.
 - Bản móc khóa kim loại/dây da: em giữ đúng như listing; chị kiểm tra variation này có giá riêng không để ghi cho khớp.
 - Chuyển listing khỏi section 'Nursery & Baby Plushies' (đổi tên section, ví dụ 'Knitted Animal Decor'); trong category picker chọn Home & Living > Home Decor thay vì Toys/Baby, và bỏ các attribute/occasion hướng trẻ em (Baby shower...).
+- Ảnh cừu không phải của mình nên cần ghi nguồn khi còn dùng: chị cho em tên hoặc handle chủ ảnh để em thêm một dòng cuối mô tả, ví dụ 'Main photo courtesy of @…'. Em không tự điền tên.
 
 
 <a id="l4337384028"></a>
-### Crochet Siamese Cat, Handmade Amigurumi Home Decor, Mini Romper or Body Only, Cat Lover Gift for Siamese Owners
+### Crochet Siamese Cat, Handmade Amigurumi Home Decor, Dressed or Body Only, Cat Lover Gift for Siamese Owners
 
 Listing: https://www.etsy.com/listing/4337384028 · giá hiện tại $58.00 · section Etsy: Cat Lover Gift
 
 Title cũ: *Siamese Cat Crochet Amigurumi Plush Toy like photos, Custom Fluffy Cat, Home Decor*
 
-**Title mới** (111 ký tự):
+**Title mới** (107 ký tự):
 
 ```text
-Crochet Siamese Cat, Handmade Amigurumi Home Decor, Mini Romper or Body Only, Cat Lover Gift for Siamese Owners
+Crochet Siamese Cat, Handmade Amigurumi Home Decor, Dressed or Body Only, Cat Lover Gift for Siamese Owners
 ```
 
 **Description:**
@@ -1322,7 +1391,7 @@ MADE TO ORDER & SHIPPING
 • Other countries: 10–30 days by post
 
 PLEASE NOTE
-• Studio lighting can make the colors in photos look slightly different
+• Colors can look slightly different from one screen to another
 • Each cat is handmade, so size and shape vary slightly; the differences are minor
 
 A handmade decorative keepsake for adults and collectors. Not a toy and not tested as a children's product; keep away from young children.
@@ -1377,7 +1446,7 @@ MEET THE FRIENDS
 DETAILS
 • Size: about 10 cm (3.9 in) tall
 • Hand-crocheted from cotton yarn, with embroidered letters and details
-• Handmade, so size and shape may vary slightly; colors may look a little different from the studio-lit photos
+• Handmade, so size and shape may vary slightly; colors may look a little different on your screen
 
 HOW IT'S SOLD
 The four friends are shown together in the photos. If you'd like to confirm which friends your order includes, message us before you order.
@@ -1445,7 +1514,7 @@ Saint Joan of Arc Crochet Doll, Catholic Confirmation Gift, Name Saint Keepsake,
 Saint Joan of Arc crochet doll: a handmade, hand-embroidered Catholic keepsake for adults. A Confirmation, feast-day or name-saint gift for anyone who takes Joan or Jeanne as their name saint.
 
 ✝️ SAINT JOAN OF ARC
-Saint Joan is remembered for her courage, perseverance and faithfulness to the very end. This doll is hand-crocheted in her honor as a keepsake for anyone who takes Joan or Jeanne as their name saint. Give it at Confirmation or on a patron-saint feast day, from a Confirmation sponsor or a friend. It sits quietly on a shelf, a desk or a home prayer corner.
+Saint Joan is remembered for her courage, perseverance and faithfulness to the very end. This doll is hand-crocheted in her honor as a keepsake for anyone who takes Joan or Jeanne as their name saint. Give it at Confirmation, on a patron-saint feast day or at Christmas, from a Confirmation sponsor or a friend. It sits quietly on a shelf, a desk or a home prayer corner.
 
 CHOOSE YOUR VERSION
 • Sample/Regular: Saint Joan only, about 23 cm (9 in), no custom name or extra embroidery
@@ -1475,7 +1544,7 @@ ABOUT VIET DELIGHT BY PURRLIGHT
 We're a Vietnamese-American maker studio, and we are Catholic. We make heirloom-quality handmade gifts: designed in Texas, made in Vietnam, finished in Texas.
 ```
 
-**Tags (13):** `joan of arc gift`, `catholic saint doll`, `confirmation saint`, `jeanne d arc`, `patron saint gift`, `catholic decor`, `saint figurine`, `religious keepsake`, `sponsor gift`, `french saint`, `home altar decor`, `catholic woman gift`, `crochet saint doll`
+**Tags (13):** `joan of arc gift`, `catholic saint doll`, `confirmation saint`, `jeanne d arc`, `patron saint gift`, `catholic decor`, `saint figurine`, `religious keepsake`, `sponsor gift`, `catholic christmas`, `home altar decor`, `catholic woman gift`, `crochet saint doll`
 
 **Đã đổi gì:**
 - 'recommended ages 3+' and 'for children and grown-ups alike' removed (age recommendation); standard devotional keepsake line added
@@ -1489,7 +1558,7 @@ We're a Vietnamese-American maker studio, and we are Catholic. We make heirloom-
 **Chị cần làm thêm:**
 - Mắt: listing vừa ghi 'không có chi tiết nhựa nhỏ' vừa ghi 'mắt nhựa và mắt không nhựa theo yêu cầu', ảnh thì giống mắt nhựa. Em ghi 'mắt nhựa, hoặc mắt không nhựa theo yêu cầu' — chị xác nhận mắt mặc định.
 - Bản Sample/Regular ghi 'no custom or embroidery' nhưng mặt bé nào cũng thêu tay; em ghi 'không tên riêng, không thêu thêm' — chị xác nhận. Bản Banner chưa có chiều cao và chưa nói có đế gỗ không. Nên đổi tên tuỳ chọn 'Deluxe' trên Etsy thành 'Banner' cho khớp mô tả (Canon v2 tránh chữ 'luxe').
-- Giá '$120' của bản Standard đã bỏ khỏi mô tả: đang giảm 25% đến hết 25/10 nên Etsy sẽ hiện giá khác; chị kiểm tra giá từng phiên bản trong menu. Section 'Baptism & Catholic Gift' gợi ý quà cho em bé — nên chuyển sang section kiểu 'Catholic Gifts & Keepsakes' (cùng chuỗi Mân Côi).
+- Giá '$120' của bản Standard đã bỏ khỏi mô tả: đang giảm 25% đến hết 25/10 nên Etsy sẽ hiện giá khác; chị kiểm tra giá từng phiên bản trong menu. Section 'Baptism & Catholic Gift' gợi ý quà cho em bé — nên chuyển sang section kiểu 'Catholic Gifts & Keepsakes' (cùng chuỗi Mân Côi). TÍNH TOÁN: làm 14–20 ngày làm việc (~3–4 tuần) + 2–3 tuần ship từ xưởng VN (theo trang custom-orders) → đơn đặt sau khoảng 5–10/11 có thể không kịp 25/12. Mô tả không hứa ngày; chị chỉ cần để processing time trên Etsy đúng 14–20 ngày để Etsy tự hiện ngày giao dự kiến.
 - Ảnh đầu có ô chữ 'Saint Jenne D'arc' sai chính tả (đúng là 'Jeanne') và chữ bị cắt ở mép dưới. Cảnh trông dựng AI: theo ý chị vẫn giữ ảnh, chỉ không đưa lên hàng nổi bật trên web; trên Etsy, nếu có ảnh thật của bé thì nên để làm ảnh đầu.
 
 
@@ -1564,7 +1633,7 @@ Want something special, like matching pets, a themed outfit or a specific year o
 **Chị cần làm thêm:**
 - Ảnh đầu có chữ 'Freegift', 'Freeship', '3+ options color' và 3 cặp, trong khi listing bán 1 cặp — chữ 'free' trên ảnh cũng tính là hứa miễn phí, nên bỏ. Ảnh dựng AI: theo ý chị vẫn giữ, chỉ không đưa lên hàng nổi bật trên web; trên Etsy nên để ảnh 1 cặp thật làm ảnh đầu.
 - Đã bỏ 'FREE US shipping' — chị kiểm tra hồ sơ vận chuyển trên Etsy (Etsy tự hiện phí ship cho khách).
-- Listing không nói búp bê được móc ở đâu, chỉ ghi 'artisans' và 'finished in Texas' — em giữ nguyên, không thêm Việt Nam. Nếu chị muốn ghi 'made in Vietnam, finished in Texas' như Saint Joan thì báo em.
+- Listing không nói búp bê được móc ở đâu, chỉ ghi 'artisans' và 'finished in Texas', còn tiêu đề mục là 'Ships from Texas' — em giữ nguyên, không tự thêm Việt Nam. Nhưng đây không phải tuỳ chọn: nếu cặp búp bê được móc ở Việt Nam, chị cần thêm câu 'Hand-crocheted by our artisan partners in Vietnam, then finished in Texas' (như Saint Joan, Elizabeth & Darcy) và khai production partner trong mục 'Who made it' của Etsy. Chỉ ghi 'finished in Texas' + 'ships from the USA' dễ bị hiểu là hàng làm ở Mỹ; FTC xét cả tuyên bố ngầm kiểu 'Made in USA'.
 
 
 <a id="l4336898722"></a>
@@ -1605,7 +1674,7 @@ MADE TO ORDER & SHIPPING
 • Other countries: 10–30 days by post
 
 A FEW NOTES
-• Colors can look a little different on screen because of studio lighting
+• Colors can look a little different from one screen to another
 • Every cat is handmade, so size and shape vary slightly; the differences are minor
 
 A handmade decorative keepsake for adults and collectors. Not a toy and not tested as a children's product; keep away from young children.
@@ -1624,22 +1693,22 @@ Thank you for shopping with Viet Delight.
 - '10&quot;' changed to '10 in'; misspelled banner removed; standard adult keepsake line added
 
 **Chị cần làm thêm:**
-- Ảnh chính trông như ảnh dựng (AI/render: ô len vuông đều, râu vẽ). Theo ý chị vẫn giữ ảnh AI, nhưng đừng gắn listing này thành hàng Feature; nếu có ảnh thật của bé móc thì nên để làm ảnh đầu. Ảnh có mũ len + yếm trái tim mà mô tả chỉ ghi 'bộ đồ', nên em không ghi chi tiết đó.
+- Ảnh chính trông như ảnh dựng (AI/render: ô len vuông đều, râu vẽ). Theo ý chị vẫn giữ ảnh AI, nhưng đừng gắn listing này thành hàng Feature; nếu có ảnh thật của bé móc thì nên để làm ảnh đầu. 'Bộ đồ + phụ kiện tháo rời' chỉ lấy từ đoạn prompt AI cũ (CHƯA BIẾT), còn mũ len + yếm trái tim chỉ thấy trong ảnh AI: chị xác nhận bé gửi đi mặc gì; nếu không kèm đồ, em bỏ khỏi tiêu đề và mô tả.
 - 'In-stock USA only body kitties' không rõ nghĩa nên em bỏ — nếu ở Mỹ có sẵn bé chỉ thân (không đồ), chị báo em thêm 1 dòng.
 - Em bỏ chữ 'Custom … Like photos' ở tiêu đề vì mô tả không nói tuỳ chỉnh gì. Nếu listing đang ở danh mục Toys thì chuyển sang Home & Living > Home Décor.
 
 
 <a id="l4467740813"></a>
-### Custom Soccer Player Crochet Doll from Photo, Personalized Football Amigurumi, Removable Team Jersey, Coach Gift, Senior Night Keepsake
+### Custom Soccer Player Crochet Doll from Photo, Personalized Football Amigurumi, Removable Team Jersey, Coach Gift, Soccer Fan Gift for Him
 
 Listing: https://www.etsy.com/listing/4467740813 · giá hiện tại $64.00 · section Etsy: Personalized Keepsakes
 
 Title cũ: *Custom Removable Outfit Soccer Player, Team Jersey Crochet Doll from Photo, Football Amigurumi Gift*
 
-**Title mới** (135 ký tự):
+**Title mới** (137 ký tự):
 
 ```text
-Custom Soccer Player Crochet Doll from Photo, Personalized Football Amigurumi, Removable Team Jersey, Coach Gift, Senior Night Keepsake
+Custom Soccer Player Crochet Doll from Photo, Personalized Football Amigurumi, Removable Team Jersey, Coach Gift, Soccer Fan Gift for Him
 ```
 
 **Description:**
@@ -1647,7 +1716,7 @@ Custom Soccer Player Crochet Doll from Photo, Personalized Football Amigurumi, R
 ```text
 Custom soccer player crochet doll made from your photo: a personalized look-alike keepsake for players, coaches and fans, in your team colors and number.
 
-Turn a favorite player, a fan or a coach into a one-of-a-kind crochet doll. Recreate yourself, a loved one, the team captain or the team's MVP: this personalized amigurumi soccer player captures their look and their love of the beautiful game, a keepsake that celebrates every goal, every practice and every win.
+Turn a player you know, a fan or a coach into a one-of-a-kind crochet doll. Recreate yourself, a loved one, the team captain or the team's MVP: this personalized amigurumi soccer player captures their look and their love of the beautiful game, a keepsake that celebrates every goal, every practice and every win.
 
 WHAT YOU CAN PERSONALIZE
 • Jersey, shorts and socks in your team colors, plus any player number
@@ -1673,7 +1742,6 @@ HOW TO ORDER
 GIFT IDEAS
 • A game-day surprise for a boyfriend or husband
 • Soccer dads, team captains and MVPs
-• A senior-night gift from the parents
 • A thank-you for a soccer coach
 • Birthdays, Christmas, anniversaries and Valentine's Day
 
@@ -1689,10 +1757,10 @@ ABOUT VIET DELIGHT
 We're a small family studio creating handmade, personalized crochet keepsakes. Every doll is crocheted stitch by stitch by our artisan team, to turn your favorite people and moments into a gift that lasts.
 ```
 
-**Tags (13):** `senior night gift`, `soccer gift for him`, `soccer mom gift`, `soccer dad gift`, `team captain gift`, `look alike doll`, `portrait doll`, `custom crochet doll`, `game day gift`, `soccer fan gift`, `boyfriend gift`, `player number doll`, `coach thank you`
+**Tags (13):** `husband gift`, `soccer gift for him`, `soccer mom gift`, `soccer dad gift`, `team captain gift`, `look alike doll`, `portrait doll`, `custom crochet doll`, `game day gift`, `soccer fan gift`, `boyfriend gift`, `player number doll`, `coach thank you`
 
 **Đã đổi gì:**
-- 'your child's first season' removed: aimed at the adult who orders it (a player, a coach, a fan, a partner, parents for senior night)
+- 'your child's first season' removed: aimed at the adult who orders it (a player, a coach, a fan, a partner)
 - '100% handmade', 'skin-friendly', 'premium fiberfill' and the size name 'Premium' removed: unsupported claims and Brand Canon; sizes now Medium and Large
 - 'FREE surprise gift' reworded to 'a small handmade charm as our thank-you'; 'THE PERFECT GIFT FOR' renamed 'GIFT IDEAS'
 - 'a feature most crochet dolls don't offer' and 'we reply within a few hours' dropped: unverifiable comparison and response-time promise
@@ -1701,22 +1769,22 @@ We're a small family studio creating handmade, personalized crochet keepsakes. E
 - 'your partner' back to the listing's own 'a loved one' (the only change needed there was dropping 'your child's first season')
 
 **Chị cần làm thêm:**
-- Ảnh chính có búp bê mặc áo giống đội tuyển quốc gia và giống cầu thủ nổi tiếng (số 10 kiểu Argentina, số 7, áo kiểu Brazil, Pháp, Tây Ban Nha, Bồ Đào Nha), vài áo có huy hiệu giống logo thật: rủi ro nhãn hiệu và quyền hình ảnh, lại mâu thuẫn câu 'không copy logo CLB'. Ảnh này trông như dựng bằng AI nên chị đẩy xuống sau; ảnh đầu nên là 1–2 búp bê mẫu không nhận ra là ai, không huy hiệu.
+- Ảnh chính có búp bê mặc áo giống đội tuyển quốc gia và giống cầu thủ nổi tiếng (số 10 kiểu Argentina, số 7, áo kiểu Brazil, Pháp, Tây Ban Nha, Bồ Đào Nha), vài áo có huy hiệu giống logo thật, lại mâu thuẫn câu 'không copy logo CLB'. Đây là rủi ro nhãn hiệu và quyền hình ảnh, khác với chuyện ảnh AI: đẩy ảnh xuống sau không hết rủi ro, vì bên giữ quyền báo vi phạm cho cả listing. Em đề nghị gỡ ảnh này khỏi Etsy và khỏi web (bản cắt trên web vẫn thấy áo kiểu Brazil, Tây Ban Nha, Pháp), thay bằng 1–2 búp bê mẫu không nhận ra là ai, không huy hiệu; chị quyết.
 - Biến thể size trong Etsy đang tên 'Premium': chị đổi thành 'Large' cho khớp mô tả (Brand Canon cấm 'premium').
 - Trong Etsy, nếu listing đang ở Toys & Games, chị chuyển sang Art & Collectibles > Dolls & Miniatures hoặc Home Décor; và xem lại câu hướng dẫn trong ô Personalization để không nhắc 'child'.
 
 
 <a id="l4467697803"></a>
-### Custom Crochet Angel Portrait Doll, Memorial Keepsake for Mom, Dad or Grandma, Amigurumi Angel Figurine, Sympathy Gift, Flower Bouquet
+### Custom Crochet Angel Portrait Doll, Memorial Keepsake for Mom, Dad or Grandma, Amigurumi Angel Figurine, Sympathy Gift, Wooden Stand
 
 Listing: https://www.etsy.com/listing/4467697803 · giá hiện tại $79.00 · section Etsy: Personalized Keepsakes
 
 Title cũ: *Custom Amigurumi Angel Mother & Dad Doll, Portrait Crochet Figurine, Memorial Keepsake, Flower Bouquet*
 
-**Title mới** (134 ký tự):
+**Title mới** (132 ký tự):
 
 ```text
-Custom Crochet Angel Portrait Doll, Memorial Keepsake for Mom, Dad or Grandma, Amigurumi Angel Figurine, Sympathy Gift, Flower Bouquet
+Custom Crochet Angel Portrait Doll, Memorial Keepsake for Mom, Dad or Grandma, Amigurumi Angel Figurine, Sympathy Gift, Wooden Stand
 ```
 
 **Description:**
@@ -1726,11 +1794,8 @@ Custom crochet angel portrait doll: a handmade memorial keepsake for adults reme
 
 Our custom crochet angel doll is a personalized memorial gift, handcrafted with care by the artisans at Viet Delight, who bring a loved one's features to life in yarn.
 
-THE ANGEL IN THE PHOTO
-The angel pictured shows the kind of detail a custom portrait can carry:
-• A grandmother angel with white wings, holding a handcrafted pink and white rose bouquet
-• Hand embroidery: a light blue shirt embroidered with tiny flowers on the front and back, with a delicate cross necklace
-• Face details: a slightly darker skin tone, soft gray Brazil wool hair, and lightly painted under-eye details for a warm, lifelike expression
+YOUR ANGEL
+Each angel is crocheted to order as a portrait of your loved one, with white wings, made from the details you share with us.
 
 DETAILS
 • Size: approx. 20 cm / 8 in tall
@@ -1738,7 +1803,7 @@ DETAILS
 • Comes with a sturdy wooden stand for a desk, bedside table, shelf or memorial altar
 
 A GIFT FOR
-A sympathy gift, a memorial keepsake, or a personal present for a grandmother on Mother's Day, a birthday or a religious milestone.
+A sympathy gift, a memorial keepsake for the first Christmas without a loved one, or a personal present for a grandmother on Mother's Day, a birthday or a religious milestone.
 
 CARE
 Gently spot clean, or hand wash with mild soap. Air dry flat in the shade. Do not machine wash or tumble dry, to protect the embroidered details and hair styling.
@@ -1751,12 +1816,12 @@ A handmade devotional keepsake for adults. Not a toy and not tested as a childre
 Explore more handmade pieces and custom orders in our shop: https://vietdelightfinds.etsy.com
 ```
 
-**Tags (13):** `memorial gift`, `remembrance gift`, `bereavement gift`, `loss of mother gift`, `loss of father gift`, `in memory of mom`, `grandma memorial`, `custom portrait doll`, `look alike doll`, `memorial altar decor`, `mothers day gift`, `religious keepsake`, `angel with wings`
+**Tags (13):** `memorial gift`, `remembrance gift`, `bereavement gift`, `loss of mother gift`, `loss of father gift`, `in memory of mom`, `grandma memorial`, `custom portrait doll`, `look alike doll`, `memorial altar decor`, `christmas memorial`, `religious keepsake`, `angel with wings`
 
 **Đã đổi gì:**
 - 'safe, hypoallergenic cotton yarn' changed to 'cotton yarn': untested material-safety claims removed
 - 'arrives safely to your doorstep' and 'securely packaged' replaced by 'We pack every order with care'
-- Customer name 'Ms. Jasmin' removed for privacy; the sample is now 'the angel in the photo'
+- Customer name 'Ms. Jasmin' removed for privacy, and the section describing the pictured angel (not the shop's work) removed
 - 'personalized guardian angel' changed to 'personalized memorial gift' so the faith piece makes no protection promise
 - '100% Handmade', 'perfect example' and 'Perfect Gift For' toned down (Canon); standard devotional keepsake line added
 - Title 'Angel Mother & Dad Doll' reworded to 'for Mom, Dad or Grandma' to match the single custom angel in the description
@@ -1764,7 +1829,8 @@ Explore more handmade pieces and custom orders in our shop: https://vietdelightf
 **Chị cần làm thêm:**
 - Tiêu đề cũ ghi 'Angel Mother & Dad', nhưng mô tả và ảnh chỉ có 1 thiên thần bà. Em viết là 1 thiên thần làm theo yêu cầu (mẹ, bố hoặc bà) — chị xác nhận $79 là 1 bé hay 1 cặp, và có làm thiên thần bố không.
 - Listing chưa nói khách gửi ảnh/thông tin người thân bằng cách nào (ô Personalization hay nhắn tin), và gửi hàng từ đâu — chị thêm giúp một dòng; em không tự đặt ra.
-- Chị đã quyết giữ ảnh thiên thần (không phải ảnh của chị) và không đưa lên đầu trang web. Vì vậy em bỏ tên khách 'Ms. Jasmin' và câu 'bé này làm theo đơn đặt', mô tả chỉ gọi là 'thiên thần trong ảnh'. Trên Etsy, khi có ảnh bé do xưởng làm thì nên để ảnh đó lên đầu, vì Etsy yêu cầu ảnh đúng là món shop làm.
+- Chị đã quyết giữ ảnh thiên thần (không phải ảnh của chị) và không đưa lên hàng nổi bật. Vì vậy em bỏ tên khách 'Ms. Jasmin', câu 'bé này làm theo đơn đặt', cả mục tả chi tiết bé trong ảnh (tóc len Brazil, vẽ bọng mắt, áo thêu hoa, dây chuyền thánh giá) và chữ 'Flower Bouquet' ở tiêu đề: giữ lại là lấy sản phẩm của người khác làm mẫu tay nghề của mình, và xưởng làm được chi tiết nào thì hiện CHƯA BIẾT. Chị cho em biết xưởng làm được bó hoa, dây chuyền, thêu áo… không để em thêm thành tuỳ chọn; trên Etsy nên sớm thay bằng ảnh bé do xưởng làm.
+- Ảnh thiên thần không phải của mình nên cần ghi nguồn khi còn dùng: chị cho em tên hoặc handle chủ ảnh để em thêm một dòng cuối mô tả, ví dụ 'Photo courtesy of @…'. Em không tự điền tên.
 
 
 <a id="l4382239441"></a>
@@ -1873,7 +1939,7 @@ MADE TO ORDER & SHIPPING
 • Other countries: 10–30 days by post
 
 HANDMADE NOTES
-• Colors in photos may vary slightly because of studio lighting
+• Colors may look slightly different from one screen to another
 • Size and shape vary a little, as each cat is made by hand; the differences are minor
 
 A handmade decorative keepsake for adults and collectors. Not a toy and not tested as a children's product; keep away from young children.

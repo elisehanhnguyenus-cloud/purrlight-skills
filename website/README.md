@@ -135,7 +135,19 @@ giá của lựa chọn khách mua. Danh sách chip có thanh cuộn riêng đ�
 - **Nội dung**: mỗi món được một agent viết chỉ từ mô tả listing (Brand Canon v2: không toy/plush/nursery/kids/baby,
   không safe/hypoallergenic, không free shipping, không hẹn ngày giao…) rồi agent thứ hai soi lại từng fact. Tên trên
   site là tên của mình, không chép tiêu đề SEO. Riêng custom pet Grand giữ "made from your photos" (quy trình chị
-  duyệt 25/09, listing chưa ghi). Giá = giá gốc; giảm giá nằm trong `SALES` (cần ngày kết thúc).
+  duyệt 25/09, listing chưa ghi). Giá = giá gốc; giảm giá nằm trong `SALES` (cần ngày kết thúc). **20/10:** 5 món
+  giảm 25% như Etsy tới hết Chủ nhật 25/10 (giờ Central) — bộ váy rửa tội, Maine Coon, Rosary charm, Saint Joan,
+  Americana; hết hạn site tự về giá gốc (cả trang đang mở và Event Desk). Món "from" đang giảm: Event Desk nhắc gõ
+  **giá đã giảm** của lựa chọn khách mua.
+- **Món "chìm" (`QUIET` trong `products.js`, chị chốt 20/10):** vẫn bán, nhưng luôn nằm **cuối** shop và cuối từng
+  collection, không bao giờ lên trang chủ hay mục "You may also like": cừu và thiên thần (ảnh không phải của chị),
+  4 ảnh trông như ảnh dựng (Ginger, British Shorthair, bộ 4 thú, mèo trắng), và mẫu rồng PDF (chị để chìm để thử xem
+  khách có muốn mua pattern không). Bỏ món khỏi danh sách = nó về đúng thứ tự Etsy.
+- **Dòng an toàn chuẩn (đổi 20/10)** trên trang sản phẩm và thư cảm ơn của Event Desk: "Handmade decorative keepsake
+  for adults and collectors. Not a toy and not tested as a children's product. Keep away from young children and
+  open flame. Spot clean only." — hàng chưa kiểm nghiệm CPSIA nên site và Etsy cùng nói đây là đồ trang trí/kỷ niệm
+  cho người lớn (câu cũ "for adult-guided use… Not suitable for children under 3" là kiểu nhãn đồ chơi trẻ em từ 3
+  tuổi). Bản viết lại cho Etsy: `docs/ETSY-LISTING-REWRITE-2026-10-20.md`.
 - **Collection**: 7 collection canon đều đã có hàng — Storybook (3), Feelings & Calm (7), Faith & Milestones (5),
   Merlin's World (8), Little Things (3), Heritage & Celebration (4), Patterns & Printables (1). George Washington
   chuyển từ Storybook sang Heritage & Celebration (đúng chủ đề 250 năm nước Mỹ).
@@ -143,7 +155,8 @@ giá của lựa chọn khách mua. Danh sách chip có thanh cuộn riêng đ�
   tới 1000 px; chỉ có khi ảnh gốc lớn hơn 600 px). Cắt vuông để bỏ chữ, nhãn "Freeship/Freegift", logo Viet Delight.
   Ba ảnh được xoá logo Viet Delight / hộp chữ bằng ffmpeg (gown, Siamese, Saint Joan). **Không bao giờ xoá dấu/chữ
   ký có thể là của người khác** (xoá dấu bản quyền là sai) — 4 ảnh có dấu lạ không bị sửa (ảnh Feelings Faces chỉ cắt vuông nên
-  con dấu "be thankful…" nằm ngoài khung) và không dùng ở trang chủ. Lời dặn giặt trên site chỉ giữ phần "spot clean" cho
+  con dấu "be thankful…" nằm ngoài khung). Chị chốt 20/10: cừu và thiên thần không phải ảnh của chị nhưng vẫn dùng,
+  chỉ không đưa lên đầu trang (→ `QUIET`). Lời dặn giặt trên site chỉ giữ phần "spot clean" cho
   khớp dòng an toàn chuẩn ("Spot clean only"); listing nào ghi giặt tay thì đã ghi vào danh sách sửa Etsy.
 - `priceFrom: true` = listing có lựa chọn làm đổi giá (size, 1 con hay cặp, bộ 3 hay 6…): site ghi "from $X", Event Desk
   bắt gõ giá của lựa chọn khách mua (7 món: Maine Coon, Sense & Sensibility, George Washington, vườn len, Feelings

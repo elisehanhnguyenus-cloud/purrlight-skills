@@ -1109,13 +1109,29 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 - Danh sách việc phía Etsy: `docs/ETSY-LISTING-FIXES-2026-10-20.md` (claim an toàn trẻ em, ảnh có dấu lạ, ảnh nghi
   AI render, giá/bộ chưa rõ, 4 món đang giảm 25% chưa rõ ngày hết).
 
+### Elise 20/10 (tin sau) — ảnh không phải của chị, ảnh dựng, giảm giá, content không nhắm trẻ em
+- **Giảm 25% tới hết 25/10** thêm 4 món như Etsy: Maine Coon, Rosary charm, Saint Joan, Americana (cùng bộ váy). Món
+  "from" đang giảm: Event Desk nhắc gõ giá đã giảm của lựa chọn khách mua. Hết hạn tự về giá gốc.
+- **Món "chìm"** (`QUIET` trong `js/products.js`): cừu, thiên thần (ảnh không phải của chị), Ginger, British
+  Shorthair, bộ 4 thú, mèo trắng (ảnh trông như ảnh dựng), mẫu rồng PDF (chị để chìm để thử nhu cầu pattern) — vẫn
+  bán, luôn cuối shop và cuối từng collection, không lên trang chủ / "You may also like".
+- **Content không nhắm trẻ em** (hàng chưa kiểm nghiệm CPSIA): dòng an toàn chuẩn trên site + thư cảm ơn Event Desk
+  đổi thành "Handmade decorative keepsake for adults and collectors. Not a toy and not tested as a children's
+  product…"; bản viết lại title + mô tả + 13 tag cho 27 listing Etsy: `docs/ETSY-LISTING-REWRITE-2026-10-20.md`.
+- Câu "Every piece finished by hand" (trang chủ) và "made by hand in small batches" (shop) đổi thành "every keepsake…"
+  — mẫu PDF và sắp tới sticker/sách in theo yêu cầu (POD) không làm bằng tay; số đếm shop ghi "31 pieces, 30 made by
+  hand in small batches".
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
    cấp?).
 2. Sau mùa lễ: thay ảnh hero và ảnh share link (mục Giáng sinh + video tự ẩn từ 2/1/2027).
-3. Etsy: xem `docs/ETSY-LISTING-FIXES-2026-10-20.md`; ngày kết thúc giảm 25% của Maine Coon, Rosary, Saint Joan,
-   Americana (để site hiện giá giảm); xác nhận quyền dùng 4 ảnh có dấu lạ + mẫu rồng "Pattern by Anna_Crochet".
+3. Etsy: dán bản viết lại trong `docs/ETSY-LISTING-REWRITE-2026-10-20.md` (và đổi category/section như ghi chú
+   từng listing); các điểm còn lại trong `docs/ETSY-LISTING-FIXES-2026-10-20.md` (giá/bộ chưa rõ, ảnh huy hiệu
+   bóng đá, túi có logo).
+4. Khi list sticker / sách POD cho Merlin: gửi em link listing — site đã sẵn cho món không làm bằng tay
+   (`NOT_HANDMADE`: không ghi "made by hand", không care, không dòng an toàn).
 
 ## 9. Link & tài nguyên
 

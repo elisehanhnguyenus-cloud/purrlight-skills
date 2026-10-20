@@ -159,6 +159,10 @@
     catGrid.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("in"); });
   }
 
+  /* QUIET pieces (products.js) stay listed but go after everything else and are never recommended */
+  var notQuiet = function (p) { return (typeof QUIET !== "undefined" ? QUIET : []).indexOf(p.id) === -1; };
+  var featuredFirst = function (list) { return list.filter(notQuiet).concat(list.filter(function (p) { return !notQuiet(p); })); };
+
   /* ---------- shop page ---------- */
   var shopGrid = document.querySelector("[data-shop-grid]");
   if (shopGrid && typeof PRODUCTS !== "undefined") {
@@ -171,11 +175,12 @@
 
     function apply(cat) {
       active = cat;
-      var items = cat === "All" ? PRODUCTS : PRODUCTS.filter(function (p) { return p.category === cat; });
+      var items = featuredFirst(cat === "All" ? PRODUCTS : PRODUCTS.filter(function (p) { return p.category === cat; }));
       renderGrid(shopGrid, items);
       if (count) {
+        var made = items.filter(function (p) { return (typeof NOT_HANDMADE !== "undefined" ? NOT_HANDMADE : []).indexOf(p.id) === -1; }).length;
         count.textContent = items.length + (items.length === 1 ? " piece" : " pieces") +
-          (cat === "All" ? ", all made in small batches" : " in " + cat);
+          (cat !== "All" ? " in " + cat : made === items.length ? ", all made in small batches" : ", " + made + " made by hand in small batches");
       }
       bar.querySelectorAll(".filter-chip").forEach(function (b) {
         b.setAttribute("aria-pressed", b.dataset.cat === cat ? "true" : "false");
@@ -220,7 +225,7 @@
       set("[data-pdp-desc]", "It may have sold out or moved. Everything currently on our hooks is in the shop.");
       [".price", ".pdp-addons", "[data-pdp-buy]", ".pdp-details", ".pdp-note", ".pdp-media"].forEach(hide);
       var relGrid0 = document.querySelector("[data-related]");
-      if (relGrid0) renderGrid(relGrid0, PRODUCTS.slice(0, 4));
+      if (relGrid0) renderGrid(relGrid0, PRODUCTS.filter(notQuiet).slice(0, 4));
       return;
     }
     p = p || PRODUCTS[0];
@@ -272,12 +277,12 @@
     if (!p.details.some(function (d) { return /spot clean/i.test(d); })) hide("[data-pdp-care]");
     if (notHandmade) hide(".pdp-note");
 
-    /* related: same category first, then others */
+    /* related: same category first, then others — never a QUIET piece */
     var relGrid = document.querySelector("[data-related]");
     if (relGrid) {
-      var rel = PRODUCTS.filter(function (x) { return x.id !== p.id && x.category === p.category; });
+      var rel = PRODUCTS.filter(function (x) { return x.id !== p.id && notQuiet(x) && x.category === p.category; });
       PRODUCTS.forEach(function (x) {
-        if (rel.length < 4 && x.id !== p.id && rel.indexOf(x) === -1) rel.push(x);
+        if (rel.length < 4 && x.id !== p.id && notQuiet(x) && rel.indexOf(x) === -1) rel.push(x);
       });
       renderGrid(relGrid, rel.slice(0, 4));
     }

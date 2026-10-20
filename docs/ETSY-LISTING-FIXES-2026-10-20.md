@@ -12,6 +12,8 @@ mô tả và từ ngữ Brand Canon v2. Danh sách này để chị sửa phía 
    vườn len, bộ 4 thú, búp bê linen ("Recommended for newborns, toddlers"), Maine Coon, thánh Joan, cô dâu chú rể,
    thiên thần, elf, Anne… Khuyên: đổi sang "keepsake / decor / for the bookshelf", bỏ mọi claim an toàn và độ tuổi
    trẻ em; Section "Nursery & Baby Plushies" nên đổi tên.
+   → **20/10 chị nhờ em viết lại:** title + mô tả + 13 tag sẵn để dán cho 27 listing, kèm lý do vì sao "handmade"
+   không được miễn CPSIA: `docs/ETSY-LISTING-REWRITE-2026-10-20.md`.
 2. **Ảnh có dấu của người khác** — cần chị xác nhận ảnh là của mình hoặc có quyền dùng:
    - Your Pet, Crocheted — Grand (4364432946): mác da "Bespoke · L.V. · 30 yrs" trên chân mèo.
    - Custom Angel Portrait Doll (4467697803): watermark chữ "Grateful / be thankful".
@@ -19,13 +21,18 @@ mô tả và từ ngữ Brand Canon v2. Danh sách này để chị sửa phía 
    - Fluffy Knitted Sheep (4361808711): chữ ký viết tay mờ trên đầu cừu.
    Em **không sửa** các dấu này (xoá dấu bản quyền của người khác là sai) — site vẫn hiện ảnh như trên Etsy (ảnh
    Feelings Faces chỉ cắt vuông nên con dấu nằm ngoài khung), nhưng không dùng chúng ở trang chủ.
+   → **Chị chốt 20/10:** cừu và thiên thần không phải ảnh của chị nhưng vẫn dùng, chỉ không đưa lên đầu trang (site:
+   luôn cuối shop, không lên trang chủ / "You may also like"). Pet Grand và Feelings Faces: em hiểu là ảnh của chị.
 3. **Ảnh có thể là ảnh dựng (AI render) chứ không phải hàng thật** — Etsy yêu cầu ảnh đúng món khách nhận:
    White Cat (4336898722), Crochet Animal Friends set (4335293461); British Shorthair (4337895128) và Ginger Tabby
    (4337392483) có cùng một thân mèo giống hệt nhau. Mô tả của 6 listing mèo đọc như prompt AI ("The design
    should reflect…", "Crochet pattern for…") dù bán mèo thành phẩm.
+   → **Chị chốt 20/10:** vẫn để, nhưng không làm hàng nổi bật (site: cuối shop, không lên trang chủ / gợi ý).
 4. **Thương hiệu người khác trong ảnh** — Americana Doll Bag Charm (4493251609): túi Michael Kors có logo.
    Custom Soccer Doll (4467740813): áo đội tuyển giống cầu thủ thật, có huy hiệu.
 5. **Mẫu rồng PDF (4399784660)** ghi "Pattern by Anna_Crochet" — chị xác nhận có quyền bán file này.
+   → **Chị xác nhận 20/10:** đúng; chị để chìm để thử khách có muốn mua pattern không (site: cuối shop). Tiêu đề Etsy
+   hiện ghi "Crochet Dragon Plush Toy…" nên khách dễ tưởng mua thú len $1.75 — bản viết lại để "Pattern PDF" lên đầu.
 
 ## Giá / nội dung bán chưa rõ (khách dễ hiểu nhầm)
 
@@ -47,8 +54,8 @@ mô tả và từ ngữ Brand Canon v2. Danh sách này để chị sửa phía 
 ## Giảm giá đang chạy trên Etsy
 
 5 món đang giảm 25%: christening gown (site đã hiện giá giảm tới hết Chủ nhật 25/10), Maine Coon, Rosary charm,
-Saint Joan of Arc, Americana bag charm. Em **chưa** hiện giá giảm của 4 món sau vì không biết ngày kết thúc — chị
-cho em ngày kết thúc là em bật (site tự trả về giá gốc khi hết hạn).
+Saint Joan of Arc, Americana bag charm. → **Chị chốt 20/10:** cả 5 món giảm tới hết 25/10 — site đã hiện giá giảm
+(tự về giá gốc từ 0:00 thứ Hai 26/10 giờ Central).
 
 ## Chữ thừa / lỗi chính tả hay gặp
 

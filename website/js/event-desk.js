@@ -234,7 +234,7 @@ var DESK_CONFIG = {
   }
 
   /* ---------- storage ---------- */
-  var LS = { orders: "purrlight.desk.orders", settings: "purrlight.desk.settings", draft: "purrlight.desk.draft" };
+  var LS = { orders: "purrlight.desk.orders", settings: "purrlight.desk.settings", draft: "purrlight.desk.draft", setAside: "purrlight.desk.setaside" };
   var storageOk = true;   /* flips false the first time a write fails (private mode, full quota) */
   function lsGet(k, fallback) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : fallback; } catch (e) { return fallback; } }
   function lsSet(k, v) {
@@ -245,7 +245,20 @@ var DESK_CONFIG = {
 
   var listeners = [];
   var LocalStore = {
-    orders: (function () { var l = lsGet(LS.orders, []); return Array.isArray(l) ? l.filter(validOrder) : []; })(),
+    /* a row that fails validOrder is set aside under its own key, never dropped: the next save rewrites the log without it */
+    orders: (function () {
+      var l = lsGet(LS.orders, []);
+      if (!Array.isArray(l)) return [];
+      var bad = l.filter(function (o) { return !validOrder(o); });
+      if (bad.length) {
+        var kept = lsGet(LS.setAside, []), seen = {};
+        if (!Array.isArray(kept)) kept = [];
+        kept.forEach(function (o) { seen[JSON.stringify(o)] = true; });
+        bad.forEach(function (o) { if (!seen[JSON.stringify(o)]) kept.push(o); });
+        lsSet(LS.setAside, kept);
+      }
+      return l.filter(validOrder);
+    })(),
     all: function () { return this.orders.slice(); },
     put: function (o) {
       var i = indexOfId(this.orders, o.id);
@@ -267,6 +280,8 @@ var DESK_CONFIG = {
   /* A hosting page (the shared hosted version) may wrap the local store with a
      synced one — same interface: all/put/remove/replaceAll/onChange/label. */
   var Store = (typeof window.PurrlightRemoteStore === "function") ? window.PurrlightRemoteStore(LocalStore) : LocalStore;
+  /* ask the browser to keep this device's orders through its clean-ups (Safari can clear a site left unused for 7 days) */
+  try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function () {}); } catch (e) { /* older browsers */ }
 
   var settings = lsGet(LS.settings, {});
   if (typeof settings !== "object" || !settings) settings = {};
@@ -1142,11 +1157,6 @@ var DESK_CONFIG = {
       setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
     } catch (e) { fallback(); }
   };
-  /* only rows in the desk's own shape are merged — a stray file must never brick the log */
-  function validOrder(o) {
-    return !!(o && typeof o === "object" && typeof o.id === "string" && typeof o.createdAt === "string" && o.customer && typeof o.customer.name === "string" &&
-      Array.isArray(o.items) && o.totals && typeof o.totals.total === "number" && (o.type === "thanks" || o.type === "order"));
-  }
   function csvCell(v) {
     v = v == null ? "" : String(v);
     if (/^[=+\-@\t\r]/.test(v)) v = "'" + v;   /* a typed "=SUM(...)" must open as text in Excel/Sheets, never run */

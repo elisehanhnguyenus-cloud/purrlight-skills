@@ -1150,6 +1150,29 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   12 MP → WebP 810×1080 (55 KB); chữ cấm bị chặn kèm thông báo tiếng Việt. Hướng dẫn từng bước cho chị:
   `docs/ADMIN-SPIKE-0A-HUONG-DAN.md`.
 
+### Code có sạch, dễ sửa không? (Elise 20/10, tin 3) — `docs/CODE-HEALTH-2026-10-20.md`
+- Soát 4 góc (dễ tìm và sửa · code thừa · độ dễ vỡ · lưới an toàn). Mỗi góc có người kiểm lại: 33 điểm xác nhận, 22 điểm
+  hạ mức, 1 điểm bị bác. **Điểm chung khoảng 6–7/10**: ngăn nắp tốt (không có JS thừa, 0 đường dẫn hỏng, 0 lỗi console),
+  nhưng thông tin kinh doanh bị gõ tay ở nhiều nơi (88 con số giá Custom Orders trong HTML, footer chép 6 trang, email
+  lặp 32 lần) và chưa có lưới an toàn. Trang đọc: https://claude.ai/artifact/TTHDd9xN18A1y7tR2kUEhp
+- **Đã sửa ngay:** `tools/check-site.js` tự chạy trước mỗi lần deploy, có lỗi thì dừng (bắt 25/25 lỗi cố tình) · bỏ
+  `validOrder` thứ hai của Event Desk, đơn hỏng được cất riêng chứ không bị xoá · sale gõ sai không còn ra `$NaN`/$0 ·
+  `navigator.storage.persist()` · deploy giữ `CNAME` · comment hai chiều cho sale bộ đầm.
+- **Còn lại** (thứ tự đề xuất trong doc): đưa test vào repo (đi cùng Admin P0), một nguồn giá Custom Orders, gom
+  header/footer/email, chống mất đơn booth (nhắc backup), README dễ tra.
+
+### Website × Làng Purrlight (Elise 20/10, tin 4) — `docs/VILLAGE-WEBSITE-PLAN-2026-10-20.md`
+- **Kết hợp được, một chiều:** khách chỉ gặp Merlin trên website. Làng là phòng làm việc riêng của chị, số liệu chỉ đi
+  vào làng. Hội đồng 5 người đều duyệt kèm sửa, bản chốt áp dụng đủ 52/52 yêu cầu. Trang đọc:
+  https://claude.ai/artifact/VSxzMoFS6R5BVAkCFCaCNc
+- **1a (hạn 09/11):** gửi form Custom Orders xong thì trang hiện dòng *"Got it — Merlin noted your order. Next step:
+  your 50% deposit, just below."*. **1b (≤3 giây):** ảnh Merlin thật cùng đèn, sổ và thư, mỗi nhịp là 1 bước thật
+  của đơn; chỉ làm nếu merge kịp trước ~01/11, không thì để tháng 1. Bản xem trước để chị duyệt:
+  https://claude.ai/artifact/JVbVgbkz9bBqDimQS8XW8G
+- **Bảng số trong làng: TẠM DỪNG.** Đồng bộ Etsy đứng từ 02/10: lịch đêm chạy 17 lần, lần nào cũng 503 (thiếu
+  `CRON_SECRET`), chưa có token Etsy, đơn mới nhất trong sổ là 26/09. Em đã kiểm lại số này. Sửa đồng bộ Etsy là một
+  việc riêng, ưu tiên cao hơn làng.
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
@@ -1164,6 +1187,10 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
    khác). Spike 0a em đã dựng xong (mục 6).
 6. Spike 0a: tự tạo token và đổi 1 ảnh theo `docs/ADMIN-SPIKE-0A-HUONG-DAN.md`, rồi nhắn em 5 dòng ghi chú.
 7. Instagram: gửi em đúng handle Instagram của shop (nếu có) để gắn vào dải ảnh cuối trang.
+8. Code: booth có mặc định cộng thuế (`added`) không · giá búp bê $80 (web) và $85 (booth) có cố ý khác không · gỡ form
+   newsletter (đang báo "chưa sẵn sàng") hay để.
+9. Làng: trả lời 6 câu ở mục 9 của kế hoạch Làng (câu nào cũng có mặc định) và duyệt từng khung, từng chữ ở bản xem trước
+   Merlin. Riêng việc **sửa đồng bộ Etsy** (câu 4): chị cho em làm thì chị bấm OAuth Etsy một lần, khoảng 15 phút.
 
 ## 9. Link & tài nguyên
 

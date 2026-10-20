@@ -39,6 +39,7 @@ website/
 │   ├── custom-orders.js  # builder "Build your piece", thanh đặt hàng dính, link form
 │   └── custom-orders.css # style riêng (token Brand v2), nạp sau css/fonts.css
 ├── deploy-pages.sh   # ★ Deploy lại lên GitHub Pages: bash website/deploy-pages.sh
+├── tools/check-site.js  # kiểm dữ liệu trước khi deploy (deploy tự chạy; không lên web)
 ├── css/
 │   ├── fonts.css     # Font self-host: Fraunces (heading) + Figtree (body)
 │   ├── style.css     # Toàn bộ style site — design tokens ở đầu file (:root)
@@ -149,8 +150,16 @@ giá của lựa chọn khách mua. Danh sách chip có thanh cuộn riêng đ�
   README/script nội bộ). GitHub tự bật Pages khi branch `gh-pages` xuất hiện.
 - **Deploy lại sau khi sửa:** commit code, rồi chạy `bash website/deploy-pages.sh`
   (copy `website/` sang `gh-pages` và push; Pages cập nhật sau 1–2 phút).
+- **Trước mỗi lần deploy, `tools/check-site.js` tự kiểm (20/10/2026)** trên đúng các file đã commit; có lỗi thì
+  **dừng, web giữ bản cũ**. Nó bắt: lỗi cú pháp ở mọi file `.js` (vd thiếu dấu phẩy giữa hai sản phẩm — trước đây
+  làm shop trống trơn), giá gõ thành chữ (`"55"`, `"$55"`), id/collection/badge sai, ảnh không có, thiếu `details`
+  hay link Etsy, `SALES`/`QUIET`/`NOT_HANDMADE`/`SAFETY_LINE_SKIP` trỏ tới món không có, sale `off` không phải số
+  1–90 hay `ends` không đúng dạng `2026-10-26T05:00:00Z`, sale bộ đầm lệch giữa `products.js` và `prices.js`, giá
+  Custom Orders gõ thành chữ, JSON hỏng, `content/follow.json` sai dạng, và mọi file mà HTML/CSS trỏ tới mà không
+  có. Tự chạy lúc nào cũng được: `node website/tools/check-site.js`. Cần Node (deploy báo nếu máy chưa có).
 - **Domain riêng purrlight.studio:** khi sẵn sàng, thêm file `CNAME` (nội dung
-  `purrlight.studio`) vào branch `gh-pages` và trỏ DNS theo GitHub Pages
+  `purrlight.studio`) vào `website/` (hoặc branch `gh-pages` — từ 20/10/2026 deploy giữ lại `CNAME` đang có trên
+  `gh-pages`, trước đó nó bị xoá mỗi lần deploy) và trỏ DNS theo GitHub Pages
   (Settings → Pages → Custom domain). `publicBaseUrl` của Event Desk tự lấy theo
   URL đang chạy (https) nên không cần điền tay.
 

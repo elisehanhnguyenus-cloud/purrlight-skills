@@ -449,6 +449,19 @@ const SALES = {
   "saint-joan-of-arc-doll": { off: 25, ends: "2026-10-26T05:00:00Z", through: "Sun, Oct 25 (Central Time)" },
   "americana-doll-bag-charm": { off: 25, ends: "2026-10-26T05:00:00Z", through: "Sun, Oct 25 (Central Time)" }
 };
+/* a typo here must never show "$NaN" in the shop or price a piece at $0 at the booth: an entry with an unknown id, an
+   `off` that is not a number from 1 to 90 (write 25, not "25%") or an `ends` that is not a full UTC time like
+   "2026-10-26T05:00:00Z" ("Oct 25" would read as the year 2001) is skipped, with a console warning
+   (tools/check-site.js stops a deploy on the same mistakes) */
+Object.keys(SALES).forEach(function (id) {
+  const s = SALES[id];
+  const known = PRODUCTS.some(function (p) { return p.id === id; });
+  const when = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?(Z|[+-]\d{2}:\d{2})$/.test(s && s.ends) && !isNaN(Date.parse(s.ends));
+  if (!known || !s || typeof s.off !== "number" || !(s.off >= 1 && s.off <= 90) || !when) {
+    if (typeof console !== "undefined") console.warn("SALES: skipped \"" + id + "\" (unknown id, off not a number 1-90, or ends not a time like 2026-10-26T05:00:00Z)");
+    delete SALES[id];
+  }
+});
 PRODUCTS.forEach(function (p) {
   const sale = SALES[p.id];
   if (sale && Date.now() < Date.parse(sale.ends)) {

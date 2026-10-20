@@ -158,6 +158,8 @@ var PRICES = {
       michael: { price: 90, label: "St. Michael the Archangel, 10 in" }
     },
     eyes: { closed: "closed (sleeping) eyes", open: "open eyes" },   /* Elise 16/10: either, same price; not for a saint we have ready */
+    /* the same sale is in js/products.js (SALES["christening-gown-set"]) — change both together; tools/check-site.js
+       stops a deploy when the two disagree on off or ends */
     gownSale: { off: 25, ends: "2026-10-26T05:00:00Z", through: "Oct 25", day: "Sun, Oct 25" }   /* Elise 16/10: 25% off through Sun Oct 25 (midnight CDT) */
   },
   godparent: { base: 95, secondOff: 10 },                                    /* §3.7 · second set −$10: Elise 15/10 */

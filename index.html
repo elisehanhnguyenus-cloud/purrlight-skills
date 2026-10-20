@@ -57,7 +57,11 @@
           </div>
         </div>
         <div class="hero-art">
-          <img src="assets/img/hero-mooncat.svg" alt="Illustration of Merlin, a tuxedo cat in a yellow beret and sage bib, asleep inside a crescent moon surrounded by stars" width="600" height="600">
+          <img src="assets/img/home/hero-crochet-cats-1080.webp" srcset="assets/img/home/hero-crochet-cats-720.webp 720w, assets/img/home/hero-crochet-cats-1080.webp 1080w" sizes="(max-width: 760px) 92vw, 46vw" alt="A worktable crowded with our crocheted cats — tabbies, tuxedos, calicos and a Siamese" width="1080" height="1080" fetchpriority="high">
+          <figure class="hero-merlin">
+            <img src="assets/img/home/merlin-real-360.webp" alt="Merlin, our real tuxedo cat, in a red holiday bow" width="360" height="360">
+            <figcaption>the real Merlin</figcaption>
+          </figure>
         </div>
       </div>
     </section>
@@ -101,32 +105,32 @@
         <div class="product-grid" data-favorites></div>
       </div>
     </section>
-    <!-- video lifestyle -->
+    <!-- real product videos (from the Etsy listings) — play muted while on screen, never with reduced motion -->
     <section class="section-tight">
       <div class="wrap">
         <div class="section-head">
-          <h2><span class="kicker">chapter four · the making</span>Watch the making, the gifting, the napping</h2>
+          <h2><span class="kicker">chapter four · on camera</span>The real pieces, up close</h2>
           <a class="section-link" data-tiktok href="https://www.tiktok.com/@purrlightstudio" target="_blank" rel="noopener">more on TikTok →</a>
         </div>
-        <!-- Posters are brand illustrations. Replace each <a> with a real
-             video embed (TikTok/YouTube) or point href at the actual video. -->
-        <div class="video-grid">
-          <a class="video-card reveal" data-tiktok href="https://www.tiktok.com/@purrlightstudio" target="_blank" rel="noopener" aria-label="Watch how our dolls are crocheted, on TikTok">
-            <img src="assets/img/video-making.svg" alt="" width="800" height="450">
-            <span class="play" aria-hidden="true"><span><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5Z"/></svg></span></span>
-            <span class="video-label">How a doll is born</span>
+        <div class="reel-grid">
+          <a class="reel-card reveal" href="shop.html?cat=Merlin%27s%20World%20%26%20His%20Friends">
+            <video data-reel muted loop playsinline preload="none" poster="assets/img/home/reel-cats-sofa-poster.webp" width="480" height="600" aria-hidden="true"><source src="assets/video/reel-cats-sofa.mp4" type="video/mp4"></video>
+            <span class="video-label">Our crochet cats, on the sofa</span>
           </a>
-          <a class="video-card reveal" data-tiktok href="https://www.tiktok.com/@purrlightstudio" target="_blank" rel="noopener" aria-label="Watch our studio shelf styling video, on TikTok">
-            <img src="assets/img/video-shelf.svg" alt="" width="800" height="450">
-            <span class="play" aria-hidden="true"><span><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5Z"/></svg></span></span>
-            <span class="video-label">On the studio shelf</span>
+          <a class="reel-card reveal" href="product.html?id=linen-pocket-doll">
+            <video data-reel muted loop playsinline preload="none" poster="assets/img/home/reel-linen-dolls-poster.webp" width="480" height="600" aria-hidden="true"><source src="assets/video/reel-linen-dolls.mp4" type="video/mp4"></video>
+            <span class="video-label">Little linen dolls</span>
           </a>
-          <a class="video-card reveal" data-tiktok href="https://www.tiktok.com/@purrlightstudio" target="_blank" rel="noopener" aria-label="Watch a cat testing our felt fish, on TikTok">
-            <img src="assets/img/video-play.svg" alt="" width="800" height="450">
-            <span class="play" aria-hidden="true"><span><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5Z"/></svg></span></span>
-            <span class="video-label">Quality control department</span>
+          <a class="reel-card reveal" href="product.html?id=anne-shirley-set">
+            <video data-reel muted loop playsinline preload="none" poster="assets/img/home/reel-packing-anne-poster.webp" width="480" height="600" aria-hidden="true"><source src="assets/video/reel-packing-anne.mp4" type="video/mp4"></video>
+            <span class="video-label">Packing a storybook set</span>
+          </a>
+          <a class="reel-card reveal" href="product.html?id=christening-gown-set">
+            <video data-reel muted loop playsinline preload="none" poster="assets/img/home/reel-christening-set-poster.webp" width="480" height="600" aria-hidden="true"><source src="assets/video/reel-christening-set.mp4" type="video/mp4"></video>
+            <span class="video-label">The christening set, piece by piece</span>
           </a>
         </div>
+        <button type="button" class="reel-pause" data-reel-pause hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg><span>Pause videos</span></button>
       </div>
     </section>
 
@@ -135,7 +139,7 @@
       <div class="wrap">
         <div class="story reveal">
           <div class="story-media">
-            <img src="assets/img/story-yarn.svg" alt="Illustration of a ball of peach yarn with a crochet hook and a small heart" width="600" height="600">
+            <img src="assets/img/home/story-yarn-hand-1000.webp" srcset="assets/img/home/story-yarn-hand-640.webp 640w, assets/img/home/story-yarn-hand-1000.webp 1000w" sizes="(max-width: 820px) 92vw, 46vw" alt="A hand holding a soft skein of cream chenille yarn" width="1000" height="1000" loading="lazy">
           </div>
           <div class="story-body">
             <p class="story-kicker">chapter five · two homes, one story</p>
@@ -156,7 +160,7 @@
           </div>
           <p>In our storybook, Merlin arrived with a tiny green backpack, a yellow beret, and a notebook full of sketches. In real life, he mostly naps on the patterns. Both feel true. A few friends are on their way to join him.</p>
           <div class="companion-strip">
-            <a class="companion" href="shop.html?cat=Merlin%27s%20World%20%26%20His%20Friends"><span class="companion-art"><img src="assets/img/merlin-sleeping.svg" alt="" width="300" height="300"></span><span>Merlin</span></a>
+            <a class="companion" href="shop.html?cat=Merlin%27s%20World%20%26%20His%20Friends"><span class="companion-art"><img src="assets/img/home/merlin-real-360.webp" alt="" width="360" height="360" loading="lazy"></span><span>Merlin</span></a>
             <span class="companion"><span class="soon-pill">joining soon</span><span class="companion-art"><img src="assets/img/companion-tam.svg" alt="" width="300" height="300"></span><span>Tâm</span></span>
             <span class="companion"><span class="soon-pill">joining soon</span><span class="companion-art"><img src="assets/img/companion-banhmi.svg" alt="" width="300" height="300"></span><span>Bánh Mì</span></span>
             <span class="companion"><span class="soon-pill">joining soon</span><span class="companion-art"><img src="assets/img/companion-mochi.svg" alt="" width="300" height="300"></span><span>Mochi</span></span>
@@ -248,15 +252,15 @@
         </div>
         <div class="journal-grid">
           <div class="journal-card reveal">
-            <img src="assets/img/story-yarn.svg" alt="" width="800" height="500" loading="lazy">
+            <img src="assets/img/home/journal-merlin-800.webp" alt="" width="800" height="500" loading="lazy">
             <div class="journal-body"><span class="journal-tag">coming soon · behind the seams</span><h3>How Merlin got his beret (we still don’t know)</h3></div>
           </div>
           <div class="journal-card reveal">
-            <img src="assets/img/product-baptism.svg" alt="" width="800" height="500" loading="lazy">
+            <img src="assets/img/home/journal-christening-800.webp" alt="" width="800" height="500" loading="lazy">
             <div class="journal-body"><span class="journal-tag">coming soon · keepsake guide</span><h3>Choosing a baptism keepsake that lasts generations</h3></div>
           </div>
           <div class="journal-card reveal">
-            <img src="assets/img/video-shelf.svg" alt="" width="800" height="500" loading="lazy">
+            <img src="assets/img/home/journal-saints-800.webp" alt="" width="800" height="500" loading="lazy">
             <div class="journal-body"><span class="journal-tag">coming soon · from the worktable</span><h3>One doll, start to finish: a making-of</h3></div>
           </div>
         </div>
@@ -269,16 +273,16 @@
         <div class="section-head">
           <h2><span class="kicker">follow the glow</span>Purrlight, daily</h2>
         </div>
-        <!-- Replace tiles with real TikTok/Pinterest photos; keep them square.
+        <!-- Square tiles = real product photos (assets/img/products). Swap for real TikTok/Pinterest posts any time.
              Handles: @purrlightstudio is OURS on TikTok / Facebook / Pinterest only —
              the Instagram handle belongs to someone else (Brand Canon v2), so no IG link here. -->
         <div class="social-tiles reveal">
-          <a data-tiktok href="https://www.tiktok.com/@purrlightstudio" target="_blank" rel="noopener" aria-label="Purrlight on TikTok"><img src="assets/img/merlin-sleeping.svg" alt="" width="300" height="300"></a>
-          <a data-tiktok href="https://www.tiktok.com/@purrlightstudio" target="_blank" rel="noopener" aria-label="Purrlight on TikTok"><img src="assets/img/video-shelf.svg" alt="" width="300" height="300"></a>
-          <a data-tiktok href="https://www.tiktok.com/@purrlightstudio" target="_blank" rel="noopener" aria-label="Purrlight on TikTok"><img src="assets/img/product-baptism.svg" alt="" width="300" height="300"></a>
-          <a href="https://www.pinterest.com/purrlightstudio" target="_blank" rel="noopener" aria-label="Purrlight on Pinterest"><img src="assets/img/story-yarn.svg" alt="" width="300" height="300"></a>
-          <a href="https://www.pinterest.com/purrlightstudio" target="_blank" rel="noopener" aria-label="Purrlight on Pinterest"><img src="assets/img/product-bunny.svg" alt="" width="300" height="300"></a>
-          <a href="https://www.pinterest.com/purrlightstudio" target="_blank" rel="noopener" aria-label="Purrlight on Pinterest"><img src="assets/img/video-play.svg" alt="" width="300" height="300"></a>
+          <a data-tiktok href="https://www.tiktok.com/@purrlightstudio" target="_blank" rel="noopener" aria-label="Purrlight on TikTok"><img src="assets/img/products/knitted-daisy-duck-600.webp" alt="" width="600" height="600" loading="lazy"></a>
+          <a data-tiktok href="https://www.tiktok.com/@purrlightstudio" target="_blank" rel="noopener" aria-label="Purrlight on TikTok"><img src="assets/img/products/christmas-elf-600.webp" alt="" width="600" height="600" loading="lazy"></a>
+          <a data-tiktok href="https://www.tiktok.com/@purrlightstudio" target="_blank" rel="noopener" aria-label="Purrlight on TikTok"><img src="assets/img/products/dashwood-ferrars-set-600.webp" alt="" width="600" height="600" loading="lazy"></a>
+          <a href="https://www.pinterest.com/purrlightstudio" target="_blank" rel="noopener" aria-label="Purrlight on Pinterest"><img src="assets/img/products/knitted-woodland-garden-600.webp" alt="" width="600" height="600" loading="lazy"></a>
+          <a href="https://www.pinterest.com/purrlightstudio" target="_blank" rel="noopener" aria-label="Purrlight on Pinterest"><img src="assets/img/products/ribbon-corduroy-bag-600.webp" alt="" width="600" height="600" loading="lazy"></a>
+          <a href="https://www.pinterest.com/purrlightstudio" target="_blank" rel="noopener" aria-label="Purrlight on Pinterest"><img src="assets/img/products/horse-companion-600.webp" alt="" width="600" height="600" loading="lazy"></a>
         </div>
         <div class="social-follow">
           <a class="btn btn-ghost btn-small" href="https://www.facebook.com/purrlightstudio" target="_blank" rel="noopener">find us on Facebook</a>
@@ -340,6 +344,8 @@
             <li><a href="shop.html?cat=Faith%20%26%20Milestones">Faith &amp; Milestones</a></li>
             <li><a href="shop.html?cat=Patterns%20%26%20Printables">Patterns &amp; Printables</a></li>
             <li><a href="shop.html?cat=Merlin%27s%20World%20%26%20His%20Friends">Merlin's World &amp; His Friends</a></li>
+            <li><a href="shop.html?cat=Little%20Things">Little Things</a></li>
+            <li><a href="shop.html?cat=Heritage%20%26%20Celebration">Heritage &amp; Celebration</a></li>
           </ul>
         </div>
         <div>

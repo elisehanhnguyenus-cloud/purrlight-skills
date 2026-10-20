@@ -60,6 +60,7 @@ body {
 }
 
 img, svg { display: block; max-width: 100%; }
+img { height: auto; }   /* width/height attributes only set the ratio — a class that sets a height still wins */
 
 a { color: inherit; text-decoration: none; }
 
@@ -291,15 +292,48 @@ h1, h2, h3, h4 {
 .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; }
 
 .hero-art { position: relative; }
-.hero-art img, .hero-art svg {
+.hero-art > img {
   width: 100%;
   height: auto;
   border-radius: var(--radius-l);
+  box-shadow: var(--shadow-soft);
+}
+
+/* the real Merlin, a small round photo pinned to the corner of the hero photo */
+.hero-merlin {
+  position: absolute;
+  left: -18px;
+  bottom: -22px;
+  width: clamp(92px, 24%, 148px);
+  margin: 0;
+  text-align: center;
+}
+.hero-merlin img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid var(--card);
+  box-shadow: var(--shadow-lift);
+}
+.hero-merlin figcaption {
+  display: inline-block;
+  margin-top: -10px;
+  position: relative;
+  background: var(--card);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  box-shadow: 0 2px 8px rgba(122, 96, 68, 0.12);
+  white-space: nowrap;
 }
 
 @media (max-width: 760px) {
   .hero-inner { grid-template-columns: 1fr; }
   .hero-art { order: -1; max-width: 420px; margin-inline: auto; }
+  .hero-merlin { left: 8px; bottom: -18px; }
 }
 
 /* ---------- trust bar ---------- */
@@ -399,13 +433,19 @@ h1, h2, h3, h4 {
 
 /* ---------- category tiles ---------- */
 
+/* 7 collections: one row on wide screens; on narrower ones the last row is centred, not left hanging */
 .cat-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: clamp(12px, 1.8vw, 22px);
+  --cat-cols: 7;
+  --cat-gap: clamp(12px, 1.6vw, 20px);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--cat-gap);
 }
-@media (max-width: 980px) { .cat-grid { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 600px) { .cat-grid { grid-template-columns: repeat(2, 1fr); } }
+.cat-grid > .cat-tile { flex: 0 0 calc((100% - (var(--cat-cols) - 1) * var(--cat-gap)) / var(--cat-cols)); min-width: 0; }
+@media (max-width: 1100px) { .cat-grid { --cat-cols: 4; } }
+@media (max-width: 760px) { .cat-grid { --cat-cols: 3; } }
+@media (max-width: 480px) { .cat-grid { --cat-cols: 2; } }
 
 .cat-tile {
   display: flex;
@@ -446,7 +486,8 @@ h1, h2, h3, h4 {
 .cat-tile .cat-art img { width: 100%; height: 100%; object-fit: cover; }
 .cat-tile span {
   font-family: var(--font-head);
-  font-size: 17.5px;
+  font-size: clamp(15px, 1.25vw, 17px);
+  line-height: 1.3;
   font-weight: 500;
 }
 
@@ -782,6 +823,7 @@ h1, h2, h3, h4 {
 }
 .pdp-info h1 { font-size: clamp(28px, 3.6vw, 42px); margin-bottom: 14px; }
 .pdp-info .price { font-size: 24px; font-weight: 600; color: var(--purr-berry); margin-bottom: 20px; }
+.price-from { font-size: 0.72em; font-weight: 500; color: var(--ink-soft); letter-spacing: 0.02em; }
 .pdp-info .pdp-desc { color: var(--ink-soft); margin-bottom: 24px; max-width: 56ch; }
 
 .pdp-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 30px; }
@@ -858,6 +900,53 @@ h1, h2, h3, h4 {
   box-shadow: var(--shadow-soft);
   margin: 34px 0;
 }
+
+/* ---------- real product videos (home) ---------- */
+
+.reel-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(12px, 1.8vw, 22px);
+}
+@media (max-width: 900px) { .reel-grid { grid-template-columns: repeat(2, 1fr); } }
+.reel-card {
+  position: relative;
+  display: block;
+  border-radius: var(--radius-m);
+  overflow: hidden;
+  background: var(--cream-deep);
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.reel-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+.reel-card video { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; }
+.reel-card .video-label {
+  display: block;
+  padding: 10px 14px 12px;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+}
+.reel-card:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.reel-pause {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 14px;
+  padding: 7px 14px;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.reel-pause:hover { background: var(--ink); color: var(--cream); }
+.reel-pause:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.reel-pause svg { width: 14px; height: 14px; fill: currentColor; }
 
 /* ---------- video lifestyle ---------- */
 
@@ -1180,7 +1269,7 @@ h1, h2, h3, h4 {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; transition: none; }
-  .btn, .product-card, .cat-tile { transition: none; }
+  .btn, .product-card, .cat-tile, .reel-card { transition: none; }
 }
 
 /* ---------- utility ---------- */

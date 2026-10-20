@@ -101,8 +101,10 @@ var DESK_CONFIG = {
 
   /* Pearland-stock pieces that are NOT in products.js (per customer-service
      skill, 8/2026). They appear as quick-add chips with NO price — the price
-     is typed at the booth, never guessed by the tool. */
-  extraItems: ["Stress ball set", "Linen doll bag charm", "Americana doll", "Catnip ball"],
+     is typed at the booth, never guessed by the tool. Since 20/10/2026 the
+     stress-ball set, the linen bag-charm doll and the Americana doll are Etsy
+     listings in products.js, so only the catnip ball is left here. */
+  extraItems: ["Catnip ball"],
 
   /* Timelines the customer reads. Ranges + conditions only — never a date.
      First person singular, the way every approved customer letter is written.
@@ -613,7 +615,12 @@ var DESK_CONFIG = {
       { kind: "cat",  name: "Custom cat", price: null, hint: "from " + money(cents(GRID.cat.Petite[0])) + " · size × yarn" },
       { kind: "doll", name: "Custom doll", price: null, hint: "from " + money(cents(GRID.doll.Petite[0])) + " · single or pair" }
     ];
-    catalog.forEach(function (p) { list.push({ kind: "catalog", pid: p.id, name: p.name, price: p.price, addons: p.addons || null }); });
+    /* a listing whose Etsy options change the price (priceFrom) has no fixed booth price: the chip shows "from $X"
+       and the line asks for the price of the option the customer chose */
+    catalog.forEach(function (p) {
+      list.push(p.priceFrom ? { kind: "catalog", pid: p.id, name: p.name, price: null, ask: true, hint: "from " + money(cents(p.price)) + " · type the option's price", addons: null }
+        : { kind: "catalog", pid: p.id, name: p.name, price: p.price, addons: p.addons || null });
+    });
     (CFG.extraItems || []).forEach(function (n) { list.push({ kind: "other", name: n, price: null, hint: "price at the booth" }); });
     return list;
   }
@@ -622,7 +629,7 @@ var DESK_CONFIG = {
   document.addEventListener("purrlight:prices", function () {
     pickerList = pickerItems();
     if (!editingId) lines.forEach(function (l) {
-      if (l.kind !== "catalog") return;
+      if (l.kind !== "catalog" || l.ask) return;
       catalog.forEach(function (c) { if (c.id === l.pid) l.unit = c.price; });
     });
     renderPicker(el.search ? el.search.value : "");
@@ -656,6 +663,7 @@ var DESK_CONFIG = {
     }
     var l = { kind: p.kind, pid: p.pid || null, name: p.name, addons: p.addons || null, addonIndex: 0, addon: "", qty: 1,
       unit: p.price == null ? "" : p.price, custom: null };
+    if (p.ask) l.ask = true;
     if (p.kind === "cat" || p.kind === "doll") {
       l.custom = { size: "Classic", yarn: 0, pair: 0, pet: "", pose: "", eyes: "", code: "", type: p.kind === "cat" ? "Cat" : "" };
       /* a custom piece follows the custom lead time unless staff already chose otherwise */
@@ -663,7 +671,7 @@ var DESK_CONFIG = {
     }
     lines.push(l);
     renderLines();
-    if (p.kind !== "catalog") { var last = el.linesEl.lastElementChild; var inp = last && $("input", last); if (inp) inp.focus(); }
+    if (p.kind !== "catalog" || l.ask) { var last = el.linesEl.lastElementChild; var inp = last && $("input", last); if (inp) inp.focus(); }
   }
   function lineUnit(l) {
     if (l.kind === "cat") return cents(GRID.cat[l.custom.size][l.custom.yarn]);
@@ -726,6 +734,9 @@ var DESK_CONFIG = {
           '<select data-ceyes="' + i + '" aria-label="Eyes"><option value="">Eyes</option>' + opts(GRID.eyes, c.eyes) + '</select>' +
           '<input type="text" data-ccode="' + i + '" value="' + esc(c.code) + '" placeholder="Yarn code · V-12" aria-label="Yarn colour code" autocapitalize="characters">' +
           '</div><div class="line-sub">' + money(lineUnit(l)) + ' each · 50% deposit ' + money(Math.round(lineUnit(l) * GRID.depositRate)) + '</div>';
+      } else if (l.ask) {
+        head = '<div class="line-name">' + esc(l.name) + '</div><div class="field-row">' +
+          '<input class="line-price" type="text" inputmode="decimal" placeholder="$ price of their option" value="' + esc(l.unit) + '" data-lp="' + i + '" aria-label="Price each — the option they chose"></div>';
       } else if (l.kind === "other") {
         head = '<div class="field-row"><input type="text" placeholder="What did they get?" value="' + esc(l.name) + '" data-ln="' + i + '" aria-label="Item name">' +
           '<input class="line-price" type="text" inputmode="decimal" placeholder="$ price each" value="' + esc(l.unit) + '" data-lp="' + i + '" aria-label="Price each"></div>';
@@ -868,7 +879,7 @@ var DESK_CONFIG = {
     if (f.email.trim() && !isEmail(f.email)) { setErr(el.email, "That email doesn't look complete."); ok = false; firstBad = firstBad || el.email; }
     if (mode === "order" && !f.email.trim() && !digits(f.phone)) { setErr(el.email, "An email or a phone — we need one way to reach them about the order."); ok = false; firstBad = firstBad || el.email; }
     if (!items.length) { toast("Add at least one piece first."); ok = false; }
-    var missingPrice = lines.filter(function (l) { return l.kind === "other" && l.name.trim() && l.qty > 0 && (l.unit === "" || l.unit == null); });
+    var missingPrice = lines.filter(function (l) { return (l.ask || l.kind === "other" && l.name.trim()) && l.qty > 0 && (l.unit === "" || l.unit == null); });
     if (missingPrice.length) { toast("Type a price for “" + missingPrice[0].name + "”."); ok = false; }
     var unnamed = lines.filter(function (l) { return l.kind === "cat" && !l.custom.pet; });
     if (unnamed.length) { toast("What's their name? It goes into the confirmation."); ok = false; }
@@ -950,8 +961,10 @@ var DESK_CONFIG = {
       /* the price it was sold at, not today's catalog price: a sale may have started or ended since (products.js SALES).
          A saved unit includes its add-on; the line keeps the base and adds the add-on back. */
       var unit = typeof i.unit === "number" ? Math.round((i.unit - delta) * 100) / 100 : (p ? p.price : i.unit);
-      return { kind: p ? "catalog" : "other", pid: i.pid, name: i.name, addons: p ? (p.addons || null) : null, addonIndex: addonIndex, addon: i.addon,
+      var back = { kind: p ? "catalog" : "other", pid: i.pid, name: i.name, addons: p ? (p.addons || null) : null, addonIndex: addonIndex, addon: i.addon,
         qty: i.qty, unit: unit, custom: null };
+      if (p && p.priceFrom) { back.ask = true; back.addons = null; }
+      return back;
     });
     var sh = o.ship || {};
     writeFields({ name: o.customer.name, email: o.customer.email, phone: o.customer.phone, note: o.note, optIn: o.customer.optIn,
@@ -1290,7 +1303,11 @@ var DESK_CONFIG = {
         /* re-attach catalog addons from the live catalog; a new sale takes today's price, an order being edited keeps
            the price it was sold at */
         var p = null; catalog.forEach(function (c) { if (c.id === l.pid) p = c; });
-        if (p) { l.addons = p.addons || null; if (!(editingId && typeof l.unit === "number")) l.unit = p.price; l.kind = "catalog"; }
+        if (p) {
+          l.kind = "catalog";
+          if (p.priceFrom) { l.ask = true; l.addons = null; }   /* the typed option price stays */
+          else { delete l.ask; l.addons = p.addons || null; if (!(editingId && typeof l.unit === "number")) l.unit = p.price; }
+        }
         if (!l.kind) l.kind = l.custom ? "cat" : "other";
         if (l.custom) {
           /* a size or yarn that no longer exists in the grid falls back rather than crashing */

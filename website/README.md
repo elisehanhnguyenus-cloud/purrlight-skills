@@ -155,8 +155,8 @@ giá của lựa chọn khách mua. Danh sách chip có thanh cuộn riêng đ�
   làm shop trống trơn), giá gõ thành chữ (`"55"`, `"$55"`), id/collection/badge sai, ảnh không có, thiếu `details`
   hay link Etsy, `SALES`/`QUIET`/`NOT_HANDMADE`/`SAFETY_LINE_SKIP` trỏ tới món không có, sale `off` không phải số
   1–90 hay `ends` không đúng dạng `2026-10-26T05:00:00Z`, sale bộ đầm lệch giữa `products.js` và `prices.js`, giá
-  Custom Orders gõ thành chữ, JSON hỏng, `content/follow.json` sai dạng, và mọi file mà HTML/CSS trỏ tới mà không
-  có. Tự chạy lúc nào cũng được: `node website/tools/check-site.js`. Cần Node (deploy báo nếu máy chưa có).
+  Custom Orders gõ thành chữ, JSON hỏng, `content/follow.json` sai dạng, mọi file mà HTML/CSS trỏ tới mà không
+  có (so đúng chữ hoa/thường như GitHub Pages), và link/ảnh bắt đầu bằng `/` (hỏng trên `github.io/purrlight-skills/`). Tự chạy lúc nào cũng được: `node website/tools/check-site.js`. Cần Node (deploy báo nếu máy chưa có).
 - **Domain riêng purrlight.studio:** khi sẵn sàng, thêm file `CNAME` (nội dung
   `purrlight.studio`) vào `website/` (hoặc branch `gh-pages` — từ 20/10/2026 deploy giữ lại `CNAME` đang có trên
   `gh-pages`, trước đó nó bị xoá mỗi lần deploy) và trỏ DNS theo GitHub Pages

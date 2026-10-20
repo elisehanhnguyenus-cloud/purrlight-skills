@@ -244,33 +244,39 @@ var DESK_CONFIG = {
   function lsDel(k) { try { localStorage.removeItem(k); } catch (e) { /* private mode */ } }
 
   var listeners = [];
+  /* a stored row that fails validOrder is never dropped: it is set aside under its own key (shown on the status line,
+     kept in Backup JSON, removed only by "Clear all"). If that copy cannot be written (storage full), the row stays in the
+     saved log, unread, until it can. */
+  function setAsideRows() { var k = lsGet(LS.setAside, []); return Array.isArray(k) ? k : []; }
+  var loaded = (function () {
+    var l = lsGet(LS.orders, []);
+    if (!Array.isArray(l)) return { good: [], held: [] };
+    var bad = l.filter(function (o) { return !validOrder(o); }), held = [];
+    if (bad.length) {
+      var kept = setAsideRows(), seen = {};
+      kept.forEach(function (o) { seen[JSON.stringify(o)] = true; });
+      bad.forEach(function (o) { if (!seen[JSON.stringify(o)]) kept.push(o); });
+      /* its own write: a full store here must not raise the "NOT SAVING" banner while the log itself still saves */
+      try { localStorage.setItem(LS.setAside, JSON.stringify(kept)); } catch (e) { held = bad; }
+    }
+    return { good: l.filter(validOrder), held: held };
+  })();
   var LocalStore = {
-    /* a row that fails validOrder is set aside under its own key, never dropped: the next save rewrites the log without it */
-    orders: (function () {
-      var l = lsGet(LS.orders, []);
-      if (!Array.isArray(l)) return [];
-      var bad = l.filter(function (o) { return !validOrder(o); });
-      if (bad.length) {
-        var kept = lsGet(LS.setAside, []), seen = {};
-        if (!Array.isArray(kept)) kept = [];
-        kept.forEach(function (o) { seen[JSON.stringify(o)] = true; });
-        bad.forEach(function (o) { if (!seen[JSON.stringify(o)]) kept.push(o); });
-        lsSet(LS.setAside, kept);
-      }
-      return l.filter(validOrder);
-    })(),
+    orders: loaded.good,
+    held: loaded.held,
+    save: function () { lsSet(LS.orders, this.orders.concat(this.held)); },
     all: function () { return this.orders.slice(); },
     put: function (o) {
       var i = indexOfId(this.orders, o.id);
       if (i > -1) this.orders[i] = o; else this.orders.unshift(o);
-      lsSet(LS.orders, this.orders); this.emit();
+      this.save(); this.emit();
     },
     remove: function (id) {
       var i = indexOfId(this.orders, id);
       if (i > -1) this.orders.splice(i, 1);
-      lsSet(LS.orders, this.orders); this.emit();
+      this.save(); this.emit();
     },
-    replaceAll: function (list) { this.orders = list; lsSet(LS.orders, this.orders); this.emit(); },
+    replaceAll: function (list) { this.orders = list; this.save(); this.emit(); },
     onChange: function (fn) { listeners.push(fn); },
     emit: function () { listeners.forEach(function (fn) { fn(); }); },
     label: "Saved on this device · works offline"
@@ -280,8 +286,6 @@ var DESK_CONFIG = {
   /* A hosting page (the shared hosted version) may wrap the local store with a
      synced one — same interface: all/put/remove/replaceAll/onChange/label. */
   var Store = (typeof window.PurrlightRemoteStore === "function") ? window.PurrlightRemoteStore(LocalStore) : LocalStore;
-  /* ask the browser to keep this device's orders through its clean-ups (Safari can clear a site left unused for 7 days) */
-  try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function () {}); } catch (e) { /* older browsers */ }
 
   var settings = lsGet(LS.settings, {});
   if (typeof settings !== "object" || !settings) settings = {};
@@ -578,6 +582,8 @@ var DESK_CONFIG = {
   var form = $("[data-desk-form]");
   if (!form) return;
   saveSettings();
+  /* ask the browser to keep this device's orders through its clean-ups (Safari can clear a site left unused for 7 days) */
+  try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function () {}); } catch (e) { /* older browsers */ }
 
   var mode = "thanks";          /* "thanks" | "order" */
   var lines = [];               /* [{ pid, name, addons, addonIndex, addon, qty, unit, custom }] */
@@ -1180,8 +1186,12 @@ var DESK_CONFIG = {
     download("purrlight-event-orders-" + stamp() + ".csv", toCsv(all), "text/csv;charset=utf-8"); toast("CSV ready — " + all.length + " orders");
   }); });
   $$("[data-export-json]").forEach(function (b) { b.addEventListener("click", function () {
-    var all = Store.all(); if (!all.length) { toast("Nothing to export yet."); return; }
-    download("purrlight-event-orders-" + stamp() + ".json", JSON.stringify({ exportedAt: new Date().toISOString(), device: settings.device, event: settings.event, orders: all }, null, 2), "application/json"); toast("Backup ready");
+    var all = Store.all(), aside = setAsideRows().concat(LocalStore.held);
+    if (!all.length && !aside.length) { toast("Nothing to export yet."); return; }
+    var data = { exportedAt: new Date().toISOString(), device: settings.device, event: settings.event, orders: all };
+    if (aside.length) data.setAside = aside;   /* rows this desk could not read: kept for a person to look at, never merged */
+    download("purrlight-event-orders-" + stamp() + ".json", JSON.stringify(data, null, 2), "application/json");
+    toast("Backup ready" + (aside.length ? " · includes " + aside.length + " set-aside row" + (aside.length === 1 ? "" : "s") : ""));
   }); });
   var importInput = $("[data-import-json]");
   if (importInput) importInput.addEventListener("change", function () {
@@ -1203,8 +1213,8 @@ var DESK_CONFIG = {
     r.readAsText(f);
   });
   $$("[data-clear-all]").forEach(function (b) { b.addEventListener("click", function () {
-    var n = Store.all().length; if (!n) { toast("The log is already empty."); return; }
-    armed(b, function () { Store.replaceAll([]); toast("Log cleared — " + n + " orders removed"); }, "Tap again to delete all " + n);
+    var n = Store.all().length + setAsideRows().length + LocalStore.held.length; if (!n) { toast("The log is already empty."); return; }
+    armed(b, function () { LocalStore.held = []; Store.replaceAll([]); lsDel(LS.setAside); updateStatus(); toast("Log cleared — " + n + " orders removed"); }, "Tap again to delete all " + n);
   }); });
 
   /* ---------- dialogs: focus stays inside, the page behind is inert, focus returns ---------- */
@@ -1288,7 +1298,11 @@ var DESK_CONFIG = {
     el.status.classList.toggle("offline", off || !storageOk);
     $("span:last-child", el.status).textContent = !storageOk
       ? "NOT SAVING on this device (private mode or storage full) — Copy or Print each message before moving on"
-      : (Store.label || LocalStore.label) + (off ? " · offline right now — everything still saves here" : "");
+      : (Store.label || LocalStore.label) + (off ? " · offline right now — everything still saves here" : "") + asideNote();
+  }
+  function asideNote() {
+    var n = setAsideRows().length + LocalStore.held.length;
+    return n ? " · " + n + " saved row" + (n === 1 ? "" : "s") + " set aside (not in desk format) — in Backup JSON" : "";
   }
   window.addEventListener("online", updateStatus); window.addEventListener("offline", updateStatus);
   var toastTimer = null;

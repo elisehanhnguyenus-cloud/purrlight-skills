@@ -1155,7 +1155,7 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   hạ mức, 1 điểm bị bác. **Điểm chung khoảng 6–7/10**: ngăn nắp tốt (không có JS thừa, 0 đường dẫn hỏng, 0 lỗi console),
   nhưng thông tin kinh doanh bị gõ tay ở nhiều nơi (88 con số giá Custom Orders trong HTML, footer chép 6 trang, email
   lặp 32 lần) và chưa có lưới an toàn. Trang đọc: https://claude.ai/artifact/TTHDd9xN18A1y7tR2kUEhp
-- **Đã sửa ngay:** `tools/check-site.js` tự chạy trước mỗi lần deploy, có lỗi thì dừng (bắt 25/25 lỗi cố tình) · bỏ
+- **Đã sửa ngay:** `tools/check-site.js` tự chạy trước mỗi lần deploy, có lỗi thì dừng (bắt 35/35 lỗi cố tình, không chặn nhầm 5 trường hợp hợp lệ) · bỏ
   `validOrder` thứ hai của Event Desk, đơn hỏng được cất riêng chứ không bị xoá · sale gõ sai không còn ra `$NaN`/$0 ·
   `navigator.storage.persist()` · deploy giữ `CNAME` · comment hai chiều cho sale bộ đầm.
 - **Còn lại** (thứ tự đề xuất trong doc): đưa test vào repo (đi cùng Admin P0), một nguồn giá Custom Orders, gom

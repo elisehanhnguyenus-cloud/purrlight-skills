@@ -114,7 +114,7 @@
   /* ---------- homepage: favorites ---------- */
   var favGrid = document.querySelector("[data-favorites]");
   if (favGrid && typeof PRODUCTS !== "undefined") {
-    var favIds = ["anne-shirley-set", "maine-coon-cat", "christening-gown-set", "rosary-charm"];
+    var favIds = ["christening-gown-set", "bennet-darcy-set", "calico-crochet-cat", "linen-pocket-doll"];
     renderGrid(favGrid, favIds.map(function (id) {
       return PRODUCTS.find(function (p) { return p.id === id; });
     }).filter(Boolean));

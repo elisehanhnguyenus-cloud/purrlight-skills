@@ -1122,6 +1122,18 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   — mẫu PDF và sắp tới sticker/sách in theo yêu cầu (POD) không làm bằng tay; số đếm shop ghi "31 pieces, 30 made by
   hand in small batches".
 
+### Kế hoạch Admin Dashboard (Elise 20/10, tin 2): chị tự đổi ảnh, sản phẩm, sale
+- Bản chốt: `docs/ADMIN-DASHBOARD-PLAN-2026-10-20.md` · trang đọc: https://claude.ai/artifact/TPZPTAWaqUuyCNgTfWfQbm
+- Cách làm: 3 bản nháp theo 3 hướng (CMS trên Git · Notion · tự viết tinh gọn), có tham khảo Jellycat gift-ideas và
+  Mushie. Gộp thành 1 bản, đưa hội đồng 5 người (Morgan · Hải Đăng · Linh Trần · Minh Triết · Prue) soát: cả 5
+  "duyệt, kèm sửa", tổng 44 điểm phải sửa, đã áp hết (chỗ hai người chọi nhau ghi ở chú thích). Em tự kiểm lại 4
+  điểm vendor rủi ro nhất và sửa 1 mốc ngày (`ubuntu-latest` chuyển sang 26.04 trong 19/10–19/11/2026).
+- Đề xuất: **Sveltia CMS** ($0, không server, login GitHub). Chị sửa qua form nhãn tiếng Việt rồi bấm Publish; nội
+  dung là JSON trong repo; sale chỉ khai ở **một** chỗ (`promo.json`). Không làm Newsroom/Blog/newsletter (theo lời
+  chị).
+- Lộ trình: spike 0a (2–3 giờ, chị tự thử kéo 1 ảnh iPhone) → Phase 0 cuối tháng 10 (~3–4 ngày công) → Phase 1 xong
+  trước 15/11, không kịp thì lùi sang tháng 1 (đóng băng 15/11–02/01) → Phase 2 khi cần.
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
@@ -1132,6 +1144,8 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
    bóng đá, túi có logo).
 4. Khi list sticker / sách POD cho Merlin: gửi em link listing — site đã sẵn cho món không làm bằng tay
    (`NOT_HANDMADE`: không ghi "made by hand", không care, không dòng an toàn).
+5. Admin Dashboard: trả lời 8 câu ở mục 8 của bản kế hoạch (câu nào cũng có mặc định, chị chỉ cần ghi câu nào muốn
+   khác) và cho em làm spike 0a.
 
 ## 9. Link & tài nguyên
 
@@ -1142,6 +1156,8 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 - **Shop Etsy (nguồn giá):** https://vietdelightfinds.etsy.com
 - **Preview tương tác (artifact, v9):** https://claude.ai/artifact/TPXZGeR5JBpKJypioewheS
 - **Event Desk (hosted, dùng tại booth):** https://claude.ai/artifact/JDd4fYwxtDvRmpf1UGs5rW
+- **Etsy — bản viết lại 27 listing (trang có nút Copy):** https://claude.ai/artifact/HsfFfFa2GYAy9ayFnvJYJg
+- **Kế hoạch Admin Dashboard:** https://claude.ai/artifact/TPZPTAWaqUuyCNgTfWfQbm
 - **Event Desk — hướng dẫn cho nhân sự (Notion):** https://app.notion.com/p/3ea8ed608af981fca71ee10c1128a543
 - **README kỹ thuật:** `website/README.md`
 - Tài liệu này: `docs/PURRLIGHT-WEBSITE-TONG-HOP.md` (bản Notion đồng bộ

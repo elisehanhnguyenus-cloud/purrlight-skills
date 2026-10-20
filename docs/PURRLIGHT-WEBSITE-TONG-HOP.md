@@ -1134,6 +1134,22 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 - Lộ trình: spike 0a (2–3 giờ, chị tự thử kéo 1 ảnh iPhone) → Phase 0 cuối tháng 10 (~3–4 ngày công) → Phase 1 xong
   trước 15/11, không kịp thì lùi sang tháng 1 (đóng băng 15/11–02/01) → Phase 2 khi cần.
 
+### Hội đồng soát 27 listing Etsy (20/10)
+- Morgan · Hải Đăng · Linh Trần · Minh Triết · Prue đọc cả 27 bản viết lại: cả 5 "duyệt, kèm sửa". 59 chỗ đã sửa vào
+  bản cuối (ghi rõ nơi làm khi hàng làm ở VN, bỏ chữ còn gợi "nursery / party favor", tag theo mùa, ghi chú quyền ảnh,
+  câu thuế nhập khẩu), 10 góp ý không áp dụng (lý do ghi trong tài liệu). Cả 4 lô vẫn qua bộ kiểm.
+- Trang để copy: https://claude.ai/artifact/HsfFfFa2GYAy9ayFnvJYJg · bản Markdown: `docs/ETSY-LISTING-REWRITE-2026-10-20.md`.
+
+### Dải ảnh "follow" cuối trang + admin thử (Elise 20/10, tin 3)
+- **Dải ảnh kiểu Mushie** ngay trên footer của 6 trang khách: 6 ảnh vuông sát mép (điện thoại 3 × 2), bấm mở TikTok /
+  Pinterest / Facebook. Dữ liệu ở `website/content/follow.json`. **Instagram để trống** vì @purrlightstudio trên
+  Instagram là của người khác. Chị gửi đúng handle là nút và ảnh tự trỏ về. Dải "Purrlight, daily" cũ ở giữa trang chủ
+  đã gộp vào dải mới.
+- **Spike 0a — admin Sveltia** tại https://elisehanhnguyenus-cloud.github.io/purrlight-skills/admin/ : giao diện tiếng
+  Việt tự bật, chỉ đăng nhập bằng token, 1 mục "Ảnh cuối trang (Follow)". Em đã thử trong trình duyệt: ảnh HEIC iPhone
+  12 MP → WebP 810×1080 (55 KB); chữ cấm bị chặn kèm thông báo tiếng Việt. Hướng dẫn từng bước cho chị:
+  `docs/ADMIN-SPIKE-0A-HUONG-DAN.md`.
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
@@ -1145,7 +1161,9 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 4. Khi list sticker / sách POD cho Merlin: gửi em link listing — site đã sẵn cho món không làm bằng tay
    (`NOT_HANDMADE`: không ghi "made by hand", không care, không dòng an toàn).
 5. Admin Dashboard: trả lời 8 câu ở mục 8 của bản kế hoạch (câu nào cũng có mặc định, chị chỉ cần ghi câu nào muốn
-   khác) và cho em làm spike 0a.
+   khác). Spike 0a em đã dựng xong (mục 6).
+6. Spike 0a: tự tạo token và đổi 1 ảnh theo `docs/ADMIN-SPIKE-0A-HUONG-DAN.md`, rồi nhắn em 5 dòng ghi chú.
+7. Instagram: gửi em đúng handle Instagram của shop (nếu có) để gắn vào dải ảnh cuối trang.
 
 ## 9. Link & tài nguyên
 

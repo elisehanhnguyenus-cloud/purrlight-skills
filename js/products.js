@@ -438,11 +438,16 @@ const PRODUCTS = [
   }
 ];
 
-/* Sales (Elise 16/10: the same discount as on Etsy). While a sale runs, p.price is the sale price everywhere that reads
-   it (shop cards, the product page, the Event Desk) and p.regular keeps the full price for the struck-through display.
+/* Sales (Elise 16/10 and 20/10: the same discount as on Etsy). While a sale runs, p.price is the sale price everywhere
+   that reads it (shop cards, the product page, the Event Desk) and p.regular keeps the full price for the struck-through
+   display. A "from" price (priceFrom) is the lowest option's sale price; the booth types the chosen option's sale price.
    The Christening Gown Set sale is also in custom-orders/prices.js (gownSale) — change both together. */
 const SALES = {
-  "christening-gown-set": { off: 25, ends: "2026-10-26T05:00:00Z", through: "Sun, Oct 25 (Central Time)" }   /* midnight CDT */
+  "christening-gown-set": { off: 25, ends: "2026-10-26T05:00:00Z", through: "Sun, Oct 25 (Central Time)" },   /* midnight CDT */
+  "maine-coon-cat": { off: 25, ends: "2026-10-26T05:00:00Z", through: "Sun, Oct 25 (Central Time)" },
+  "rosary-charm": { off: 25, ends: "2026-10-26T05:00:00Z", through: "Sun, Oct 25 (Central Time)" },
+  "saint-joan-of-arc-doll": { off: 25, ends: "2026-10-26T05:00:00Z", through: "Sun, Oct 25 (Central Time)" },
+  "americana-doll-bag-charm": { off: 25, ends: "2026-10-26T05:00:00Z", through: "Sun, Oct 25 (Central Time)" }
 };
 PRODUCTS.forEach(function (p) {
   const sale = SALES[p.id];
@@ -472,10 +477,16 @@ function endSales() {
 
 /* Which pieces the standard care/safety copy applies to (shared by product.html and the Event Desk):
    NOT_HANDMADE     — digital patterns / printed-to-order / molded items: no "made by hand", no spot-clean care, no safety line.
-   SAFETY_LINE_SKIP — a christening garment cannot carry "Not suitable for children under 3", a rosary
+   SAFETY_LINE_SKIP — a christening garment cannot carry "keepsake for adults… keep away from young children", a rosary
    charm is not a children's item, and neither is a coin pouch or a handbag. Only the verbatim safety line is ever shown; nothing replaces it. */
 const NOT_HANDMADE = ["dragon-pattern"];
 const SAFETY_LINE_SKIP = ["christening-gown-set", "rosary-charm", "quilted-cat-pouch", "ribbon-corduroy-bag"];
+
+/* Listed but never featured (Elise 20/10): these sit at the end of the shop and of every collection, and are never picked
+   for the home page or "You may also like". Sheep and angel: the photos are not Elise's own. Ginger, British Shorthair,
+   animal friends, white cat: the photos look like renders. Dragon: the one pattern, kept low-key as a test of whether
+   shop visitors want patterns. */
+const QUIET = ["ginger-tabby-cat", "british-shorthair-cat", "dragon-pattern", "knitted-sheep", "crochet-animal-friends-set", "white-cat", "angel-portrait-doll"];
 
 /* the 7 canon collections — every one has listings since 20/10/2026; each tile shows a real product photo */
 const CATEGORIES = [

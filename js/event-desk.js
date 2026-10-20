@@ -85,7 +85,7 @@ var DESK_CONFIG = {
      safety line — the product page carries their own wash/care notes. */
   notHandmade: (typeof NOT_HANDMADE !== "undefined") ? NOT_HANDMADE : ["whisker-tee", "cat-pvc-keychain"],
   /* Items the safety line must never follow: an infant garment cannot carry
-     "Not suitable for children under 3", and pet accessories are not
+     "keepsake for adults… keep away from young children", and pet accessories are not
      children's items. Only the verbatim line is permitted, so nothing
      replaces it here. */
   safetyLineSkip: (typeof SAFETY_LINE_SKIP !== "undefined") ? SAFETY_LINE_SKIP : ["baptism-set", "pet-bandana", "bow-collar", "felt-fish"],
@@ -153,7 +153,7 @@ var DESK_CONFIG = {
 
   /* Verbatim lines already used on the product page (The Purrlight Promise). */
   careLine: "Handmade things like gentle care: spot clean with a damp cloth and keep keepsakes out of direct sun.",
-  safetyLine: "Handmade keepsake for adult-guided use. Not tested as a children's toy. Not suitable for children under 3. Keep away from open flame. Spot clean only.",
+  safetyLine: "Handmade decorative keepsake for adults and collectors. Not a toy and not tested as a children's product. Keep away from young children and open flame. Spot clean only.",
 
   signName: "Elise",
   tagline: "Made by hand. Made to be kept."
@@ -618,7 +618,7 @@ var DESK_CONFIG = {
     /* a listing whose Etsy options change the price (priceFrom) has no fixed booth price: the chip shows "from $X"
        and the line asks for the price of the option the customer chose */
     catalog.forEach(function (p) {
-      list.push(p.priceFrom ? { kind: "catalog", pid: p.id, name: p.name, price: null, ask: true, hint: "from " + money(cents(p.price)) + " · type the option's price", addons: null }
+      list.push(p.priceFrom ? { kind: "catalog", pid: p.id, name: p.name, price: null, ask: true, hint: "from " + money(cents(p.price)) + (p.sale ? " · " + p.sale.off + "% off: type the option's sale price" : " · type the option's price"), addons: null }
         : { kind: "catalog", pid: p.id, name: p.name, price: p.price, addons: p.addons || null });
     });
     (CFG.extraItems || []).forEach(function (n) { list.push({ kind: "other", name: n, price: null, hint: "price at the booth" }); });
@@ -735,8 +735,9 @@ var DESK_CONFIG = {
           '<input type="text" data-ccode="' + i + '" value="' + esc(c.code) + '" placeholder="Yarn code · V-12" aria-label="Yarn colour code" autocapitalize="characters">' +
           '</div><div class="line-sub">' + money(lineUnit(l)) + ' each · 50% deposit ' + money(Math.round(lineUnit(l) * GRID.depositRate)) + '</div>';
       } else if (l.ask) {
+        var askSale = null; catalog.forEach(function (c) { if (c.id === l.pid && c.sale) askSale = c.sale; });   /* a "from" piece on sale: the option's sale price */
         head = '<div class="line-name">' + esc(l.name) + '</div><div class="field-row">' +
-          '<input class="line-price" type="text" inputmode="decimal" placeholder="$ price of their option" value="' + esc(l.unit) + '" data-lp="' + i + '" aria-label="Price each — the option they chose"></div>';
+          '<input class="line-price" type="text" inputmode="decimal" placeholder="' + (askSale ? '$ sale price (' + askSale.off + '% off) of their option' : '$ price of their option') + '" value="' + esc(l.unit) + '" data-lp="' + i + '" aria-label="' + (askSale ? 'Sale price each, ' + askSale.off + '% off — the option they chose' : 'Price each — the option they chose') + '"></div>';
       } else if (l.kind === "other") {
         head = '<div class="field-row"><input type="text" placeholder="What did they get?" value="' + esc(l.name) + '" data-ln="' + i + '" aria-label="Item name">' +
           '<input class="line-price" type="text" inputmode="decimal" placeholder="$ price each" value="' + esc(l.unit) + '" data-lp="' + i + '" aria-label="Price each"></div>';

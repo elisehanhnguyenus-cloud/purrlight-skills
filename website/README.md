@@ -104,8 +104,9 @@ bằng hộp thư đó (thư ký "Elise · Purrlight Studio", khách sẽ *reply
 đó để gửi ảnh mèo); (2) chốt trạng thái permit thuế Texas → chọn chế độ thuế
 trong ⚙; (3) gửi thử cả hai loại thư từ chính điện thoại của chị (Gmail /
 iOS Mail có thể cắt thư quá dài — tool đã nhắc dùng Copy khi > 1.900 ký tự);
-(4) điền giá cho 4 món tồn kho Pearland trong `extraItems` nếu muốn có sẵn
-(hiện để trống, gõ giá tại booth).
+(4) từ 20/10 bóng cảm xúc, búp bê linen và búp bê Americana đã là món catalog (giá theo Etsy); `extraItems` chỉ
+còn "Catnip ball" (gõ giá tại booth). Món có nhiều lựa chọn giá (`priceFrom`) hiện "from $X" — người đứng booth gõ
+giá của lựa chọn khách mua. Danh sách chip có thanh cuộn riêng để dòng đơn và tổng tiền luôn gần.
 
 ## Trạng thái online (15/10/2026)
 
@@ -141,7 +142,12 @@ iOS Mail có thể cắt thư quá dài — tool đã nhắc dùng Copy khi > 1.
 - **Ảnh sản phẩm**: `assets/img/products/<id>-600.webp` (thẻ sản phẩm, ô danh mục) và `<id>.webp` (trang sản phẩm,
   tới 1000 px; chỉ có khi ảnh gốc lớn hơn 600 px). Cắt vuông để bỏ chữ, nhãn "Freeship/Freegift", logo Viet Delight.
   Ba ảnh được xoá logo Viet Delight / hộp chữ bằng ffmpeg (gown, Siamese, Saint Joan). **Không bao giờ xoá dấu/chữ
-  ký có thể là của người khác** (xoá dấu bản quyền là sai) — 4 ảnh có dấu lạ giữ nguyên và không dùng ở trang chủ.
+  ký có thể là của người khác** (xoá dấu bản quyền là sai) — 4 ảnh có dấu lạ không bị sửa (ảnh Feelings Faces chỉ cắt vuông nên
+  con dấu "be thankful…" nằm ngoài khung) và không dùng ở trang chủ. Lời dặn giặt trên site chỉ giữ phần "spot clean" cho
+  khớp dòng an toàn chuẩn ("Spot clean only"); listing nào ghi giặt tay thì đã ghi vào danh sách sửa Etsy.
+- `priceFrom: true` = listing có lựa chọn làm đổi giá (size, 1 con hay cặp, bộ 3 hay 6…): site ghi "from $X", Event Desk
+  bắt gõ giá của lựa chọn khách mua (7 món: Maine Coon, Sense & Sensibility, George Washington, vườn len, Feelings
+  Faces, Saint Joan, cầu thủ bóng đá).
   `assets/img/etsy/` cũ đã gỡ.
 - **Việc cần chị sửa phía Etsy** (claim an toàn trẻ em, ảnh có dấu của người khác, ảnh có thể là AI render, giá/nội
   dung bộ chưa rõ…): xem `docs/ETSY-LISTING-FIXES-2026-10-20.md`.

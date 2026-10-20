@@ -7,10 +7,11 @@
   /* a sale ended while the page was open (js/products.js): show the full prices again */
   document.addEventListener("purrlight:prices", function () { location.reload(); });
   /* a price on sale (products.js SALES): the full price struck through, then the sale price */
+  /* priceFrom (products.js): Etsy options change the price, so the lowest one reads "from $X" */
   var priceHTML = function (p, delta) {
-    var d = delta || 0;
-    if (!p.regular) return fmt(p.price + d);
-    return '<s><span class="visually-hidden">Was </span>' + fmt(p.regular + d) + '</s> <span class="visually-hidden">now </span>' + fmt(p.price + d);
+    var d = delta || 0, from = p.priceFrom ? '<span class="price-from">from</span> ' : "";
+    if (!p.regular) return from + fmt(p.price + d);
+    return from + '<s><span class="visually-hidden">Was </span>' + fmt(p.regular + d) + '</s> <span class="visually-hidden">now </span>' + fmt(p.price + d);
   };
 
   /* ---------- mobile nav ---------- */
@@ -52,26 +53,42 @@
 
   /* ---------- home: real product videos ----------
      muted loops that play only while at least half on screen; with reduced motion or Save-Data they stay as their
-     poster photo (they are decorative — each card's link and label carry the meaning) */
+     poster photo (they are decorative — each card's link and label carry the meaning). "Pause videos" stops them
+     for good on this device (WCAG 2.2.2) and is remembered. */
   var reels = document.querySelectorAll("video[data-reel]");
   var still = (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) ||
     (navigator.connection && navigator.connection.saveData);
   if (reels.length && !still && "IntersectionObserver" in window) {
+    var reelsOff = false;
+    try { reelsOff = localStorage.getItem("purrlight:reels") === "off"; } catch (err) { /* storage blocked — videos may play */ }
+    var playReel = function (v) { if (!reelsOff && v.dataset.on && !document.hidden) { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); } };
     var reelIO = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
         var v = en.target;
         v.dataset.on = en.isIntersecting && en.intersectionRatio >= 0.5 ? "1" : "";
-        if (v.dataset.on && !document.hidden) { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); }
-        else v.pause();
+        if (v.dataset.on) playReel(v); else v.pause();
       });
     }, { threshold: [0, 0.5] });
     reels.forEach(function (v) { reelIO.observe(v); });
     document.addEventListener("visibilitychange", function () {
-      reels.forEach(function (v) {
-        if (document.hidden) v.pause();
-        else if (v.dataset.on) { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); }
-      });
+      reels.forEach(function (v) { if (document.hidden) v.pause(); else playReel(v); });
     });
+    var pauseBtn = document.querySelector("[data-reel-pause]");
+    if (pauseBtn) {
+      var label = pauseBtn.querySelector("span"), icon = pauseBtn.querySelector("path");
+      var showState = function () {
+        label.textContent = reelsOff ? "Play videos" : "Pause videos";
+        icon.setAttribute("d", reelsOff ? "M8 5v14l11-7z" : "M7 5h3.5v14H7zM13.5 5H17v14h-3.5z");
+      };
+      showState();
+      pauseBtn.hidden = false;
+      pauseBtn.addEventListener("click", function () {
+        reelsOff = !reelsOff;
+        try { localStorage.setItem("purrlight:reels", reelsOff ? "off" : "on"); } catch (err) { /* this visit only */ }
+        reels.forEach(function (v) { if (reelsOff) v.pause(); else playReel(v); });
+        showState();
+      });
+    }
   }
 
   /* ---------- product card builder ---------- */

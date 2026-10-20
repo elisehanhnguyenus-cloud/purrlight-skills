@@ -17,6 +17,8 @@
      photo is bigger) and point `img` / `imgLarge` at them.
    - Names on the site are ours (canon words); the Etsy title can differ.
    - `price` is the regular price; a sale goes in SALES below, with its end date.
+   - `priceFrom: true` when Etsy options change the price (sizes, single doll or pair, set of 3 or 6…):
+     `price` is then the lowest option, the site shows "from $X" and the Event Desk asks for the option's price.
    - `addons` (bundle dropdown) is only allowed when the Etsy listing has
      the SAME variation at the same price — none do today, so none here.
    ============================================================ */
@@ -33,9 +35,9 @@ const PRODUCTS = [
     badge: "",
     img: "assets/img/products/christening-gown-set-600.webp",
     imgLarge: "assets/img/products/christening-gown-set.webp",
-    short: "A christening gown, bonnet, mittens and booties in embroidered lace and satin, sized 3–12 months.",
-    desc: "An heirloom christening set in embroidered lace and satin: a gown with cross and floral embroidery, a lace-trimmed bonnet, embroidered mittens and satin-trimmed booties. Made by hand for a baptism, christening or dedication day, and meant to be kept and passed down afterwards. Sized 3–12 months, it comes in a keepsake box, in stock and ready to ship from Texas.",
-    details: ["Gown, bonnet, mittens and booties", "Gown in a cotton, linen, muslin, lace and satin blend", "Cross and floral embroidery; lace-trimmed bonnet, satin-trimmed booties", "Sizes 3–12 months", "Packaged in a keepsake box", "In stock in the USA — ships from Texas"],
+    short: "A christening gown, bonnet, mittens, booties and socks in embroidered lace and satin, sized 3–12 months.",
+    desc: "An heirloom christening set in embroidered lace and satin: a gown with cross and floral embroidery, a lace-trimmed bonnet, embroidered mittens, satin-trimmed booties and socks. Made by hand for a baptism, christening or dedication day, and meant to be kept and passed down afterwards. Sized 3–12 months, it comes in a keepsake box, in stock and ready to ship from Texas.",
+    details: ["Gown, bonnet, mittens, booties and socks", "Gown in a cotton, linen, muslin, lace and satin blend", "Cross and floral embroidery; lace-trimmed bonnet, satin-trimmed booties", "Sizes 3–12 months", "Packaged in a keepsake box", "In stock in the USA — ships from Texas"],
     etsyUrl: "https://www.etsy.com/listing/4333988358"
   },
   {
@@ -43,6 +45,7 @@ const PRODUCTS = [
     name: "Maine Coon Crochet Cat",
     category: "Merlin's World & His Friends",
     price: 55,
+    priceFrom: true,
     badge: "",
     img: "assets/img/products/maine-coon-cat-600.webp",
     short: "The big shaggy one, about 25 cm seated, with a small mane, tufted ear tips and a full tail you can run your fingers through.",
@@ -80,6 +83,7 @@ const PRODUCTS = [
     name: "Elinor Dashwood & Edward Ferrars Crochet Dolls",
     category: "Storybook & Traditional Tales",
     price: 40.99,
+    priceFrom: true,
     badge: "made-to-order",
     img: "assets/img/products/dashwood-ferrars-set-600.webp",
     short: "Elinor and Edward, hand-crocheted Regency art dolls inspired by Sense and Sensibility — about 18 cm each, made to order.",
@@ -130,6 +134,7 @@ const PRODUCTS = [
     name: "George Washington Crochet Doll",
     category: "Heritage & Celebration",
     price: 42,
+    priceFrom: true,
     badge: "made-to-order",
     img: "assets/img/products/george-washington-doll-600.webp",
     short: "George Washington in Continental Army blue and a tricorn hat — a hand-crocheted keepsake for America's 250th.",
@@ -188,7 +193,7 @@ const PRODUCTS = [
     imgLargeW: 720,
     short: "An oversized horse knitted by hand in soft, fluffy yarn, about 40 cm (15.75 in) long.",
     desc: "A generously sized horse, about 40 cm (15.75 in) long, knitted by hand in Vietnam in ultra-soft fluffy yarn and stuffed with fiberfill. It is big enough for warm hugs, with a rustic charm that suits a farm- or woodland-themed room and any horse lover.",
-    details: ["About 40 cm / 15.75 in long", "Hand-knitted in Vietnam in ultra-soft fluffy yarn", "Stuffed with fiberfill", "Spot clean recommended; if necessary, hand wash gently in cold water and lay flat to air dry"],
+    details: ["About 40 cm / 15.75 in long", "Hand-knitted in Vietnam in ultra-soft fluffy yarn", "Stuffed with fiberfill", "Spot clean with a damp cloth; air dry"],
     etsyUrl: "https://www.etsy.com/listing/4368649382"
   },
   {
@@ -202,7 +207,7 @@ const PRODUCTS = [
     imgLargeW: 770,
     short: "A tall giraffe hand-knitted in soft, fluffy yarn, about 60 cm (23.6 in), in pink, blue or yellow.",
     desc: "Our large giraffe stands about 60 cm (23.6 in) tall, hand-knitted in Vietnam in soft, fluffy yarn with a stretchy, squishy texture. It is stuffed with fiberfill to keep its chunky shape and comes in pastel pink, blue or yellow. A gentle, huggable companion for a safari-themed room or anyone who loves the art of hand-knitting.",
-    details: ["About 60 cm / 23.6 in tall", "Hand-knitted in Vietnam in soft, fluffy yarn", "Stuffed with fiberfill", "Pastel colors: Pink, Blue or Yellow (choose on Etsy)", "Hand wash gently in cold water with mild soap; avoid rubbing the stitches harshly; do not wring; lay flat to air dry"],
+    details: ["About 60 cm / 23.6 in tall", "Hand-knitted in Vietnam in soft, fluffy yarn", "Stuffed with fiberfill", "Pastel colors: Pink, Blue or Yellow (choose on Etsy)", "Spot clean gently with mild soap; do not rub the stitches harshly or wring; lay flat to air dry"],
     etsyUrl: "https://www.etsy.com/listing/4364454125"
   },
   {
@@ -210,6 +215,7 @@ const PRODUCTS = [
     name: "Crochet Feelings Faces Set",
     category: "Feelings & Calm",
     price: 14,
+    priceFrom: true,
     badge: "made-to-order",
     img: "assets/img/products/crochet-feelings-faces-600.webp",
     short: "Palm-sized crochet balls with hand-embroidered feelings faces, in a set of 3 or 6, to name a mood and squeeze it out.",
@@ -234,13 +240,14 @@ const PRODUCTS = [
     name: "Knitted Woodland Garden Friends",
     category: "Feelings & Calm",
     price: 16,
+    priceFrom: true,
     badge: "",
     img: "assets/img/products/knitted-woodland-garden-600.webp",
     imgLarge: "assets/img/products/knitted-woodland-garden.webp",
     imgLargeW: 800,
     short: "Hand-knitted garden friends with embroidered faces: a big tree, hedgehog, carrot, broccoli, mushroom, pear and more.",
     desc: "Little veggies with happy faces and soft woodland creatures, hand-knitted in fluffy textured yarn. Pick your favorites or collect the whole garden, from the 25 cm tree to the pocket-sized hedgehog. Each piece is 100% hand-knitted, so all sizes are approximate, and they're made as keepsakes to be passed down.",
-    details: ["Giant tree about 25 cm (10 in); carrot about 10 cm (4 in)", "Broccoli about 12 cm; hedgehog about 8 cm", "Garden friends (acorn, mushroom, pear, pineapple, pumpkin): about 10–12 cm (3.9–4.7 in)", "Pick your favorites or collect the whole garden (choose on Etsy)", "Care: Spot clean with mild soap and cold water to preserve the fuzzy texture and happy embroidered faces. Lay flat to dry under the sun."],
+    details: ["Giant tree about 25 cm (10 in); carrot about 10 cm (4 in)", "Broccoli about 12 cm; hedgehog about 8 cm", "Garden friends (acorn, mushroom, pear, pineapple, pumpkin): about 10–12 cm (3.9–4.7 in)", "Pick your favorites or collect the whole garden (choose on Etsy)", "Care: Spot clean with mild soap and cold water to preserve the fuzzy texture and happy embroidered faces; lay flat to dry"],
     etsyUrl: "https://www.etsy.com/listing/4427969443"
   },
   {
@@ -254,7 +261,7 @@ const PRODUCTS = [
     imgLargeW: 800,
     short: "A hand-knitted duck with long floppy yellow legs, a fluffy white scarf and a daisy-embroidered belly pocket.",
     desc: "A long-necked duck, hand-knitted in Vietnam in soft yarn, with a flat, pillowy body that is cozy to hug. It has long, floppy mustard-yellow legs, a fluffy white scarf and a little belly pocket hand-embroidered with daisies. A sweet companion for duck, goose and farm-animal fans, as room decor or a soft travel pillow.",
-    details: ["About 40 cm / 15.7 in from head to toe", "Hand-knitted in Vietnam in soft yarn; stuffed with fiberfill", "Long floppy mustard-yellow legs, fluffy white scarf, belly pocket with hand-embroidered daisies", "Spot clean or hand wash gently in cold water with mild soap; lay flat to air dry; do not machine wash or wring"],
+    details: ["About 40 cm / 15.7 in from head to toe", "Hand-knitted in Vietnam in soft yarn; stuffed with fiberfill", "Long floppy mustard-yellow legs, fluffy white scarf, belly pocket with hand-embroidered daisies", "Spot clean gently with mild soap and cold water; lay flat to air dry; do not machine wash or wring"],
     etsyUrl: "https://www.etsy.com/listing/4427983754"
   },
   {
@@ -294,7 +301,7 @@ const PRODUCTS = [
     imgLargeW: 800,
     short: "Four 10 cm crochet friends (Amelia, Benny, Bella and Zara), each in its own little outfit with a letter.",
     desc: "Meet Amelia the cat, Benny the dog, Bella and Zara the bunny: four little crochet friends made by hand in cotton yarn. Each wears its own outfit with a letter and a small extra, from a pink headband and a striped scarf to earmuffs and a side bag. At about 10 cm tall, they suit a collector's shelf or make a heartfelt gift.",
-    details: ["Set of 4, each about 10 cm tall, crocheted in cotton yarn", "Amelia: grey cat, yellow sweater with a daisy and \"A\", pink headband", "Benny: beige dog, green sweater with \"B\" and a paw print, striped pink scarf", "Bella in pink overalls with earmuffs; Zara the bunny with a tassel scarf and side bag", "Care: Handwash only with mild soap and cool water. Air dry completely to maintain their shape and vibrant colors. Avoid prolonged exposure to direct sunlight.", "Made to order: processing 1–2 weeks"],
+    details: ["Set of 4, each about 10 cm tall, crocheted in cotton yarn", "Amelia: grey cat, yellow sweater with a daisy and \"A\", pink headband", "Benny: beige dog, green sweater with \"B\" and a paw print, striped pink scarf", "Bella in pink overalls with earmuffs; Zara the bunny with a tassel scarf and side bag", "Care: Spot clean with mild soap and cool water; air dry completely to keep their shape and colors; avoid long exposure to direct sunlight", "Made to order: processing 1–2 weeks"],
     etsyUrl: "https://www.etsy.com/listing/4335293461"
   },
   {
@@ -302,6 +309,7 @@ const PRODUCTS = [
     name: "Saint Joan of Arc Crochet Doll",
     category: "Faith & Milestones",
     price: 79,
+    priceFrom: true,
     badge: "made-to-order",
     img: "assets/img/products/saint-joan-of-arc-doll-600.webp",
     imgLarge: "assets/img/products/saint-joan-of-arc-doll.webp",
@@ -354,11 +362,12 @@ const PRODUCTS = [
     name: "Your Soccer Player, Crocheted",
     category: "Heritage & Celebration",
     price: 64,
+    priceFrom: true,
     badge: "made-to-order",
     img: "assets/img/products/custom-soccer-doll-600.webp",
     short: "A crochet look-alike of your player, fan or coach from your photo — team colors, any number and a removable kit.",
     desc: "Send a photo and our artisan team crochets a look-alike soccer player: yourself, a loved one, a coach or the team's MVP. The jersey, shorts and socks come in your team colors with any player number, with skin tone, hair and facial hair to match, and the kit comes off so the doll can be re-dressed. Tiny details include cleats, wristbands and a mini crochet soccer ball.",
-    details: ["About 8 in / 20 cm or 10 in / 25 cm — choose on Etsy", "Personalize jersey colors, number, optional name on back, skin tone and hair; upload 1–2 clear front photos", "Cotton yarn, fiberfill; removable outfit", "Original designs only — trademarked club logos are not copied", "Made to order — allow 10–12 days to craft; personalized items can't be returned, so message within 24 hours for changes", "Spot clean gently with a damp cloth and mild soap. Air dry flat. Do not machine wash or tumble dry."],
+    details: ["About 8 in / 20 cm or 10 in / 25 cm — choose on Etsy", "Personalize jersey colors, number, optional name on back, skin tone and hair; upload 1–2 clear front photos", "Cotton yarn, fiberfill; removable outfit", "Made to order — allow 10–12 days to craft; personalized items can't be returned, so message within 24 hours for changes", "Spot clean gently with a damp cloth and mild soap. Air dry flat. Do not machine wash or tumble dry."],
     etsyUrl: "https://www.etsy.com/listing/4467740813"
   },
   {
@@ -398,7 +407,7 @@ const PRODUCTS = [
     imgLargeW: 690,
     short: "A hand-crocheted angel made to look like someone you love, about 8 in tall on a wooden stand — a memorial keepsake.",
     desc: "A hand-crocheted angel portrait of someone you love, with white wings and a small handmade bouquet, on a sturdy wooden stand. The angel in the photo was a custom order: a grandmother in a light blue shirt embroidered with tiny flowers, a cross necklace, soft gray Brazil wool hair and a pink-and-white rose bouquet. For a desk, a shelf, a bedside table or a memorial altar — a memorial keepsake, a sympathy gift, or a present for a grandmother.",
-    details: ["About 20 cm / 8 in tall", "Crocheted by hand in cotton yarn", "Wooden stand included", "Custom portrait, made to your loved one's features", "Gently spot clean or hand wash with mild soap. Air dry flat in the shade. Please do not machine wash or tumble dry.", "Made to order — allow 14 days crafting time"],
+    details: ["About 20 cm / 8 in tall", "Crocheted by hand in cotton yarn", "Wooden stand included", "Custom portrait, made to your loved one's features", "Gently spot clean with mild soap. Air dry flat in the shade. Please do not machine wash or tumble dry.", "Made to order — allow 14 days crafting time"],
     etsyUrl: "https://www.etsy.com/listing/4467697803"
   },
   {
@@ -476,7 +485,7 @@ const CATEGORIES = [
   { name: "Merlin's World & His Friends", img: "assets/img/products/calico-crochet-cat-600.webp" },
   { name: "Little Things", img: "assets/img/products/linen-pocket-doll-600.webp" },
   { name: "Heritage & Celebration", img: "assets/img/products/christmas-elf-600.webp" },
-  { name: "Patterns & Printables", img: "assets/img/products/dragon-pattern-600.webp" }
+  { name: "Patterns & Printables", img: "assets/img/home/story-yarn-hand-640.webp" }
 ];
 
 /* a collection with no listing yet would show here as a "soon" tile (home page only, never in the shop filter) */

@@ -17,8 +17,8 @@ mô tả và từ ngữ Brand Canon v2. Danh sách này để chị sửa phía 
    - Custom Angel Portrait Doll (4467697803): watermark chữ "Grateful / be thankful".
    - Crochet Feelings Faces (4548879570): con dấu "Be thankful, be Grateful & be blessed" + biển "Happy Hook Pouches".
    - Fluffy Knitted Sheep (4361808711): chữ ký viết tay mờ trên đầu cừu.
-   Em **không xoá** các dấu này (xoá dấu bản quyền của người khác là sai) — site vẫn hiện ảnh như trên Etsy, nhưng
-   không dùng chúng ở trang chủ.
+   Em **không sửa** các dấu này (xoá dấu bản quyền của người khác là sai) — site vẫn hiện ảnh như trên Etsy (ảnh
+   Feelings Faces chỉ cắt vuông nên con dấu nằm ngoài khung), nhưng không dùng chúng ở trang chủ.
 3. **Ảnh có thể là ảnh dựng (AI render) chứ không phải hàng thật** — Etsy yêu cầu ảnh đúng món khách nhận:
    White Cat (4336898722), Crochet Animal Friends set (4335293461); British Shorthair (4337895128) và Ginger Tabby
    (4337392483) có cùng một thân mèo giống hệt nhau. Mô tả của 6 listing mèo đọc như prompt AI ("The design
@@ -34,7 +34,14 @@ mô tả và từ ngữ Brand Canon v2. Danh sách này để chị sửa phía 
 - Sense and Sensibility (4597361808): mô tả ghi "launch price $69.99 / set $78" nhưng Etsy hiện $40.99.
 - Bộ 4 thú $24 (4335293461), bộ vườn len $16 (4427969443), hươu cao cổ $55 (ảnh 2 con): giá cho 1 món hay cả bộ?
 - Anne (4367997103): ảnh chính chỉ có 1 búp bê nhưng bán bộ 3.
-- Christening gown (4333988358): ảnh có tất ren nhưng mục "Set Includes" không ghi tất (site đã bỏ tất).
+- Christening gown (4333988358): ảnh và video có tất ren, chị đã duyệt 16/10 "Gown, bonnet, mittens, booties and socks"
+  (site ghi có tất) — nhưng mục "Set Includes" trên Etsy chưa ghi tất: nên thêm.
+- Sense and Sensibility, George Washington, Maine Coon, vườn len, Feelings Faces, Saint Joan, cầu thủ: giá Etsy hiện là
+  giá của lựa chọn rẻ nhất → site ghi "from $X". Chị cho em giá từng lựa chọn nếu muốn ghi rõ hơn.
+- Lời dặn giặt: hươu cao cổ, bộ 4 thú ("Handwash only"), vịt, thiên thần, ngựa ghi giặt tay; vườn len ghi "phơi nắng".
+  Dòng an toàn chuẩn của site ghi "Spot clean only" nên site chỉ giữ phần "spot clean" — chị chọn một cách cho cả hai bên.
+- Cầu thủ bóng đá: listing ghi "không chép logo đội", nhưng ảnh có huy hiệu giống áo đội tuyển → site bỏ câu này cho
+  khỏi mâu thuẫn; nên đổi ảnh mẫu không có huy hiệu.
 - Vịt (4427983754): 30 cm hay 40 cm? Siamese: mô tả ghi "black & white fur" (sai màu). Rosary: 10 hay 11 hạt.
 
 ## Giảm giá đang chạy trên Etsy

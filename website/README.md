@@ -48,8 +48,10 @@ website/
 └── assets/
     ├── brand/        # logo-flat.png, favicon — KHÔNG vẽ lại, KHÔNG AI-generate
     ├── fonts/        # File .woff2 (đã tải sẵn, có subset tiếng Việt)
-    └── img/          # Minh họa SVG (brand art, tile "soon")
-        ├── etsy/     # ★ ẢNH LISTING THẬT tải từ Etsy — tên file = listing id (vd 4337395489.jpg)
+    ├── video/        # video trang chủ (reel-*.mp4) + video Merlin của Custom Orders
+    └── img/          # companion-*.svg = 3 nhân vật "joining soon" (hình phác thảo duy nhất còn lại)
+        ├── products/ # ★ ẢNH SẢN PHẨM (vuông) — <id>-600.webp cho thẻ, <id>.webp ≤1000px cho trang sản phẩm
+        ├── home/     # ảnh thật của trang chủ / About + poster video
         └── custom/   # Ảnh trang Custom Orders (WebP ≤ 200 KB) + og-custom-orders-merlin.jpg (ảnh share link từ 17/10; og-custom-orders.jpg cũ giữ cho link đã share)
 ```
 
@@ -118,32 +120,48 @@ iOS Mail có thể cắt thư quá dài — tool đã nhắc dùng Copy khi > 1.
   (Settings → Pages → Custom domain). `publicBaseUrl` của Event Desk tự lấy theo
   URL đang chạy (https) nên không cần điền tay.
 
-## Catalog — nguồn sự thật
+## Catalog — nguồn sự thật (cập nhật 20/10/2026: đủ 31 món)
 
-- `js/products.js` lấy giá / link / ảnh / facts từ **RSS feed của shop Etsy**
-  (`https://www.etsy.com/shop/VietDelightFinds/rss`) ngày 15/10/2026. Feed chỉ
-  đưa **10 listing mới nhất** → site có 10 món; listing còn lại của shop chưa
-  lên (trang Etsy chặn bot, không kéo tự động được). Thêm món: copy một block
-  trong `products.js`, dán link listing, tải ảnh vào `assets/img/etsy/`.
-- Giá trên site = giá hiển thị của listing (giá thấp nhất khi listing có
-  variation). Phần cộng thêm (size 10 in, long-pile fur +$20…) ghi trong
-  `details` và chọn trên Etsy — site không có dropdown giá.
-- Đã đối chiếu 10/10 món với listing (15/10, mỗi món một agent kiểm tra).
-  4 món có facts ngoài listing, đã sửa: Founding Fathers → chỉ là búp bê
-  **George Washington** (Jefferson & Franklin "join in 2026"); British
-  Shorthair → **phụ kiện** tháo được (không phải bộ đồ), bỏ dòng care vì
-  listing không ghi; "Large Crochet Horse" → listing là ngựa **đan** (knitted);
-  custom pet Grand → "cat (or other pet)", **16–21 in** theo tiêu đề listing.
-  Riêng "made from your photos" ở custom pet là quy trình đã duyệt 25/09 (chưa
-  ghi trên listing Etsy — nên thêm vào listing).
-- **Cần chị xem phía Etsy** (lệch Brand Canon / Hard Rules — site KHÔNG copy
-  theo): (1) listing ngựa 4368649382 dùng "magical", "hypoallergenic",
-  "child-safe", "for kids / toddlers / nursery"; (2) listing dragon pattern
-  4399784660 ghi credit "Pattern by Anna_Crochet" — xác nhận quyền bán/license
-  trước khi giữ trên site; tiêu đề "Plush Toy… Nursery Decor" cho một file PDF;
-  (3) listing British Shorthair 4337895128 mở đầu "Crochet pattern for…" dù là
-  sản phẩm vật lý; (4) giá custom pet Grand trên Etsy $150 vs bảng giá booth
-  25/09 (Grand cat $90–120) — khác kênh có chủ ý, hay cần đồng bộ?
+- `js/products.js` = **toàn bộ 31 listing đang bán** của shop Etsy VietDelightFinds (shop hiện 32 — bỏ listing
+  "International shipping service" $8 vì là phí ship, không phải sản phẩm). Thứ tự = thứ tự shop trên Etsy.
+- **Cách lấy dữ liệu** (trang Etsy chặn bot, nhưng hai đường này mở được):
+  - `https://www.etsy.com/shop/VietDelightFinds?format=rss` → trang shop đầy đủ: 32 listing, giá, giá giảm, video,
+    9 section kèm `section_id`;
+  - `https://www.etsy.com/shop/VietDelightFinds/rss?section_id=<id>` → mô tả đầy đủ + ảnh chính của từng listing
+    trong section (RSS thường chỉ có 10 món mới nhất; theo section thì đủ cả shop). Listing không nằm trong section
+    nào (custom pet Grand) có trong RSS thường.
+  - Trang từng listing (`/listing/<id>`) vẫn bị chặn → mỗi món chỉ có **ảnh chính** của listing.
+- **Nội dung**: mỗi món được một agent viết chỉ từ mô tả listing (Brand Canon v2: không toy/plush/nursery/kids/baby,
+  không safe/hypoallergenic, không free shipping, không hẹn ngày giao…) rồi agent thứ hai soi lại từng fact. Tên trên
+  site là tên của mình, không chép tiêu đề SEO. Riêng custom pet Grand giữ "made from your photos" (quy trình chị
+  duyệt 25/09, listing chưa ghi). Giá = giá gốc; giảm giá nằm trong `SALES` (cần ngày kết thúc).
+- **Collection**: 7 collection canon đều đã có hàng — Storybook (3), Feelings & Calm (7), Faith & Milestones (5),
+  Merlin's World (8), Little Things (3), Heritage & Celebration (4), Patterns & Printables (1). George Washington
+  chuyển từ Storybook sang Heritage & Celebration (đúng chủ đề 250 năm nước Mỹ).
+- **Ảnh sản phẩm**: `assets/img/products/<id>-600.webp` (thẻ sản phẩm, ô danh mục) và `<id>.webp` (trang sản phẩm,
+  tới 1000 px; chỉ có khi ảnh gốc lớn hơn 600 px). Cắt vuông để bỏ chữ, nhãn "Freeship/Freegift", logo Viet Delight.
+  Ba ảnh được xoá logo Viet Delight / hộp chữ bằng ffmpeg (gown, Siamese, Saint Joan). **Không bao giờ xoá dấu/chữ
+  ký có thể là của người khác** (xoá dấu bản quyền là sai) — 4 ảnh có dấu lạ giữ nguyên và không dùng ở trang chủ.
+  `assets/img/etsy/` cũ đã gỡ.
+- **Việc cần chị sửa phía Etsy** (claim an toàn trẻ em, ảnh có dấu của người khác, ảnh có thể là AI render, giá/nội
+  dung bộ chưa rõ…): xem `docs/ETSY-LISTING-FIXES-2026-10-20.md`.
+- Thêm món mới: copy một block trong `products.js`, dán link listing, đặt ảnh vuông vào `assets/img/products/`.
+
+## Ảnh & video trên các trang (20/10/2026 — chị yêu cầu: rõ ràng, không mockup quá đà)
+
+Mọi khối ảnh minh hoạ SVG (Merlin trên trăng, cuộn len vẽ, poster video vẽ, tile "soon", ảnh About) đã thay bằng
+ảnh/video thật, trong `assets/img/home/` và `assets/video/`:
+
+| Khối | Ảnh/video |
+|---|---|
+| Hero trang chủ | bàn đầy mèo len (`hero-crochet-cats-*.webp`) + ảnh tròn **Merlin thật** (`merlin-real-360.webp`) |
+| Chapter four | 4 video thật từ listing Etsy (mèo len trên sofa, búp bê linen, đóng gói bộ Anne, bộ đồ rửa tội) — tự chạy không tiếng khi ≥ 50% trong màn hình, dừng khi cuộn qua / đổi tab, **không** chạy khi người xem bật giảm chuyển động hoặc Save-Data |
+| Câu chuyện | len chenille trên tay (`story-yarn-hand-*.webp`) |
+| Meet Merlin & friends | Merlin = ảnh thật; Tâm, Bánh Mì, Mochi giữ hình phác thảo (nhân vật "joining soon", chưa có ảnh thật) |
+| Journal (3 thẻ) | Merlin, bộ đồ rửa tội, hàng thánh |
+| Purrlight, daily | 6 ảnh sản phẩm thật |
+| Danh mục / Favorites | ảnh sản phẩm thật (chọn ảnh sạch, không dùng ảnh có dấu lạ / nghi AI) |
+| About | Merlin giữa quà và len (`about-merlin-studio-*.webp`) |
 
 ## Custom Orders — landing page từ Linktree (`custom-orders/`)
 
@@ -410,9 +428,8 @@ màu canon; muốn icon hồng thì đổi `src` sang `../assets/brand/favicon-6
 
 ## Việc còn lại trước khi "launch" (checklist cho Elise)
 
-1. **Listing còn lại** — gửi link từng listing (hoặc CSV từ Shop Manager →
-   Listings → Download) để thêm vào site. Collection "Little Things" và
-   "Heritage & Celebration" vẫn là tile "soon" tới khi có listing.
+1. **Listing Etsy** — đã đủ 31 món (20/10). Sửa phía Etsy theo
+   `docs/ETSY-LISTING-FIXES-2026-10-20.md`; listing mới thì báo em (hoặc tự thêm theo mục Catalog).
 2. **Link TikTok** — xác minh handle trong `TIKTOK_SHOP_URL` (đang là
    @purrlightstudio theo Canon v2); mọi link TikTok trên site đọc từ đó.
 3. **Newsletter** — form chưa nối backend (hiện chỉ hiện thông báo trung

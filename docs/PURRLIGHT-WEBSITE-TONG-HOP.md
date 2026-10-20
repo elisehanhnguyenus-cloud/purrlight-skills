@@ -1095,11 +1095,27 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 - Đặt trần $10 trên console (Anthropic workspace spend limit; OpenAI project hard limit / trả trước; Google: budget chỉ cảnh
   báo) — chị tự làm khi tạo khoá, các bước ở `website/README.md` mục "Khoá (API key)…". Hiện chưa có khoá nào để giới hạn.
 
+### Elise 20/10 — ảnh thật thay mockup trên mọi trang; đưa đủ sản phẩm Etsy lên web
+- **Catalog đủ 31 món** (shop có 32; bỏ listing "International shipping service"). Đọc được cả shop qua
+  `…/shop/VietDelightFinds?format=rss` (trang shop) + RSS theo từng `section_id` (mô tả + ảnh chính). Mỗi món: 1 agent
+  viết từ mô tả listing + 1 agent soi lại (workflow 10 agent). 7 collection đều có hàng; Little Things và
+  Heritage & Celebration không còn "soon". P&P đổi giá $38 → $44 theo Etsy.
+- **Ảnh sản phẩm** `assets/img/products/`: cắt vuông bỏ chữ/nhãn; xoá logo Viet Delight (gown, Siamese) và hộp chữ
+  (Saint Joan). Không xoá dấu có thể của người khác (4 ảnh) — liệt kê để chị xác nhận.
+- **Trang chủ / About / trang sản phẩm**: hết hình minh hoạ SVG — hero = mèo len thật + Merlin thật; 4 video sản phẩm
+  thật từ listing Etsy (tự chạy không tiếng khi trong màn hình, tôn trọng giảm chuyển động); câu chuyện, Journal,
+  "Purrlight, daily", About đều ảnh thật. Chỉ còn 3 hình phác thảo nhân vật "joining soon".
+- Sửa kèm: ảnh trang sản phẩm bị kéo dài (thiếu `height: auto`), ô "Purrlight, daily" cao bất thường; lưới danh mục 7 ô.
+- Danh sách việc phía Etsy: `docs/ETSY-LISTING-FIXES-2026-10-20.md` (claim an toàn trẻ em, ảnh có dấu lạ, ảnh nghi
+  AI render, giá/bộ chưa rõ, 4 món đang giảm 25% chưa rõ ngày hết).
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
    cấp?).
 2. Sau mùa lễ: thay ảnh hero và ảnh share link (mục Giáng sinh + video tự ẩn từ 2/1/2027).
+3. Etsy: xem `docs/ETSY-LISTING-FIXES-2026-10-20.md`; ngày kết thúc giảm 25% của Maine Coon, Rosary, Saint Joan,
+   Americana (để site hiện giá giảm); xác nhận quyền dùng 4 ảnh có dấu lạ + mẫu rồng "Pattern by Anna_Crochet".
 
 ## 9. Link & tài nguyên
 

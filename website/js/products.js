@@ -146,9 +146,9 @@ const PRODUCTS = [
     img: "assets/img/products/custom-pet-grand-600.webp",
     imgLarge: "assets/img/products/custom-pet-grand.webp",
     imgLargeW: 800,
-    short: "Your own cat or other pet, crocheted by hand in our Grand size: 16–21 inches, big enough to hug.",
-    desc: "The Grand size of our personalized pet pieces: your own cat or other pet, crocheted by hand at 16–21 inches (over 14 inches). It is customized for you and made for your order, a big, huggable likeness of your own companion.",
-    details: ["Grand size: 16–21 in / about 40–53 cm (over 14 in)", "Personalized to your cat or other pet", "Crocheted by hand", "Made to order"],
+    short: "Your own cat or other pet, crocheted by hand from your photos in our Grand size: 16–21 inches, big enough to hug.",
+    desc: "The Grand size of our personalized pet pieces: your own cat or other pet, crocheted by hand at 16–21 inches (over 14 inches) from the photos you send. It is customized for you and made for your order, a big, huggable likeness of your own companion.",
+    details: ["Grand size: 16–21 in / about 40–53 cm (over 14 in)", "Personalized to your cat or other pet — made from your photos", "Crocheted by hand", "Made to order"],
     etsyUrl: "https://www.etsy.com/listing/4364432946"
   },
   {

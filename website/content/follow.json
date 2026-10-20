@@ -1,0 +1,60 @@
+{
+  "kicker": "follow the glow",
+  "title": "Purrlight, daily",
+  "profiles": {
+    "instagram": "",
+    "tiktok": "https://www.tiktok.com/@purrlightstudio",
+    "pinterest": "https://www.pinterest.com/purrlightstudio",
+    "facebook": "https://www.facebook.com/purrlightstudio"
+  },
+  "tiles": [
+    {
+      "image": "assets/img/products/knitted-daisy-duck-600.webp",
+      "alt": "Knitted duck with a daisy pocket and a white scarf",
+      "network": "tiktok",
+      "link": "",
+      "rights": "own",
+      "credit": ""
+    },
+    {
+      "image": "assets/img/products/christmas-elf-600.webp",
+      "alt": "Crochet Christmas elf doll",
+      "network": "tiktok",
+      "link": "",
+      "rights": "own",
+      "credit": ""
+    },
+    {
+      "image": "assets/img/products/dashwood-ferrars-set-600.webp",
+      "alt": "Elinor Dashwood and Edward Ferrars crochet dolls",
+      "network": "tiktok",
+      "link": "",
+      "rights": "own",
+      "credit": ""
+    },
+    {
+      "image": "assets/img/products/knitted-woodland-garden-600.webp",
+      "alt": "Knitted woodland garden friends",
+      "network": "pinterest",
+      "link": "",
+      "rights": "own",
+      "credit": ""
+    },
+    {
+      "image": "assets/img/products/ribbon-corduroy-bag-600.webp",
+      "alt": "Ribbon-embroidered corduroy handbag",
+      "network": "pinterest",
+      "link": "",
+      "rights": "own",
+      "credit": ""
+    },
+    {
+      "image": "assets/img/products/horse-companion-600.webp",
+      "alt": "Large hand-knitted horse",
+      "network": "pinterest",
+      "link": "",
+      "rights": "own",
+      "credit": ""
+    }
+  ]
+}

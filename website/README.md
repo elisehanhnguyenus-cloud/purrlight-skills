@@ -22,13 +22,15 @@ Safe phrases: "From Merlin's notebook", "Sketched by Merlin, stitched by us",
 website/
 ├── index.html        # Trang chủ (cấu trúc chapter): hero, trust bar, danh mục,
 │                     #   favorites, video, story, Meet Merlin & friends,
-│                     #   Purrks (launching soon), journal, social, gifting, newsletter
+│                     #   Purrks (launching soon), journal, gifting, newsletter
 ├── shop.html         # Trang shop: lưới sản phẩm + lọc theo danh mục
 ├── product.html      # Trang chi tiết sản phẩm (đọc ?id=... từ URL)
 ├── about.html        # Câu chuyện thương hiệu (hai tầng: sự thật / storybook)
 ├── partners.html     # Partner/affiliate program cho shopper curators
 ├── event.html        # ★ EVENT DESK — bàn bán hàng tại sự kiện (nội bộ, noindex)
 ├── confirm.html      # Trang khách mở từ link/QR: thank-you hoặc order confirmation
+├── content/
+│   └── follow.json   # ★ DẢI ẢNH "FOLLOW" cuối mọi trang khách: tiêu đề, link mạng xã hội, 3–12 ô ảnh
 ├── manifest.webmanifest  # "Add to Home Screen" cho event.html trên điện thoại
 ├── custom-orders/    # ★ LANDING PAGE CUSTOM ORDERS (từ Linktree) — xem mục riêng bên dưới
 │   ├── index.html    #   copy + giá nguyên văn theo Handoff Brief (Notion 15/10)
@@ -43,6 +45,7 @@ website/
 ├── js/
 │   ├── products.js   # ★ DỮ LIỆU SẢN PHẨM — sửa giá/tên/mô tả ở đây
 │   ├── main.js       # Nav mobile, render sản phẩm, lọc, trang chi tiết
+│   ├── follow.js     # Vẽ dải ảnh "follow" từ content/follow.json (6 trang khách, trên footer)
 │   ├── event-desk.js # ★ EVENT DESK — cấu hình (DESK_CONFIG) + lời văn + logic
 │   └── vendor/qrcode.min.js  # QR (MIT, qrcode-generator 1.4.4) — chỉ event.html dùng
 └── assets/
@@ -54,6 +57,21 @@ website/
         ├── home/     # ảnh thật của trang chủ / About + poster video
         └── custom/   # Ảnh trang Custom Orders (WebP ≤ 200 KB) + og-custom-orders-merlin.jpg (ảnh share link từ 17/10; og-custom-orders.jpg cũ giữ cho link đã share)
 ```
+
+## Dải ảnh "follow" cuối trang (20/10/2026, kiểu Mushie)
+
+- 6 trang khách (index, shop, product, about, partners, confirm) có `<section data-follow hidden>` ngay trên footer;
+  `js/follow.js` đọc `content/follow.json` và vẽ: kicker + tiêu đề, lưới ảnh vuông sát mép (6 cột, điện thoại 3×2),
+  rê chuột/tab hiện tên mạng, nút "watch on TikTok · pin us on Pinterest · find us on Facebook".
+- **Đổi ảnh / link:** sửa `content/follow.json` (hoặc trong admin `/admin/` khi đã đăng nhập). Mỗi ô: `image`
+  (đường dẫn trong site, ví dụ `assets/img/products/<id>-600.webp`, hoặc ảnh upload qua admin), `alt` (tiếng Anh),
+  `network` (instagram / tiktok / pinterest / facebook), `link` (link bài cụ thể — bỏ trống thì về trang hồ sơ),
+  `rights` (`own` / `customer`) và `credit` (`@handle` — bắt buộc khi là ảnh khách, hiện "photo: @handle").
+- **Instagram:** `profiles.instagram` đang để trống vì @purrlightstudio trên Instagram là của người khác (Brand
+  Canon v2). Chị gửi đúng handle → điền link vào đó là nút "follow on Instagram" và các ô `instagram` tự trỏ về.
+- An toàn: link chỉ nhận `https://` (link lạ bị bỏ, về trang hồ sơ); chữ đưa vào bằng textContent, không innerHTML.
+  Không có dữ liệu hoặc mở bằng file:// → dải ảnh ẩn, trang vẫn bình thường.
+- Dải "Purrlight, daily" cũ ở giữa trang chủ đã gỡ (nội dung chuyển vào dải mới, không lặp 2 lần).
 
 ## Event Desk — bàn bán hàng tại sự kiện (`event.html`)
 

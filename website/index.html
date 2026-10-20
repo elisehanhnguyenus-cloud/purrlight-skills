@@ -267,31 +267,6 @@
       </div>
     </section>
 
-    <!-- social strip -->
-    <section class="section-tight">
-      <div class="wrap">
-        <div class="section-head">
-          <h2><span class="kicker">follow the glow</span>Purrlight, daily</h2>
-        </div>
-        <!-- Square tiles = real product photos (assets/img/products). Swap for real TikTok/Pinterest posts any time.
-             Handles: @purrlightstudio is OURS on TikTok / Facebook / Pinterest only —
-             the Instagram handle belongs to someone else (Brand Canon v2), so no IG link here. -->
-        <div class="social-tiles reveal">
-          <a data-tiktok href="https://www.tiktok.com/@purrlightstudio" target="_blank" rel="noopener" aria-label="Purrlight on TikTok"><img src="assets/img/products/knitted-daisy-duck-600.webp" alt="" width="600" height="600" loading="lazy"></a>
-          <a data-tiktok href="https://www.tiktok.com/@purrlightstudio" target="_blank" rel="noopener" aria-label="Purrlight on TikTok"><img src="assets/img/products/christmas-elf-600.webp" alt="" width="600" height="600" loading="lazy"></a>
-          <a data-tiktok href="https://www.tiktok.com/@purrlightstudio" target="_blank" rel="noopener" aria-label="Purrlight on TikTok"><img src="assets/img/products/dashwood-ferrars-set-600.webp" alt="" width="600" height="600" loading="lazy"></a>
-          <a href="https://www.pinterest.com/purrlightstudio" target="_blank" rel="noopener" aria-label="Purrlight on Pinterest"><img src="assets/img/products/knitted-woodland-garden-600.webp" alt="" width="600" height="600" loading="lazy"></a>
-          <a href="https://www.pinterest.com/purrlightstudio" target="_blank" rel="noopener" aria-label="Purrlight on Pinterest"><img src="assets/img/products/ribbon-corduroy-bag-600.webp" alt="" width="600" height="600" loading="lazy"></a>
-          <a href="https://www.pinterest.com/purrlightstudio" target="_blank" rel="noopener" aria-label="Purrlight on Pinterest"><img src="assets/img/products/horse-companion-600.webp" alt="" width="600" height="600" loading="lazy"></a>
-        </div>
-        <div class="social-follow">
-          <a class="btn btn-ghost btn-small" href="https://www.facebook.com/purrlightstudio" target="_blank" rel="noopener">find us on Facebook</a>
-          <a class="btn btn-ghost btn-small" href="https://www.pinterest.com/purrlightstudio" target="_blank" rel="noopener">pin us on Pinterest</a>
-          <a class="btn btn-ghost btn-small" data-tiktok href="https://www.tiktok.com/@purrlightstudio" target="_blank" rel="noopener">watch on TikTok</a>
-        </div>
-      </div>
-    </section>
-
     <!-- personalization & corporate gifting -->
     <section class="section-tight">
       <div class="wrap">
@@ -326,6 +301,9 @@
     </section>
 
   </main>
+
+  <!-- follow strip: rendered by js/follow.js from content/follow.json (edit there or in /admin/) -->
+  <section class="follow" data-follow aria-labelledby="follow-title" hidden></section>
 
   <footer class="site-footer">
     <div class="wrap">
@@ -375,5 +353,6 @@
 
   <script src="js/products.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/follow.js"></script>
 </body>
 </html>

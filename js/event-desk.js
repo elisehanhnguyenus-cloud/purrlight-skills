@@ -28,13 +28,13 @@ var DESK_CONFIG = {
      stays hidden (there is nothing a customer could open). */
   publicBaseUrl: "",
 
-  /* Sales tax. rate 8.25% = the figure the fair P&L uses (Notion, họp 05/09/2026).
-     mode "none"     — no tax line at all. DEFAULT until the Texas Sales and Use
-                       Permit is confirmed (Notion Booth Kit, 18/09/2026: "chưa có").
+  /* Sales tax. rate 8.25% = the figure the fair P&L uses (Notion, họp 05/09/2026). The Texas Sales and Use Permit
+     is in hand (custom-orders/prices.js, Elise 16/10/2026).
+     mode "added"    — tax on top of the price. DEFAULT (Elise 21/10/2026: the booth adds tax on top of the web prices).
      mode "included" — booth prices are tax-in; the message says so.
-     mode "added"    — tax on top of the price.
+     mode "none"     — no tax line at all.
      Change it in the ⚙ settings panel at the booth, or here. */
-  tax: { rate: 0.0825, mode: "none" },
+  tax: { rate: 0.0825, mode: "added" },
 
   /* What the booth actually takes (Notion Booth Kit 25/09/2026: Square / Zelle / cash). */
   payMethods: ["Cash", "Card (Square)", "Zelle", "Other"],
@@ -147,8 +147,8 @@ var DESK_CONFIG = {
   promiseLine: "Every piece is checked by hand before it ships. If anything arrives less than perfect, just reply to this email — we'll make it right.",
 
   /* Optional follow-on lines at the end of the thank-you (one or two at most).
-     Empty = nothing added. The Instagram handle @purrlightstudio is taken by
-     someone else (Canon v2) — use the Linktree or TikTok/Pinterest handle. */
+     Empty = nothing added. The shop's Instagram is @vietdelight_us (Elise 21/10/2026);
+     @purrlightstudio on Instagram is someone else's (Canon v2). */
   followOnLines: [],
 
   /* Verbatim lines already used on the product page (The Purrlight Promise). */
@@ -291,6 +291,9 @@ var DESK_CONFIG = {
   if (typeof settings !== "object" || !settings) settings = {};
   if (!settings.device) settings.device = randomTag();
   if (!settings.taxMode) settings.taxMode = CFG.tax.mode;
+  /* a booth phone still on the old default ("none", from before the permit) moves to "added" once (Elise 21/10/2026);
+     a choice made in ⚙ after that is kept */
+  if (settings.taxDefault !== 2) { if (settings.taxMode === "none") settings.taxMode = CFG.tax.mode; settings.taxDefault = 2; }
   if (typeof settings.taxRate !== "number") settings.taxRate = CFG.tax.rate;
   /* (written back to storage once the console boots — never at module load,
      so a blocked localStorage cannot take confirm.html down with it) */

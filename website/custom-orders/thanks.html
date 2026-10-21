@@ -66,7 +66,7 @@
       <!-- Elise approved "We check every deposit by hand" on 21/10/2026. The second sentence is How it works, word for word. -->
       <p class="thanks-fact" data-thanks-fact>We check every deposit by hand — this page can't see payments. For every made-to-order or custom piece, we send you a design mockup before we start.</p>
 
-      <p class="thanks-neutral" data-thanks-neutral>Paying your balance, or sent your order form from another device? Add your order code or your name to the payment note — we match every payment by hand. If you haven't sent the order form yet, <a href="./#gifts">place your order first</a> so we can match your deposit.</p>
+      <p class="thanks-neutral" data-thanks-neutral>Paying your balance, or sent your order form from another device? Add your order code or your name to <span data-note-where>the Zelle memo</span> — we match every payment by hand. If you haven't sent the order form yet, <a href="./#gifts">place your order first</a> so we can match your deposit.</p>
 
       <!-- Merlin's letter (Elise 21/10: its name is "Your order was confirmed"; the real confirmation is the email Elise
            sends once she sees the deposit). Built with textContent from this tab's copy of the order (sessionStorage) —
@@ -88,7 +88,7 @@
             <p class="ledger-empty"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="6" y="3.5" width="13" height="17" rx="1.5"/><path d="M9.5 3.5v17"/><path d="M4.5 7.5h3M4.5 12h3M4.5 16.5h3"/><path d="M12.5 8.5h4M12.5 12h4"/></svg><span>Your pick is in the order form you sent.</span></p>
           </div>
           <!-- what to write when paying, right under the deposit (thanks.js puts the order code in: "7RJ7-D") -->
-          <p class="letter-note"><svg class="letter-note-ic" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path class="ic-fill" d="M4 20l1.1-4.5L15.6 5a1.8 1.8 0 0 1 2.6 0l.8.8a1.8 1.8 0 0 1 0 2.6L8.5 18.9z"/><path d="M13.9 6.7l3.4 3.4"/></svg><span data-letter-note>When you pay, add your order code or your name to the payment note.</span></p>
+          <p class="letter-note"><svg class="letter-note-ic" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path class="ic-fill" d="M4 20l1.1-4.5L15.6 5a1.8 1.8 0 0 1 2.6 0l.8.8a1.8 1.8 0 0 1 0 2.6L8.5 18.9z"/><path d="M13.9 6.7l3.4 3.4"/></svg><span data-letter-note>When you pay, add your order code or your name to <span data-note-where>the Zelle memo</span>.</span></p>
           <h3 class="letter-sub">What happens next</h3>
           <!-- the next steps as pictures and words (Elise 21/10), joined by a stitched yarn thread like How it works.
                Titles 3–4 are How it works (index.html), 1–2 are new; the sentences are the letter's own (the old step 3

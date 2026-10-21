@@ -55,6 +55,23 @@
   var KNOWN_HOW = {};   /* every pick word this page wrote (a how it doesn't know = a line it didn't write, or one cut short) */
   for (var gk in GETS) if (own(GETS, gk)) GETS[gk].picks.forEach(function (p) { KNOWN_HOW[p] = true; });
 
+  /* where the order code goes when paying: only the ways the order page shows that have a box for it — Zelle's memo,
+     Venmo's note, a card page once its note box is on (PAY.square / PAY.stripe notes: true) — named the way the order
+     page's hints name them. Square today has no note box: its payers are not asked for one (we match by hand). */
+  var NOTE_BOX = { zelle: "the Zelle memo", venmo: "the Venmo note", square: "the Square note", stripe: "the Stripe box \u201COrder code or your name\u201D" };
+  function noteWhere() {
+    var P = typeof PAY !== "undefined" && PAY && Array.isArray(PAY.order) ? PAY : null, list = [];
+    if (P) P.order.forEach(function (k) {
+      var m = P[k] || {}, on = k === "zelle" ? !!m.to : k === "venmo" ? !!m.handle : !!m.url && m.notes === true;
+      if (on && own(NOTE_BOX, k) && list.indexOf(NOTE_BOX[k]) < 0) list.push(NOTE_BOX[k]);
+    });
+    return list.length < 2 ? list.join("") : list.slice(0, -1).join(", ") + " or " + list[list.length - 1];
+  }
+  (function () {   /* the static lines (no copy): the same places */
+    var w = noteWhere();
+    if (w) Array.prototype.forEach.call(document.querySelectorAll("[data-note-where]"), function (n) { n.textContent = w; });
+  })();
+
   /* ---------- the copy of the order sent from this tab — every field checked, anything odd is left out ---------- */
   var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   function readCopy() {
@@ -176,11 +193,11 @@
       order.appendChild(built);
       if (getIt && stepText && stepLi) { stepText.textContent = GETS[getIt].step; stepLi.setAttribute("data-how", GETS[getIt].icon); }
     }
-    if (note && copy.code) {   /* exactly what goes in the payment note, set apart so it is easy to copy by eye */
+    if (note && copy.code) {   /* exactly what to write when paying, set apart so it is easy to copy by eye */
       note.textContent = "";
       note.appendChild(document.createTextNode("When you pay, write "));
       note.appendChild(el("strong", "letter-code", copy.code + "-D"));
-      note.appendChild(document.createTextNode(" in the payment note."));
+      note.appendChild(document.createTextNode(" in " + (noteWhere() || "the payment note") + "."));
     }
   }
 

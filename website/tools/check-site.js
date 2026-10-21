@@ -120,7 +120,7 @@ if (cat) {
 
 /* ---------- Custom Orders prices ---------- */
 var pr = null;
-try { pr = load("custom-orders/prices.js", ["PRICES", "PAY", "ORDER_FORM_URL", "MERLIN_SCENE"]); }
+try { pr = load("custom-orders/prices.js", ["PRICES", "PAY", "ORDER_FORM_URL", "MERLIN_SCENE", "summaryLine", "pickParts", "estGodparent"]); }
 catch (e) { fail("custom-orders/prices.js", "không chạy được: " + e.message); }
 if (pr) {
   pr.warns.forEach(function (w) { fail("custom-orders/prices.js", w); });
@@ -242,17 +242,27 @@ if (has("custom-orders/thanks.html")) {
   /* the letter's delivery table (thanks.js GETS) = the order page's ways (custom-orders.js GET_IT picks + DELIVERY names):
      a pick word missing there and every letter for that way shows the line as sent (Elise 21/10, the letter) */
   var coJs = has("custom-orders/custom-orders.js") ? readText(path.join(ROOT, "custom-orders/custom-orders.js")) : "";
-  var getsBlock = (/var GETS = \{([\s\S]*?)\n  \};/.exec(tj) || [])[1] || "";
-  if (!getsBlock) fail("custom-orders/thanks.js", "không thấy bảng GETS (cách nhận hàng của lá thư)");
+  var getsBlock = (/var GETS = \{([\s\S]*?)\n  \};/.exec(tj) || [])[1] || "", GETS = null;
+  try { GETS = vm.runInNewContext("({" + getsBlock + "\n})"); } catch (e) { GETS = null; }
+  var dm = /var DELIVERY = (\{[^}]*\})/.exec(coJs), DELIV = null;
+  try { DELIV = dm ? vm.runInNewContext("(" + dm[1] + ")") : null; } catch (e) { DELIV = null; }
+  if (!getsBlock || !GETS) fail("custom-orders/thanks.js", "không thấy bảng GETS (cách nhận hàng của lá thư)");
+  else if (!DELIV) fail("custom-orders/custom-orders.js", "không đọc được DELIVERY (tên các cách nhận hàng)");
   else {
-    (coJs.match(/pick: "[^"]+"/g) || []).forEach(function (m) {
-      var pick = m.slice(7, -1);
-      if (getsBlock.indexOf('"' + pick + '"') < 0) fail("custom-orders/thanks.js GETS", 'thiếu chữ "' + pick + '" (GET_IT trong custom-orders.js) — thêm vào picks của cách nhận hàng đó');
-    });
-    var dm = /var DELIVERY = \{([^}]*)\}/.exec(coJs);
-    ((dm && dm[1].match(/"[^"]+"/g)) || []).forEach(function (q) {
-      if (getsBlock.indexOf(q + ":") < 0) fail("custom-orders/thanks.js GETS", "thiếu cách nhận hàng " + q + " (DELIVERY trong custom-orders.js)");
-    });
+    Object.keys(DELIV).forEach(function (k) { if (!GETS[DELIV[k]]) fail("custom-orders/thanks.js GETS", "thiếu cách nhận hàng \"" + DELIV[k] + "\" (DELIVERY trong custom-orders.js)"); });
+    /* each GET_IT pick: under its own way in GETS, and readable by the letter (pickParts) */
+    var re = /(\w+): \{ name: "[^"]+",[^\n]*?pick: "([^"]+)"/g, m2, seen = 0;
+    while ((m2 = re.exec(coJs))) {
+      var key = m2[1], pick = m2[2], way = DELIV[key];
+      seen++;
+      if (!way) { fail("custom-orders/custom-orders.js GET_IT." + key, "không có trong DELIVERY"); continue; }
+      if (!GETS[way] || !Array.isArray(GETS[way].picks) || GETS[way].picks.indexOf(pick) < 0) fail("custom-orders/thanks.js GETS", 'thiếu chữ "' + pick + '" trong picks của "' + way + '" (GET_IT.' + key + ".pick trong custom-orders.js)");
+      if (pr && pr.out.summaryLine && pr.out.pickParts && pr.out.estGodparent) {
+        var parts = pr.out.pickParts(pr.out.summaryLine("X", pr.out.estGodparent({ count: 1 }), pick), "X");
+        if (!parts || parts.how !== pick) fail("custom-orders/custom-orders.js GET_IT." + key + ".pick", 'lá thư không đọc được chữ "' + pick + '" — không dùng dấu · hoặc — trong chữ này');
+      }
+    }
+    if (seen !== Object.keys(DELIV).length - 1) fail("custom-orders/custom-orders.js GET_IT", "đọc được " + seen + " cách nhận hàng có pick, cần " + (Object.keys(DELIV).length - 1) + " (mọi cách trừ Digital file)");
   }
 }
 /* the Merlin scene: on only with Elise's approval date and all 8 files */

@@ -134,7 +134,7 @@
     var code = m ? m[1] : (href || !codeCarried ? "" : orderCode), pick = (m ? m[2] || "" : f.pick || "").replace(/ · Card message: "[\s\S]*$/, "");
     if (code) copy.code = code;
     if (pick && f.product && /^\d{1,5}\.\d{2}$/.test(f.total || "") && /^\d{1,5}\.\d{2}$/.test(f.deposit || "")) {
-      copy.product = f.product.slice(0, 120); copy.total = f.total; copy.deposit = f.deposit; copy.pick = pick.slice(0, 600);
+      copy.product = f.product.slice(0, 120); copy.total = f.total; copy.deposit = f.deposit; copy.pick = pick.slice(0, 1000);   /* the longest pick the page writes is 769 characters (thanks.js keeps 1000 too) */
       if (f.delivery) copy.delivery = f.delivery.slice(0, 60);
     }
     sset(COPY_KEY, JSON.stringify(copy));

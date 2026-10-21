@@ -239,6 +239,21 @@ if (has("custom-orders/thanks.html")) {
   var tj = has("custom-orders/thanks.js") ? readText(path.join(ROOT, "custom-orders/thanks.js")) : "";
   if (!tj) fail("custom-orders/thanks.js", "không có file");
   else if (/location\s*\.\s*(search|href)|URLSearchParams|document\s*\.\s*(URL|location)/.test(tj)) fail("custom-orders/thanks.js", "không được đọc địa chỉ trang (location.search / location.href / URLSearchParams)");
+  /* the letter's delivery table (thanks.js GETS) = the order page's ways (custom-orders.js GET_IT picks + DELIVERY names):
+     a pick word missing there and every letter for that way shows the line as sent (Elise 21/10, the letter) */
+  var coJs = has("custom-orders/custom-orders.js") ? readText(path.join(ROOT, "custom-orders/custom-orders.js")) : "";
+  var getsBlock = (/var GETS = \{([\s\S]*?)\n  \};/.exec(tj) || [])[1] || "";
+  if (!getsBlock) fail("custom-orders/thanks.js", "không thấy bảng GETS (cách nhận hàng của lá thư)");
+  else {
+    (coJs.match(/pick: "[^"]+"/g) || []).forEach(function (m) {
+      var pick = m.slice(7, -1);
+      if (getsBlock.indexOf('"' + pick + '"') < 0) fail("custom-orders/thanks.js GETS", 'thiếu chữ "' + pick + '" (GET_IT trong custom-orders.js) — thêm vào picks của cách nhận hàng đó');
+    });
+    var dm = /var DELIVERY = \{([^}]*)\}/.exec(coJs);
+    ((dm && dm[1].match(/"[^"]+"/g)) || []).forEach(function (q) {
+      if (getsBlock.indexOf(q + ":") < 0) fail("custom-orders/thanks.js GETS", "thiếu cách nhận hàng " + q + " (DELIVERY trong custom-orders.js)");
+    });
+  }
 }
 /* the Merlin scene: on only with Elise's approval date and all 8 files */
 if (pr && pr.out.MERLIN_SCENE) {

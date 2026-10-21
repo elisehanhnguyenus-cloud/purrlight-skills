@@ -438,18 +438,25 @@ function summaryLine(product, est, how) {
   return "My pick: " + product + " — " + parts.join(" · ") + qty + tax + " — estimate " + money(est.total) + " · deposit (50%) " + money(est.deposit) + (est.digitalOnly ? "" : " · " + (how || (est.pickupOnly ? "Pickup at Pearland Town Center" : "Free U.S. shipping")));
 }
 
-/* the pick line back in parts, for the thank-you letter: { items: [{label, amount, detail}], qty: {n, many, subtotal,
-   saving} | null, tax: {label, amount, fruit} | null (null = outside Texas), total, deposit, how }. Labels may hold " · ",
-   " — ", "$" or brackets, so the parts are accepted only when summaryLine's own wording rebuilt from them gives back the
-   very same line and the sums add up; anything else (an old or edited line) → null, and the letter shows the line as sent. */
+/* the pick line back in parts, for the thank-you letter (Elise 21/10: the order easy to read, check and skim):
+   { items: [{label, amount, detail}], qty: {n, many, subtotal, saving} | null, tax: {label, amount, fruit} | null
+   (null = outside Texas), total, deposit, balance, how }. Labels may hold " · ", " — ", "$" or brackets, so the parts
+   are accepted only when summaryLine's own wording rebuilt from them gives back the very same line, AND every number is
+   the one this file would have made: the lines × qty less the saving (itemOff, item by item, as applyQty; 2 to
+   PRICES.volume.maxQty), the tax (taxLabel(), salesTaxBp of the taxed part — less with fresh fruit), the deposit (half,
+   rounded up to the cent), and a swap's working ("NAME $P − BASIC $B", only on a "Swap: BASIC → NAME" line, P − B = the
+   line). Anything else (an old, edited or cut-short line) → null (a how cut inside its own words still parses:
+   thanks.js accepts only the hows it knows), and the letter shows the line as sent. */
 function pickParts(text, product) {
-  var M = "−?\\$\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2})?";
+  var M = "−?\\$\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2})?", U = "\\$\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2})?";   /* money(): signed / never below zero */
+  var esc = function (s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); };
   var num = function (s) { var v = Number(s.replace(/[−$,]/g, "")); return s.charAt(0) === "−" ? -v : v; };
+  var c = function (n) { return Math.round(n * 100); };
   var head = "My pick: " + product + " — ";
   if (typeof text !== "string" || typeof product !== "string" || !product || text.indexOf(head) !== 0) return null;
-  var tail = new RegExp("^([\\s\\S]+?)(?: — × (\\d+) (\\S+) (" + M + "), order more, save more −(\\$[\\d,]+(?:\\.\\d{2})?))?" +
-    "(?: — no Texas sales tax \\(outside Texas\\)| — (Texas sales tax \\([\\d.]+%\\)) (" + M + ")( \\(not on the fresh fruit\\))?)" +
-    " — estimate (" + M + ") · deposit \\(50%\\) (" + M + ")(?: · ([\\s\\S]+))?$").exec(text.slice(head.length));
+  var tail = new RegExp("^([\\s\\S]+?)(?: — × (\\d+) ([a-z]+) (" + U + "), order more, save more −(" + U + "))?" +
+    "(?: — no Texas sales tax \\(outside Texas\\)| — (" + esc(taxLabel()) + ") (" + U + ")( \\(not on the fresh fruit\\))?)" +
+    " — estimate (" + U + ") · deposit \\(50%\\) (" + U + ")(?: · ([^—·]+))?$").exec(text.slice(head.length));   /* how: one part, never a separator */
   if (!tail) return null;
   var items = [], rest = tail[1], item = new RegExp("^([\\s\\S]+?) (" + M + ")(?: \\(((?:[^()]|\\([^()]*\\))*)\\))?(?= · |$)");
   while (rest) {
@@ -463,7 +470,7 @@ function pickParts(text, product) {
     items: items,
     qty: tail[2] ? { n: Number(tail[2]), many: tail[3], subtotal: num(tail[4]), saving: num(tail[5]) } : null,
     tax: tail[6] ? { label: tail[6], amount: num(tail[7]), fruit: !!tail[8] } : null,
-    total: num(tail[9]), deposit: num(tail[10]), how: tail[11] || ""
+    total: num(tail[9]), deposit: num(tail[10]), balance: 0, how: tail[11] || ""
   };
   /* the same words, rebuilt */
   var again = head + items.map(function (it) { return it.label + " " + money(it.amount) + (it.detail ? " (" + it.detail + ")" : ""); }).join(" · ") +
@@ -471,11 +478,34 @@ function pickParts(text, product) {
     (out.tax ? " — " + out.tax.label + " " + money(out.tax.amount) + (out.tax.fruit ? " (not on the fresh fruit)" : "") : " — no Texas sales tax (outside Texas)") +
     " — estimate " + money(out.total) + " · deposit (50%) " + money(out.deposit) + (out.how ? " · " + out.how : "");
   if (again !== text) return null;
-  /* the sums: items (× qty − saving) + tax = estimate; deposit = half, rounded up to the cent */
-  var c = function (n) { return Math.round(n * 100); }, pre = 0;
-  for (var i = 0; i < items.length; i++) pre += c(items[i].amount);
-  if (out.qty) { if (!(out.qty.n >= 2) || c(out.qty.subtotal) !== pre * out.qty.n) return null; pre = c(out.qty.subtotal) - c(out.qty.saving); }
+  /* each line: the first one is the piece (above zero); a working in brackets only on a swap, and it must add up */
+  var pre = 0;
+  for (var i = 0; i < items.length; i++) {
+    var it = items[i];
+    if (it.detail) {
+      var sw = /^Swap: ([\s\S]+?) → ([\s\S]+)$/.exec(it.label);
+      var w = sw && new RegExp("^" + esc(sw[2]) + " (" + U + ") − " + esc(sw[1]) + " (" + U + ")$").exec(it.detail);
+      if (!w || money(num(w[1])) !== w[1] || money(num(w[2])) !== w[2] || c(num(w[1])) - c(num(w[2])) !== c(it.amount)) return null;
+    }
+    pre += c(it.amount);
+  }
+  if (!(items[0].amount > 0)) return null;
+  /* × N: the lines once each, then order more, save more — the same rounding as applyQty */
+  if (out.qty) {
+    var n = out.qty.n, unit = pre / 100, off = 0;
+    if (!(n >= 2 && n <= PRICES.volume.maxQty) || c(out.qty.subtotal) !== pre * n) return null;
+    for (var k = 2; k <= n; k++) off += round2(unit * itemOff(k));
+    if (c(round2(off)) !== c(out.qty.saving)) return null;
+    pre = c(out.qty.subtotal) - c(out.qty.saving);
+  }
+  /* the tax: exactly salesTaxBp of it all, or less when the fresh fruit is left out (the same rounding as settle) */
+  if (out.tax) {
+    var full = Math.round(pre * PRICES.salesTaxBp / 10000), t = c(out.tax.amount);
+    if (out.tax.fruit ? !(t >= 0 && t < full) : t !== full) return null;
+  }
+  /* estimate = all of it with tax; deposit = half, rounded up to the cent; balance = the rest */
   if (pre + (out.tax ? c(out.tax.amount) : 0) !== c(out.total) || c(out.deposit) !== Math.ceil(c(out.total) * PRICES.depositRate)) return null;
+  out.balance = (c(out.total) - c(out.deposit)) / 100;
   return out;
 }
 

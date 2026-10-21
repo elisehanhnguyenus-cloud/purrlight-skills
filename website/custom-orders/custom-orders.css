@@ -809,43 +809,138 @@ html[data-season="christmas"] .glints-lamp i:nth-child(1), html[data-season="chr
 
 /* ---------- thanks.html: after paying a deposit (plan 21/10 §3) ---------- */
 .thanks { padding: 28px 0 48px; }
-.thanks-inner { max-width: 640px; display: grid; gap: 16px; justify-items: start; }
+.thanks-inner { max-width: 640px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; justify-items: start; }   /* minmax: a long word from the copy never widens the page */
 .thanks-h { font-size: 40px; }
 .thanks-photo { margin: 0; }
 .thanks-photo img { width: 160px; height: 160px; border-radius: 50%; object-fit: cover; border: 1px solid var(--line); }
 .thanks-fact { font-size: 17px; max-width: 56ch; }
 .thanks-neutral { font-size: 15px; color: var(--ink-soft); max-width: 60ch; }
 .thanks-neutral[hidden], .letter[hidden], .letter-meta[hidden], .letter-actions[hidden], .mailbox-btn[hidden] { display: none; }
-.mailbox { display: grid; gap: 12px; width: 100%; justify-items: start; }
+.mailbox { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; width: 100%; min-width: 0; justify-items: start; }
 .mailbox-btn { gap: 10px; padding: 0 18px; }
 .mailbox-btn svg { flex: none; }
-.letter { width: 100%; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-img); padding: 20px 18px; display: grid; gap: 8px; box-shadow: 0 1px 0 var(--line-soft); }
+.letter { width: 100%; min-width: 0; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-img); padding: 20px 18px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; box-shadow: 0 1px 0 var(--line-soft); }
 .letter:focus { outline: 2px solid var(--berry); outline-offset: 2px; }
 .letter-from { font-family: var(--font-hand); font-size: 22px; color: var(--caption); line-height: 1.1; }
 .letter-title { font-size: 24px; }
 .letter-meta { font-size: 14px; color: var(--ink-soft); }
-.letter-product { font-weight: 600; }
-.letter-pick { font-size: 14.5px; overflow-wrap: anywhere; }
-.letter-money { font-size: 15px; }
-.letter-delivery { font-size: 14px; color: var(--ink-soft); }
-.letter-sub { font-size: 17px; margin-top: 6px; }
-.letter-steps { margin: 0; padding-left: 22px; display: grid; gap: 6px; font-size: 15px; }
-.letter-note { font-weight: 600; }
+.letter-meta strong { color: var(--ink); font-weight: 700; letter-spacing: 0.05em; }
+.letter-sub { font-size: 17px; margin-top: 8px; }
 .letter-fine { font-size: 13.5px; color: var(--ink-soft); }
+.letter-note, .ledger-empty, .ledger-sub, .tl-text, .letter-fine, .ledger-raw { text-wrap: pretty; }   /* no one-word last lines where the browser can help */
+.ledger-product > .ledger-name { text-wrap: balance; }
 .letter-actions { display: flex; flex-wrap: wrap; gap: 0 18px; margin: 0; }
 .thanks-terms, .thanks-contact { max-width: 64ch; }
 .thanks-links { font-size: 15px; }
 .thanks-links a { display: inline-flex; align-items: center; min-height: 44px; }
+/* the drawings: line icons in ink, one peach accent each (none in forced colours: the lines carry them) */
+.letter .ic-fill { fill: var(--peach); }
+.letter .ic-hole { fill: var(--cream); }
+
+/* the order (Elise 21/10: easy to read, check and skim) — one line per part of the estimate, the amounts in one column
+   on the right with the order page's signs (+$10 · $0 · −$5), the way it reaches you, then the sums under an ink rule:
+   the 50% deposit is the biggest number (what to pay now), and what to write when paying sits right under it */
+.ledger { display: grid; grid-template-columns: minmax(0, 1fr); background: var(--cream); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px 8px; margin-top: 6px; font-size: 15px; line-height: 1.4; font-variant-numeric: tabular-nums; }
+.ledger-head { font-weight: 600; font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--caption); }
+.ledger-lines { list-style: none; margin: 0; padding: 0; }
+.ledger-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 14px; align-items: baseline; padding: 7px 0; }
+.ledger-name { min-width: 0; overflow-wrap: anywhere; }   /* a long label wraps under its own name, never under the amount */
+.ledger-sub { display: block; font-size: 13.5px; line-height: 1.35; color: var(--ink-soft); }
+.ledger-amt { font-weight: 600; white-space: nowrap; text-align: right; }
+.ledger-product { padding: 4px 0 8px; }
+.ledger-product > .ledger-name, .ledger-product > .ledger-amt { font-family: var(--font-head); font-weight: 500; font-size: 18px; line-height: 1.3; }
+.ledger-product .ledger-sub { font-family: var(--font-body); font-size: 14px; margin-top: 2px; }
+.ledger-lines .ledger-row { border-top: 1px solid var(--line); }
+.ledger-lines .ledger-qty { border-top: 1px dashed var(--line-ui); }   /* × N covers every line above it */
+.ledger-how { display: grid; grid-template-columns: 24px minmax(0, 1fr); column-gap: 10px; align-items: start; border-top: 1px dashed var(--line-ui); padding: 9px 0 9px; }
+.ledger-how > .ledger-name { font-weight: 600; }
+.ledger-how .ledger-sub { font-weight: 400; }
+.ledger-ic { display: block; color: var(--ink); }
+.ledger-raw { font-size: 14.5px; color: var(--ink-soft); overflow-wrap: anywhere; padding: 0 0 10px; }   /* the line as it was sent */
+.ledger-sums { margin: 0; border-top: 1.5px solid var(--ink); padding-top: 4px; display: grid; }
+.ledger-sums dd { margin: 0; }
+.ledger-sums .ledger-row { padding: 5px 0; }
+.ledger-total .ledger-name { font-weight: 600; }
+.ledger-total .ledger-amt { font-size: 16px; }
+.ledger-deposit { align-items: center; }
+.ledger-deposit .ledger-name { font-weight: 700; font-size: 16px; }
+.ledger-deposit .ledger-amt { font-family: var(--font-head); font-weight: 600; font-size: 26px; line-height: 1.15; color: var(--berry); }   /* berry on cream 5.98:1 */
+.ledger-balance { color: var(--ink-soft); }
+.ledger-balance .ledger-amt { font-weight: 500; }
+.ledger-empty { display: grid; grid-template-columns: 24px minmax(0, 1fr); column-gap: 10px; align-items: center; padding: 2px 0 4px; }
+.ledger-empty svg { color: var(--caption); }
+/* what to write in the payment note: a pencil, and the code exactly as it is typed */
+.letter-note { display: grid; grid-template-columns: 20px minmax(0, 1fr); column-gap: 10px; align-items: start; font-weight: 600; padding: 2px 2px 0; }
+.letter-note-ic { display: block; margin-top: 4px; color: var(--ink); }
+.letter-code { font-weight: 700; letter-spacing: 0.06em; background: var(--glow-soft); border-radius: 6px; padding: 1px 6px; white-space: nowrap; }   /* ink on glow 7.7:1 */
+
+/* what happens next (Elise 21/10: pictures and words): a drawing in a butter circle, the title, the sentence; a stitched
+   peach yarn thread runs from one circle to the next, like the one in How it works */
+.letter-steps { list-style: none; margin: 4px 0 8px; padding: 0; display: grid; }
+.tl-step { position: relative; display: grid; grid-template-columns: 44px minmax(0, 1fr); grid-template-rows: auto 1fr; column-gap: 14px; padding-bottom: 18px; }
+.tl-step:last-child { padding-bottom: 0; }
+.tl-step:not(:last-child) { min-height: 76px; }   /* always some thread between two circles */
+.tl-dot { position: relative; z-index: 1; grid-row: 1 / span 2; width: 44px; height: 44px; border-radius: 50%; background: var(--butter-soft); border: 1.5px solid var(--peach); color: var(--ink); display: grid; place-items: center; }
+.tl-dot svg { display: block; }
+[data-step-get-li] .ic { display: none; }   /* step 4 draws the way it reaches you: a parcel unless thanks.js knows better */
+[data-step-get-li]:not([data-how]) .ic-ship, [data-step-get-li][data-how="ship"] .ic-ship, [data-step-get-li][data-how="pickup"] .ic-pickup, [data-step-get-li][data-how="digital"] .ic-digital { display: block; }
+.tl-title { display: flex; align-items: baseline; gap: 8px; font-weight: 600; font-size: 16px; line-height: 1.3; padding-top: 3px; }
+.tl-n { font-family: var(--font-head); font-weight: 600; font-size: 15px; color: var(--caption); }   /* caption on white 5.6:1 */
+.tl-label { min-width: 0; }
+.tl-text { font-size: 15px; line-height: 1.5; margin-top: 2px; }
+.tl-step:not(:last-child)::before { content: ""; position: absolute; left: 21px; top: 44px; bottom: 0; border-left: 2px dashed var(--peach); }
+@supports ((mask-repeat: repeat-y) or (-webkit-mask-repeat: repeat-y)) {   /* the thread as a loose stitched strand */
+  .tl-step:not(:last-child)::before {
+    left: 18px; width: 8px; border: 0; background: var(--peach);
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='24' viewBox='0 0 8 24'%3E%3Cpath d='M4 0C7 6 7 6 4 12S1 18 4 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' pathLength='24' stroke-dasharray='4.5 3.5' stroke-dashoffset='-1.75'/%3E%3C/svg%3E") center top / 8px 24px repeat-y;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='24' viewBox='0 0 8 24'%3E%3Cpath d='M4 0C7 6 7 6 4 12S1 18 4 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' pathLength='24' stroke-dasharray='4.5 3.5' stroke-dashoffset='-1.75'/%3E%3C/svg%3E") center top / 8px 24px repeat-y;
+  }
+}
+@media (forced-colors: active) {
+  .letter .ic-fill, .letter .ic-hole { fill: none; }
+  .tl-step:not(:last-child)::before { background: CanvasText; }
+  .tl-dot { border-color: CanvasText; }
+  .letter-code { outline: 1px solid CanvasText; }
+}
+@media (max-width: 359px) {
+  .letter { padding-left: 16px; padding-right: 16px; }
+  .ledger { padding-left: 12px; padding-right: 12px; }
+  .ledger-row { column-gap: 10px; }
+  .ledger-deposit .ledger-amt { font-size: 23px; }
+}
 @media (min-width: 600px) {
   .thanks { padding: 44px 0 64px; }
   .thanks-h { font-size: 48px; }
   .letter { padding: 28px 30px; }
+  .ledger { padding: 14px 18px 10px; }
 }
-/* printing: the letter only */
+/* printing: the letter only, on one page (US Letter or A4, the browser's margins, with or without background graphics):
+   borders carry the shapes, the thread is a dashed grey line */
 @media print {
   .thanks-page .site-header, .thanks-page .co-footer, .thanks-page .skip-link, .thanks-h, .thanks-photo, .thanks-fact, .thanks-neutral,
   .mailbox-btn, .letter-actions, .thanks-terms, .thanks-contact, .thanks-links, .thanks-page [role="status"] { display: none !important; }
   .thanks-page { background: #fff; }
   .thanks { padding: 0; }
-  .letter, .letter[hidden] { display: grid !important; border: 0; box-shadow: none; padding: 0; }
+  .letter, .letter[hidden] { display: grid !important; border: 0; box-shadow: none; padding: 0; gap: 6px; }
+  .letter:focus { outline: none; }   /* the letter takes focus when it opens: no ring on paper */
+  .ledger { background: none; border-color: #999; padding: 8px 12px 6px; font-size: 13.5px; break-inside: avoid; }
+  .ledger-row { padding: 3px 0; }
+  .ledger-sums .ledger-row { padding: 3px 0; }
+  .ledger-sub { font-size: 12px; }
+  .ledger-product { padding: 2px 0 5px; }
+  .ledger-product > .ledger-name, .ledger-product > .ledger-amt { font-size: 16px; }
+  .ledger-how { padding: 5px 0; }
+  .ledger-deposit .ledger-amt { font-size: 21px; }
+  .letter-note { font-size: 14px; }
+  .letter-code { background: none; border: 1px solid #999; padding: 0 5px; }
+  .letter-sub { margin-top: 4px; font-size: 16px; }
+  .letter-steps { margin-bottom: 4px; break-inside: avoid; }
+  .tl-step, .tl-step:not(:last-child) { grid-template-columns: 32px minmax(0, 1fr); column-gap: 10px; padding-bottom: 8px; min-height: 0; }
+  .tl-step:last-child { padding-bottom: 0; }
+  .tl-dot { width: 32px; height: 32px; background: none; border-color: #999; }
+  .tl-dot svg { width: 20px; height: 20px; }
+  .tl-step:not(:last-child)::before { left: 15px; top: 32px; bottom: 0; width: 0; background: none; -webkit-mask: none; mask: none; border-left: 1.5px dashed #999; }
+  .tl-title { font-size: 14px; padding-top: 1px; }
+  .tl-n { font-size: 13.5px; }
+  .tl-text { font-size: 13px; line-height: 1.4; margin-top: 0; }
 }

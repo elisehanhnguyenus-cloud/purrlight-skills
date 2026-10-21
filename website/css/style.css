@@ -124,21 +124,25 @@ h1, h2, h3, h4 {
   font-weight: 600;
   letter-spacing: -0.015em;
   white-space: nowrap;
+  flex-shrink: 0;   /* never squeezed by the links */
 }
 .logo svg { width: 34px; height: 34px; }
 .logo img { height: 42px; width: auto; }
 .logo .light { color: var(--accent-large); }
 
 .main-nav { flex: 1; }
+/* the one-row header (logo + 8 links + Shop on Etsy) needs about 1170px at these gaps; below 1200px the menu button
+   and drawer take over, so a label never breaks in two (Elise 21/10: "Shop / All" on two lines) */
 .main-nav ul {
   display: flex;
   justify-content: center;
-  gap: clamp(14px, 2.2vw, 30px);
+  gap: clamp(14px, 1.5vw, 20px);
   list-style: none;
 }
 .main-nav a {
   font-size: 15px;
   font-weight: 500;
+  white-space: nowrap;
   color: var(--ink-soft);
   padding: 6px 2px;
   border-bottom: 2px solid transparent;
@@ -149,9 +153,9 @@ h1, h2, h3, h4 {
   border-color: var(--glow);
 }
 
-.header-cta { white-space: nowrap; }
+.header-cta { white-space: nowrap; flex-shrink: 0; }
 
-/* mobile nav */
+/* the menu button and drawer: phones, tablets and narrow laptops */
 .nav-toggle {
   display: none;
   background: none;
@@ -162,12 +166,11 @@ h1, h2, h3, h4 {
 }
 .nav-toggle svg { width: 26px; height: 26px; stroke: var(--ink); }
 
-@media (max-width: 860px) {
+@media (max-width: 1199px) {
   /* backdrop-filter would make the header the containing block for the
-     fixed nav drawer, so it comes off on mobile */
+     fixed nav drawer, so it comes off here */
   .site-header { backdrop-filter: none; background: var(--cream); }
   .nav-toggle { display: block; margin-left: auto; }
-  .site-header .header-cta { display: none; }
   .main-nav {
     position: fixed;
     inset: 0;
@@ -201,7 +204,15 @@ h1, h2, h3, h4 {
   }
   .nav-close svg { width: 26px; height: 26px; stroke: var(--ink); }
 }
-@media (min-width: 861px) {
+/* tablets and narrow laptops keep Shop on Etsy next to the menu button; phones have no room for it */
+@media (min-width: 861px) and (max-width: 1199px) {
+  .site-header .header-cta { margin-left: auto; }
+  .site-header .header-cta + .nav-toggle { margin-left: 4px; }
+}
+@media (max-width: 860px) {
+  .site-header .header-cta { display: none; }
+}
+@media (min-width: 1200px) {
   .nav-close { display: none; }
 }
 

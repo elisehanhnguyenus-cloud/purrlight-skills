@@ -74,7 +74,7 @@ collections:
                 label: Instagram
                 widget: string
                 required: false
-                hint: 'Chỉ điền khi chắc đây là tài khoản của shop (@purrlightstudio trên Instagram là của người khác).'
+                hint: 'Instagram của shop: https://www.instagram.com/vietdelight_us/ (Elise 21/10). @purrlightstudio trên Instagram là của người khác.'
                 pattern: ['^(https://(www\.)?instagram\.com/[A-Za-z0-9._]+/?)?$', 'Dán link dạng https://www.instagram.com/tên-tài-khoản']
               - name: tiktok
                 label: TikTok

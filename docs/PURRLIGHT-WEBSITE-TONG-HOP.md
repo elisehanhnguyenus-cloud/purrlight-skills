@@ -1173,6 +1173,22 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   `CRON_SECRET`), chưa có token Etsy, đơn mới nhất trong sổ là 26/09. Em đã kiểm lại số này. Sửa đồng bộ Etsy là một
   việc riêng, ưu tiên cao hơn làng.
 
+### Elise 21/10 — trả lời 6 câu
+- **Đồng bộ Etsy (chị: "sửa luôn"):** đã sửa phần lịch đêm. Hàm `etsy-sync` giờ so khoá với kho bí mật của Supabase
+  (không ai phải chép khoá), nên lịch đêm không còn bị chặn 503. Lần chạy thử 21/10 ghi đúng 1 dòng lỗi rõ ràng vào sổ:
+  thiếu khoá app Etsy. Em đã dựng sẵn link kết nối Etsy (OAuth, chỉ đọc, chỉ lưu khi đúng chủ shop VietDelightFinds).
+  **Còn chờ chị:** tạo/mở app Etsy cho nhà phát triển, dán 2 khoá vào Supabase, bấm "Allow" (hướng dẫn riêng, gửi chị
+  qua link riêng tư). Xong em chạy thử ngay và kiểm số.
+- **Bản xem trước Merlin:** chị tạm duyệt. Đây là mockup; hình và video thật sẽ do Gemini agent làm sau rồi thay vào.
+- **Thanh toán + cảnh Merlin sau khi trả tiền:** chị muốn 5 cách trả (Zelle, Venmo, Square, Stripe, PayPal). Trả xong
+  hiện cảnh Merlin cảm ơn, viết 2 tờ giấy, thả 1 tờ vào hộp thư (= thư xác nhận đơn của khách), nhảy xuống, gõ cửa:
+  "Mommy, you have new order(s)!". Đang nghiên cứu từng cổng (link, chuyển về trang, phí) trước khi dựng.
+- **Booth:** mặc định **cộng thuế 8.25%** lên giá web. Máy booth nào còn để mặc định cũ ("none") tự chuyển sang "added"
+  một lần; bản Event Desk trên claude.ai cũng đã cập nhật (bản 14).
+- **Newsletter:** để nguyên, xử lý sau.
+- **Instagram:** @vietdelight_us — https://www.instagram.com/vietdelight_us/ . 6 ô ảnh cuối trang và nút "follow on
+  Instagram" đã trỏ về đây.
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
@@ -1186,11 +1202,11 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 5. Admin Dashboard: trả lời 8 câu ở mục 8 của bản kế hoạch (câu nào cũng có mặc định, chị chỉ cần ghi câu nào muốn
    khác). Spike 0a em đã dựng xong (mục 6).
 6. Spike 0a: tự tạo token và đổi 1 ảnh theo `docs/ADMIN-SPIKE-0A-HUONG-DAN.md`, rồi nhắn em 5 dòng ghi chú.
-7. Instagram: gửi em đúng handle Instagram của shop (nếu có) để gắn vào dải ảnh cuối trang.
-8. Code: booth có mặc định cộng thuế (`added`) không · giá búp bê $80 (web) và $85 (booth) có cố ý khác không · gỡ form
-   newsletter (đang báo "chưa sẵn sàng") hay để.
-9. Làng: trả lời 6 câu ở mục 9 của kế hoạch Làng (câu nào cũng có mặc định) và duyệt từng khung, từng chữ ở bản xem trước
-   Merlin. Riêng việc **sửa đồng bộ Etsy** (câu 4): chị cho em làm thì chị bấm OAuth Etsy một lần, khoảng 15 phút.
+7. ~~Instagram~~ — xong 21/10 (@vietdelight_us).
+8. Code: giá búp bê $80 (web) và $85 (booth) có cố ý khác không. (Thuế booth: đã chốt "cộng thuế"; newsletter: để sau.)
+9. Đồng bộ Etsy: làm 4 bước trong hướng dẫn kết nối Etsy (app Etsy → 2 khoá vào Supabase → bấm Allow → nhắn em "xong").
+10. Thanh toán: gửi em link/handle của Venmo, Stripe, PayPal khi có (Zelle và Square đã có), theo danh sách trong kế hoạch
+    thanh toán em gửi sau.
 
 ## 9. Link & tài nguyên
 

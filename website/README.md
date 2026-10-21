@@ -69,8 +69,9 @@ website/
   (đường dẫn trong site, ví dụ `assets/img/products/<id>-600.webp`, hoặc ảnh upload qua admin), `alt` (tiếng Anh),
   `network` (instagram / tiktok / pinterest / facebook), `link` (link bài cụ thể — bỏ trống thì về trang hồ sơ),
   `rights` (`own` / `customer`) và `credit` (`@handle` — bắt buộc khi là ảnh khách, hiện "photo: @handle").
-- **Instagram:** `profiles.instagram` đang để trống vì @purrlightstudio trên Instagram là của người khác (Brand
-  Canon v2). Chị gửi đúng handle → điền link vào đó là nút "follow on Instagram" và các ô `instagram` tự trỏ về.
+- **Instagram:** của shop là **@vietdelight_us** (https://www.instagram.com/vietdelight_us/, Elise 21/10/2026). Cả 6 ô
+  ảnh trỏ về đó và có nút "follow on Instagram". @purrlightstudio trên Instagram là của người khác (Brand Canon v2),
+  đừng dùng.
 - An toàn: link chỉ nhận `https://` (link lạ bị bỏ, về trang hồ sơ); chữ đưa vào bằng textContent, không innerHTML.
   Không có dữ liệu hoặc mở bằng file:// → dải ảnh ẩn, trang vẫn bình thường.
 - Dải "Purrlight, daily" cũ ở giữa trang chủ đã gỡ (nội dung chuyển vào dải mới, không lặp 2 lần).
@@ -501,9 +502,9 @@ màu canon; muốn icon hồng thì đổi `src` sang `../assets/brand/favicon-6
 5. **Video lifestyle** — 3 card đang trỏ về TikTok profile với poster minh
    họa. Khi có video thật: thay href bằng link video hoặc nhúng embed.
 6. **Social handles** — @purrlightstudio là của mình trên TikTok / Facebook /
-   Pinterest (Canon v2); handle Instagram thuộc người khác nên site KHÔNG
-   link Instagram. Pinterest/Facebook đang hard-code ở section social — xác
-   nhận tài khoản tồn tại.
+   Pinterest (Canon v2). Instagram của shop là @vietdelight_us (Elise 21/10/2026;
+   @purrlightstudio trên Instagram là của người khác). Các link nằm trong
+   `content/follow.json` — xác nhận TikTok / Pinterest / Facebook tồn tại.
 7. **Purrks Points** — đang gắn badge "launching soon" (đúng sự thật vì
    chưa có chương trình). Khi nào chạy thật (Shopify + Smile.io, hoặc thủ
    công qua email) thì bỏ badge và cập nhật mô tả. KHÔNG bỏ badge trước đó.

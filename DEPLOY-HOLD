@@ -1,0 +1,5 @@
+Phần trả cọc mới (4 cách: Zelle · Venmo · Square · Stripe, mã đơn, trang cảm ơn custom-orders/thanks.html, lá thư
+"Your order was confirmed") đã commit nhưng CHƯA được lên web: chờ Elise duyệt bản xem trước chữ tiếng Anh (21/10/2026).
+Khi Elise duyệt: xoá file này, commit, chạy bash website/deploy-pages.sh.
+Cần đẩy gấp một sửa khác trước khi duyệt: hoặc revert các commit phần trả cọc, hoặc (nếu chấp nhận đưa luôn phần này lên)
+DEPLOY_HOLD_OK=1 bash website/deploy-pages.sh.

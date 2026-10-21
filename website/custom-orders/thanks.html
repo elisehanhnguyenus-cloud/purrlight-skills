@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank you — Purrlight Studio</title>
+  <meta name="description" content="Thank you for your Purrlight Studio custom order.">
+  <!-- the page after paying a deposit (plan 21/10 §3): never indexed, no analytics. A shared link opens Custom Orders,
+       not this page (og:url). It only says what is surely true: it cannot see payments, and thanks.js never reads the
+       address's query (providers may add one; it is removed unread). -->
+  <meta name="robots" content="noindex, nofollow">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Custom Orders — Purrlight Studio">
+  <meta property="og:description" content="Handcrafted keepsakes made from your photos — crochet portrait dolls, pet memorials, digital watercolor art & gift boxes.">
+  <meta property="og:image" content="https://elisehanhnguyenus-cloud.github.io/purrlight-skills/assets/img/custom/og-custom-orders-merlin.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://elisehanhnguyenus-cloud.github.io/purrlight-skills/custom-orders/">
+  <meta name="theme-color" content="#FBF6EE">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/brand/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="64x64" href="../assets/brand/favicon-64.png">
+  <link rel="preload" href="../assets/fonts/fraunces-normal-600-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../assets/fonts/figtree-normal-400-latin-7073ac15.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/fonts.css">
+  <link rel="stylesheet" href="custom-orders.css">
+  <noscript><style>.nav-toggle,.nav-close{display:none!important}.main-nav{position:static!important;visibility:visible!important;opacity:1!important;padding:0!important}.main-nav ul{flex-direction:row!important;flex-wrap:wrap;gap:4px 14px!important}.main-nav a{font-family:inherit!important;font-size:15px!important;border-bottom:0!important;padding:4px 0!important}</style></noscript>
+</head>
+<body class="thanks-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="logo" href="../index.html" aria-label="Purrlight Studio home">
+        <img src="../assets/brand/logo-flat.png" alt="Purrlight Studio" width="360" height="119">
+      </a>
+      <nav class="main-nav" id="main-nav" aria-label="Main">
+        <button class="nav-close" aria-label="Close menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../shop.html">Shop All</a></li>
+          <li><a href="./">Custom Orders</a></li>
+          <li><a href="../shop.html?cat=Merlin%27s%20World%20%26%20His%20Friends">Merlin's World</a></li>
+          <li><a href="../shop.html?cat=Storybook%20%26%20Traditional%20Tales">Storybook</a></li>
+          <li><a href="../shop.html?cat=Faith%20%26%20Milestones">Faith &amp; Milestones</a></li>
+          <li><a href="../about.html">Our Story</a></li>
+          <li><a href="../partners.html">Partners</a></li>
+        </ul>
+      </nav>
+      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" class="thanks">
+    <div class="wrap thanks-inner">
+      <h1 class="thanks-h">Thank you!</h1>
+
+      <!-- MERLIN_SCENE.on (prices.js) is false until Elise approves the scene: Merlin's real photo stands here (the same file
+           as the Custom Orders closing — SEASONAL Christmas 2026, swap both after the season). -->
+      <figure class="thanks-photo" data-thanks-photo>
+        <img src="../assets/img/custom/merlin-portrait.webp" alt="Merlin, our tuxedo cat, in a red holiday bow" width="240" height="240" decoding="async">
+      </figure>
+      <!-- Elise approved "We check every deposit by hand" on 21/10/2026. The second sentence is How it works, word for word. -->
+      <p class="thanks-fact" data-thanks-fact>We check every deposit by hand — this page can't see payments. For every made-to-order or custom piece, we send you a design mockup before we start.</p>
+
+      <p class="thanks-neutral" data-thanks-neutral>Paying your balance, or sent your order form from another device? Add your order code or your name to the payment note — we match every payment by hand. If you haven't sent the order form yet, <a href="./#gifts">place your order first</a> so we can match your deposit.</p>
+
+      <!-- Merlin's letter (Elise 21/10: its name is "Your order was confirmed"; the real confirmation is the email Elise
+           sends once she sees the deposit). Built with textContent from this tab's copy of the order (sessionStorage) —
+           without it, or without JavaScript, it shows the general version with no amount and no code. -->
+      <div class="mailbox">
+        <button type="button" class="btn btn-quiet mailbox-btn" aria-expanded="true" aria-controls="letter" hidden>
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 18v-7a4 4 0 0 1 8 0v7z"/><path d="M8 7h8a4 4 0 0 1 4 4v7h-8"/><path d="M3 18h18"/><path d="M15 11V5h3"/><path d="M12 18v3"/></svg>
+          <span data-mailbox-label>Open your letter</span>
+        </button>
+        <article class="letter" id="letter" aria-labelledby="letter-h" tabindex="-1">
+          <p class="letter-from">From Merlin's notebook</p>
+          <h2 id="letter-h" class="letter-title">Your order was confirmed</h2>
+          <p class="letter-meta" data-letter-meta hidden></p>
+          <div class="letter-order" data-letter-order>
+            <p>Your pick is in the order form you sent.</p>
+          </div>
+          <h3 class="letter-sub">What happens next</h3>
+          <ol class="letter-steps">
+            <li>We check your deposit by hand and email you once it's in.</li>
+            <li>For every made-to-order or custom piece, we send you a design mockup before we start.</li>
+            <li>For a made-to-order or custom piece, we make it and send you a photo of the finished piece. Pay the balance, then it ships free in the U.S. — or pick it up at Pearland Town Center.</li>
+          </ol>
+          <p class="letter-note" data-letter-note>When you pay, add your order code or your name to the payment note.</p>
+          <p class="letter-fine">This is a copy of what you sent us, not proof of payment.</p>
+          <p class="letter-actions" data-letter-actions hidden>
+            <button type="button" class="link-btn" data-letter-print>Print or save as PDF</button>
+            <button type="button" class="link-btn" data-letter-copy>Copy text</button>
+          </p>
+          <p class="pay-status" role="status" data-letter-status></p>
+        </article>
+      </div>
+
+      <p class="note thanks-terms">Your deposit is refundable until work begins. Custom pieces can't be returned, but anything wrong or damaged is on us, 100%.</p>
+      <p class="note thanks-contact">Questions about your order or deposit? Email <a href="mailto:purrlightstudiollc@gmail.com">purrlightstudiollc@gmail.com</a></p>
+      <p class="thanks-links"><a href="./#pay">Back to Pay your deposit</a> · <a href="./">Custom Orders</a></p>
+    </div>
+  </main>
+
+  <footer class="co-footer">
+    <div class="wrap">
+      <p class="tagline">Made by hand. Made to be kept.</p>
+      <p>Designed in Texas. Made in Vietnam.</p>
+      <p class="footer-links"><a href="../index.html">Home</a> · <a href="../shop.html">Shop All</a> · <a href="../about.html">Our Story</a> · <a href="https://vietdelightfinds.etsy.com" rel="noopener">Etsy shop</a> · <a href="mailto:purrlightstudiollc@gmail.com">purrlightstudiollc@gmail.com</a></p>
+      <p class="copyright">© <span data-year>2026</span> Purrlight Studio LLC · Pearland, TX</p>
+    </div>
+  </footer>
+
+  <script src="prices.js"></script>
+  <script src="thanks.js"></script>
+</body>
+</html>

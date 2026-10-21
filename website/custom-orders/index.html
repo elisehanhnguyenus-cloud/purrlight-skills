@@ -603,29 +603,63 @@
       </div>
     </section>
 
-    <!-- Deposit: Square payment link (customer types the amount) or Zelle — Elise 15/10/2026. Values also in prices.js (PAY). -->
+    <!-- Deposit (Elise 15/10 + 21/10/2026): Zelle · Venmo · Square · Stripe, in that order (PayPal dropped 21/10). Each way
+         is one .pay-way[data-pay]; a way with no link / handle / address in prices.js (PAY) carries `hidden` here too —
+         tools/check-site.js stops a deploy when this HTML and PAY differ. With JavaScript the page writes the order code
+         and the deposit of the order that was sent into the hints. -->
     <section class="pay" id="pay" aria-labelledby="pay-h">
       <div class="wrap">
         <h2 id="pay-h" class="section-title">Pay your deposit</h2>
-        <p class="pay-lede">Place your order first, then pay the 50% deposit by card or Zelle. The balance is paid when you approve the photo of your finished piece.</p>
-        <p class="pay-pick" data-pay-pick hidden></p>
+        <p class="pay-sent" role="status"></p>
+        <p class="pay-lede">Place your order first, then pay the 50% deposit any way below. The balance is paid when you approve the photo of your finished piece.</p>
+        <div class="pay-pick" data-pay-pick hidden></div>
         <div class="pay-ways">
-          <div class="pay-way">
+          <div class="pay-way" data-pay="zelle">
+            <h3 class="pay-title">Zelle® payment</h3>
+            <p>Send to <strong class="zelle-to" data-zelle-to>purrlightstudiollc@gmail.com</strong></p>
+            <p class="pay-hint" data-pay-hint>In the memo, write your name and your piece.</p>
+            <p class="pay-note">Please send only to this address, and check it before you send — Zelle® payments can't be canceled once sent.</p>
+            <p class="pay-sent-link"><a href="thanks.html">I've sent it</a></p>
+          </div>
+          <div class="pay-way" data-pay="venmo" hidden>
+            <h3 class="pay-title">Venmo</h3>
+            <p>Send to <strong class="venmo-to" data-venmo-to></strong></p>
+            <p class="pay-hint" data-pay-hint>In the note, write your name and your piece.</p>
+            <figure class="pay-qr" hidden>
+              <img data-pay-qr src="" alt="QR code that opens our Venmo profile" width="148" height="148" loading="lazy" decoding="async">
+              <figcaption>On a computer? Scan with your phone.</figcaption>
+            </figure>
+            <p class="pay-sent-link"><a href="thanks.html">I've sent it</a></p>
+          </div>
+          <div class="pay-way" data-pay="square">
             <h3 class="pay-title">Card · Square</h3>
             <p>On the Square page (it shows our shop name, Viet Delight), type your deposit amount.</p>
-            <p class="pay-actions"><a class="btn btn-primary" data-pay-square href="https://square.link/u/UUg2LtbP" rel="noopener">Pay by card</a></p>
+            <p class="pay-actions"><a class="btn btn-primary" data-pay-link data-pay-square href="https://square.link/u/UUg2LtbP" rel="noopener">Pay by card with Square</a></p>
+            <p class="pay-hint" data-pay-hint hidden></p>
+            <p class="pay-back" hidden>After you pay, you come back to Purrlight.</p>
             <figure class="pay-qr">
-              <img src="../assets/img/custom/square-pay-qr.svg" alt="QR code that opens the Square payment page" width="148" height="148" loading="lazy" decoding="async">
+              <img data-pay-qr src="../assets/img/custom/square-pay-qr.svg" alt="QR code that opens the Square payment page" width="148" height="148" loading="lazy" decoding="async">
               <figcaption>On a computer? Scan with your phone.</figcaption>
             </figure>
           </div>
-          <div class="pay-way">
-            <h3 class="pay-title">Zelle® payment</h3>
-            <p>Send to <strong class="zelle-to" data-zelle-to>purrlightstudiollc@gmail.com</strong></p>
-            <p class="pay-note">Add your name and your piece in the memo. Please send only to this address, and check it before you send — Zelle® payments can't be canceled once sent.</p>
+          <div class="pay-way" data-pay="stripe" hidden>
+            <h3 class="pay-title">Card · Stripe</h3>
+            <p data-pay-amount>On the Stripe page, type your deposit amount.</p>
+            <p class="pay-actions"><a class="btn btn-primary" data-pay-link href="" rel="noopener">Pay by card with Stripe</a></p>
+            <p class="pay-hint" data-pay-hint>In “Order code or your name”, write your name and your piece.</p>
+            <p class="pay-back" hidden>After you pay, you come back to Purrlight.</p>
+            <figure class="pay-qr" hidden>
+              <img data-pay-qr src="" alt="QR code that opens the Stripe payment page" width="148" height="148" loading="lazy" decoding="async">
+              <figcaption>On a computer? Scan with your phone.</figcaption>
+            </figure>
           </div>
         </div>
+        <div class="pay-done">
+          <p>Paid in your bank app or in Venmo — or not brought back here after paying?</p>
+          <p><a class="btn btn-quiet" href="thanks.html">I've sent my deposit</a></p>
+        </div>
         <p class="note pay-terms">Your deposit is refundable until work begins. Custom pieces can't be returned, but anything wrong or damaged is on us, 100%.</p>
+        <p class="note pay-contact">Questions about your order or deposit? Email <a href="mailto:purrlightstudiollc@gmail.com">purrlightstudiollc@gmail.com</a></p>
         <!-- Zelle trademark guidelines (zelle.com/zelle-trademark-guidelines): the word only (no logo), as an adjective ("Zelle® payment"),
              and this capital-letter line wherever the mark shows. "Used with permission" waits until a bank or Zelle confirms it. -->
         <p class="legal">Zelle® is a registered trademark of Early Warning Services, LLC. <span class="legal-caps">PURRLIGHT STUDIO LLC IS NOT AUTHORIZED, ENDORSED, OR SPONSORED BY EARLY WARNING SERVICES, LLC- OWNER OF ZELLE®.</span></p>

@@ -54,6 +54,18 @@
   var yr = document.querySelector("[data-year]");
   if (yr) yr.textContent = new Date().getFullYear();
 
+  /* ---------- the order code (prices.js newOrderCode) and the order copy — this tab only (sessionStorage) ----------
+     One code per tab, kept while the pick changes (so "same pick → back into the open form" still matches), a new one
+     after each sent form. The copy of the order that was sent (saveOrderCopy) feeds #pay and thanks.html. */
+  var CODE_KEY = "purrlight-order-code", COPY_KEY = "purrlight-order-copy";
+  function sget(k) { try { return window.sessionStorage.getItem(k); } catch (e) { return null; } }
+  function sset(k, v) { try { if (v === null) window.sessionStorage.removeItem(k); else window.sessionStorage.setItem(k, v); } catch (e) { /* storage blocked: the code lives until the page closes */ } }
+  var hasCodes = typeof newOrderCode === "function" && typeof isOrderCode === "function";
+  var orderCode = sget(CODE_KEY);
+  if (!hasCodes) orderCode = "";
+  else if (!isOrderCode(orderCode)) { orderCode = newOrderCode(); sset(CODE_KEY, orderCode || null); }
+  function withCode(text) { return orderCode ? orderCode + (text ? " · " + text : "") : text; }
+
   /* ---------- order link: one constant + utm passthrough (brief §5) ---------- */
   var lastPick = null;   /* { product, total, deposit, text, getit } — the pick the customer is building */
   /* blank lines to fill in, so a shipping order brings its address and a time to receive it (Elise 16/10) */
@@ -62,7 +74,7 @@
   function orderUrl() {
     var url = ORDER_FORM_URL;
     if (/^mailto:/i.test(url)) {   /* the fallback email link: the pick travels in the message body */
-      if (lastPick) url += (url.indexOf("?") > -1 ? "&" : "?") + "body=" + encodeURIComponent(lastPick.text + (FILL_IN[lastPick.getit] || ""));
+      if (lastPick) url += (url.indexOf("?") > -1 ? "&" : "?") + "body=" + encodeURIComponent(withCode(lastPick.text) + (FILL_IN[lastPick.getit] || ""));
       return url;
     }
     var qs = [];
@@ -73,12 +85,14 @@
     if (lastPick && /^https:\/\/(www\.)?tally\.so\//i.test(url)) {
       /* Tally: hidden fields named pick, product, total, deposit and delivery (see prices.js); amounts always with cents,
          like "Copy deposit amount"; delivery "Digital file" makes the form's phone + time-to-receive questions optional */
-      qs.push("pick=" + encodeURIComponent(lastPick.text), "product=" + encodeURIComponent(lastPick.product),
+      qs.push("pick=" + encodeURIComponent(withCode(lastPick.text)), "product=" + encodeURIComponent(lastPick.product),
         "total=" + lastPick.total.toFixed(2), "deposit=" + lastPick.deposit.toFixed(2));
       if (DELIVERY[lastPick.getit]) qs.push("delivery=" + encodeURIComponent(DELIVERY[lastPick.getit]));
+    } else if (orderCode && /^https:\/\/(www\.)?tally\.so\//i.test(url)) {
+      qs.push("pick=" + encodeURIComponent(orderCode));   /* no piece chosen yet: the form still carries the code */
     } else if (lastPick && ORDER_FORM_PREFILL_ENTRY) {
       if (url.indexOf("usp=") === -1) qs.push("usp=pp_url");
-      qs.push(encodeURIComponent(ORDER_FORM_PREFILL_ENTRY) + "=" + encodeURIComponent(lastPick.text));
+      qs.push(encodeURIComponent(ORDER_FORM_PREFILL_ENTRY) + "=" + encodeURIComponent(withCode(lastPick.text)));
     }
     if (qs.length) url += (url.indexOf("?") > -1 ? "&" : "?") + qs.join("&");
     return url;
@@ -99,6 +113,45 @@
      for visitors who ask for reduced motion — see the CSS).
      Tally's script loads after the page; until it has — or if it is blocked — the link opens the form page as before.
      Sent: the popup closes and the page goes to "Pay your deposit" (the form's own redirect, done here). */
+  function hiddenFields(href) {
+    var out = {}, q = String(href || "").split("#")[0].split("?")[1] || "";
+    q.split("&").forEach(function (kv) {
+      var i = kv.indexOf("=");
+      if (i > 0) { try { out[decodeURIComponent(kv.slice(0, i))] = decodeURIComponent(kv.slice(i + 1).replace(/\+/g, " ")); } catch (err) { /* a bad escape: leave it out */ } }
+    });
+    return out;
+  }
+  /* the copy of the order that was sent, read from the very link the form was opened with (so it is what was sent):
+     code, piece, estimate, deposit, how it reaches them, and the pick line WITHOUT the card message (never stored).
+     href "" (the form page's own redirect, ?sent=1): only the day and the code of this tab — no amounts promised. */
+  function localDay() { var d = new Date(); return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
+  function saveOrderCopy(href) {
+    var f = hiddenFields(href), m = /^([ACDEFHJKMNPRTWXY3479]{4})(?: · ([\s\S]*))?$/.exec(f.pick || ""), copy = { v: 1, at: localDay(), sent: true };
+    var code = m ? m[1] : (href ? "" : orderCode), pick = (m ? m[2] || "" : f.pick || "").replace(/ · Card message: "[\s\S]*$/, "");
+    if (code) copy.code = code;
+    if (pick && f.product && /^\d{1,5}\.\d{2}$/.test(f.total || "") && /^\d{1,5}\.\d{2}$/.test(f.deposit || "")) {
+      copy.product = f.product.slice(0, 120); copy.total = f.total; copy.deposit = f.deposit; copy.pick = pick.slice(0, 600);
+      if (f.delivery) copy.delivery = f.delivery.slice(0, 60);
+    }
+    sset(COPY_KEY, JSON.stringify(copy));
+    return copy;
+  }
+  function sentCopy() {
+    try { var c = JSON.parse(sget(COPY_KEY)); return c && c.v === 1 && c.sent ? c : null; } catch (e) { return null; }
+  }
+  /* after a sent form: the phone order bar steps aside for the rest of the visit, one status line (read once), the
+     deposit section shows the order that was sent, and the next order gets a new code */
+  var barOff = false;
+  function afterSent(copy) {
+    barOff = true;
+    if (bar) { bar.hidden = true; document.body.classList.remove("has-bar"); document.documentElement.classList.remove("has-bar"); }
+    var st = document.querySelector(".pay-sent");
+    if (st) setTimeout(function () { st.textContent = "Got it — Merlin noted your order. Next step: your 50% deposit, just below."; }, 150);
+    if (hasCodes) { orderCode = newOrderCode(); sset(CODE_KEY, orderCode || null); }
+    updatePay();
+    applyOrderLinks();
+    return copy;
+  }
   var TALLY_FORM = (ORDER_FORM_URL.match(/^https:\/\/(?:www\.)?tally\.so\/r\/([A-Za-z0-9]+)$/) || [])[1];
   if (TALLY_FORM) {
     var tallyOpener = null, tallyHref = null, tallyTimer = null;
@@ -109,14 +162,6 @@
       document.head.appendChild(sc);
     };
     if (document.readyState === "complete") loadTally(); else window.addEventListener("load", loadTally);
-    var hiddenFields = function (href) {
-      var out = {}, q = href.split("#")[0].split("?")[1] || "";
-      q.split("&").forEach(function (kv) {
-        var i = kv.indexOf("=");
-        if (i > 0) { try { out[decodeURIComponent(kv.slice(0, i))] = decodeURIComponent(kv.slice(i + 1).replace(/\+/g, " ")); } catch (err) { /* a bad escape: leave it out */ } }
-      });
-      return out;
-    };
     document.addEventListener("click", function (e) {
       var a = e.target && e.target.closest ? e.target.closest("a[data-order]") : null;
       if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;   /* a new tab stays a new tab */
@@ -140,12 +185,14 @@
         onOpen: function () { clearTimeout(tallyTimer); var f = document.querySelector(".tally-form-" + TALLY_FORM + " iframe"); if (f) f.focus(); },
         onClose: function () { clearTimeout(tallyTimer); tallyHref = null; var o = tallyOpener; tallyOpener = null; if (o && document.documentElement.contains(o)) o.focus({ preventScroll: true }); },
         onSubmit: function () {
+          var copy = saveOrderCopy(tallyHref);   /* first: closing the popup clears tallyHref (onClose) */
           tallyOpener = null;
           T.closePopup(TALLY_FORM);
           var sec = document.getElementById("pay"), pay = document.getElementById("pay-h");
           location.hash = "pay";
           if (sec) sec.scrollIntoView();   /* also when the address already ends in #pay (the "How to pay" link) */
           if (pay) { pay.setAttribute("tabindex", "-1"); pay.focus({ preventScroll: true }); }
+          afterSent(copy);
         }
       });
     });
@@ -784,15 +831,41 @@
     barThumb.hidden = false;
   }
 
-  /* ---------- pay your deposit: Square link (customer types the amount) or Zelle ---------- */
+  /* ---------- pay your deposit: Zelle · Venmo · Square · Stripe (prices.js PAY) ----------
+     The deposit and the order code come from the order that was SENT (the copy saveOrderCopy keeps in this tab), so
+     changing the pick afterwards never changes what the payment links and hints say; before a form is sent they
+     follow the pick being built. */
   var payPick = document.querySelector("[data-pay-pick]");
-  var paySquare = document.querySelectorAll("[data-pay-square]");
-  var zelleTo = document.querySelector("[data-zelle-to]");
-  if (typeof PAY !== "undefined") {
-    for (var ps = 0; ps < paySquare.length; ps++) paySquare[ps].setAttribute("href", PAY.squareUrl);
-    if (zelleTo) zelleTo.textContent = PAY.zelleTo;
+  var payWays = {};
+  var PAY_OK = typeof PAY !== "undefined" && PAY && PAY.order;
+  (PAY_OK ? PAY.order : []).forEach(function (key) {
+    var box = document.querySelector('.pay-way[data-pay="' + key + '"]');
+    if (box) payWays[key] = { box: box, link: box.querySelector("[data-pay-link]"), hint: box.querySelector("[data-pay-hint]"), back: box.querySelector(".pay-back") };
+  });
+  function payData(key) {   /* the way's address, handle or link — "" = hidden */
+    var m = PAY_OK && PAY[key] || {};
+    return key === "zelle" ? m.to || "" : key === "venmo" ? m.handle || "" : m.url || "";
   }
-  /* each copy button reports right under itself (one status per way to pay), so phones see it next to the tap */
+  /* the order of the cards on the page follows PAY.order */
+  var wayList = document.querySelector(".pay-ways");
+  if (wayList && PAY_OK) PAY.order.forEach(function (key) { if (payWays[key]) wayList.appendChild(payWays[key].box); });
+  var zelleTo = document.querySelector("[data-zelle-to]"), venmoTo = document.querySelector("[data-venmo-to]");
+  Object.keys(payWays).forEach(function (key) {
+    var w = payWays[key], m = PAY[key] || {}, d = payData(key);
+    w.box.hidden = !d;
+    if (w.link) w.link.setAttribute("href", d || "#pay");
+    var qr = w.box.querySelector(".pay-qr"), qi = qr && qr.querySelector("[data-pay-qr]");
+    if (qr) { qr.hidden = !(d && m.qr); if (qi && m.qr && qi.getAttribute("src") !== m.qr) qi.setAttribute("src", m.qr); }
+  });
+  if (zelleTo && payData("zelle")) zelleTo.textContent = payData("zelle");
+  if (venmoTo && payData("venmo")) venmoTo.textContent = payData("venmo");
+  /* "After you pay, you come back to Purrlight": on every card whose provider can bring the customer back, and only
+     when all of those shown have been tried (back: true) — never on one card and not another */
+  var redirectWays = ["square", "stripe"].filter(function (k) { return payWays[k] && payData(k); });
+  var allBack = redirectWays.length > 0 && redirectWays.every(function (k) { return PAY[k].back === true; });
+  redirectWays.forEach(function (k) { if (payWays[k].back) payWays[k].back.hidden = !allBack; });
+
+  /* each copy button reports right under itself, so phones see it next to the tap */
   function payStatusAfter(block) {
     var st = el("p", { "class": "pay-status", role: "status" });
     if (block && block.parentNode) block.parentNode.insertBefore(st, block.nextSibling);
@@ -802,29 +875,85 @@
     copyText(text, function () { st.textContent = done; clearTimeout(st.timer); st.timer = setTimeout(function () { st.textContent = ""; }, 4000); },
       function () { st.textContent = "Copy not available here — " + text; });
   }
-  var copyAmountBtn = el("button", { type: "button", "class": "link-btn pay-copy-amount", text: "Copy deposit amount", hidden: "" });
-  var copyZelleBtn = el("button", { type: "button", "class": "link-btn pay-copy-zelle", text: "Copy address" });
-  var squareStatus = null, zelleStatus = null;
-  if (paySquare.length && paySquare[0].parentNode) { paySquare[0].parentNode.appendChild(copyAmountBtn); squareStatus = payStatusAfter(paySquare[0].parentNode); }
-  if (zelleTo && zelleTo.parentNode) {
-    zelleTo.parentNode.appendChild(document.createTextNode(" "));   /* never "…@gmail.comCopy address" */
-    zelleTo.parentNode.appendChild(copyZelleBtn);
-    zelleStatus = payStatusAfter(zelleTo.parentNode);
+  function addCopy(target, label, cls, getText, done) {
+    if (!target || !target.parentNode) return null;
+    var b = el("button", { type: "button", "class": "link-btn " + cls, text: label });
+    target.parentNode.appendChild(document.createTextNode(" "));   /* never "…@gmail.comCopy address" */
+    target.parentNode.appendChild(b);
+    var st = payStatusAfter(target.parentNode);
+    b.addEventListener("click", function () { var t = getText(); if (t) payCopy(st, t, done(t)); });
+    return b;
   }
-  /* the deposit to copy is the pick the order links carry — never a piece the customer has not chosen */
+  if (payData("zelle")) addCopy(zelleTo, "Copy address", "pay-copy-zelle", function () { return zelleTo.textContent; }, function () { return "Copied the Zelle address."; });
+  if (payData("venmo")) addCopy(venmoTo, "Copy @handle", "pay-copy-venmo", function () { return venmoTo.textContent; }, function () { return "Copied our Venmo name."; });
+
+  /* the summary above the cards + one "Copy deposit amount" for every way */
+  var pickLine = el("p", { "class": "pay-pick-line" });
+  var copyAmountBtn = el("button", { type: "button", "class": "link-btn pay-copy-amount", text: "Copy deposit amount", hidden: "" });
+  var amountStatus = el("p", { "class": "pay-status", role: "status" });
+  if (payPick) { payPick.appendChild(pickLine); payPick.appendChild(el("p", { "class": "pay-pick-actions" }, [copyAmountBtn])); payPick.appendChild(amountStatus); }
+  function payDeposit() {   /* the sent order's deposit; before a form is sent, the pick's */
+    var c = sentCopy();
+    if (c && c.deposit) return Number(c.deposit);
+    return lastPick ? lastPick.deposit : 0;
+  }
+  function payCode() { var c = sentCopy(); return c ? (c.code || "") : orderCode; }
   copyAmountBtn.addEventListener("click", function () {
-    if (lastPick && squareStatus) payCopy(squareStatus, lastPick.deposit.toFixed(2).replace(/\.00$/, ""), "Copied " + money(lastPick.deposit) + " — paste it on the Square page.");
+    var d = payDeposit();
+    if (d > 0) payCopy(amountStatus, d.toFixed(2).replace(/\.00$/, ""), "Copied " + money(d) + " — paste it on the payment page.");
   });
-  copyZelleBtn.addEventListener("click", function () { if (zelleStatus) payCopy(zelleStatus, zelleTo ? zelleTo.textContent : "", "Copied the Zelle address."); });
+  var NOTE_WORD = { zelle: "the memo", venmo: "the note", square: "the note", stripe: "\u201COrder code or your name\u201D" };
   function updatePay() {
-    copyAmountBtn.hidden = !lastPick;
-    if (!payPick) return;
-    payPick.hidden = !lastPick;
-    payPick.innerHTML = "";
-    if (!lastPick) return;
-    payPick.appendChild(document.createTextNode("Your pick — " + lastPick.product + ": deposit "));
-    payPick.appendChild(el("strong", { text: money(lastPick.deposit) }));
-    payPick.appendChild(document.createTextNode(" (estimate " + money(lastPick.total) + ")."));
+    if (!copyAmountBtn) return;   /* not set up yet */
+    var c = sentCopy(), d = payDeposit(), code = payCode();
+    copyAmountBtn.hidden = !(d > 0);
+    if (payPick) {
+      payPick.hidden = !(c || lastPick);
+      pickLine.innerHTML = "";
+      if (c && c.deposit) {
+        pickLine.appendChild(document.createTextNode("Your order — " + c.product + ": deposit "));
+        pickLine.appendChild(el("strong", { text: money(Number(c.deposit)) }));
+        pickLine.appendChild(document.createTextNode("."));
+      } else if (c) {
+        pickLine.appendChild(document.createTextNode("Your order form is in."));
+      }
+      if (c && c.code) {
+        pickLine.appendChild(document.createTextNode(" Order code "));
+        pickLine.appendChild(el("strong", { text: c.code }));
+        pickLine.appendChild(document.createTextNode("."));
+      }
+      if (lastPick && !(c && c.deposit)) {
+        if (c) pickLine.appendChild(document.createTextNode(" "));
+        pickLine.appendChild(document.createTextNode((c ? "Your pick on this device — " : "Your pick — ") + lastPick.product + ": deposit "));
+        pickLine.appendChild(el("strong", { text: money(lastPick.deposit) }));
+        pickLine.appendChild(document.createTextNode(" (estimate " + money(lastPick.total) + ")."));
+      }
+    }
+    Object.keys(payWays).forEach(function (key) {
+      var w = payWays[key], m = PAY[key] || {};
+      if (!payData(key)) return;
+      if (w.link) w.link.setAttribute("href", payHref(key, d));
+      if (key === "stripe") {
+        var amt = w.box.querySelector("[data-pay-amount]"), filled = d > 0 && payHref("stripe", d) !== payData("stripe");
+        if (amt) amt.textContent = filled ? "Your deposit, " + money(d) + ", is filled in on the Stripe page — you can change it." : "On the Stripe page, type your deposit amount.";
+      }
+      if (w.hint) {
+        var notes = key === "zelle" || key === "venmo" || m.notes === true;
+        w.hint.hidden = !notes;
+        if (notes) w.hint.textContent = "In " + NOTE_WORD[key] + ", write " + (code ? code + "-D." : "your name and your piece.");
+      }
+    });
+  }
+  updatePay();
+  /* the form page's own redirect (Tally "Redirect on completion" → ?sent=1#pay): the same as a sent popup, without the
+     order details (this page never saw the link that was sent), and the flag leaves the address at once — Tally's popup
+     copies the page's query into the next form */
+  if (/[?&]sent=1(&|$)/.test(location.search || "")) {
+    try {
+      var rest = location.search.replace(/([?&])sent=1(&|$)/, function (_, a, b) { return b ? a : ""; });
+      history.replaceState(null, "", location.pathname + rest + location.hash);
+    } catch (e) { /* old browsers: the flag stays, harmless */ }
+    afterSent(saveOrderCopy(""));
   }
 
   /* how the photos travel: the order email today, the order form once ORDER_FORM_URL is a form */
@@ -1012,12 +1141,12 @@
   var closing = document.querySelector(".closing");
   if ("IntersectionObserver" in window && heroCta && closing) {
     var pastHero = false, atClosing = false;
-    var sync = function () { bar.hidden = !(pastHero && !atClosing); document.body.classList.toggle("has-bar", !bar.hidden); document.documentElement.classList.toggle("has-bar", !bar.hidden); };
+    var sync = function () { bar.hidden = barOff || !(pastHero && !atClosing); document.body.classList.toggle("has-bar", !bar.hidden); document.documentElement.classList.toggle("has-bar", !bar.hidden); };
     new IntersectionObserver(function (es) { es.forEach(function (e) { pastHero = !e.isIntersecting && e.boundingClientRect.top < 0; }); sync(); }, { threshold: 0 }).observe(heroCta);
     new IntersectionObserver(function (es) { es.forEach(function (e) { atClosing = e.isIntersecting; }); sync(); }, { threshold: 0.4 }).observe(closing);
   } else if (heroCta) {
     /* no IntersectionObserver: a plain scroll rule */
-    var onScroll = function () { var show = window.scrollY > 420; bar.hidden = !show; document.body.classList.toggle("has-bar", show); document.documentElement.classList.toggle("has-bar", show); };
+    var onScroll = function () { var show = !barOff && window.scrollY > 420; bar.hidden = !show; document.body.classList.toggle("has-bar", show); document.documentElement.classList.toggle("has-bar", show); };
     window.addEventListener("scroll", onScroll); onScroll();
   }
 

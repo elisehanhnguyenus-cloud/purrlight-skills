@@ -7,6 +7,12 @@ set -euo pipefail
 ROOT="$(git rev-parse --show-toplevel)"
 SRC="$ROOT/website"
 SHA="$(git -C "$ROOT" rev-parse --short HEAD)"
+
+# DEPLOY-HOLD ở gốc repo (không nằm trong website/): bản đã commit có phần khách thấy mà Elise CHƯA duyệt — dừng.
+# Đọc lý do trong file. Elise duyệt rồi thì xoá file, commit, chạy lại. Gấp mà vẫn phải đẩy: DEPLOY_HOLD_OK=1.
+if git -C "$ROOT" cat-file -e HEAD:DEPLOY-HOLD 2>/dev/null && [ "${DEPLOY_HOLD_OK:-}" != "1" ]; then
+  echo "DỪNG: có DEPLOY-HOLD trong bản đã commit — chưa đưa lên web:"; git -C "$ROOT" show HEAD:DEPLOY-HOLD; exit 1
+fi
 TMP="$(mktemp -d)"
 cleanup() { git -C "$ROOT" worktree remove --force "$TMP" 2>/dev/null || true; rm -rf "$TMP"; }
 trap cleanup EXIT

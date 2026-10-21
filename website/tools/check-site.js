@@ -120,7 +120,7 @@ if (cat) {
 
 /* ---------- Custom Orders prices ---------- */
 var pr = null;
-try { pr = load("custom-orders/prices.js", ["PRICES", "PAY", "ORDER_FORM_URL"]); }
+try { pr = load("custom-orders/prices.js", ["PRICES", "PAY", "ORDER_FORM_URL", "MERLIN_SCENE"]); }
 catch (e) { fail("custom-orders/prices.js", "không chạy được: " + e.message); }
 if (pr) {
   pr.warns.forEach(function (w) { fail("custom-orders/prices.js", w); });
@@ -173,6 +173,79 @@ if (pr && pr.out.PRICES) {
     });
     if (gl && !nGl) fail("js/event-desk.js gridListings", "không đọc được dòng nào (dạng \"id\": { kind: \"cat\", size: \"Grand\" })");
   }
+}
+
+/* ---------- deposit: PAY (prices.js) = the #pay cards in custom-orders/index.html (plan 21/10/2026) ---------- */
+if (pr && pr.out.PAY) {
+  var PAYX = pr.out.PAY, coHtml = readText(path.join(ROOT, "custom-orders/index.html")), WAYS = ["zelle", "venmo", "square", "stripe"];
+  var wayBlock = function (key) {   /* the card's HTML, from its opening tag to the next card or the end of the list */
+    var i = coHtml.indexOf('data-pay="' + key + '"');
+    if (i < 0) return null;
+    var start = coHtml.lastIndexOf("<div", i), rest = coHtml.slice(i), stop = rest.search(/<div class="pay-(way|done)"/);
+    return { open: coHtml.slice(start, coHtml.indexOf(">", i) + 1), html: coHtml.slice(start, stop > 0 ? i + stop : undefined) };
+  };
+  var attr = function (html, sel) { var m = new RegExp("<[^>]*" + sel + "[^>]*>").exec(html || ""); return m ? m[0] : ""; };
+  var hrefOf = function (tag) { var m = /\shref="([^"]*)"/.exec(tag); return m ? m[1].replace(/&amp;/g, "&") : null; };
+  var textOf = function (html, sel) { var m = new RegExp("<[^>]*" + sel + "[^>]*>([^<]*)<").exec(html || ""); return m ? m[1].trim() : null; };
+  if (!Array.isArray(PAYX.order) || !PAYX.order.length) fail("custom-orders/prices.js PAY.order", "phải là danh sách các cách trả, ví dụ [\"zelle\", \"venmo\", \"square\", \"stripe\"]");
+  else PAYX.order.forEach(function (key, i) {
+    var where = "custom-orders/prices.js PAY." + key;
+    if (WAYS.indexOf(key) < 0) { fail("custom-orders/prices.js PAY.order", "\"" + key + "\" chưa có thẻ trên trang (chỉ có " + WAYS.join(", ") + ")"); return; }
+    if (PAYX.order.indexOf(key) !== i) fail("custom-orders/prices.js PAY.order", "\"" + key + "\" bị lặp");
+    var m = PAYX[key];
+    if (!m || typeof m !== "object") { fail(where, "thiếu"); return; }
+    var data = key === "zelle" ? m.to : key === "venmo" ? m.handle : m.url;
+    if (typeof data !== "string") { fail(where, "phải có " + (key === "zelle" ? "to" : key === "venmo" ? "handle" : "url") + " (để \"\" nếu chưa có)"); return; }
+    var b = wayBlock(key);
+    if (!b) { fail("custom-orders/index.html", "không thấy thẻ data-pay=\"" + key + "\" trong #pay"); return; }
+    var hidden = /\shidden(\s|>|=)/.test(b.open);
+    if (!data && !hidden) fail("custom-orders/index.html", "thẻ " + key + " đang hiện nhưng PAY." + key + " trống — thêm hidden vào thẻ");
+    if (data && hidden) fail("custom-orders/index.html", "thẻ " + key + " đang ẩn (hidden) nhưng PAY." + key + " đã có — bỏ hidden");
+    ["back", "notes"].forEach(function (k) { if (k in m && typeof m[k] !== "boolean") fail(where + "." + k, "phải là true hoặc false (không có dấu nháy)"); });
+    if (m.qr && !has(path.posix.normalize("custom-orders/" + m.qr))) fail(where + ".qr", "không thấy ảnh " + m.qr);
+    if (!data) return;
+    if (key === "zelle") {
+      if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(data)) fail(where + ".to", "không giống địa chỉ email: " + data);
+      if (textOf(b.html, "data-zelle-to") !== data) fail("custom-orders/index.html", "địa chỉ Zelle trong thẻ ≠ PAY.zelle.to (" + data + ") — sửa cả hai cho giống");
+    } else if (key === "venmo") {
+      if (!/^@[A-Za-z0-9_-]{5,30}$/.test(data)) fail(where + ".handle", "phải có dạng @tên (5–30 chữ, số, - hoặc _): " + data);
+      if (textOf(b.html, "data-venmo-to") !== data) fail("custom-orders/index.html", "tên Venmo trong thẻ ≠ PAY.venmo.handle (" + data + ") — sửa cả hai cho giống");
+    } else {
+      if (!/^https:\/\/[^\s?#]+$/.test(data)) fail(where + ".url", "phải là link https không có dấu ? hay # (trang tự thêm số cọc khi được phép): " + data);
+      else if (key === "square" && !/^https:\/\/(square\.link\/u\/[A-Za-z0-9]+|checkout\.square\.site\/merchant\/[A-Za-z0-9\/_-]+)$/.test(data)) fail(where + ".url", "không phải link Square (square.link/u/…): " + data);
+      else if (key === "stripe") {
+        if (!/^https:\/\/buy\.stripe\.com\/[A-Za-z0-9_]+$/.test(data)) fail(where + ".url", "không phải link Stripe (buy.stripe.com/…): " + data);
+        else if (/^https:\/\/buy\.stripe\.com\/test_/.test(data)) fail(where + ".url", "đây là link chế độ thử (test_) — dùng link thật");
+        if (!(Number.isInteger(m.minCents) && Number.isInteger(m.maxCents) && m.minCents >= 50 && m.minCents <= m.maxCents)) fail(where, "minCents / maxCents phải là số cent nguyên, 50 ≤ minCents ≤ maxCents");
+      }
+      if (hrefOf(attr(b.html, "data-pay-link")) !== data) fail("custom-orders/index.html", "link nút " + key + " ≠ PAY." + key + ".url — sửa cả hai cho giống");
+    }
+  });
+  if (PAYX.thanks !== "thanks.html" || !has("custom-orders/thanks.html")) fail("custom-orders/prices.js PAY.thanks", "phải là \"thanks.html\" và có file custom-orders/thanks.html");
+}
+/* the thank-you page: never indexed, never reads the address's query (a provider's "st=Completed" must never become "paid") */
+if (has("custom-orders/thanks.html")) {
+  if (!/<meta name="robots" content="noindex, nofollow">/.test(readText(path.join(ROOT, "custom-orders/thanks.html")))) fail("custom-orders/thanks.html", "thiếu <meta name=\"robots\" content=\"noindex, nofollow\">");
+  var tj = has("custom-orders/thanks.js") ? readText(path.join(ROOT, "custom-orders/thanks.js")) : "";
+  if (!tj) fail("custom-orders/thanks.js", "không có file");
+  else if (/location\s*\.\s*(search|href)|URLSearchParams|document\s*\.\s*(URL|location)/.test(tj)) fail("custom-orders/thanks.js", "không được đọc địa chỉ trang (location.search / location.href / URLSearchParams)");
+}
+/* the Merlin scene: on only with Elise's approval date and all 8 files */
+if (pr && pr.out.MERLIN_SCENE) {
+  var MS = pr.out.MERLIN_SCENE;
+  if (MS.on !== true && MS.on !== false) fail("custom-orders/prices.js MERLIN_SCENE.on", "phải là true hoặc false");
+  if (MS.on === true) {
+    if (!(isSaleTime(String(MS.approved) + "T00:00:00Z") && /^\d{4}-\d{2}-\d{2}$/.test(String(MS.approved)))) fail("custom-orders/prices.js MERLIN_SCENE", "on: true cần ngày Elise duyệt ở approved (dạng 2026-10-25)");
+    ["assets/video/merlin-order-960.mp4", "assets/video/merlin-order-960.webm", "assets/video/merlin-order-phone-640.mp4", "assets/video/merlin-order-phone-640.webm",
+     "assets/img/custom/merlin-order-poster-960.webp", "assets/img/custom/merlin-order-poster-phone-640.webp", "assets/img/custom/merlin-order-still-960.webp", "assets/img/custom/merlin-order-still-phone-640.webp"]
+      .forEach(function (f) { if (!has(f)) fail("MERLIN_SCENE", "on: true nhưng thiếu file " + f); });
+  }
+  var cc = Array.isArray(MS.cc) ? MS.cc : null, lastEnd = -1;
+  if (!cc) fail("custom-orders/prices.js MERLIN_SCENE.cc", "phải là danh sách [giây bắt đầu, giây kết thúc, \"chữ\"]");
+  else cc.forEach(function (c, i) {
+    if (!Array.isArray(c) || typeof c[0] !== "number" || typeof c[1] !== "number" || typeof c[2] !== "string" || !(c[0] < c[1]) || c[0] < lastEnd) fail("custom-orders/prices.js MERLIN_SCENE.cc[" + i + "]", "phải là [bắt đầu, kết thúc, \"chữ\"], theo thứ tự thời gian, không chồng nhau");
+    else lastEnd = c[1];
+  });
 }
 
 /* ---------- JSON files, and the follow strip ---------- */

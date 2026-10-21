@@ -156,6 +156,8 @@ giá của lựa chọn khách mua. Danh sách chip có thanh cuộn riêng đ�
   README/script nội bộ). GitHub tự bật Pages khi branch `gh-pages` xuất hiện.
 - **Deploy lại sau khi sửa:** commit code, rồi chạy `bash website/deploy-pages.sh`
   (copy `website/` sang `gh-pages` và push; Pages cập nhật sau 1–2 phút).
+- **`DEPLOY-HOLD` ở gốc repo** = bản đã commit có phần khách thấy mà Elise chưa duyệt: script dừng và in lý do. Elise
+  duyệt xong thì xoá file, commit, deploy. (Từ 21/10/2026: phần trả cọc mới + trang cảm ơn chờ duyệt chữ.)
 - **Trước mỗi lần deploy, `tools/check-site.js` tự kiểm (20/10/2026)** trên đúng các file đã commit; có lỗi thì
   **dừng, web giữ bản cũ**. Nó bắt: lỗi cú pháp ở mọi file `.js` (vd thiếu dấu phẩy giữa hai sản phẩm — trước đây
   làm shop trống trơn), giá gõ thành chữ (`"55"`, `"$55"`), id/collection/badge sai, ảnh không có, thiếu `details`
@@ -271,10 +273,18 @@ photos** (danh sách ảnh cần gửi từng món) và **Message for the card**
 godparent; đi kèm dòng "My pick", không lưu trên máy); hộp tân gia: 4 món cơ bản
 + gift box, add-on +$10 (thêm Chocolate box), mỗi add-on chọn **thêm** hoặc
 **đổi** một món cơ bản (món bị đổi hiện gạch ngang trong hộp); mục **Pay your
-deposit** (`#pay`): nút Square (link "Custom order" khách tự nhập số tiền — trang
-ghi đúng số cọc + nút *Copy deposit amount*), Zelle® tới
-`purrlightstudiollc@gmail.com` (nút *Copy address*), QR Square chỉ hiện trên
-máy tính, điều khoản cọc lấy từ bản chị duyệt cho booth 25/09.
+deposit** (`#pay`, đổi 21/10 — kế hoạch `docs/PAYMENT-MERLIN-PLAN-2026-10-21.md`, chị bỏ PayPal): 4 thẻ theo
+thứ tự **Zelle · Venmo · Square · Stripe**; thẻ nào chưa có link/handle/địa chỉ thì ẩn (hôm nay hiện Zelle + Square).
+Mỗi tab có một **mã đơn** 4 ký tự (vd `K7HM`, không phải dữ liệu cá nhân) đi đầu trường ẩn `pick` của form; khách ghi
+`K7HM-D` vào ghi chú khi trả cọc (`-B` cho phần còn lại). Gửi form xong: trang lưu **bản sao đơn** trong tab
+(sessionStorage, không lời nhắn thiệp, không bao giờ localStorage), dòng "Got it — Merlin noted your order…", ẩn thanh
+Order, số cọc + mã ở phần cọc khoá theo **đơn đã gửi** (đổi món sau đó không đổi). Một nút *Copy deposit amount* chung,
+*Copy address* (Zelle), *Copy @handle* (Venmo). Dưới thẻ: **I've sent my deposit** → `thanks.html`. QR chỉ hiện trên
+máy tính. Dòng pháp lý Zelle VIẾT HOA (hướng dẫn thương hiệu Zelle). Điều khoản cọc lấy từ bản chị duyệt cho booth 25/09.
+**Trang cảm ơn** `custom-orders/thanks.html` (noindex): ảnh Merlin thật, câu "We check every deposit by hand…" (chị
+duyệt 21/10), lá thư trong hộp mail **"Your order was confirmed"** (chị đặt tên 21/10) có mã, món, ước tính, cọc — in/lưu
+PDF hoặc copy được. `thanks.js` **không bao giờ đọc phần `?…` của địa chỉ** (xoá ngay, không đọc): trang không thấy tiền,
+nên không ghi "paid". Thư xác nhận thật là email chị gửi sau khi thấy cọc. Cảnh Merlin (video) tắt: `MERLIN_SCENE.on`.
 
 **Chị cần điền (đầu `prices.js`):**
 - `ORDER_FORM_URL` — link form đặt hàng chung cho 7 món. **Hiện là form Tally
@@ -292,9 +302,18 @@ máy tính, điều khoản cọc lấy từ bản chị duyệt cho booth 25/09
   ảnh lên được (hay bị chặn trong trình duyệt của Instagram/TikTok).
 - `ORDER_FORM_PREFILL_ENTRY` — chỉ khi dùng Google Form: id ô nhận dòng tóm tắt
   (Form → ⋮ → Get pre-filled link → `entry.xxxx`).
-- `PAY.squareUrl`, `PAY.zelleTo` — nơi nhận cọc (đổi cả trong `index.html`
-  mục `#pay`, bản cho khách tắt JS). QR Square: `assets/img/custom/square-pay-qr.svg`
-  (tạo từ link; đổi link thì tạo lại QR).
+- `PAY` — nơi nhận cọc, mỗi cách một mục: `zelle.to`, `venmo.handle` (`@tên` của business profile), `square.url`,
+  `stripe.url` (`https://buy.stripe.com/…` loại "Customers choose what to pay"; trang tự điền số cọc bằng
+  `?prefilled_amount`, chỉ khi cọc nằm trong `minCents`–`maxCents`; **đặt mức tối thiểu của link = $5.00**, là mức cọc
+  nhỏ nhất trang tính ra — test giá kiểm). Để trống = thẻ ẩn (cũng là cách tắt nhanh một cách trả khi tài khoản bị giữ).
+  `back: true` chỉ sau khi một lần trả thật đã quay về `thanks.html`; `notes: true` khi trang của hãng có ô ghi chú cho
+  mã đơn; `qr` = ảnh QR (máy tính). **Đổi cả khối `.pay-way[data-pay=…]` trong `index.html`** (bản tắt JS: bỏ/thêm
+  `hidden`, link, địa chỉ, handle) — `tools/check-site.js` chặn deploy khi hai bên lệch, khi link Stripe là `test_`,
+  hay link không phải https. QR Square: `assets/img/custom/square-pay-qr.svg` (tạo từ link; đổi link thì tạo lại QR).
+- **Thêm một cách trả cọc** (vd Venmo): điền `PAY.venmo.handle`, bỏ `hidden` ở thẻ Venmo và ghi handle vào
+  `data-venmo-to` trong `index.html`, chạy `node tools/check-site.js .`. Link có chuyển khách về trang (Square, Stripe):
+  dán `https://elisehanhnguyenus-cloud.github.io/purrlight-skills/custom-orders/thanks.html` (không thêm gì vào URL)
+  vào ô redirect của hãng, thử thật một lần, rồi mới đặt `back: true`.
 
 **Tải trang (bản 4, đo ở 390px):** 21 request · 480 KB · CLS 0 (desktop 0.006).
 Chỉ ảnh của món đang hiện được tải; 6 món còn lại tải khi khách chọn. Font:
@@ -554,7 +573,7 @@ màu canon; muốn icon hồng thì đổi `src` sang `../assets/brand/favicon-6
 cách độc lập — dò mẫu khoá trong mọi phiên bản của mọi file, **gitleaks 8.21.2**, **detect-secrets** → **không có khoá
 API hay mật khẩu nào.** Repo này **công khai** (public): ai cũng đọc được mọi thứ từng commit.
 
-Công khai có chủ đích (khách cần, không phải bí mật): link form Tally, link thanh toán Square, email Zelle / Gmail studio.
+Công khai có chủ đích (khách cần, không phải bí mật): link form Tally, link thanh toán Square (và link Stripe, handle Venmo khi có), email Zelle / Gmail studio.
 
 **Quy tắc:**
 - Khoá / mật khẩu chỉ để trong `.env` trên máy mình: `cp .env.example .env` rồi điền. `.gitignore` chặn `.env`, file

@@ -441,7 +441,22 @@ p { margin: 0; }
 .pay-lede { max-width: 60ch; margin-top: 4px; }
 .pay-pick { margin-top: 10px; font-size: 15px; }
 .pay-pick strong { color: var(--berry); font-weight: 600; }
-.pay-pick[hidden] { display: none; }
+.pay-pick[hidden], .pay-way[hidden], .pay-qr[hidden], .pay-hint[hidden], .pay-back[hidden] { display: none; }
+.pay-pick-actions { margin: 0; }
+.pay-sent { font-size: 15px; font-weight: 600; color: var(--ink); margin-top: 6px; }
+.pay-sent:empty { height: 0; margin: 0; overflow: hidden; }   /* rendered while empty: read when the text arrives */
+.pay-hint { font-size: 15px; }
+.pay-back { font-size: 14px; color: var(--ink-soft); }
+.pay-sent-link { margin: 0; }
+.pay-sent-link a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 500; }
+.venmo-to { font-weight: 600; }
+.pay-done { margin-top: 18px; display: grid; gap: 6px; }
+.pay-done p { margin: 0; }
+.pay-contact { margin-top: 8px; }
+/* a quiet secondary button: ink outline on cream, as tall as the others */
+.btn-quiet { background: transparent; border: 1.5px solid var(--line-ui); min-height: 44px; }
+.btn-quiet:hover { background: var(--glow-soft); }
+.btn-quiet:active { background: var(--peach); }
 .pay-ways { display: grid; gap: 0; margin-top: 18px; }
 .pay-way { padding: 16px 0; border-top: 1px solid var(--line); display: grid; gap: 8px; align-content: start; }
 .pay-way:last-child { border-bottom: 1px solid var(--line); }
@@ -791,3 +806,46 @@ html[data-season="christmas"] .glints-lamp i:nth-child(1), html[data-season="chr
 @keyframes co-twinkle { 0%, 100% { opacity: 1; transform: scale(1) rotate(0); } 50% { opacity: 0.35; transform: scale(0.6) rotate(25deg); } }
 @keyframes co-bulb { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }   /* a soft breath, not a blink */
 @media print { .xmas-snow { display: none; } .xmas-times[open] > summary { display: none; } }   /* printing opens the timing list (custom-orders.js); the toggle means nothing on paper */
+
+/* ---------- thanks.html: after paying a deposit (plan 21/10 §3) ---------- */
+.thanks { padding: 28px 0 48px; }
+.thanks-inner { max-width: 640px; display: grid; gap: 16px; justify-items: start; }
+.thanks-h { font-size: 40px; }
+.thanks-photo { margin: 0; }
+.thanks-photo img { width: 160px; height: 160px; border-radius: 50%; object-fit: cover; border: 1px solid var(--line); }
+.thanks-fact { font-size: 17px; max-width: 56ch; }
+.thanks-neutral { font-size: 15px; color: var(--ink-soft); max-width: 60ch; }
+.thanks-neutral[hidden], .letter[hidden], .letter-meta[hidden], .letter-actions[hidden], .mailbox-btn[hidden] { display: none; }
+.mailbox { display: grid; gap: 12px; width: 100%; justify-items: start; }
+.mailbox-btn { gap: 10px; padding: 0 18px; }
+.mailbox-btn svg { flex: none; }
+.letter { width: 100%; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-img); padding: 20px 18px; display: grid; gap: 8px; box-shadow: 0 1px 0 var(--line-soft); }
+.letter:focus { outline: 2px solid var(--berry); outline-offset: 2px; }
+.letter-from { font-family: var(--font-hand); font-size: 22px; color: var(--caption); line-height: 1.1; }
+.letter-title { font-size: 24px; }
+.letter-meta { font-size: 14px; color: var(--ink-soft); }
+.letter-product { font-weight: 600; }
+.letter-pick { font-size: 14.5px; overflow-wrap: anywhere; }
+.letter-money { font-size: 15px; }
+.letter-delivery { font-size: 14px; color: var(--ink-soft); }
+.letter-sub { font-size: 17px; margin-top: 6px; }
+.letter-steps { margin: 0; padding-left: 22px; display: grid; gap: 6px; font-size: 15px; }
+.letter-note { font-weight: 600; }
+.letter-fine { font-size: 13.5px; color: var(--ink-soft); }
+.letter-actions { display: flex; flex-wrap: wrap; gap: 0 18px; margin: 0; }
+.thanks-terms, .thanks-contact { max-width: 64ch; }
+.thanks-links { font-size: 15px; }
+.thanks-links a { display: inline-flex; align-items: center; min-height: 44px; }
+@media (min-width: 600px) {
+  .thanks { padding: 44px 0 64px; }
+  .thanks-h { font-size: 48px; }
+  .letter { padding: 28px 30px; }
+}
+/* printing: the letter only */
+@media print {
+  .thanks-page .site-header, .thanks-page .co-footer, .thanks-page .skip-link, .thanks-h, .thanks-photo, .thanks-fact, .thanks-neutral,
+  .mailbox-btn, .letter-actions, .thanks-terms, .thanks-contact, .thanks-links, .thanks-page [role="status"] { display: none !important; }
+  .thanks-page { background: #fff; }
+  .thanks { padding: 0; }
+  .letter, .letter[hidden] { display: grid !important; border: 0; box-shadow: none; padding: 0; }
+}

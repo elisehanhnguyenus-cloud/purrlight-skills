@@ -110,12 +110,66 @@ var ORDER_FORM_URL = "https://tally.so/r/M1KOkY";
    and paste it. To find the id: Google Form → ⋮ → Get pre-filled link. */
 var ORDER_FORM_PREFILL_ENTRY = "";
 
-/* Where the deposit is paid (Elise 15/10/2026). The Square link is a "Custom order" payment link where the
-   customer types the amount; Zelle goes to this address. The same values are written into index.html (#pay)
-   for visitors without JavaScript — change both together. */
+/* Where the deposit is paid (Elise 15/10 + 21/10/2026): one entry per way, shown in the order of PAY.order — Elise's
+   order (Zelle, Venmo, Square, Stripe; PayPal dropped 21/10). An empty to / handle / url = that way is hidden (also
+   the allowed one-line switch during the 15/11–02/01 freeze, e.g. when an account is on hold).
+   back: true only once a real payment came back to thanks.html (the provider's redirect, README "Add a way to pay").
+   notes: true once the provider's page has a box where the customer can type the order code.
+   qr: shown on computers only. The same values are written into index.html (#pay) for visitors without JavaScript —
+   change both together: tools/check-site.js stops a deploy when they differ. Links, handles and addresses only —
+   never a key or a secret. */
 var PAY = {
-  squareUrl: "https://square.link/u/UUg2LtbP",
-  zelleTo: "purrlightstudiollc@gmail.com"
+  order: ["zelle", "venmo", "square", "stripe"],
+  zelle:  { to: "purrlightstudiollc@gmail.com" },                /* the order code goes in the memo */
+  venmo:  { handle: "", qr: "" },                                /* business profile "@name"; qr: a Venmo QR with no amount set */
+  square: { url: "https://square.link/u/UUg2LtbP", back: false, notes: false, qr: "../assets/img/custom/square-pay-qr.svg" },
+          /* the "Custom order" link: the customer types the amount (Elise tried $45 on 21/10: $45.00, no tax or tip added) */
+  stripe: { url: "", back: false, notes: true, qr: "", minCents: 500, maxCents: 1000000 },
+          /* https://buy.stripe.com/… with "Customers choose what to pay"; minCents = the link's minimum = the smallest
+             deposit this page can make ($5.00: a $10 digital painting for a buyer outside Texas — the price test checks
+             it); maxCents = the link's maximum. A deposit outside them is not filled in. */
+  thanks: "thanks.html"
+};
+
+/* the link for one way to pay, with the deposit filled in only where the provider documents it — Stripe:
+   ?prefilled_amount in cents on a "customers choose what to pay" link (docs.stripe.com/payment-links/customize).
+   Nothing else ever goes on a payment URL: no name, no email, no card message, no order code, no utm. */
+function payHref(key, deposit) {
+  var m = PAY[key] || {}, url = m.url || "", cents = Math.round(Number(deposit) * 100);
+  if (!url || !(cents > 0)) return url;
+  if (key === "stripe" && /^https:\/\/buy\.stripe\.com\/(?!test_)[A-Za-z0-9_]+$/.test(url) && cents >= m.minCents && cents <= m.maxCents)
+    return url + "?prefilled_amount=" + cents;
+  return url;
+}
+
+/* the order code (plan 21/10 §2.2): 4 characters that are hard to mix up — no 0/O, 1/I/L, 2/Z, 5/S, 6/G, 8/B, U/V,
+   Q. Random, not personal data. It goes first in the form's "pick" field and into the payment note (K7HM-D for the
+   deposit, K7HM-B for the balance), so Elise can match a payment to its order. "" when the browser has no
+   crypto.getRandomValues: the page then asks for "your name and your piece". */
+var CODE_CHARS = "ACDEFHJKMNPRTWXY3479";
+function newOrderCode(rnd) {
+  var c = rnd || (typeof crypto !== "undefined" && crypto && crypto.getRandomValues ? crypto : null), out = "";
+  if (!c) return "";
+  try {
+    while (out.length < 4) {
+      var b = c.getRandomValues(new Uint8Array(8));
+      for (var i = 0; i < b.length && out.length < 4; i++) if (b[i] < 240) out += CODE_CHARS.charAt(b[i] % 20);   /* 240 = 12 × 20: every character equally likely */
+    }
+  } catch (e) { return ""; }
+  return out;
+}
+function isOrderCode(s) { return typeof s === "string" && /^[ACDEFHJKMNPRTWXY3479]{4}$/.test(s); }
+
+/* the scene on thanks.html after paying (Elise 21/10: Merlin says thank you, writes 2 sheets, tosses one into the
+   mailbox, jumps down, knocks on the door: "Mommy, you have a new order!"). Off until Elise approves the frames,
+   words and alt of this version — then on: true with the day in approved (tools/check-site.js stops a deploy on
+   on: true without that date or without the files). Off = the real Merlin photo, the words and the letter. */
+var MERLIN_SCENE = {
+  on: false,
+  approved: "",                   /* "2026-10-2x": the day Elise approved this version */
+  version: "mockup-2026-10-21",   /* new files → a new value (GitHub Pages caches 10 min); added as ?v= to each file */
+  voice: false,                   /* true once the video has Merlin's voice: shows "Sound on" */
+  cc: [[1.6, 3.3, "Thank you!"], [11.5, 12.5, "[knock, knock, knock]"], [12.6, 14.6, "Mommy, you have a new order!"]]
 };
 
 var PRICES = {
@@ -385,5 +439,5 @@ function summaryLine(product, est, how) {
 }
 
 if (typeof module !== "undefined") {
-  module.exports = { ORDER_FORM_URL: ORDER_FORM_URL, ORDER_FORM_PREFILL_ENTRY: ORDER_FORM_PREFILL_ENTRY, PAY: PAY, PRICES: PRICES, money: money, moneyPair: moneyPair, taxLabel: taxLabel, outOfTexas: outOfTexas, itemOff: itemOff, applyQty: applyQty, estPortraitDoll: estPortraitDoll, estPet: estPet, estWatercolor: estWatercolor, estHousewarming: estHousewarming, estCalendar: estCalendar, estGodparent: estGodparent, estChristeningGown: estChristeningGown, estConfirmation: estConfirmation, TIMING: TIMING, timingKind: timingKind, timingNote: timingNote, addonPrice: addonPrice, gownPrice: gownPrice, summaryLine: summaryLine };
+  module.exports = { ORDER_FORM_URL: ORDER_FORM_URL, ORDER_FORM_PREFILL_ENTRY: ORDER_FORM_PREFILL_ENTRY, PAY: PAY, PRICES: PRICES, money: money, moneyPair: moneyPair, taxLabel: taxLabel, outOfTexas: outOfTexas, itemOff: itemOff, applyQty: applyQty, estPortraitDoll: estPortraitDoll, estPet: estPet, estWatercolor: estWatercolor, estHousewarming: estHousewarming, estCalendar: estCalendar, estGodparent: estGodparent, estChristeningGown: estChristeningGown, estConfirmation: estConfirmation, TIMING: TIMING, timingKind: timingKind, timingNote: timingNote, addonPrice: addonPrice, gownPrice: gownPrice, summaryLine: summaryLine, payHref: payHref, newOrderCode: newOrderCode, isOrderCode: isOrderCode, CODE_CHARS: CODE_CHARS, MERLIN_SCENE: MERLIN_SCENE };
 }

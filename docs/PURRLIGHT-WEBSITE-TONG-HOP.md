@@ -549,8 +549,9 @@ lazy-load.
   dùng ảnh listing Etsy Maine Coon; christening dùng ảnh hộp thật thay mockup.
 - Giá custom doll $80 (brief) ≠ bảng giá booth 25/09 (doll Petite $45 /
   Classic $85 / Grand $130) và custom pet Grand Etsy $150 ≠ booth $90–120 —
-  khác kênh có chủ ý? → 21/10: Elise chốt búp bê $80 ở mọi nơi (booth đã sửa);
-  câu pet Grand / Etsy Jumbo còn chờ.
+  khác kênh có chủ ý? → 21/10: Elise chốt búp bê $80 ở mọi nơi (booth đã sửa).
+  Pet Grand: cùng một món với Etsy "Jumbo" $150 — giá Etsy cao hơn **có chủ ý** vì Etsy miễn phí giao hàng
+  (Elise 21/10). Giá trực tiếp (web Custom Orders + booth) là bảng $90–120.
 - ✅ **Hạn Giáng sinh — Elise chốt 15/10: giữ Chủ nhật.** Brief §1/§3.9 ghi
   "Sun, Nov 30 · Sun, Dec 14" nhưng năm 2026 hai ngày đó là thứ Hai → trang
   nay ghi **Sun, Nov 29** (crochet) và **Sun, Dec 13** (tranh, lịch, hộp quà).
@@ -1194,8 +1195,21 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   01/11). Cả 31 giá trên shop khớp đúng giá Etsy (so từng listing).
 - **Giá búp bê: $80 ở mọi nơi (chị chốt 21/10).** Booth Classic 1 con $85 → $80 (cặp vẫn $160). `check-site` giờ chặn
   deploy nếu giá búp bê hay bảng giá thú cưng ở booth lệch web. Listing Etsy "Angel Portrait Doll" (4467697803) đang
-  $79 — chị đổi trên Etsy thì sổ đêm tự thấy, em đổi shop theo. Listing Etsy "Jumbo Cat & Pet Plushie" (4364432946)
-  $150 khác Custom Orders size Grand $90–120: chờ chị nói đó có phải cùng một món không.
+  $79 — chị đổi trên Etsy thì sổ đêm tự thấy, em đổi shop theo.
+- **Etsy "Jumbo Cat & Pet Plushie" (4364432946, $150) = size Grand (chị trả lời 21/10).** Giá Etsy cao hơn vì Etsy miễn
+  phí giao hàng, chị tăng giá để bù. Luật từ nay: **giá trực tiếp** (Custom Orders trên web + booth) giống nhau ở mọi
+  nơi; **giá Etsy** được phép cao hơn. Thẻ shop dẫn sang Etsy thì ghi giá Etsy ($150).
+  - **Booth đã sửa:** trước đây chip "Your Pet, Crocheted — Grand" ở Event Desk tính $150 (giá Etsy), trong khi chip
+    "Custom cat" size Grand tính $90–120 — cùng một món, 2 giá. Nay chip đó thêm dòng "Custom cat · Grand" theo bảng
+    ($90/$105/$120). Chip "Custom Crochet Angel Portrait Doll" ($79 Etsy) cũng vậy: thêm "Custom doll · Classic" $80.
+    Danh sách ở `gridListings` trong `js/event-desk.js`; `check-site` chặn deploy nếu id không còn trong shop.
+  - **Dòng pháp lý Zelle** (theo hướng dẫn thương hiệu của Zelle): thêm câu VIẾT HOA "PURRLIGHT STUDIO LLC IS NOT
+    AUTHORIZED, ENDORSED, OR SPONSORED BY EARLY WARNING SERVICES, LLC- OWNER OF ZELLE®."; tiêu đề thẻ thành
+    "Zelle® payment" (Zelle chỉ cho dùng tên như tính từ).
+- **Thanh toán: chị trả lời 21/10.** (1) Link Square gõ 45 hiện đúng **$45.00** — không bị cộng thuế 2 lần.
+  (2) Lá thư Merlin thảy vào hộp mail tên **"Your order was confirmed"**; thư xác nhận thật vẫn là email chị gửi
+  sau khi thấy cọc. (3) Câu **"We check every deposit by hand"** đúng cách chị làm → được lên web. (4) **Bỏ PayPal.**
+  Còn 4 cách: Zelle · Venmo · Square · Stripe. Luật "ngang hàng" của PayPal không còn áp dụng.
 
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
@@ -1211,12 +1225,10 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
    khác). Spike 0a em đã dựng xong (mục 6).
 6. Spike 0a: tự tạo token và đổi 1 ảnh theo `docs/ADMIN-SPIKE-0A-HUONG-DAN.md`, rồi nhắn em 5 dòng ghi chú.
 7. ~~Instagram~~ — xong 21/10 (@vietdelight_us).
-8. Etsy: đổi listing Angel Portrait Doll $79 → $80 nếu muốn khớp. "Jumbo" $150 trên Etsy có phải là size Grand
-   ($90–120) không?
+8. Etsy: đổi listing Angel Portrait Doll $79 → $80 nếu muốn khớp. (~~"Jumbo" $150 = size Grand?~~ — có, 21/10.)
 9. ~~Đồng bộ Etsy~~ — xong 21/10. Bảng số trong Làng chỉ làm sau 7 đêm đồng bộ liền thành công (tới ~28/10).
-10. Thanh toán: kế hoạch chốt ở `docs/PAYMENT-MERLIN-PLAN-2026-10-21.md` (hội đồng Hải Đăng, Linh Trần, Prue duyệt kèm
-    sửa). **Gấp:** mở link Square, gõ 45 — màn hình phải ghi đúng $45.00 (không thêm dòng thuế/tip). Rồi trả lời các câu ở
-    mục 10 (câu nào cũng có mặc định); link Venmo/Stripe/PayPal gửi trước ~05/11 thì lên trước mùa lễ.
+10. Thanh toán: kế hoạch chốt ở `docs/PAYMENT-MERLIN-PLAN-2026-10-21.md`. ~~Thử Square $45~~ — đúng $45.00 (21/10).
+    Bỏ PayPal (21/10). Link Venmo (business profile) / Stripe gửi trước ~05/11 thì lên trước mùa lễ.
 
 ## 9. Link & tài nguyên
 

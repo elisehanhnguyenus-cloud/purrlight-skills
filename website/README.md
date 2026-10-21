@@ -121,10 +121,15 @@ hàng làm theo đơn ngoài mùa lễ vẫn "typically 10–14 days" của skil
 Fur"), dòng
 safety nguyên văn (Brand Canon v2).
 
+**Giá booth = giá trực tiếp trên web** (Elise 21/10): bảng `customGrid` (mèo/thú cưng, búp bê) phải giống
+`custom-orders/prices.js` — `tools/check-site.js` chặn deploy khi lệch. Chip của listing Etsy là món trong bảng
+(`gridListings`: "Your Pet, Crocheted — Grand" → Custom cat · Grand; angel portrait doll → Custom doll · Classic)
+thêm dòng theo bảng, không theo giá Etsy: giá Etsy được phép cao hơn vì Etsy miễn phí giao hàng (Elise 21/10).
+
 **Luật đã cài cứng trong tool** (đừng gỡ): không có ô nhập ngày giao — chỉ có
 3 lựa chọn timeline dạng khoảng + điều kiện; dòng cá nhân bị chặn nếu chứa từ
 cấm (safe/non-toxic, "shipped", "before Christmas", magic, "made in USA"…);
-mặc định **không ghi thuế** cho tới khi có Texas Sales and Use Permit; giảm
+mặc định **cộng thuế 8.25%** lên giá (Elise 21/10; máy còn để "none" kiểu cũ tự chuyển một lần); giảm
 giá quá 15% bị cảnh báo (chủ trương: hạ size, không hạ giá); Purrks không
 được nhắc tới.
 

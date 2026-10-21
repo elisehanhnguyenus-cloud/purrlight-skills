@@ -450,6 +450,7 @@ p { margin: 0; }
 .pay-status:empty { height: 0; margin: 0; overflow: hidden; }   /* rendered while empty: live regions that appear with their text are often not read */
 .pay-terms { margin-top: 14px; max-width: 70ch; }
 .legal { margin-top: 10px; font-size: 12.5px; line-height: 1.5; color: var(--ink-soft); max-width: 80ch; }
+.legal-caps { display: block; margin-top: 2px; }
 @media (min-width: 900px) {
   .pay { padding: 56px 0; }
   .pay-ways { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px; }

@@ -160,6 +160,18 @@ if (pr && pr.out.PRICES) {
     (P2.pet.sizes || []).forEach(function (size) {
       if (JSON.stringify(cg[size]) !== JSON.stringify(P2.pet.table[size])) fail("giá thú cưng " + size, "booth " + JSON.stringify(cg[size]) + " ≠ web " + JSON.stringify(P2.pet.table[size]) + " — sửa cả hai cho giống");
     });
+    /* gridListings: an Etsy listing that is a grid piece rings up at the grid at the booth (Elise 21/10/2026) —
+       a renamed id would silently put the Etsy price back on the booth chip */
+    var gl = /\bgridListings:\s*\{([\s\S]*?)\n\s*\}/.exec(desk), ids = new Set((cat && Array.isArray(cat.out.PRODUCTS) ? cat.out.PRODUCTS : []).map(function (p) { return p.id; })), nGl = 0;
+    if (!gl) fail("js/event-desk.js", "không thấy gridListings (món Etsy tính theo bảng giá booth)");
+    else gl[1].replace(/"([^"]+)":\s*\{\s*kind:\s*"(\w+)",\s*size:\s*"(\w+)"\s*\}/g, function (_, id, kind, size) {
+      nGl++;
+      var g = kind === "cat" ? cg : kind === "doll" ? dg : null;
+      if (!ids.has(id)) fail("js/event-desk.js gridListings", "\"" + id + "\" không có trong js/products.js");
+      if (!g || !g[size]) fail("js/event-desk.js gridListings", "\"" + id + "\": " + kind + " / " + size + " không có trong bảng giá booth");
+      return "";
+    });
+    if (gl && !nGl) fail("js/event-desk.js gridListings", "không đọc được dòng nào (dạng \"id\": { kind: \"cat\", size: \"Grand\" })");
   }
 }
 

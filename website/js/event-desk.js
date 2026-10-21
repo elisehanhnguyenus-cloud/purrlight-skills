@@ -60,6 +60,16 @@ var DESK_CONFIG = {
     depositRate: 0.5
   },
 
+  /* Etsy listings in products.js that ARE a custom-grid piece. At the booth they ring up at the grid, never at the
+     Etsy price: Elise 21/10/2026 — the Jumbo cat & pet on Etsy ($150) is the Grand size here, priced higher on Etsy
+     because Etsy ships free; the angel portrait doll is a Classic portrait doll ($80 everywhere). The chip keeps the
+     listing's name and adds a custom line already set to that size. tools/check-site.js stops a deploy when an id
+     here is not in products.js or the size is not in the grid. */
+  gridListings: {
+    "custom-pet-grand": { kind: "cat", size: "Grand" },
+    "angel-portrait-doll": { kind: "doll", size: "Classic" }
+  },
+
   /* Words that must never reach a customer from the free-text fields
      (dates promised, safety claims, "shipped" before a scan). The desk
      refuses to save while one is present. */
@@ -645,6 +655,12 @@ var DESK_CONFIG = {
     /* a listing whose Etsy options change the price (priceFrom) has no fixed booth price: the chip shows "from $X"
        and the line asks for the price of the option the customer chose */
     catalog.forEach(function (p) {
+      var g = (CFG.gridListings || {})[p.id];
+      if (g && GRID[g.kind] && GRID[g.kind][g.size]) {   /* the grid price, not the Etsy price (see gridListings) */
+        list.push({ kind: g.kind, name: p.name, price: null, size: g.size,
+          hint: (g.kind === "cat" ? "Custom cat" : "Custom doll") + " · " + g.size + " · from " + money(cents(GRID[g.kind][g.size][0])) });
+        return;
+      }
       list.push(p.priceFrom ? { kind: "catalog", pid: p.id, name: p.name, price: null, ask: true, hint: "from " + money(cents(p.price)) + (p.sale ? " · " + p.sale.off + "% off: type the option's sale price" : " · type the option's price"), addons: null }
         : { kind: "catalog", pid: p.id, name: p.name, price: p.price, addons: p.addons || null });
     });
@@ -688,11 +704,13 @@ var DESK_CONFIG = {
     if (p.kind === "catalog" && !p.addons) {
       for (var i = 0; i < lines.length; i++) if (lines[i].pid === p.pid) { lines[i].qty += 1; renderLines(); return; }
     }
-    var l = { kind: p.kind, pid: p.pid || null, name: p.name, addons: p.addons || null, addonIndex: 0, addon: "", qty: 1,
+    var grid = p.kind === "cat" || p.kind === "doll";
+    /* a grid line is a "Custom cat" / "Custom doll" line, whichever chip added it (gridListings keep the Etsy name on the chip only) */
+    var l = { kind: p.kind, pid: p.pid || null, name: grid ? (p.kind === "cat" ? "Custom cat" : "Custom doll") : p.name, addons: p.addons || null, addonIndex: 0, addon: "", qty: 1,
       unit: p.price == null ? "" : p.price, custom: null };
     if (p.ask) l.ask = true;
-    if (p.kind === "cat" || p.kind === "doll") {
-      l.custom = { size: "Classic", yarn: 0, pair: 0, pet: "", pose: "", eyes: "", code: "", type: p.kind === "cat" ? "Cat" : "" };
+    if (grid) {
+      l.custom = { size: p.size || "Classic", yarn: 0, pair: 0, pet: "", pose: "", eyes: "", code: "", type: p.kind === "cat" ? "Cat" : "" };
       /* a custom piece follows the custom lead time unless staff already chose otherwise */
       if (!timelineTouched) { var r = $('input[value="custom"]', el.tlChips); if (r) r.checked = true; }
     }

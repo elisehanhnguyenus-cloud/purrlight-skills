@@ -191,9 +191,16 @@
     if (steps.length !== 4) return;
     var set = function (li, label, text) { li.querySelector(".tl-label").textContent = label; if (text) li.querySelector(".tl-text").textContent = text; };
     set(steps[0], "Your payment", "We check your payment by hand and email you once it's in.");
-    set(steps[1], "Preview & edits", "We send you a preview first. Up to 5 rounds of edits are included; more are charged.");
+    set(steps[1], "Preview & edits", "We send you a preview first. Up to 5 rounds of edits are included; after that, edits are priced as a new piece.");
     steps[2].hidden = true;
     steps[3].querySelector(".tl-n").textContent = "3";
+    /* the rosary add-on comes with a digital painting (Elise 21/10: paid in full too): it ships or is picked up */
+    var g = own(GETS, copy.delivery) ? GETS[copy.delivery] : null, text = GETS["Digital file"].step;
+    if (g && copy.delivery !== "Digital file" && copy.pick && copy.pick.indexOf("Crochet rosary add-on") > -1) {
+      text += g.icon === "pickup" ? " Pick up the rosary at Pearland Town Center on " + copy.delivery.replace("Pickup ", "") + "." : " The rosary ships free in the U.S.";
+      stepLi.setAttribute("data-how", g.icon);
+    }
+    set(steps[3], steps[3].querySelector(".tl-label").textContent, text);
   }
 
   if (copy) {
@@ -224,9 +231,8 @@
       }
       note.appendChild(document.createTextNode(" in " + (noteWhere() || "the payment note") + "."));
     }
-    if (full(copy)) {   /* paid in full: the booth's paid-in-full terms (Elise 25/09) and "payment" for "deposit" */
-      var terms = $(".thanks-terms"), fact = $("[data-thanks-fact]");
-      if (terms) terms.textContent = "It's refundable in full until work begins. Custom pieces can't be returned, but anything wrong or damaged is on us, 100%.";
+    if (full(copy)) {   /* paid in full: "payment" for "deposit" */
+      var fact = $("[data-thanks-fact]");
       if (fact) fact.textContent = fact.textContent.replace("We check every deposit by hand", "We check every payment by hand");
     }
   }

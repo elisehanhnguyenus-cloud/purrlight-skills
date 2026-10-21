@@ -14,8 +14,10 @@
      box with its add-ons).
    - Both godparents: the second set is $10 less ($95 + $85).
    - 50% deposit when ordering; the balance after the photo is approved.
-     Digital files (Elise 21/10): paid in full when ordering, no deposit — a preview first, up to 5 rounds of edits
-     (more are charged), and the final file by email once it is approved.
+     Digital files (Elise 21/10): paid in full when ordering, no deposit — also with the crochet rosary add-on ("y
+     chang") — a preview first, up to 5 rounds of edits (after that, priced as a new piece), and the final files by
+     email once approved. Refunds (Elise 21/10): for an order not yet started and materials not yet bought, when
+     cancelled at least 5 days before work begins; not for last-minute orders.
    - Print paper: regular paper is included in the print price · fine-art
      paper +$10 · handmade Vietnamese Dó papyrus +$5.
 
@@ -282,7 +284,8 @@ function estWatercolor(o) {
   if (isPrint && o.giftBox) lines.push({ label: "Gift box", amount: PRICES.watercolor.giftBox });
   if (o && o.rosary) lines.push({ label: "Crochet rosary add-on", amount: PRICES.watercolor.rosary });
   var r = applyQty(finish(lines), o && o.qty, "painting", "paintings");
-  r.digitalOnly = !isPrint && !(o && o.rosary);   /* nothing ships — and it is paid in full (settle) */
+  r.digitalOnly = !isPrint && !(o && o.rosary);   /* nothing ships */
+  r.full = !isPrint;   /* a digital painting is paid in full (settle) — with the rosary add-on too (Elise 21/10) */
   r.note = r.qty > 1 ? "Estimate for " + r.qty + " paintings with the same options" : "Estimate for one painting";
   return settle(r);
 }
@@ -323,7 +326,7 @@ function estCalendar(o) {
   var pages = o && o.pages === 6 ? 6 : 1;
   var label = (kind === "print" ? "Design + print" : "Digital files only") + " · " + (pages === 1 ? "1 page" : "6 pages");
   var r = finish([{ label: label, amount: PRICES.calendar[kind][pages] }]);
-  r.digitalOnly = kind === "digital";   /* paid in full (settle) */
+  r.digitalOnly = r.full = kind === "digital";   /* nothing ships; paid in full (settle) */
   return settle(r);
 }
 
@@ -417,12 +420,12 @@ function applyQty(r, qty, one, many) {
 }
 
 /* Texas sales tax on the taxed part of the price (whole cents, half a cent rounds up) — none when the order ships
-   outside Texas — then 50% deposit today and the rest after the photo is approved. A digital file (r.digitalOnly) is
-   paid in full today (Elise 21/10): the "deposit" is the whole total and nothing is left after. */
+   outside Texas — then 50% deposit today and the rest after the photo is approved. An order with a digital file (r.full)
+   is paid in full today (Elise 21/10): the "deposit" is the whole total and nothing is left after. */
 function settle(r) {
   var pre = Math.round(r.pre * 100), taxed = r.outOfTexas ? 0 : pre - Math.round((r.taxFree || 0) * 100);
   var tax = Math.round(Math.max(0, taxed) * PRICES.salesTaxBp / 10000);
-  var cents = pre + tax, dep = r.digitalOnly ? cents : Math.ceil(cents * PRICES.depositRate);   /* a half cent always rounds the deposit up */
+  var cents = pre + tax, dep = r.full ? cents : Math.ceil(cents * PRICES.depositRate);   /* a half cent always rounds the deposit up */
   r.tax = tax / 100;
   r.total = cents / 100;
   r.deposit = dep / 100;
@@ -439,7 +442,7 @@ function summaryLine(product, est, how) {
   for (var i = 0; i < est.lines.length; i++) parts.push(est.lines[i].label + " " + money(est.lines[i].amount) + (est.lines[i].detail ? " (" + est.lines[i].detail + ")" : ""));
   var qty = est.qty > 1 ? " — × " + est.qty + " " + est.many + " " + money(est.subtotal) + ", order more, save more −" + money(est.saving) : "";
   var tax = est.outOfTexas ? " — no Texas sales tax (outside Texas)" : " — " + taxLabel() + " " + money(est.tax) + (est.taxFree ? " (not on the fresh fruit)" : "");
-  return "My pick: " + product + " — " + parts.join(" · ") + qty + tax + " — estimate " + money(est.total) + (est.digitalOnly ? " · pay in full " : " · deposit (50%) ") + money(est.deposit) + (est.digitalOnly ? "" : " · " + (how || (est.pickupOnly ? "Pickup at Pearland Town Center" : "Free U.S. shipping")));
+  return "My pick: " + product + " — " + parts.join(" · ") + qty + tax + " — estimate " + money(est.total) + (est.full ? " · pay in full " : " · deposit (50%) ") + money(est.deposit) + (est.digitalOnly ? "" : " · " + (how || (est.pickupOnly ? "Pickup at Pearland Town Center" : "Free U.S. shipping")));
 }
 
 /* the pick line back in parts, for the thank-you letter (Elise 21/10: the order easy to read, check and skim):
@@ -507,10 +510,10 @@ function pickParts(text, product) {
     var full = Math.round(pre * PRICES.salesTaxBp / 10000), t = c(out.tax.amount);
     if (out.tax.fruit ? !(t >= 0 && t < full) : t !== full) return null;
   }
-  /* estimate = all of it with tax; deposit = half, rounded up to the cent; balance = the rest. "pay in full" (a digital
-     file, Elise 21/10): the whole estimate, nothing to ship (no how) */
+  /* estimate = all of it with tax; deposit = half, rounded up to the cent; balance = the rest. "pay in full" (an order
+     with a digital file, Elise 21/10): the whole estimate — a how only when the rosary add-on ships with it */
   if (pre + (out.tax ? c(out.tax.amount) : 0) !== c(out.total)) return null;
-  if (out.full ? c(out.deposit) !== c(out.total) || out.how : c(out.deposit) !== Math.ceil(c(out.total) * PRICES.depositRate)) return null;
+  if (out.full ? c(out.deposit) !== c(out.total) : c(out.deposit) !== Math.ceil(c(out.total) * PRICES.depositRate)) return null;
   out.balance = (c(out.total) - c(out.deposit)) / 100;
   return out;
 }

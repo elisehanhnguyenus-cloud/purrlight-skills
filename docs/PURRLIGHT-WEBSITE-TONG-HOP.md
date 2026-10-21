@@ -1258,8 +1258,11 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   giờ biết đơn nhờ link đã bấm (cùng mã, trong 12 giờ); khi không biết thì không nói "cọc" (ghi "-D — or -F"); tranh file +
   tràng hạt vẫn thấy dòng bản xem trước/5 lần sửa; đơn trả đủ hiện câu hoàn tiền của booth ("refundable in full until work
   begins") và "We check every payment by hand". 193 kiểm tra trang trả tiền + thư; mọi bộ khác qua.
-- Còn hỏi chị (bản xem trước): (1) hoàn tiền cho file trả đủ — đang dùng câu booth 25/09; (2) phí mỗi lần sửa thêm sau 5
-  lần; (3) tranh file + tràng hạt: cọc 50% (đang để) hay trả đủ; (4) mã -F có dễ nhận không.
+- Chị trả lời 21/10 (tin sau): (1) **hoàn tiền** cho đơn chưa làm và nguyên liệu chưa mua, huỷ tối thiểu 5 ngày trước khi
+  bắt đầu, không áp dụng đơn last-minute → câu hoàn tiền mới cho mọi đơn trên web (phần trả tiền + trang cảm ơn);
+  (2) sau 5 lần sửa → **tính như 1 sản phẩm mới**; (3) **tranh file + tràng hạt y chang** → cũng trả đủ (tràng hạt vẫn gửi
+  hoặc đến lấy; thư thêm câu về tràng hạt); (4) mã -F: ok.
+- Còn hỏi chị: đơn "last-minute" là đặt trước bao nhiêu ngày? Booth (Event Desk) có đổi sang câu hoàn tiền mới không?
 
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26

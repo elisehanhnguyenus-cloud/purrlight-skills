@@ -277,8 +277,11 @@ deposit** (`#pay`, đổi 21/10 — kế hoạch `docs/PAYMENT-MERLIN-PLAN-2026-
 thứ tự **Zelle · Venmo · Square · Stripe**; thẻ nào chưa có link/handle/địa chỉ thì ẩn (hôm nay hiện Zelle + Square).
 Mỗi tab có một **mã đơn** 4 ký tự (vd `K7HM`, không phải dữ liệu cá nhân) đi đầu trường ẩn `pick` của form; khách ghi
 `K7HM-D` vào ghi chú khi trả cọc (`-B` cho phần còn lại, `-F` khi trả đủ một lần). **File kỹ thuật số trả đủ một lần,
-không cọc** (chị chốt 21/10): bản xem trước, sửa tối đa 5 lần (hơn thì tính phí), duyệt bản cuối thì gửi file qua
-email — ô ước tính ghi "Pay in full today", dòng pick ghi "pay in full $X", lá thư 3 bước (không có bước chụp ảnh). Gửi form xong: trang lưu **bản sao đơn** trong tab
+không cọc** (chị chốt 21/10; tranh file + tràng hạt cũng vậy — `r.full`): bản xem trước, sửa tối đa 5 lần (sau đó tính như
+một sản phẩm mới), duyệt bản cuối thì gửi file qua email — ô ước tính ghi "Pay in full today", dòng pick ghi "pay in full
+$X", lá thư 3 bước (không có bước chụp ảnh; có tràng hạt thì thêm câu gửi/đến lấy tràng hạt). **Hoàn tiền** (chị chốt 21/10,
+mọi đơn trên web): đơn chưa làm và nguyên liệu chưa mua, huỷ ít nhất 5 ngày trước khi bắt đầu; không áp dụng đơn
+last-minute. Booth (Event Desk) vẫn câu cũ — chờ chị. Gửi form xong: trang lưu **bản sao đơn** trong tab
 (sessionStorage, không lời nhắn thiệp, không bao giờ localStorage), dòng "Got it — Merlin noted your order…", ẩn thanh
 Order, số cọc + mã ở phần cọc khoá theo **đơn đã gửi** (đổi món sau đó không đổi). Về bằng `?sent=1#pay` (redirect
 của form Tally): nếu tab này vừa gửi popup (< 2 phút) thì giữ nguyên bản sao đó; nếu không thì chỉ ghi mã mà tab đã có

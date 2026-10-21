@@ -280,10 +280,10 @@
   function holds(expr, v) {
     var conds = expr.split("&");
     for (var i = 0; i < conds.length; i++) {
-      var m = conds[i].match(/^([\w-]+)(!=|!~|=|~)(.*)$/);
+      var m = conds[i].match(/^([\w-]+)(!=|=|~)(.*)$/);
       if (!m) continue;
       var val = v[m[1]], ok;
-      if (m[2] === "~" || m[2] === "!~") { ok = Array.isArray(val) && val.indexOf(m[3]) > -1; if (m[2] === "!~") ok = !ok; }
+      if (m[2] === "~") ok = Array.isArray(val) && val.indexOf(m[3]) > -1;
       else { var hit = m[3].split(",").indexOf(String(val)) > -1; ok = m[2] === "=" ? hit : !hit; }
       if (!ok) return false;
     }
@@ -735,7 +735,7 @@
       totalRow.appendChild(amt);
       prevTotal = est.total;
       depositRow.innerHTML = ""; balanceRow.innerHTML = "";
-      if (est.digitalOnly) {   /* a digital file is paid in full when ordering (Elise 21/10): no deposit, no balance */
+      if (est.full) {   /* an order with a digital file is paid in full when ordering (Elise 21/10): no deposit, no balance */
         depositRow.appendChild(el("span", { text: "Pay in full today" })); depositRow.appendChild(el("strong", { "class": "amt", text: money(est.total) }));
         balanceRow.appendChild(el("span", { text: "A preview first, up to 5 rounds of edits · your files by email" }));
       } else {
@@ -910,9 +910,7 @@
   if (payData("venmo")) addCopy(venmoTo, "Copy @handle", "pay-copy-venmo", function () { return venmoTo.textContent; }, function () { return "Copied our Venmo name."; });
 
   /* the summary above the cards + one "Copy deposit amount" for every way */
-  var pickLine = el("p", { "class": "pay-pick-line" }), doneBtn = document.querySelector(".pay-done .btn"), payTerms = document.querySelector(".pay-terms");
-  /* the deposit terms (approved for Custom Orders) and, for an order paid in full, the booth's paid-in-full wording (Elise 25/09) */
-  var TERMS_DEPOSIT = payTerms ? payTerms.textContent : "", TERMS_FULL = "It's refundable in full until work begins. Custom pieces can't be returned, but anything wrong or damaged is on us, 100%.";
+  var pickLine = el("p", { "class": "pay-pick-line" }), doneBtn = document.querySelector(".pay-done .btn");
   var copyAmountBtn = el("button", { type: "button", "class": "link-btn pay-copy-amount", text: "Copy deposit amount", hidden: "" });
   var amountStatus = el("p", { "class": "pay-status", role: "status" });
   if (payPick) { payPick.appendChild(pickLine); payPick.appendChild(el("p", { "class": "pay-pick-actions" }, [copyAmountBtn])); payPick.appendChild(amountStatus); }
@@ -935,7 +933,6 @@
     copyAmountBtn.hidden = !(d > 0);
     copyAmountBtn.textContent = full ? "Copy amount" : "Copy deposit amount";
     if (doneBtn) doneBtn.textContent = full || unknown ? "I've sent my payment" : "I've sent my deposit";
-    if (payTerms) payTerms.textContent = full ? TERMS_FULL : TERMS_DEPOSIT;
     if (payPick) {
       payPick.hidden = !(c || lastPick);
       pickLine.innerHTML = "";
@@ -1005,7 +1002,7 @@
   for (var hp = 0; hp < howPhotos.length; hp++) howPhotos[hp].textContent = byEmail ? "Attach them to your order email."
     : "Upload them in the order form." + (inApp ? " Opened this inside an app? Use its ••• menu to open the page in your browser so your photos attach." : "") + " Photos won't attach? Email them to purrlightstudiollc@gmail.com.";
   function pick(g) {   /* the customer is now building this piece: it is what the order links carry */
-    lastPick = { product: g.def.product, total: g.est.total, deposit: g.est.deposit, full: !!g.est.digitalOnly, text: g.text, getit: g.getit };
+    lastPick = { product: g.def.product, total: g.est.total, deposit: g.est.deposit, full: !!g.est.full, text: g.text, getit: g.getit };
     if (g === current) updateBar();
     updatePay();
     applyOrderLinks();

@@ -1248,8 +1248,15 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 - Bản sao đơn giữ tới 1,000 ký tự (trước 600: hơn 25 nghìn kiểu đơn dài hơn 600 sẽ bị cắt). In ra: 1 trang (Letter, A4).
 - Rà soát 3 góc: 2 lỗi nhỏ đã sửa — thư từng bảo khách Square ghi vào "payment note" trong khi Square chưa có ô ghi chú (giờ
   chỉ nêu ô thật: Zelle memo; chị bật ghi chú Square thì tự thêm), và `check-site` giờ thử đọc từng chữ cách nhận hàng.
-- Hỏi chị (bản xem trước, mục câu hỏi): với file kỹ thuật số, bước 4 "Pay the balance after you approve the photo of your
-  finished piece" có đúng cách chị làm không.
+- Hỏi chị: với file kỹ thuật số, bước 4 có đúng cách chị làm không → **chị trả lời 21/10: file kỹ thuật số trả đủ một lần
+  (không cọc); chị gửi bản xem trước; sửa tối đa 5 lần, hơn thì tính phí; duyệt bản cuối thì gửi file qua email.**
+  Đã làm: giá (`settle`: đơn chỉ có file → cọc = cả tổng, không còn phần sau), dòng pick "pay in full $X", ô ước tính
+  "Pay in full today", phần trả tiền (mã `-F`, nút "Copy amount", Square/Stripe "the full amount", nút "I've sent my
+  payment"), "What's inside" của tranh/lịch file, How it works, lá thư (Pay in full, 3 bước: Your payment · Preview &
+  edits · Approve & receive). Tranh file + tràng hạt (có hàng gửi) vẫn cọc 50%. Mức thấp nhất của link Stripe thành $6.
+- Còn hỏi chị: (1) khách đã trả đủ cho file mà đổi ý trước khi chị bắt đầu thì có hoàn tiền không (dòng "Your deposit is
+  refundable until work begins" hiện chỉ nói về cọc)? (2) phí mỗi lần sửa thêm sau 5 lần là bao nhiêu (trang đang chỉ ghi
+  "more are charged")?
 
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
@@ -1271,7 +1278,7 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
     Bỏ PayPal (21/10). Link Venmo (business profile) / Stripe gửi trước ~05/11 thì lên trước mùa lễ.
     **Duyệt 54 câu tiếng Anh** (có lá thư làm lại) ở bản xem trước (link ở mục trên): nhắn "duyệt hết" hoặc "sửa câu số …". Duyệt xong em gỡ
     `DEPLOY-HOLD` và đưa lên web. Sau đó: bật chuyển hướng về `thanks.html` + ô ghi chú ở link Square; đặt redirect của
-    form Tally về `…/custom-orders/?sent=1#pay`; link Stripe đặt mức tối thiểu $5 và ô tự điền tên "Order code or your name".
+    form Tally về `…/custom-orders/?sent=1#pay`; link Stripe đặt mức tối thiểu $6 và ô tự điền tên "Order code or your name".
 11. **Purrlight Circle:** gửi em (a) ai tham gia được, (b) đăng ký ở đâu (link form/app), (c) hoa hồng bao nhiêu, tính
     trên gì, (d) theo dõi đơn bằng gì (mã giảm giá, link riêng, TikTok Shop…), (e) trả hoa hồng khi nào, bằng gì,
     (f) khách của người giới thiệu có được giảm gì không, (g) Circle thay trang Partner Program hay đứng riêng.

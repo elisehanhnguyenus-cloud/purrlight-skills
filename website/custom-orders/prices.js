@@ -14,6 +14,8 @@
      box with its add-ons).
    - Both godparents: the second set is $10 less ($95 + $85).
    - 50% deposit when ordering; the balance after the photo is approved.
+     Digital files (Elise 21/10): paid in full when ordering, no deposit — a preview first, up to 5 rounds of edits
+     (more are charged), and the final file by email once it is approved.
    - Print paper: regular paper is included in the print price · fine-art
      paper +$10 · handmade Vietnamese Dó papyrus +$5.
 
@@ -124,10 +126,11 @@ var PAY = {
   venmo:  { handle: "", qr: "" },                                /* business profile "@name"; qr: a Venmo QR with no amount set */
   square: { url: "https://square.link/u/UUg2LtbP", back: false, notes: false, qr: "../assets/img/custom/square-pay-qr.svg" },
           /* the "Custom order" link: the customer types the amount (Elise tried $45 on 21/10: $45.00, no tax or tip added) */
-  stripe: { url: "", back: false, notes: true, qr: "", minCents: 500, maxCents: 1000000 },
+  stripe: { url: "", back: false, notes: true, qr: "", minCents: 600, maxCents: 1000000 },
           /* https://buy.stripe.com/… with "Customers choose what to pay"; minCents = the link's minimum = the smallest
-             deposit this page can make ($5.00: a $10 digital painting for a buyer outside Texas — the price test checks
-             it); maxCents = the link's maximum. A deposit outside them is not filled in. */
+             amount this page asks to pay now ($6.00: the deposit on a $12 4×6 print for a buyer outside Texas; digital
+             files are paid in full, $10 at least — the price test checks it); maxCents = the link's maximum. An amount
+             outside them is not filled in. */
   thanks: "thanks.html"
 };
 
@@ -279,9 +282,9 @@ function estWatercolor(o) {
   if (isPrint && o.giftBox) lines.push({ label: "Gift box", amount: PRICES.watercolor.giftBox });
   if (o && o.rosary) lines.push({ label: "Crochet rosary add-on", amount: PRICES.watercolor.rosary });
   var r = applyQty(finish(lines), o && o.qty, "painting", "paintings");
-  r.digitalOnly = !isPrint && !(o && o.rosary);   /* nothing ships */
+  r.digitalOnly = !isPrint && !(o && o.rosary);   /* nothing ships — and it is paid in full (settle) */
   r.note = r.qty > 1 ? "Estimate for " + r.qty + " paintings with the same options" : "Estimate for one painting";
-  return r;
+  return settle(r);
 }
 
 /* o.addons: [{ key, name, swapFor, swapKey }] (swapFor "" = added to the box) or plain keys. Added: the add-on's own
@@ -320,8 +323,8 @@ function estCalendar(o) {
   var pages = o && o.pages === 6 ? 6 : 1;
   var label = (kind === "print" ? "Design + print" : "Digital files only") + " · " + (pages === 1 ? "1 page" : "6 pages");
   var r = finish([{ label: label, amount: PRICES.calendar[kind][pages] }]);
-  r.digitalOnly = kind === "digital";
-  return r;
+  r.digitalOnly = kind === "digital";   /* paid in full (settle) */
+  return settle(r);
 }
 
 function estGodparent(o) {
@@ -414,11 +417,12 @@ function applyQty(r, qty, one, many) {
 }
 
 /* Texas sales tax on the taxed part of the price (whole cents, half a cent rounds up) — none when the order ships
-   outside Texas — then 50% deposit today and the rest after the photo is approved */
+   outside Texas — then 50% deposit today and the rest after the photo is approved. A digital file (r.digitalOnly) is
+   paid in full today (Elise 21/10): the "deposit" is the whole total and nothing is left after. */
 function settle(r) {
   var pre = Math.round(r.pre * 100), taxed = r.outOfTexas ? 0 : pre - Math.round((r.taxFree || 0) * 100);
   var tax = Math.round(Math.max(0, taxed) * PRICES.salesTaxBp / 10000);
-  var cents = pre + tax, dep = Math.ceil(cents * PRICES.depositRate);   /* a half cent always rounds the deposit up */
+  var cents = pre + tax, dep = r.digitalOnly ? cents : Math.ceil(cents * PRICES.depositRate);   /* a half cent always rounds the deposit up */
   r.tax = tax / 100;
   r.total = cents / 100;
   r.deposit = dep / 100;
@@ -435,12 +439,12 @@ function summaryLine(product, est, how) {
   for (var i = 0; i < est.lines.length; i++) parts.push(est.lines[i].label + " " + money(est.lines[i].amount) + (est.lines[i].detail ? " (" + est.lines[i].detail + ")" : ""));
   var qty = est.qty > 1 ? " — × " + est.qty + " " + est.many + " " + money(est.subtotal) + ", order more, save more −" + money(est.saving) : "";
   var tax = est.outOfTexas ? " — no Texas sales tax (outside Texas)" : " — " + taxLabel() + " " + money(est.tax) + (est.taxFree ? " (not on the fresh fruit)" : "");
-  return "My pick: " + product + " — " + parts.join(" · ") + qty + tax + " — estimate " + money(est.total) + " · deposit (50%) " + money(est.deposit) + (est.digitalOnly ? "" : " · " + (how || (est.pickupOnly ? "Pickup at Pearland Town Center" : "Free U.S. shipping")));
+  return "My pick: " + product + " — " + parts.join(" · ") + qty + tax + " — estimate " + money(est.total) + (est.digitalOnly ? " · pay in full " : " · deposit (50%) ") + money(est.deposit) + (est.digitalOnly ? "" : " · " + (how || (est.pickupOnly ? "Pickup at Pearland Town Center" : "Free U.S. shipping")));
 }
 
 /* the pick line back in parts, for the thank-you letter (Elise 21/10: the order easy to read, check and skim):
    { items: [{label, amount, detail}], qty: {n, many, subtotal, saving} | null, tax: {label, amount, fruit} | null
-   (null = outside Texas), total, deposit, balance, how }. Labels may hold " · ", " — ", "$" or brackets, so the parts
+   (null = outside Texas), total, full (a digital file: "pay in full"), deposit, balance, how }. Labels may hold " · ", " — ", "$" or brackets, so the parts
    are accepted only when summaryLine's own wording rebuilt from them gives back the very same line, AND every number is
    the one this file would have made: the lines × qty less the saving (itemOff, item by item, as applyQty; 2 to
    PRICES.volume.maxQty), the tax (taxLabel(), salesTaxBp of the taxed part — less with fresh fruit), the deposit (half,
@@ -456,7 +460,7 @@ function pickParts(text, product) {
   if (typeof text !== "string" || typeof product !== "string" || !product || text.indexOf(head) !== 0) return null;
   var tail = new RegExp("^([\\s\\S]+?)(?: — × (\\d+) ([a-z]+) (" + U + "), order more, save more −(" + U + "))?" +
     "(?: — no Texas sales tax \\(outside Texas\\)| — (" + esc(taxLabel()) + ") (" + U + ")( \\(not on the fresh fruit\\))?)" +
-    " — estimate (" + U + ") · deposit \\(50%\\) (" + U + ")(?: · ([^—·]+))?$").exec(text.slice(head.length));   /* how: one part, never a separator */
+    " — estimate (" + U + ") · (deposit \\(50%\\)|pay in full) (" + U + ")(?: · ([^—·]+))?$").exec(text.slice(head.length));   /* how: one part, never a separator */
   if (!tail) return null;
   var items = [], rest = tail[1], item = new RegExp("^([\\s\\S]+?) (" + M + ")(?: \\(((?:[^()]|\\([^()]*\\))*)\\))?(?= · |$)");
   while (rest) {
@@ -470,13 +474,13 @@ function pickParts(text, product) {
     items: items,
     qty: tail[2] ? { n: Number(tail[2]), many: tail[3], subtotal: num(tail[4]), saving: num(tail[5]) } : null,
     tax: tail[6] ? { label: tail[6], amount: num(tail[7]), fruit: !!tail[8] } : null,
-    total: num(tail[9]), deposit: num(tail[10]), balance: 0, how: tail[11] || ""
+    total: num(tail[9]), full: tail[10] === "pay in full", deposit: num(tail[11]), balance: 0, how: tail[12] || ""
   };
   /* the same words, rebuilt */
   var again = head + items.map(function (it) { return it.label + " " + money(it.amount) + (it.detail ? " (" + it.detail + ")" : ""); }).join(" · ") +
     (out.qty ? " — × " + out.qty.n + " " + out.qty.many + " " + money(out.qty.subtotal) + ", order more, save more −" + money(out.qty.saving) : "") +
     (out.tax ? " — " + out.tax.label + " " + money(out.tax.amount) + (out.tax.fruit ? " (not on the fresh fruit)" : "") : " — no Texas sales tax (outside Texas)") +
-    " — estimate " + money(out.total) + " · deposit (50%) " + money(out.deposit) + (out.how ? " · " + out.how : "");
+    " — estimate " + money(out.total) + (out.full ? " · pay in full " : " · deposit (50%) ") + money(out.deposit) + (out.how ? " · " + out.how : "");
   if (again !== text) return null;
   /* each line: the first one is the piece (above zero); a working in brackets only on a swap, and it must add up */
   var pre = 0;
@@ -503,8 +507,10 @@ function pickParts(text, product) {
     var full = Math.round(pre * PRICES.salesTaxBp / 10000), t = c(out.tax.amount);
     if (out.tax.fruit ? !(t >= 0 && t < full) : t !== full) return null;
   }
-  /* estimate = all of it with tax; deposit = half, rounded up to the cent; balance = the rest */
-  if (pre + (out.tax ? c(out.tax.amount) : 0) !== c(out.total) || c(out.deposit) !== Math.ceil(c(out.total) * PRICES.depositRate)) return null;
+  /* estimate = all of it with tax; deposit = half, rounded up to the cent; balance = the rest. "pay in full" (a digital
+     file, Elise 21/10): the whole estimate, nothing to ship (no how) */
+  if (pre + (out.tax ? c(out.tax.amount) : 0) !== c(out.total)) return null;
+  if (out.full ? c(out.deposit) !== c(out.total) || out.how : c(out.deposit) !== Math.ceil(c(out.total) * PRICES.depositRate)) return null;
   out.balance = (c(out.total) - c(out.deposit)) / 100;
   return out;
 }

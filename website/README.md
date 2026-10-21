@@ -276,7 +276,9 @@ godparent; đi kèm dòng "My pick", không lưu trên máy); hộp tân gia: 4 
 deposit** (`#pay`, đổi 21/10 — kế hoạch `docs/PAYMENT-MERLIN-PLAN-2026-10-21.md`, chị bỏ PayPal): 4 thẻ theo
 thứ tự **Zelle · Venmo · Square · Stripe**; thẻ nào chưa có link/handle/địa chỉ thì ẩn (hôm nay hiện Zelle + Square).
 Mỗi tab có một **mã đơn** 4 ký tự (vd `K7HM`, không phải dữ liệu cá nhân) đi đầu trường ẩn `pick` của form; khách ghi
-`K7HM-D` vào ghi chú khi trả cọc (`-B` cho phần còn lại). Gửi form xong: trang lưu **bản sao đơn** trong tab
+`K7HM-D` vào ghi chú khi trả cọc (`-B` cho phần còn lại, `-F` khi trả đủ một lần). **File kỹ thuật số trả đủ một lần,
+không cọc** (chị chốt 21/10): bản xem trước, sửa tối đa 5 lần (hơn thì tính phí), duyệt bản cuối thì gửi file qua
+email — ô ước tính ghi "Pay in full today", dòng pick ghi "pay in full $X", lá thư 3 bước (không có bước chụp ảnh). Gửi form xong: trang lưu **bản sao đơn** trong tab
 (sessionStorage, không lời nhắn thiệp, không bao giờ localStorage), dòng "Got it — Merlin noted your order…", ẩn thanh
 Order, số cọc + mã ở phần cọc khoá theo **đơn đã gửi** (đổi món sau đó không đổi). Về bằng `?sent=1#pay` (redirect
 của form Tally): nếu tab này vừa gửi popup (< 2 phút) thì giữ nguyên bản sao đó; nếu không thì chỉ ghi mã mà tab đã có
@@ -307,8 +309,9 @@ nên không ghi "paid". Thư xác nhận thật là email chị gửi sau khi th
   (Form → ⋮ → Get pre-filled link → `entry.xxxx`).
 - `PAY` — nơi nhận cọc, mỗi cách một mục: `zelle.to`, `venmo.handle` (`@tên` của business profile), `square.url`,
   `stripe.url` (`https://buy.stripe.com/…` loại "Customers choose what to pay"; trang tự điền số cọc bằng
-  `?prefilled_amount`, chỉ khi cọc nằm trong `minCents`–`maxCents`; **đặt mức tối thiểu của link = $5.00**, là mức cọc
-  nhỏ nhất trang tính ra — test giá kiểm). Để trống = thẻ ẩn (cũng là cách tắt nhanh một cách trả khi tài khoản bị giữ).
+  `?prefilled_amount`, chỉ khi số tiền nằm trong `minCents`–`maxCents`; **đặt mức tối thiểu của link = $6.00**, là số
+  nhỏ nhất trang bảo khách trả ngay — cọc của bản in 4×6 $12 cho khách ngoài Texas; file kỹ thuật số trả đủ, ít nhất $10
+  — test giá kiểm). Để trống = thẻ ẩn (cũng là cách tắt nhanh một cách trả khi tài khoản bị giữ).
   `back: true` chỉ sau khi một lần trả thật đã quay về `thanks.html`; `notes: true` khi trang của hãng có ô ghi chú cho
   mã đơn; `qr` = ảnh QR (máy tính). **Đổi cả khối `.pay-way[data-pay=…]` trong `index.html`** (bản tắt JS: bỏ/thêm
   `hidden`, link, địa chỉ, handle) — `tools/check-site.js` chặn deploy khi hai bên lệch, khi link Stripe là `test_`,

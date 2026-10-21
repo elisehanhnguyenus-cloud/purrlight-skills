@@ -49,7 +49,7 @@
     "Ship outside Texas": { icon: "ship", picks: ["Ship to my address outside Texas (free U.S. shipping)", "Free U.S. shipping"], note: "Free U.S. shipping", step: "Pay the balance, then it ships free in the U.S." },
     "Pickup Saturday":    { icon: "pickup", picks: ["Pickup Saturday at Pearland Town Center", "Pickup at Pearland Town Center"], note: "Pearland Town Center", step: "Pay the balance, then pick it up at Pearland Town Center on Saturday." },
     "Pickup Sunday":      { icon: "pickup", picks: ["Pickup Sunday at Pearland Town Center", "Pickup at Pearland Town Center"], note: "Pearland Town Center", step: "Pay the balance, then pick it up at Pearland Town Center on Sunday." },
-    "Digital file":       { icon: "digital", picks: [""], note: "Nothing to ship", step: "Pay the balance after you approve the photo of your finished piece." }
+    "Digital file":       { icon: "digital", picks: [""], note: "Nothing to ship", step: "Once you approve the final, we email you your files." }   /* Elise 21/10 */
   };
   function own(o, k) { return typeof k === "string" && Object.prototype.hasOwnProperty.call(o, k); }
   var KNOWN_HOW = {};   /* every pick word this page wrote (a how it doesn't know = a line it didn't write, or one cut short) */
@@ -127,6 +127,8 @@
     return s;
   }
   var getIt = "";   /* the copy's delivery, once it agrees with the pick — step 4 follows it */
+  /* a digital file is paid in full (Elise 21/10): its "deposit" is the whole estimate — a 50% deposit never is */
+  function full(c) { return !!(c && c.total && cents(c.deposit) === cents(c.total)); }
   /* how it reaches them: the copy's delivery with the order page's note when the pick says the same; the pick's own
      words when they disagree (an edited copy); nothing when there is neither */
   function howRow(delivery, how) {
@@ -173,10 +175,25 @@
     var pair = typeof moneyPair === "function" ? moneyPair(c.deposit, (cents(c.total) - cents(c.deposit)) / 100) : [fmt(c.deposit), fmt((cents(c.total) - cents(c.deposit)) / 100)];
     var sums = el("dl", "ledger-sums");
     sums.appendChild(sum("ledger-total", "Estimate", fmt(c.total)));
-    sums.appendChild(sum("ledger-deposit", "50% deposit", pair[0]));
-    sums.appendChild(sum("ledger-balance", "Balance", pair[1], "After you approve the photo", "after you approve the photo"));   /* the order page's "Balance after you approve the photo", in two parts */
+    if (full(c)) sums.appendChild(sum("ledger-deposit", "Pay in full", fmt(c.total)));   /* a digital file (Elise 21/10): no deposit, no balance */
+    else {
+      sums.appendChild(sum("ledger-deposit", "50% deposit", pair[0]));
+      sums.appendChild(sum("ledger-balance", "Balance", pair[1], "After you approve the photo", "after you approve the photo"));   /* the order page's "Balance after you approve the photo", in two parts */
+    }
     box.appendChild(sums);
     return box;
+  }
+
+  /* the steps of a digital file (Elise 21/10): paid in full, a preview with up to 5 rounds of edits, the files by email
+     once the final is approved — the camera step (a photo of the finished piece) is not one of them */
+  function paidInFullSteps() {
+    var steps = letter ? letter.querySelectorAll(".tl-step") : [];
+    if (steps.length !== 4) return;
+    var set = function (li, label, text) { li.querySelector(".tl-label").textContent = label; if (text) li.querySelector(".tl-text").textContent = text; };
+    set(steps[0], "Your payment", "We check your payment by hand and email you once it's in.");
+    set(steps[1], "Preview & edits", "We send you a preview first. Up to 5 rounds of edits are included; more are charged.");
+    steps[2].hidden = true;
+    steps[3].querySelector(".tl-n").textContent = "3";
   }
 
   if (copy) {
@@ -191,12 +208,14 @@
       var built = ledger(copy);
       order.textContent = "";
       order.appendChild(built);
+      if (full(copy)) getIt = "Digital file";
       if (getIt && stepText && stepLi) { stepText.textContent = GETS[getIt].step; stepLi.setAttribute("data-how", GETS[getIt].icon); }
+      if (full(copy)) paidInFullSteps();
     }
     if (note && copy.code) {   /* exactly what to write when paying, set apart so it is easy to copy by eye */
       note.textContent = "";
       note.appendChild(document.createTextNode("When you pay, write "));
-      note.appendChild(el("strong", "letter-code", copy.code + "-D"));
+      note.appendChild(el("strong", "letter-code", copy.code + (full(copy) ? "-F" : "-D")));   /* F: paid in full · D: deposit */
       note.appendChild(document.createTextNode(" in " + (noteWhere() || "the payment note") + "."));
     }
   }
@@ -237,7 +256,7 @@
     }
     part(".letter-from, .letter-title, .letter-meta:not([hidden])");
     part(".ledger-head, [data-copy], .ledger-empty, .letter-note", function (n) { return n.getAttribute("data-copy") || words(n); });
-    part(".letter-sub, .tl-step", function (n) { return n.tagName === "LI" ? words(n.querySelector(".tl-n")) + ". " + words(n.querySelector(".tl-label")) + " — " + words(n.querySelector(".tl-text")) : words(n); });
+    part(".letter-sub, .tl-step:not([hidden])", function (n) { return n.tagName === "LI" ? words(n.querySelector(".tl-n")) + ". " + words(n.querySelector(".tl-label")) + " — " + words(n.querySelector(".tl-text")) : words(n); });
     part(".letter-fine");
     return out.join("\n\n");
   }

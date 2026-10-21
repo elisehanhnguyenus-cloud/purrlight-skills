@@ -879,6 +879,7 @@ html[data-season="christmas"] .glints-lamp i:nth-child(1), html[data-season="chr
 .letter-steps { list-style: none; margin: 4px 0 8px; padding: 0; display: grid; }
 .tl-step { position: relative; display: grid; grid-template-columns: 44px minmax(0, 1fr); grid-template-rows: auto 1fr; column-gap: 14px; padding-bottom: 18px; }
 .tl-step:last-child { padding-bottom: 0; }
+.tl-step[hidden] { display: none; }   /* a digital file has no camera step */
 .tl-step:not(:last-child) { min-height: 76px; }   /* always some thread between two circles */
 .tl-dot { position: relative; z-index: 1; grid-row: 1 / span 2; width: 44px; height: 44px; border-radius: 50%; background: var(--butter-soft); border: 1.5px solid var(--peach); color: var(--ink); display: grid; place-items: center; }
 .tl-dot svg { display: block; }

@@ -149,11 +149,13 @@
   /* after a sent form: the phone order bar steps aside for the rest of the visit, one status line (read once), the
      deposit section shows the order that was sent, and the next order gets a new code (keepCode: it already has one) */
   var barOff = false;
+  /* a digital file is paid in full (Elise 21/10): its "deposit" is the whole estimate — a 50% deposit never is */
+  function paidInFull(c) { return !!(c && c.deposit && c.total && Math.round(Number(c.deposit) * 100) === Math.round(Number(c.total) * 100)); }
   function afterSent(copy, keepCode) {
     barOff = true;
     if (bar) { bar.hidden = true; document.body.classList.remove("has-bar"); document.documentElement.classList.remove("has-bar"); }
     var st = document.querySelector(".pay-sent");
-    if (st) setTimeout(function () { st.textContent = "Got it — Merlin noted your order. Next step: your 50% deposit, just below."; }, 150);
+    if (st) setTimeout(function () { st.textContent = "Got it — Merlin noted your order. Next step: " + (paidInFull(copy) ? "your payment" : "your 50% deposit") + ", just below."; }, 150);
     if (hasCodes && !keepCode) { orderCode = newOrderCode(); sset(CODE_KEY, orderCode || null); }
     updatePay();
     applyOrderLinks();
@@ -276,10 +278,10 @@
   function holds(expr, v) {
     var conds = expr.split("&");
     for (var i = 0; i < conds.length; i++) {
-      var m = conds[i].match(/^([\w-]+)(!=|=|~)(.*)$/);
+      var m = conds[i].match(/^([\w-]+)(!=|!~|=|~)(.*)$/);
       if (!m) continue;
       var val = v[m[1]], ok;
-      if (m[2] === "~") ok = Array.isArray(val) && val.indexOf(m[3]) > -1;
+      if (m[2] === "~" || m[2] === "!~") { ok = Array.isArray(val) && val.indexOf(m[3]) > -1; if (m[2] === "!~") ok = !ok; }
       else { var hit = m[3].split(",").indexOf(String(val)) > -1; ok = m[2] === "=" ? hit : !hit; }
       if (!ok) return false;
     }
@@ -731,9 +733,14 @@
       totalRow.appendChild(amt);
       prevTotal = est.total;
       depositRow.innerHTML = ""; balanceRow.innerHTML = "";
-      var db = moneyPair(est.deposit, est.balance);
-      depositRow.appendChild(el("span", { text: "Deposit today (50%)" })); depositRow.appendChild(el("strong", { "class": "amt", text: db[0] }));
-      balanceRow.appendChild(el("span", { text: "Balance after you approve the photo" })); balanceRow.appendChild(el("span", { "class": "amt", text: db[1] }));
+      if (est.digitalOnly) {   /* a digital file is paid in full when ordering (Elise 21/10): no deposit, no balance */
+        depositRow.appendChild(el("span", { text: "Pay in full today" })); depositRow.appendChild(el("strong", { "class": "amt", text: money(est.total) }));
+        balanceRow.appendChild(el("span", { text: "A preview first, up to 5 rounds of edits · your files by email" }));
+      } else {
+        var db = moneyPair(est.deposit, est.balance);
+        depositRow.appendChild(el("span", { text: "Deposit today (50%)" })); depositRow.appendChild(el("strong", { "class": "amt", text: db[0] }));
+        balanceRow.appendChild(el("span", { text: "Balance after you approve the photo" })); balanceRow.appendChild(el("span", { "class": "amt", text: db[1] }));
+      }
       if (fromUser) g.goneNote = "";
       /* when it is made and delivered (Elise 16–17/10): the holiday timing by kind of piece in the season ("may not
          arrive by Christmas" added past its order-by date), 15 days after the season; nothing for a digital file or a
@@ -901,7 +908,7 @@
   if (payData("venmo")) addCopy(venmoTo, "Copy @handle", "pay-copy-venmo", function () { return venmoTo.textContent; }, function () { return "Copied our Venmo name."; });
 
   /* the summary above the cards + one "Copy deposit amount" for every way */
-  var pickLine = el("p", { "class": "pay-pick-line" });
+  var pickLine = el("p", { "class": "pay-pick-line" }), doneBtn = document.querySelector(".pay-done .btn");
   var copyAmountBtn = el("button", { type: "button", "class": "link-btn pay-copy-amount", text: "Copy deposit amount", hidden: "" });
   var amountStatus = el("p", { "class": "pay-status", role: "status" });
   if (payPick) { payPick.appendChild(pickLine); payPick.appendChild(el("p", { "class": "pay-pick-actions" }, [copyAmountBtn])); payPick.appendChild(amountStatus); }
@@ -911,6 +918,7 @@
     return lastPick ? lastPick.deposit : 0;
   }
   function payCode() { var c = sentCopy(); return c ? (c.code || "") : orderCode; }
+  function payFull() { var c = sentCopy(); return c ? paidInFull(c) : !!(lastPick && lastPick.full); }   /* the order to pay is a digital file */
   copyAmountBtn.addEventListener("click", function () {
     var d = payDeposit();
     if (d > 0) payCopy(amountStatus, d.toFixed(2).replace(/\.00$/, ""), "Copied " + money(d) + " — paste it on the payment page.");
@@ -918,13 +926,15 @@
   var NOTE_WORD = { zelle: "the memo", venmo: "the note", square: "the note", stripe: "\u201COrder code or your name\u201D" };
   function updatePay() {
     if (!copyAmountBtn) return;   /* not set up yet */
-    var c = sentCopy(), d = payDeposit(), code = payCode();
+    var c = sentCopy(), d = payDeposit(), code = payCode(), full = payFull(), tag = full ? "-F" : "-D";   /* F: paid in full · D: deposit · B: balance */
     copyAmountBtn.hidden = !(d > 0);
+    copyAmountBtn.textContent = full ? "Copy amount" : "Copy deposit amount";
+    if (doneBtn) doneBtn.textContent = full ? "I've sent my payment" : "I've sent my deposit";
     if (payPick) {
       payPick.hidden = !(c || lastPick);
       pickLine.innerHTML = "";
       if (c && c.deposit) {
-        pickLine.appendChild(document.createTextNode("Your order — " + c.product + ": deposit "));
+        pickLine.appendChild(document.createTextNode("Your order — " + c.product + (full ? ": pay in full " : ": deposit ")));
         pickLine.appendChild(el("strong", { text: money(Number(c.deposit)) }));
         pickLine.appendChild(document.createTextNode("."));
       } else if (c) {
@@ -937,23 +947,24 @@
       }
       if (lastPick && !(c && c.deposit)) {
         if (c) pickLine.appendChild(document.createTextNode(" "));
-        pickLine.appendChild(document.createTextNode((c ? "Your pick on this device — " : "Your pick — ") + lastPick.product + ": deposit "));
+        pickLine.appendChild(document.createTextNode((c ? "Your pick on this device — " : "Your pick — ") + lastPick.product + (lastPick.full ? ": pay in full " : ": deposit ")));
         pickLine.appendChild(el("strong", { text: money(lastPick.deposit) }));
-        pickLine.appendChild(document.createTextNode(" (estimate " + money(lastPick.total) + ")."));
+        pickLine.appendChild(document.createTextNode(lastPick.full ? "." : " (estimate " + money(lastPick.total) + ")."));
       }
     }
     Object.keys(payWays).forEach(function (key) {
       var w = payWays[key], m = PAY[key] || {};
       if (!payData(key)) return;
       if (w.link) w.link.setAttribute("href", payHref(key, d));
-      if (key === "stripe") {
-        var amt = w.box.querySelector("[data-pay-amount]"), filled = d > 0 && payHref("stripe", d) !== payData("stripe");
-        if (amt) amt.textContent = filled ? "Your deposit, " + money(d) + ", is filled in on the Stripe page — you can change it." : "On the Stripe page, type your deposit amount.";
-      }
+      var amt = w.box.querySelector("[data-pay-amount]");
+      if (key === "stripe" && amt) {
+        var filled = d > 0 && payHref("stripe", d) !== payData("stripe");
+        amt.textContent = filled ? (full ? "The full amount, " : "Your deposit, ") + money(d) + ", is filled in on the Stripe page — you can change it." : "On the Stripe page, type " + (full ? "the full amount." : "your deposit amount.");
+      } else if (key === "square" && amt) amt.textContent = "On the Square page (it shows our shop name, Viet Delight), type " + (full ? "the full amount." : "your deposit amount.");
       if (w.hint) {
         var notes = key === "zelle" || key === "venmo" || m.notes === true;
         w.hint.hidden = !notes;
-        if (notes) w.hint.textContent = "In " + NOTE_WORD[key] + ", write " + (code ? code + "-D." : "your name and your piece.");
+        if (notes) w.hint.textContent = "In " + NOTE_WORD[key] + ", write " + (code ? code + tag + "." : "your name and your piece.");
       }
     });
   }
@@ -981,7 +992,7 @@
   for (var hp = 0; hp < howPhotos.length; hp++) howPhotos[hp].textContent = byEmail ? "Attach them to your order email."
     : "Upload them in the order form." + (inApp ? " Opened this inside an app? Use its ••• menu to open the page in your browser so your photos attach." : "") + " Photos won't attach? Email them to purrlightstudiollc@gmail.com.";
   function pick(g) {   /* the customer is now building this piece: it is what the order links carry */
-    lastPick = { product: g.def.product, total: g.est.total, deposit: g.est.deposit, text: g.text, getit: g.getit };
+    lastPick = { product: g.def.product, total: g.est.total, deposit: g.est.deposit, full: !!g.est.digitalOnly, text: g.text, getit: g.getit };
     if (g === current) updateBar();
     updatePay();
     applyOrderLinks();

@@ -1211,6 +1211,16 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   sau khi thấy cọc. (3) Câu **"We check every deposit by hand"** đúng cách chị làm → được lên web. (4) **Bỏ PayPal.**
   Còn 4 cách: Zelle · Venmo · Square · Stripe. Luật "ngang hàng" của PayPal không còn áp dụng.
 
+### Elise 21/10 (tin sau) — thanh menu bị rớt chữ, Purrlight Circle
+- **Thanh menu (đã sửa, đã lên web):** ở laptop, 8 mục menu + logo + nút không đủ chỗ trên 1 hàng nên mỗi chữ 2 từ bị bẻ
+  đôi ("Shop / All"…); trên Custom Orders quanh 1000 px logo còn bị bóp mất. Giờ chữ không bao giờ xuống dòng, logo không
+  bị bóp; dưới 1200 px (Custom Orders: 1120 px) hiện nút ☰ mở menu, nút "Shop on Etsy" / "Place your order" vẫn nằm cạnh.
+  Menu mở ra: con trỏ bàn phím vào trong menu, trang phía sau khoá lại, đóng thì về nút ☰ (giống Custom Orders). Đã đo
+  320–1600 px trên mọi trang có menu.
+- **Purrlight Circle:** em tìm trong Notion, Google Drive và repo — không có chỗ nào ghi chương trình này. Chỉ có trang
+  **Partner Program** (`partners.html`, qua TikTok Shop affiliate), mà tài liệu ghi là **chưa chạy** (TikTok Shop Open
+  Collaboration chưa bật, chưa đặt hoa hồng). Em chưa đưa gì lên web, chờ chị gửi chi tiết (mục "Còn chờ chị" 11).
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
@@ -1229,6 +1239,9 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 9. ~~Đồng bộ Etsy~~ — xong 21/10. Bảng số trong Làng chỉ làm sau 7 đêm đồng bộ liền thành công (tới ~28/10).
 10. Thanh toán: kế hoạch chốt ở `docs/PAYMENT-MERLIN-PLAN-2026-10-21.md`. ~~Thử Square $45~~ — đúng $45.00 (21/10).
     Bỏ PayPal (21/10). Link Venmo (business profile) / Stripe gửi trước ~05/11 thì lên trước mùa lễ.
+11. **Purrlight Circle:** gửi em (a) ai tham gia được, (b) đăng ký ở đâu (link form/app), (c) hoa hồng bao nhiêu, tính
+    trên gì, (d) theo dõi đơn bằng gì (mã giảm giá, link riêng, TikTok Shop…), (e) trả hoa hồng khi nào, bằng gì,
+    (f) khách của người giới thiệu có được giảm gì không, (g) Circle thay trang Partner Program hay đứng riêng.
 
 ## 9. Link & tài nguyên
 

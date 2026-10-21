@@ -1254,9 +1254,12 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   "Pay in full today", phần trả tiền (mã `-F`, nút "Copy amount", Square/Stripe "the full amount", nút "I've sent my
   payment"), "What's inside" của tranh/lịch file, How it works, lá thư (Pay in full, 3 bước: Your payment · Preview &
   edits · Approve & receive). Tranh file + tràng hạt (có hàng gửi) vẫn cọc 50%. Mức thấp nhất của link Stripe thành $6.
-- Còn hỏi chị: (1) khách đã trả đủ cho file mà đổi ý trước khi chị bắt đầu thì có hoàn tiền không (dòng "Your deposit is
-  refundable until work begins" hiện chỉ nói về cọc)? (2) phí mỗi lần sửa thêm sau 5 lần là bao nhiêu (trang đang chỉ ghi
-  "more are charged")?
+- Rà soát phần "trả đủ" (2 góc + phản biện): 4 lỗi xác nhận, đã sửa — form mở cả trang (không popup) quay về `?sent=1`
+  giờ biết đơn nhờ link đã bấm (cùng mã, trong 12 giờ); khi không biết thì không nói "cọc" (ghi "-D — or -F"); tranh file +
+  tràng hạt vẫn thấy dòng bản xem trước/5 lần sửa; đơn trả đủ hiện câu hoàn tiền của booth ("refundable in full until work
+  begins") và "We check every payment by hand". 193 kiểm tra trang trả tiền + thư; mọi bộ khác qua.
+- Còn hỏi chị (bản xem trước): (1) hoàn tiền cho file trả đủ — đang dùng câu booth 25/09; (2) phí mỗi lần sửa thêm sau 5
+  lần; (3) tranh file + tràng hạt: cọc 50% (đang để) hay trả đủ; (4) mã -F có dễ nhận không.
 
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
@@ -1276,7 +1279,7 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 9. ~~Đồng bộ Etsy~~ — xong 21/10. Bảng số trong Làng chỉ làm sau 7 đêm đồng bộ liền thành công (tới ~28/10).
 10. Thanh toán: kế hoạch chốt ở `docs/PAYMENT-MERLIN-PLAN-2026-10-21.md`. ~~Thử Square $45~~ — đúng $45.00 (21/10).
     Bỏ PayPal (21/10). Link Venmo (business profile) / Stripe gửi trước ~05/11 thì lên trước mùa lễ.
-    **Duyệt 54 câu tiếng Anh** (có lá thư làm lại) ở bản xem trước (link ở mục trên): nhắn "duyệt hết" hoặc "sửa câu số …". Duyệt xong em gỡ
+    **Duyệt 61 câu tiếng Anh** (có lá thư làm lại + đơn file trả đủ) ở bản xem trước (link ở mục trên): nhắn "duyệt hết" hoặc "sửa câu số …". Duyệt xong em gỡ
     `DEPLOY-HOLD` và đưa lên web. Sau đó: bật chuyển hướng về `thanks.html` + ô ghi chú ở link Square; đặt redirect của
     form Tally về `…/custom-orders/?sent=1#pay`; link Stripe đặt mức tối thiểu $6 và ô tự điền tên "Order code or your name".
 11. **Purrlight Circle:** gửi em (a) ai tham gia được, (b) đăng ký ở đâu (link form/app), (c) hoa hồng bao nhiêu, tính

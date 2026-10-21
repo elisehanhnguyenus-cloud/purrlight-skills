@@ -438,6 +438,47 @@ function summaryLine(product, est, how) {
   return "My pick: " + product + " — " + parts.join(" · ") + qty + tax + " — estimate " + money(est.total) + " · deposit (50%) " + money(est.deposit) + (est.digitalOnly ? "" : " · " + (how || (est.pickupOnly ? "Pickup at Pearland Town Center" : "Free U.S. shipping")));
 }
 
+/* the pick line back in parts, for the thank-you letter: { items: [{label, amount, detail}], qty: {n, many, subtotal,
+   saving} | null, tax: {label, amount, fruit} | null (null = outside Texas), total, deposit, how }. Labels may hold " · ",
+   " — ", "$" or brackets, so the parts are accepted only when summaryLine's own wording rebuilt from them gives back the
+   very same line and the sums add up; anything else (an old or edited line) → null, and the letter shows the line as sent. */
+function pickParts(text, product) {
+  var M = "−?\\$\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2})?";
+  var num = function (s) { var v = Number(s.replace(/[−$,]/g, "")); return s.charAt(0) === "−" ? -v : v; };
+  var head = "My pick: " + product + " — ";
+  if (typeof text !== "string" || typeof product !== "string" || !product || text.indexOf(head) !== 0) return null;
+  var tail = new RegExp("^([\\s\\S]+?)(?: — × (\\d+) (\\S+) (" + M + "), order more, save more −(\\$[\\d,]+(?:\\.\\d{2})?))?" +
+    "(?: — no Texas sales tax \\(outside Texas\\)| — (Texas sales tax \\([\\d.]+%\\)) (" + M + ")( \\(not on the fresh fruit\\))?)" +
+    " — estimate (" + M + ") · deposit \\(50%\\) (" + M + ")(?: · ([\\s\\S]+))?$").exec(text.slice(head.length));
+  if (!tail) return null;
+  var items = [], rest = tail[1], item = new RegExp("^([\\s\\S]+?) (" + M + ")(?: \\(((?:[^()]|\\([^()]*\\))*)\\))?(?= · |$)");
+  while (rest) {
+    var m = item.exec(rest);
+    if (!m) return null;
+    items.push({ label: m[1], amount: num(m[2]), detail: m[3] || "" });
+    rest = rest.slice(m[0].length);
+    if (rest) { if (rest.indexOf(" · ") !== 0) return null; rest = rest.slice(3); if (!rest) return null; }
+  }
+  var out = {
+    items: items,
+    qty: tail[2] ? { n: Number(tail[2]), many: tail[3], subtotal: num(tail[4]), saving: num(tail[5]) } : null,
+    tax: tail[6] ? { label: tail[6], amount: num(tail[7]), fruit: !!tail[8] } : null,
+    total: num(tail[9]), deposit: num(tail[10]), how: tail[11] || ""
+  };
+  /* the same words, rebuilt */
+  var again = head + items.map(function (it) { return it.label + " " + money(it.amount) + (it.detail ? " (" + it.detail + ")" : ""); }).join(" · ") +
+    (out.qty ? " — × " + out.qty.n + " " + out.qty.many + " " + money(out.qty.subtotal) + ", order more, save more −" + money(out.qty.saving) : "") +
+    (out.tax ? " — " + out.tax.label + " " + money(out.tax.amount) + (out.tax.fruit ? " (not on the fresh fruit)" : "") : " — no Texas sales tax (outside Texas)") +
+    " — estimate " + money(out.total) + " · deposit (50%) " + money(out.deposit) + (out.how ? " · " + out.how : "");
+  if (again !== text) return null;
+  /* the sums: items (× qty − saving) + tax = estimate; deposit = half, rounded up to the cent */
+  var c = function (n) { return Math.round(n * 100); }, pre = 0;
+  for (var i = 0; i < items.length; i++) pre += c(items[i].amount);
+  if (out.qty) { if (!(out.qty.n >= 2) || c(out.qty.subtotal) !== pre * out.qty.n) return null; pre = c(out.qty.subtotal) - c(out.qty.saving); }
+  if (pre + (out.tax ? c(out.tax.amount) : 0) !== c(out.total) || c(out.deposit) !== Math.ceil(c(out.total) * PRICES.depositRate)) return null;
+  return out;
+}
+
 if (typeof module !== "undefined") {
-  module.exports = { ORDER_FORM_URL: ORDER_FORM_URL, ORDER_FORM_PREFILL_ENTRY: ORDER_FORM_PREFILL_ENTRY, PAY: PAY, PRICES: PRICES, money: money, moneyPair: moneyPair, taxLabel: taxLabel, outOfTexas: outOfTexas, itemOff: itemOff, applyQty: applyQty, estPortraitDoll: estPortraitDoll, estPet: estPet, estWatercolor: estWatercolor, estHousewarming: estHousewarming, estCalendar: estCalendar, estGodparent: estGodparent, estChristeningGown: estChristeningGown, estConfirmation: estConfirmation, TIMING: TIMING, timingKind: timingKind, timingNote: timingNote, addonPrice: addonPrice, gownPrice: gownPrice, summaryLine: summaryLine, payHref: payHref, newOrderCode: newOrderCode, isOrderCode: isOrderCode, CODE_CHARS: CODE_CHARS, MERLIN_SCENE: MERLIN_SCENE };
+  module.exports = { ORDER_FORM_URL: ORDER_FORM_URL, ORDER_FORM_PREFILL_ENTRY: ORDER_FORM_PREFILL_ENTRY, PAY: PAY, PRICES: PRICES, money: money, moneyPair: moneyPair, taxLabel: taxLabel, outOfTexas: outOfTexas, itemOff: itemOff, applyQty: applyQty, estPortraitDoll: estPortraitDoll, estPet: estPet, estWatercolor: estWatercolor, estHousewarming: estHousewarming, estCalendar: estCalendar, estGodparent: estGodparent, estChristeningGown: estChristeningGown, estConfirmation: estConfirmation, TIMING: TIMING, timingKind: timingKind, timingNote: timingNote, addonPrice: addonPrice, gownPrice: gownPrice, summaryLine: summaryLine, pickParts: pickParts, payHref: payHref, newOrderCode: newOrderCode, isOrderCode: isOrderCode, CODE_CHARS: CODE_CHARS, MERLIN_SCENE: MERLIN_SCENE };
 }

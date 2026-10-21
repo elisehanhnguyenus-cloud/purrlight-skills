@@ -57,7 +57,7 @@
   /* ---------- the order code (prices.js newOrderCode) and the order copy — this tab only (sessionStorage) ----------
      One code per tab, kept while the pick changes (so "same pick → back into the open form" still matches), a new one
      after each sent form. The copy of the order that was sent (saveOrderCopy) feeds #pay and thanks.html. */
-  var CODE_KEY = "purrlight-order-code", COPY_KEY = "purrlight-order-copy", JUST_KEY = "purrlight-just-sent";
+  var CODE_KEY = "purrlight-order-code", COPY_KEY = "purrlight-order-copy", JUST_KEY = "purrlight-just-sent", PEND_KEY = "purrlight-order-pending";
   function sget(k) { try { return window.sessionStorage.getItem(k); } catch (e) { return null; } }
   function sset(k, v) { try { if (v === null) window.sessionStorage.removeItem(k); else window.sessionStorage.setItem(k, v); } catch (e) { /* storage blocked: the code lives until the page closes */ } }
   var hasCodes = typeof newOrderCode === "function" && typeof isOrderCode === "function";
@@ -155,7 +155,7 @@
     barOff = true;
     if (bar) { bar.hidden = true; document.body.classList.remove("has-bar"); document.documentElement.classList.remove("has-bar"); }
     var st = document.querySelector(".pay-sent");
-    if (st) setTimeout(function () { st.textContent = "Got it — Merlin noted your order. Next step: " + (paidInFull(copy) ? "your payment" : "your 50% deposit") + ", just below."; }, 150);
+    if (st) setTimeout(function () { st.textContent = "Got it — Merlin noted your order. Next step: " + (copy && copy.deposit && !paidInFull(copy) ? "your 50% deposit" : "your payment") + ", just below."; }, 150);
     if (hasCodes && !keepCode) { orderCode = newOrderCode(); sset(CODE_KEY, orderCode || null); }
     updatePay();
     applyOrderLinks();
@@ -174,6 +174,8 @@
     document.addEventListener("click", function (e) {
       var a = e.target && e.target.closest ? e.target.closest("a[data-order]") : null;
       if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;   /* a new tab stays a new tab */
+      /* the link this tab leaves with: if the form page sends it back here (?sent=1), that is the order it carried */
+      if ((a.getAttribute("href") || "").indexOf(ORDER_FORM_URL) === 0) sset(PEND_KEY, JSON.stringify({ at: Date.now(), href: a.getAttribute("href") }));
       var T = window.Tally, href = a.getAttribute("href") || "";
       if (!T || typeof T.openPopup !== "function" || href.indexOf(ORDER_FORM_URL) !== 0) return;
       e.preventDefault();
@@ -908,7 +910,9 @@
   if (payData("venmo")) addCopy(venmoTo, "Copy @handle", "pay-copy-venmo", function () { return venmoTo.textContent; }, function () { return "Copied our Venmo name."; });
 
   /* the summary above the cards + one "Copy deposit amount" for every way */
-  var pickLine = el("p", { "class": "pay-pick-line" }), doneBtn = document.querySelector(".pay-done .btn");
+  var pickLine = el("p", { "class": "pay-pick-line" }), doneBtn = document.querySelector(".pay-done .btn"), payTerms = document.querySelector(".pay-terms");
+  /* the deposit terms (approved for Custom Orders) and, for an order paid in full, the booth's paid-in-full wording (Elise 25/09) */
+  var TERMS_DEPOSIT = payTerms ? payTerms.textContent : "", TERMS_FULL = "It's refundable in full until work begins. Custom pieces can't be returned, but anything wrong or damaged is on us, 100%.";
   var copyAmountBtn = el("button", { type: "button", "class": "link-btn pay-copy-amount", text: "Copy deposit amount", hidden: "" });
   var amountStatus = el("p", { "class": "pay-status", role: "status" });
   if (payPick) { payPick.appendChild(pickLine); payPick.appendChild(el("p", { "class": "pay-pick-actions" }, [copyAmountBtn])); payPick.appendChild(amountStatus); }
@@ -927,9 +931,11 @@
   function updatePay() {
     if (!copyAmountBtn) return;   /* not set up yet */
     var c = sentCopy(), d = payDeposit(), code = payCode(), full = payFull(), tag = full ? "-F" : "-D";   /* F: paid in full · D: deposit · B: balance */
+    var unknown = !!(c && !c.deposit);   /* sent, but the page never saw what (?sent=1 without the link): deposit or paid in full */
     copyAmountBtn.hidden = !(d > 0);
     copyAmountBtn.textContent = full ? "Copy amount" : "Copy deposit amount";
-    if (doneBtn) doneBtn.textContent = full ? "I've sent my payment" : "I've sent my deposit";
+    if (doneBtn) doneBtn.textContent = full || unknown ? "I've sent my payment" : "I've sent my deposit";
+    if (payTerms) payTerms.textContent = full ? TERMS_FULL : TERMS_DEPOSIT;
     if (payPick) {
       payPick.hidden = !(c || lastPick);
       pickLine.innerHTML = "";
@@ -959,12 +965,12 @@
       var amt = w.box.querySelector("[data-pay-amount]");
       if (key === "stripe" && amt) {
         var filled = d > 0 && payHref("stripe", d) !== payData("stripe");
-        amt.textContent = filled ? (full ? "The full amount, " : "Your deposit, ") + money(d) + ", is filled in on the Stripe page — you can change it." : "On the Stripe page, type " + (full ? "the full amount." : "your deposit amount.");
-      } else if (key === "square" && amt) amt.textContent = "On the Square page (it shows our shop name, Viet Delight), type " + (full ? "the full amount." : "your deposit amount.");
+        amt.textContent = filled ? (full ? "The full amount, " : "Your deposit, ") + money(d) + ", is filled in on the Stripe page — you can change it." : "On the Stripe page, type " + (unknown ? "the amount due." : full ? "the full amount." : "your deposit amount.");
+      } else if (key === "square" && amt) amt.textContent = "On the Square page (it shows our shop name, Viet Delight), type " + (unknown ? "the amount due." : full ? "the full amount." : "your deposit amount.");
       if (w.hint) {
         var notes = key === "zelle" || key === "venmo" || m.notes === true;
         w.hint.hidden = !notes;
-        if (notes) w.hint.textContent = "In " + NOTE_WORD[key] + ", write " + (code ? code + tag + "." : "your name and your piece.");
+        if (notes) w.hint.textContent = "In " + NOTE_WORD[key] + ", write " + (!code ? "your name and your piece." : unknown ? code + "-D — or " + code + "-F for a digital file paid in full." : code + tag + ".");
       }
     });
   }
@@ -980,7 +986,14 @@
     } catch (e) { /* old browsers: the flag stays, harmless */ }
     var justSent = Number(sget(JUST_KEY)) || 0, sinceSent = Date.now() - justSent, kept = sentCopy();
     sset(JUST_KEY, null);
+    /* the form page, opened from a link in this tab (no popup): the link it left with, if it carries this tab's code and
+       was clicked in the last 12 hours — then the page knows the amounts, and whether it is a deposit or paid in full */
+    var pend = null, pcode = "";
+    try { pend = JSON.parse(sget(PEND_KEY)); pcode = (hiddenFields(pend.href).pick || "").slice(0, 4); } catch (e) { pend = null; }
+    sset(PEND_KEY, null);
+    var pendAge = pend && typeof pend.at === "number" ? Date.now() - pend.at : -1;
     if (kept && justSent && sinceSent >= 0 && sinceSent < 120000) afterSent(kept, true);
+    else if (pend && codeCarried && pcode && pcode === orderCode && pendAge >= 0 && pendAge < 12 * 3600000) afterSent(saveOrderCopy(pend.href));
     else afterSent(saveOrderCopy(""));
   }
 

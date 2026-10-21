@@ -215,8 +215,19 @@
     if (note && copy.code) {   /* exactly what to write when paying, set apart so it is easy to copy by eye */
       note.textContent = "";
       note.appendChild(document.createTextNode("When you pay, write "));
-      note.appendChild(el("strong", "letter-code", copy.code + (full(copy) ? "-F" : "-D")));   /* F: paid in full · D: deposit */
+      if (copy.product) note.appendChild(el("strong", "letter-code", copy.code + (full(copy) ? "-F" : "-D")));   /* F: paid in full · D: deposit */
+      else {   /* the order itself is not in this tab: a deposit, or a digital file paid in full */
+        note.appendChild(el("strong", "letter-code", copy.code + "-D"));
+        note.appendChild(document.createTextNode(" — or "));
+        note.appendChild(el("strong", "letter-code", copy.code + "-F"));
+        note.appendChild(document.createTextNode(" for a digital file paid in full —"));
+      }
       note.appendChild(document.createTextNode(" in " + (noteWhere() || "the payment note") + "."));
+    }
+    if (full(copy)) {   /* paid in full: the booth's paid-in-full terms (Elise 25/09) and "payment" for "deposit" */
+      var terms = $(".thanks-terms"), fact = $("[data-thanks-fact]");
+      if (terms) terms.textContent = "It's refundable in full until work begins. Custom pieces can't be returned, but anything wrong or damaged is on us, 100%.";
+      if (fact) fact.textContent = fact.textContent.replace("We check every deposit by hand", "We check every payment by hand");
     }
   }
 

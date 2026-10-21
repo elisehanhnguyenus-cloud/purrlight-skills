@@ -105,28 +105,34 @@ p { margin: 0; }
 .site-header { position: sticky; top: 0; z-index: 60; background: rgba(251, 246, 238, 0.92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
 .site-header .wrap { max-width: 1200px; }
 .header-inner { display: flex; align-items: center; gap: 20px; padding-top: 10px; padding-bottom: 10px; }
-.logo { display: flex; align-items: center; }
+.logo { display: flex; align-items: center; flex-shrink: 0; }   /* never squeezed by the links (it was, to nothing, at ~1000px) */
 .logo img { height: 28px; width: auto; }
 .main-nav { flex: 1; }
-.main-nav ul { display: flex; justify-content: center; gap: clamp(10px, 1.6vw, 26px); list-style: none; margin: 0; padding: 0; }
+.main-nav ul { display: flex; justify-content: center; gap: clamp(10px, 1.4vw, 24px); list-style: none; margin: 0; padding: 0; }
 .main-nav a { font-size: 15px; font-weight: 500; color: var(--ink-soft); text-decoration: none; white-space: nowrap; padding: 6px 2px; border-bottom: 2px solid transparent; transition: color 200ms ease, border-color 200ms ease; }
 .main-nav a:hover, .main-nav a[aria-current="page"] { color: var(--ink); border-color: var(--peach); }
-.header-cta { white-space: nowrap; }
+.header-cta { white-space: nowrap; flex-shrink: 0; }
 .nav-toggle { display: none; background: none; border: 0; cursor: pointer; padding: 9px; min-width: 44px; min-height: 44px; border-radius: var(--radius); color: var(--ink); }
 .nav-toggle svg, .nav-close svg { width: 26px; height: 26px; stroke: currentColor; }
-/* the one-row header (logo + 8 links + CTA) needs ~980px; below that the drawer + phone order bar take over */
-@media (max-width: 979px) {
+/* the one-row header (logo + 8 links + Place your order) needs about 1100px; below 1120px the menu button and drawer
+   take over, so the links never squeeze the logo or break a label (Elise 21/10) */
+@media (max-width: 1119px) {
   .site-header { backdrop-filter: none; background: var(--cream); }
-  .header-inner { padding-top: 8px; padding-bottom: 8px; }
   .nav-toggle { display: block; margin-left: auto; }
-  .site-header .header-cta { display: none; }
   .main-nav { position: fixed; inset: 0; background: var(--cream); visibility: hidden; opacity: 0; transition: opacity 240ms ease, visibility 0s 240ms; z-index: 70; padding: 90px var(--gutter) 40px; overflow-y: auto; }
   .main-nav.open { visibility: visible; opacity: 1; transition: opacity 240ms ease; }
   .main-nav ul { flex-direction: column; gap: 8px; }
   .main-nav a { display: block; font-family: var(--font-head); font-size: 30px; font-weight: 500; color: var(--ink); padding: 10px 0; border-bottom: 1px solid var(--line); }
   .nav-close { position: absolute; top: 18px; right: var(--gutter); background: none; border: 0; cursor: pointer; padding: 9px; min-width: 44px; min-height: 44px; color: var(--ink); }
 }
-@media (min-width: 980px) { .logo img { height: 34px; } .header-inner { padding-top: 14px; padding-bottom: 14px; } .nav-close { display: none; } }
+@media (min-width: 980px) and (max-width: 1119px) { .site-header .header-cta { margin-left: auto; } .site-header .header-cta + .nav-toggle { margin-left: 4px; } }
+/* phones: the drawer and the phone order bar */
+@media (max-width: 979px) {
+  .header-inner { padding-top: 8px; padding-bottom: 8px; }
+  .site-header .header-cta { display: none; }
+}
+@media (min-width: 980px) { .logo img { height: 34px; } .header-inner { padding-top: 14px; padding-bottom: 14px; } }
+@media (min-width: 1120px) { .nav-close { display: none; } }
 
 /* ---------- hero: Merlin is the background, edge to edge, melting into the cream (Elise 16/10).
    Phones: words + button, then the photo full width (top and bottom edges fade). Desktop: the photo fills the right

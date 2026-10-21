@@ -19,13 +19,25 @@
   var nav = document.querySelector(".main-nav");
   var close = document.querySelector(".nav-close");
   if (toggle && nav) {
+    /* the drawer covers the page (phones, tablets and laptops under 1200px): while it is open everything outside it is
+       inert, focus goes in, and comes back to the menu button when it closes — as on Custom Orders */
+    var outside = function () {
+      var list = [].slice.call(document.body.children).filter(function (n) { return !n.contains(nav) && n.tagName !== "SCRIPT"; });
+      return list.concat([document.querySelector(".logo"), document.querySelector(".site-header .header-cta"), toggle]).filter(Boolean);
+    };
+    var setInert = function (on) { outside().forEach(function (n) { if (on) n.setAttribute("inert", ""); else n.removeAttribute("inert"); }); };
     toggle.addEventListener("click", function () {
       nav.classList.add("open");
       toggle.setAttribute("aria-expanded", "true");
+      setInert(true);
+      (close || nav.querySelector("a")).focus();
     });
     var shut = function () {
+      if (!nav.classList.contains("open")) return;
       nav.classList.remove("open");
       toggle.setAttribute("aria-expanded", "false");
+      setInert(false);
+      toggle.focus();
     };
     if (close) close.addEventListener("click", shut);
     nav.addEventListener("click", function (e) {

@@ -221,6 +221,16 @@ if (pr && pr.out.PAY) {
       if (hrefOf(attr(b.html, "data-pay-link")) !== data) fail("custom-orders/index.html", "link nút " + key + " ≠ PAY." + key + ".url — sửa cả hai cho giống");
     }
   });
+  /* a card left out of PAY.order must carry hidden (the page hides it too); the "or in Venmo" words show with the Venmo card only */
+  var listed = Array.isArray(PAYX.order) ? PAYX.order : [];
+  WAYS.forEach(function (key) {
+    var b = wayBlock(key);
+    if (listed.indexOf(key) < 0 && b && !/\shidden(\s|>|=)/.test(b.open)) fail("custom-orders/index.html", "thẻ " + key + " không có trong PAY.order nhưng đang hiện — thêm hidden vào thẻ, hoặc thêm \"" + key + "\" vào PAY.order");
+  });
+  var venmoOn = listed.indexOf("venmo") > -1 && PAYX.venmo && typeof PAYX.venmo.handle === "string" && PAYX.venmo.handle !== "";
+  var vw = attr(coHtml, "data-venmo-word");
+  if (!vw) fail("custom-orders/index.html", "thiếu <span data-venmo-word> (chữ \" or in Venmo\" trong khối \"I've sent my deposit\")");
+  else if (/\shidden(\s|>|=)/.test(vw) === venmoOn) fail("custom-orders/index.html", venmoOn ? "chữ \" or in Venmo\" đang ẩn nhưng đã có Venmo — bỏ hidden ở <span data-venmo-word>" : "chữ \" or in Venmo\" đang hiện nhưng chưa có Venmo — thêm hidden vào <span data-venmo-word>");
   if (PAYX.thanks !== "thanks.html" || !has("custom-orders/thanks.html")) fail("custom-orders/prices.js PAY.thanks", "phải là \"thanks.html\" và có file custom-orders/thanks.html");
 }
 /* the thank-you page: never indexed, never reads the address's query (a provider's "st=Completed" must never become "paid") */

@@ -278,7 +278,10 @@ thứ tự **Zelle · Venmo · Square · Stripe**; thẻ nào chưa có link/han
 Mỗi tab có một **mã đơn** 4 ký tự (vd `K7HM`, không phải dữ liệu cá nhân) đi đầu trường ẩn `pick` của form; khách ghi
 `K7HM-D` vào ghi chú khi trả cọc (`-B` cho phần còn lại). Gửi form xong: trang lưu **bản sao đơn** trong tab
 (sessionStorage, không lời nhắn thiệp, không bao giờ localStorage), dòng "Got it — Merlin noted your order…", ẩn thanh
-Order, số cọc + mã ở phần cọc khoá theo **đơn đã gửi** (đổi món sau đó không đổi). Một nút *Copy deposit amount* chung,
+Order, số cọc + mã ở phần cọc khoá theo **đơn đã gửi** (đổi món sau đó không đổi). Về bằng `?sent=1#pay` (redirect
+của form Tally): nếu tab này vừa gửi popup (< 2 phút) thì giữ nguyên bản sao đó; nếu không thì chỉ ghi mã mà tab đã có
+từ trước (không có mã → gợi ý "your name and your piece", không bao giờ bịa mã) và **không hứa số tiền** (Stripe không
+điền sẵn, ẩn *Copy deposit amount*). Trình duyệt chặn sessionStorage: bản sao giữ trong bộ nhớ trang. Một nút *Copy deposit amount* chung,
 *Copy address* (Zelle), *Copy @handle* (Venmo). Dưới thẻ: **I've sent my deposit** → `thanks.html`. QR chỉ hiện trên
 máy tính. Dòng pháp lý Zelle VIẾT HOA (hướng dẫn thương hiệu Zelle). Điều khoản cọc lấy từ bản chị duyệt cho booth 25/09.
 **Trang cảm ơn** `custom-orders/thanks.html` (noindex): ảnh Merlin thật, câu "We check every deposit by hand…" (chị
@@ -311,7 +314,9 @@ nên không ghi "paid". Thư xác nhận thật là email chị gửi sau khi th
   `hidden`, link, địa chỉ, handle) — `tools/check-site.js` chặn deploy khi hai bên lệch, khi link Stripe là `test_`,
   hay link không phải https. QR Square: `assets/img/custom/square-pay-qr.svg` (tạo từ link; đổi link thì tạo lại QR).
 - **Thêm một cách trả cọc** (vd Venmo): điền `PAY.venmo.handle`, bỏ `hidden` ở thẻ Venmo và ghi handle vào
-  `data-venmo-to` trong `index.html`, chạy `node tools/check-site.js .`. Link có chuyển khách về trang (Square, Stripe):
+  `data-venmo-to` trong `index.html` (Venmo: bỏ cả `hidden` ở `<span data-venmo-word>` — chữ "or in Venmo" trong khối
+  *I've sent my deposit*), chạy `node tools/check-site.js .`. Thẻ nào bỏ khỏi `PAY.order` thì phải có `hidden` (trang
+  cũng tự ẩn). Link có chuyển khách về trang (Square, Stripe):
   dán `https://elisehanhnguyenus-cloud.github.io/purrlight-skills/custom-orders/thanks.html` (không thêm gì vào URL)
   vào ô redirect của hãng, thử thật một lần, rồi mới đặt `back: true`.
 

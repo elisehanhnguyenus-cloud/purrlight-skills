@@ -64,7 +64,7 @@
   var letter = $("#letter"), meta = $("[data-letter-meta]"), order = $("[data-letter-order]"), note = $("[data-letter-note]");
   if (copy) {
     var neutral = $("[data-thanks-neutral]");
-    if (neutral) neutral.hidden = true;   /* this tab sent the form: the line for balance payers and other devices is not for them */
+    if (neutral && (copy.code || copy.product)) neutral.hidden = true;   /* this tab sent the form: the line for balance payers and other devices is not for them */
     if (meta && (copy.day || copy.code)) {
       meta.textContent = [copy.day, copy.code ? "Order code " + copy.code : ""].filter(Boolean).join(" · ");
       meta.hidden = false;

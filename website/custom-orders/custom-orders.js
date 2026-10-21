@@ -57,13 +57,15 @@
   /* ---------- the order code (prices.js newOrderCode) and the order copy — this tab only (sessionStorage) ----------
      One code per tab, kept while the pick changes (so "same pick → back into the open form" still matches), a new one
      after each sent form. The copy of the order that was sent (saveOrderCopy) feeds #pay and thanks.html. */
-  var CODE_KEY = "purrlight-order-code", COPY_KEY = "purrlight-order-copy";
+  var CODE_KEY = "purrlight-order-code", COPY_KEY = "purrlight-order-copy", JUST_KEY = "purrlight-just-sent";
   function sget(k) { try { return window.sessionStorage.getItem(k); } catch (e) { return null; } }
   function sset(k, v) { try { if (v === null) window.sessionStorage.removeItem(k); else window.sessionStorage.setItem(k, v); } catch (e) { /* storage blocked: the code lives until the page closes */ } }
   var hasCodes = typeof newOrderCode === "function" && typeof isOrderCode === "function";
   var orderCode = sget(CODE_KEY);
+  /* a code already in this tab may be in a form that was sent from here; one made on this load never was */
+  var codeCarried = hasCodes && isOrderCode(orderCode);
   if (!hasCodes) orderCode = "";
-  else if (!isOrderCode(orderCode)) { orderCode = newOrderCode(); sset(CODE_KEY, orderCode || null); }
+  else if (!codeCarried) { orderCode = newOrderCode(); sset(CODE_KEY, orderCode || null); }
   function withCode(text) { return orderCode ? orderCode + (text ? " · " + text : "") : text; }
 
   /* ---------- order link: one constant + utm passthrough (brief §5) ---------- */
@@ -123,31 +125,36 @@
   }
   /* the copy of the order that was sent, read from the very link the form was opened with (so it is what was sent):
      code, piece, estimate, deposit, how it reaches them, and the pick line WITHOUT the card message (never stored).
-     href "" (the form page's own redirect, ?sent=1): only the day and the code of this tab — no amounts promised. */
+     href "" (the form page's own redirect, ?sent=1): only the day and the code this tab had before the page loaded —
+     no amounts promised, and no code at all when the form was sent from somewhere else (another tab, the form's own link).
+     Kept in memory too, for browsers that block sessionStorage. */
   function localDay() { var d = new Date(); return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
   function saveOrderCopy(href) {
     var f = hiddenFields(href), m = /^([ACDEFHJKMNPRTWXY3479]{4})(?: · ([\s\S]*))?$/.exec(f.pick || ""), copy = { v: 1, at: localDay(), sent: true };
-    var code = m ? m[1] : (href ? "" : orderCode), pick = (m ? m[2] || "" : f.pick || "").replace(/ · Card message: "[\s\S]*$/, "");
+    var code = m ? m[1] : (href || !codeCarried ? "" : orderCode), pick = (m ? m[2] || "" : f.pick || "").replace(/ · Card message: "[\s\S]*$/, "");
     if (code) copy.code = code;
     if (pick && f.product && /^\d{1,5}\.\d{2}$/.test(f.total || "") && /^\d{1,5}\.\d{2}$/.test(f.deposit || "")) {
       copy.product = f.product.slice(0, 120); copy.total = f.total; copy.deposit = f.deposit; copy.pick = pick.slice(0, 600);
       if (f.delivery) copy.delivery = f.delivery.slice(0, 60);
     }
     sset(COPY_KEY, JSON.stringify(copy));
+    memCopy = copy;
     return copy;
   }
+  var memCopy = null;
   function sentCopy() {
-    try { var c = JSON.parse(sget(COPY_KEY)); return c && c.v === 1 && c.sent ? c : null; } catch (e) { return null; }
+    try { var c = JSON.parse(sget(COPY_KEY)); if (c && c.v === 1 && c.sent) return c; } catch (e) { /* storage blocked or odd: the copy in memory */ }
+    return memCopy;
   }
   /* after a sent form: the phone order bar steps aside for the rest of the visit, one status line (read once), the
-     deposit section shows the order that was sent, and the next order gets a new code */
+     deposit section shows the order that was sent, and the next order gets a new code (keepCode: it already has one) */
   var barOff = false;
-  function afterSent(copy) {
+  function afterSent(copy, keepCode) {
     barOff = true;
     if (bar) { bar.hidden = true; document.body.classList.remove("has-bar"); document.documentElement.classList.remove("has-bar"); }
     var st = document.querySelector(".pay-sent");
     if (st) setTimeout(function () { st.textContent = "Got it — Merlin noted your order. Next step: your 50% deposit, just below."; }, 150);
-    if (hasCodes) { orderCode = newOrderCode(); sset(CODE_KEY, orderCode || null); }
+    if (hasCodes && !keepCode) { orderCode = newOrderCode(); sset(CODE_KEY, orderCode || null); }
     updatePay();
     applyOrderLinks();
     return copy;
@@ -173,6 +180,7 @@
         return;
       }
       if (tallyOpen()) T.closePopup(TALLY_FORM);   /* one popup, with the latest pick */
+      sset(JUST_KEY, null);
       tallyOpener = a; tallyHref = href;
       /* the form never shows (tally.so down or blocked while the script loaded): after 10 s, open the form page instead */
       clearTimeout(tallyTimer);
@@ -186,6 +194,7 @@
         onClose: function () { clearTimeout(tallyTimer); tallyHref = null; var o = tallyOpener; tallyOpener = null; if (o && document.documentElement.contains(o)) o.focus({ preventScroll: true }); },
         onSubmit: function () {
           var copy = saveOrderCopy(tallyHref);   /* first: closing the popup clears tallyHref (onClose) */
+          sset(JUST_KEY, String(Date.now()));   /* the form's redirect may reload this page as ?sent=1 next: keep this copy */
           tallyOpener = null;
           T.closePopup(TALLY_FORM);
           var sec = document.getElementById("pay"), pay = document.getElementById("pay-h");
@@ -847,6 +856,8 @@
     return key === "zelle" ? m.to || "" : key === "venmo" ? m.handle || "" : m.url || "";
   }
   /* the order of the cards on the page follows PAY.order */
+  /* a card whose way is not in PAY.order never shows */
+  Array.prototype.forEach.call(document.querySelectorAll(".pay-way[data-pay]"), function (box) { if (!payWays[box.getAttribute("data-pay")]) box.hidden = true; });
   var wayList = document.querySelector(".pay-ways");
   if (wayList && PAY_OK) PAY.order.forEach(function (key) { if (payWays[key]) wayList.appendChild(payWays[key].box); });
   var zelleTo = document.querySelector("[data-zelle-to]"), venmoTo = document.querySelector("[data-venmo-to]");
@@ -859,6 +870,8 @@
   });
   if (zelleTo && payData("zelle")) zelleTo.textContent = payData("zelle");
   if (venmoTo && payData("venmo")) venmoTo.textContent = payData("venmo");
+  var venmoWord = document.querySelector("[data-venmo-word]");   /* "Paid in your bank app or in Venmo": only with a Venmo card */
+  if (venmoWord) venmoWord.hidden = !(payWays.venmo && payData("venmo"));
   /* "After you pay, you come back to Purrlight": on every card whose provider can bring the customer back, and only
      when all of those shown have been tried (back: true) — never on one card and not another */
   var redirectWays = ["square", "stripe"].filter(function (k) { return payWays[k] && payData(k); });
@@ -894,7 +907,7 @@
   if (payPick) { payPick.appendChild(pickLine); payPick.appendChild(el("p", { "class": "pay-pick-actions" }, [copyAmountBtn])); payPick.appendChild(amountStatus); }
   function payDeposit() {   /* the sent order's deposit; before a form is sent, the pick's */
     var c = sentCopy();
-    if (c && c.deposit) return Number(c.deposit);
+    if (c) return c.deposit ? Number(c.deposit) : 0;   /* sent without amounts (?sent=1): none promised */
     return lastPick ? lastPick.deposit : 0;
   }
   function payCode() { var c = sentCopy(); return c ? (c.code || "") : orderCode; }
@@ -945,15 +958,19 @@
     });
   }
   updatePay();
-  /* the form page's own redirect (Tally "Redirect on completion" → ?sent=1#pay): the same as a sent popup, without the
-     order details (this page never saw the link that was sent), and the flag leaves the address at once — Tally's popup
-     copies the page's query into the next form */
+  /* the form's own redirect (Tally "Redirect on completion" → ?sent=1#pay), and the flag leaves the address at once —
+     Tally's popup copies the page's query into the next form.
+     - right after a popup sent from this tab (Tally reloads the whole page): that copy is the order; its code was renewed
+     - otherwise (the form page): the same as a sent popup, without the order details — this page never saw that link */
   if (/[?&]sent=1(&|$)/.test(location.search || "")) {
     try {
       var rest = location.search.replace(/([?&])sent=1(&|$)/, function (_, a, b) { return b ? a : ""; });
       history.replaceState(null, "", location.pathname + rest + location.hash);
     } catch (e) { /* old browsers: the flag stays, harmless */ }
-    afterSent(saveOrderCopy(""));
+    var justSent = Number(sget(JUST_KEY)) || 0, sinceSent = Date.now() - justSent, kept = sentCopy();
+    sset(JUST_KEY, null);
+    if (kept && justSent && sinceSent >= 0 && sinceSent < 120000) afterSent(kept, true);
+    else afterSent(saveOrderCopy(""));
   }
 
   /* how the photos travel: the order email today, the order form once ORDER_FORM_URL is a form */

@@ -41,7 +41,10 @@ var DESK_CONFIG = {
 
   /* Approved booth price grid — Elise, 25/09/2026 (Cat Show Booth Kit & Changelog).
      Custom cat = size × yarn. Custom doll = size × single/pair. Deposit 50%.
-     Dogs, rabbits and other pets use the cat grid. */
+     Dogs, rabbits and other pets use the cat grid.
+     The booth and the web sell at the same prices (Elise 21/10/2026): the cat grid = PRICES.pet.table and a Classic
+     doll = PRICES.portraitDoll.base ($80, was $85 here) in custom-orders/prices.js. tools/check-site.js stops a
+     deploy when they differ — change both together. */
   customGrid: {
     yarns: [
       { key: "cotton", label: "Yaoh Cotton", code: "C" },
@@ -50,7 +53,7 @@ var DESK_CONFIG = {
     ],
     sizes: ["Petite", "Classic", "Grand"],
     cat:  { Petite: [40, 48, 55], Classic: [55, 67, 79], Grand: [90, 105, 120] },
-    doll: { Petite: [45, 85],     Classic: [85, 160],    Grand: [130, 245] },   /* [single, pair] */
+    doll: { Petite: [45, 85],     Classic: [80, 160],    Grand: [130, 245] },   /* [single, pair] */
     poses: ["Sitting", "Standing", "Lying"],
     eyes: ["Awake", "Sleepy"],
     petTypes: ["Cat", "Dog", "Rabbit", "Other pet"],

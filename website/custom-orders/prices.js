@@ -119,6 +119,8 @@ var PAY = {
 };
 
 var PRICES = {
+  /* the same prices at the booth (Elise 21/10): a Classic doll in js/event-desk.js customGrid.doll and the cat grid
+     there = pet.table here. tools/check-site.js stops a deploy when they differ — change both together. */
   portraitDoll: { base: 80, shadowbox: 10 },                               /* §3.2 · taxed like the rest (Elise 16/10, second message) */
   pet: {                                                                     /* §3.3 */
     sizes: ["Petite", "Classic", "Grand"],

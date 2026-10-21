@@ -144,6 +144,25 @@ if (pr) {
   }
 }
 
+/* ---------- the booth sells at the web's prices (Elise 21/10/2026) ---------- */
+if (pr && pr.out.PRICES) {
+  var desk = readText(path.join(ROOT, "js/event-desk.js"));
+  var grid = function (name) {   /* e.g. doll: { Petite: [45, 85], Classic: [80, 160], Grand: [130, 245] } */
+    var m = new RegExp("\\b" + name + ":\\s*\\{([^}]*)\\}").exec(desk), out = {};
+    if (!m) return null;
+    m[1].replace(/(\w+):\s*\[([^\]]*)\]/g, function (_, k, v) { out[k] = v.split(",").map(Number); return ""; });
+    return out;
+  };
+  var P2 = pr.out.PRICES, dg = grid("doll"), cg = grid("cat");
+  if (!dg || !cg) fail("js/event-desk.js", "không đọc được bảng giá booth (customGrid: cat / doll)");
+  else {
+    if (!dg.Classic || dg.Classic[0] !== P2.portraitDoll.base) fail("giá búp bê", "booth Classic 1 con $" + (dg.Classic && dg.Classic[0]) + " ≠ web Custom Portrait Doll $" + P2.portraitDoll.base + " — sửa js/event-desk.js và custom-orders/prices.js cho giống");
+    (P2.pet.sizes || []).forEach(function (size) {
+      if (JSON.stringify(cg[size]) !== JSON.stringify(P2.pet.table[size])) fail("giá thú cưng " + size, "booth " + JSON.stringify(cg[size]) + " ≠ web " + JSON.stringify(P2.pet.table[size]) + " — sửa cả hai cho giống");
+    });
+  }
+}
+
 /* ---------- JSON files, and the follow strip ---------- */
 var json = {};
 byExt(".json").forEach(function (f) {

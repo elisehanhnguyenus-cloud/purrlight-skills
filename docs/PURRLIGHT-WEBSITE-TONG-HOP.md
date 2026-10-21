@@ -549,7 +549,8 @@ lazy-load.
   dùng ảnh listing Etsy Maine Coon; christening dùng ảnh hộp thật thay mockup.
 - Giá custom doll $80 (brief) ≠ bảng giá booth 25/09 (doll Petite $45 /
   Classic $85 / Grand $130) và custom pet Grand Etsy $150 ≠ booth $90–120 —
-  khác kênh có chủ ý?
+  khác kênh có chủ ý? → 21/10: Elise chốt búp bê $80 ở mọi nơi (booth đã sửa);
+  câu pet Grand / Etsy Jumbo còn chờ.
 - ✅ **Hạn Giáng sinh — Elise chốt 15/10: giữ Chủ nhật.** Brief §1/§3.9 ghi
   "Sun, Nov 30 · Sun, Dec 14" nhưng năm 2026 hai ngày đó là thứ Hai → trang
   nay ghi **Sun, Nov 29** (crochet) và **Sun, Dec 13** (tranh, lịch, hộp quà).
@@ -1188,6 +1189,13 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 - **Newsletter:** để nguyên, xử lý sau.
 - **Instagram:** @vietdelight_us — https://www.instagram.com/vietdelight_us/ . 6 ô ảnh cuối trang và nút "follow on
   Instagram" đã trỏ về đây.
+- **Đồng bộ Etsy chạy lại (21/10, sau khi chị bấm Allow):** lần chạy đầu OK trong 12 giây: 137 đơn (7 đơn mới từ 02/10,
+  đơn mới nhất 19/10), 32 listing đang bán, 56 dòng phí mới. Từ nay lịch đêm tự chạy lúc 18:00 giờ Houston (17:00 từ
+  01/11). Cả 31 giá trên shop khớp đúng giá Etsy (so từng listing).
+- **Giá búp bê: $80 ở mọi nơi (chị chốt 21/10).** Booth Classic 1 con $85 → $80 (cặp vẫn $160). `check-site` giờ chặn
+  deploy nếu giá búp bê hay bảng giá thú cưng ở booth lệch web. Listing Etsy "Angel Portrait Doll" (4467697803) đang
+  $79 — chị đổi trên Etsy thì sổ đêm tự thấy, em đổi shop theo. Listing Etsy "Jumbo Cat & Pet Plushie" (4364432946)
+  $150 khác Custom Orders size Grand $90–120: chờ chị nói đó có phải cùng một món không.
 
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
@@ -1203,8 +1211,9 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
    khác). Spike 0a em đã dựng xong (mục 6).
 6. Spike 0a: tự tạo token và đổi 1 ảnh theo `docs/ADMIN-SPIKE-0A-HUONG-DAN.md`, rồi nhắn em 5 dòng ghi chú.
 7. ~~Instagram~~ — xong 21/10 (@vietdelight_us).
-8. Code: giá búp bê $80 (web) và $85 (booth) có cố ý khác không. (Thuế booth: đã chốt "cộng thuế"; newsletter: để sau.)
-9. Đồng bộ Etsy: làm 4 bước trong hướng dẫn kết nối Etsy (app Etsy → 2 khoá vào Supabase → bấm Allow → nhắn em "xong").
+8. Etsy: đổi listing Angel Portrait Doll $79 → $80 nếu muốn khớp. "Jumbo" $150 trên Etsy có phải là size Grand
+   ($90–120) không?
+9. ~~Đồng bộ Etsy~~ — xong 21/10. Bảng số trong Làng chỉ làm sau 7 đêm đồng bộ liền thành công (tới ~28/10).
 10. Thanh toán: gửi em link/handle của Venmo, Stripe, PayPal khi có (Zelle và Square đã có), theo danh sách trong kế hoạch
     thanh toán em gửi sau.
 

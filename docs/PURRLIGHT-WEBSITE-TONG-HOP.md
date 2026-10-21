@@ -1235,6 +1235,22 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   - Cách trả nào bỏ khỏi `PAY.order` thì không hiện. `check-site` chặn deploy khi trang lệch.
 - Kiểm tra: 148 kiểm tra phần cọc + trang cảm ơn, 64 ca của `check-site`, các bộ cũ (giá, studio, Event Desk) đều qua.
 
+### Lá thư làm lại (Elise 21/10: "dễ đọc, dễ check, dễ lướt" + "What happens next" có hình)
+- Nhóm thiết kế 3 hướng + 2 giám khảo chọn kiểu **phiếu gọn** (receipt), ghép ý hay của 2 hướng kia.
+- **Ô "Your pick":** món + lựa chọn; mỗi món thêm/đổi một dòng (dòng đổi có cách tính); × N, giảm khi mua nhiều, thuế; số
+  tiền thẳng một cột với dấu +/−. Cách nhận hàng có hình nhỏ. Cuối ô: Estimate, **cọc 50% là số to nhất** (đỏ mận), Balance.
+  Ngay dưới: "When you pay, write 7RJ7-D in the Zelle memo."
+- **What happens next:** 4 bước (Your deposit · Design mockup · We make it · Approve & receive), mỗi bước một hình vẽ tay
+  trong vòng tròn, nối bằng sợi len như "How it works". Bước 4 đổi hình + câu theo cách nhận hàng (giao / đến lấy thứ Bảy
+  hay Chủ nhật / file).
+- Dòng "My pick" được tách bằng `pickParts` (prices.js): chỉ nhận khi ghép lại ra đúng nguyên văn và mọi con số tính lại
+  khớp (8,600 dòng + bài kiểm tra chặt hơn 55 nghìn dòng). Không chắc → thư hiện nguyên dòng khách đã gửi.
+- Bản sao đơn giữ tới 1,000 ký tự (trước 600: hơn 25 nghìn kiểu đơn dài hơn 600 sẽ bị cắt). In ra: 1 trang (Letter, A4).
+- Rà soát 3 góc: 2 lỗi nhỏ đã sửa — thư từng bảo khách Square ghi vào "payment note" trong khi Square chưa có ô ghi chú (giờ
+  chỉ nêu ô thật: Zelle memo; chị bật ghi chú Square thì tự thêm), và `check-site` giờ thử đọc từng chữ cách nhận hàng.
+- Hỏi chị (bản xem trước, mục câu hỏi): với file kỹ thuật số, bước 4 "Pay the balance after you approve the photo of your
+  finished piece" có đúng cách chị làm không.
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
@@ -1253,7 +1269,7 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 9. ~~Đồng bộ Etsy~~ — xong 21/10. Bảng số trong Làng chỉ làm sau 7 đêm đồng bộ liền thành công (tới ~28/10).
 10. Thanh toán: kế hoạch chốt ở `docs/PAYMENT-MERLIN-PLAN-2026-10-21.md`. ~~Thử Square $45~~ — đúng $45.00 (21/10).
     Bỏ PayPal (21/10). Link Venmo (business profile) / Stripe gửi trước ~05/11 thì lên trước mùa lễ.
-    **Duyệt 47 câu tiếng Anh** ở bản xem trước (link ở mục trên): nhắn "duyệt hết" hoặc "sửa câu số …". Duyệt xong em gỡ
+    **Duyệt 54 câu tiếng Anh** (có lá thư làm lại) ở bản xem trước (link ở mục trên): nhắn "duyệt hết" hoặc "sửa câu số …". Duyệt xong em gỡ
     `DEPLOY-HOLD` và đưa lên web. Sau đó: bật chuyển hướng về `thanks.html` + ô ghi chú ở link Square; đặt redirect của
     form Tally về `…/custom-orders/?sent=1#pay`; link Stripe đặt mức tối thiểu $5 và ô tự điền tên "Order code or your name".
 11. **Purrlight Circle:** gửi em (a) ai tham gia được, (b) đăng ký ở đâu (link form/app), (c) hoa hồng bao nhiêu, tính

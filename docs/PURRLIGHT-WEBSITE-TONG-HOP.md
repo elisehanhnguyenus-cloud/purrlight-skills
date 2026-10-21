@@ -1214,8 +1214,9 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 8. Etsy: đổi listing Angel Portrait Doll $79 → $80 nếu muốn khớp. "Jumbo" $150 trên Etsy có phải là size Grand
    ($90–120) không?
 9. ~~Đồng bộ Etsy~~ — xong 21/10. Bảng số trong Làng chỉ làm sau 7 đêm đồng bộ liền thành công (tới ~28/10).
-10. Thanh toán: gửi em link/handle của Venmo, Stripe, PayPal khi có (Zelle và Square đã có), theo danh sách trong kế hoạch
-    thanh toán em gửi sau.
+10. Thanh toán: kế hoạch chốt ở `docs/PAYMENT-MERLIN-PLAN-2026-10-21.md` (hội đồng Hải Đăng, Linh Trần, Prue duyệt kèm
+    sửa). **Gấp:** mở link Square, gõ 45 — màn hình phải ghi đúng $45.00 (không thêm dòng thuế/tip). Rồi trả lời các câu ở
+    mục 10 (câu nào cũng có mặc định); link Venmo/Stripe/PayPal gửi trước ~05/11 thì lên trước mùa lễ.
 
 ## 9. Link & tài nguyên
 

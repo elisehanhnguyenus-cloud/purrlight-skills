@@ -1221,6 +1221,20 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   **Partner Program** (`partners.html`, qua TikTok Shop affiliate), mà tài liệu ghi là **chưa chạy** (TikTok Shop Open
   Collaboration chưa bật, chưa đặt hoa hồng). Em chưa đưa gì lên web, chờ chị gửi chi tiết (mục "Còn chờ chị" 11).
 
+### Phần trả cọc 4 cách + trang cảm ơn — đã làm, đang khoá chờ chị duyệt chữ (21/10)
+- Đã có trên nhánh làm việc, **chưa lên web**: file `DEPLOY-HOLD` ở gốc repo làm lệnh deploy tự dừng cho tới khi chị duyệt
+  bản xem trước chữ tiếng Anh (47 câu, có nghĩa tiếng Việt + ảnh chụp: https://claude.ai/artifact/FJp8sphU4bZjU6FuLGkRfB,
+  trang riêng tư của chị).
+- Nhóm rà soát (4 góc + người phản biện riêng) xác nhận 6 lỗi, đã sửa hết:
+  - Khi form Tally tự đưa khách về `?sent=1#pay` sau popup, trang từng thay mã đơn đã gửi bằng mã mới và mất số cọc.
+    Giờ giữ nguyên đơn vừa gửi.
+  - Tab chưa từng mở form (form mở thẳng, tab khác) không bao giờ bịa mã. Khách được nhắc ghi tên + món.
+  - Sau `?sent=1` không hứa số tiền: Stripe không điền sẵn, ẩn nút chép số cọc.
+  - Trình duyệt chặn bộ nhớ tab: gợi ý vẫn đúng mã đã gửi.
+  - Chữ "or in Venmo" chỉ hiện khi có thẻ Venmo.
+  - Cách trả nào bỏ khỏi `PAY.order` thì không hiện. `check-site` chặn deploy khi trang lệch.
+- Kiểm tra: 148 kiểm tra phần cọc + trang cảm ơn, 64 ca của `check-site`, các bộ cũ (giá, studio, Event Desk) đều qua.
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
@@ -1239,6 +1253,9 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 9. ~~Đồng bộ Etsy~~ — xong 21/10. Bảng số trong Làng chỉ làm sau 7 đêm đồng bộ liền thành công (tới ~28/10).
 10. Thanh toán: kế hoạch chốt ở `docs/PAYMENT-MERLIN-PLAN-2026-10-21.md`. ~~Thử Square $45~~ — đúng $45.00 (21/10).
     Bỏ PayPal (21/10). Link Venmo (business profile) / Stripe gửi trước ~05/11 thì lên trước mùa lễ.
+    **Duyệt 47 câu tiếng Anh** ở bản xem trước (link ở mục trên): nhắn "duyệt hết" hoặc "sửa câu số …". Duyệt xong em gỡ
+    `DEPLOY-HOLD` và đưa lên web. Sau đó: bật chuyển hướng về `thanks.html` + ô ghi chú ở link Square; đặt redirect của
+    form Tally về `…/custom-orders/?sent=1#pay`; link Stripe đặt mức tối thiểu $5 và ô tự điền tên "Order code or your name".
 11. **Purrlight Circle:** gửi em (a) ai tham gia được, (b) đăng ký ở đâu (link form/app), (c) hoa hồng bao nhiêu, tính
     trên gì, (d) theo dõi đơn bằng gì (mã giảm giá, link riêng, TikTok Shop…), (e) trả hoa hồng khi nào, bằng gì,
     (f) khách của người giới thiệu có được giảm gì không, (g) Circle thay trang Partner Program hay đứng riêng.

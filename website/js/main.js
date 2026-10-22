@@ -46,6 +46,16 @@
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape") shut();
     });
+    /* widened past the drawer while it was open (a tablet turned sideways): close it, or the page behind stays inert */
+    var wideNav = window.matchMedia ? window.matchMedia("(min-width: 1200px)") : null;
+    var onWideNav = function () {
+      if (!wideNav.matches || !nav.classList.contains("open")) return;
+      nav.classList.remove("open");
+      toggle.setAttribute("aria-expanded", "false");
+      setInert(false);
+    };
+    if (wideNav && wideNav.addEventListener) wideNav.addEventListener("change", onWideNav);
+    else if (wideNav && wideNav.addListener) wideNav.addListener(onWideNav);
   }
 
   /* ---------- reveal on scroll ---------- */
@@ -68,12 +78,17 @@
      poster photo (they are decorative — each card's link and label carry the meaning). "Pause videos" stops them
      for good on this device (WCAG 2.2.2) and is remembered. */
   var reels = document.querySelectorAll("video[data-reel]");
-  var still = (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) ||
+  var calmMQ = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
+  var still = (calmMQ && calmMQ.matches) ||
     (navigator.connection && navigator.connection.saveData);
   if (reels.length && !still && "IntersectionObserver" in window) {
     var reelsOff = false;
     try { reelsOff = localStorage.getItem("purrlight:reels") === "off"; } catch (err) { /* storage blocked — videos may play */ }
-    var playReel = function (v) { if (!reelsOff && v.dataset.on && !document.hidden) { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); } };
+    var playReel = function (v) { if (!reelsOff && v.dataset.on && !document.hidden && !(calmMQ && calmMQ.matches)) { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); } };
+    /* reduced motion switched on mid-visit: the videos stop where they are */
+    var onCalm = function () { if (calmMQ.matches) reels.forEach(function (v) { v.pause(); }); };
+    if (calmMQ && calmMQ.addEventListener) calmMQ.addEventListener("change", onCalm);
+    else if (calmMQ && calmMQ.addListener) calmMQ.addListener(onCalm);
     var reelIO = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
         var v = en.target;
@@ -155,7 +170,7 @@
     catGrid.innerHTML = CATEGORIES.map(function (c) {
       return (
         '<a class="cat-tile reveal" href="shop.html?cat=' + encodeURIComponent(c.name) + '">' +
-        '<span class="cat-art"><img src="' + c.img + '" alt="" width="400" height="400"></span>' +
+        '<span class="cat-art"><img src="' + c.img + '" alt="" width="400" height="400" loading="lazy" decoding="async"></span>' +
         "<span>" + c.name + "</span></a>"
       );
     }).join("");
@@ -163,7 +178,7 @@
       catGrid.innerHTML += UPCOMING_CATEGORIES.map(function (c) {
         return (
           '<span class="cat-tile tile-soon reveal"><span class="soon-pill">soon</span>' +
-          '<span class="cat-art"><img src="' + c.img + '" alt="" width="400" height="400"></span>' +
+          '<span class="cat-art"><img src="' + c.img + '" alt="" width="400" height="400" loading="lazy" decoding="async"></span>' +
           "<span>" + c.name + "</span></span>"
         );
       }).join("");
@@ -268,6 +283,7 @@
         return '<option value="' + i + '">' + a.label + tag + "</option>";
       }).join("");
       addonWrap.hidden = false;
+      if (priceEl) priceEl.setAttribute("aria-live", "polite");   /* the set's price is read out when it changes */
       sel.addEventListener("change", function () {
         var a = p.addons[Number(sel.value)] || p.addons[0];
         if (priceEl) priceEl.innerHTML = priceHTML(p, a.delta);

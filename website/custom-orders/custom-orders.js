@@ -50,6 +50,14 @@
     if (closeBtn) closeBtn.addEventListener("click", shut);
     nav.addEventListener("click", function (e) { if (e.target.tagName === "A") shut(); });
     document.addEventListener("keydown", function (e) { if (e.key === "Escape") shut(); });
+    /* widened past the drawer while it was open (a tablet turned sideways): close it, or the page behind stays inert */
+    var wideNav = window.matchMedia ? window.matchMedia("(min-width: 1120px)") : null;
+    var onWideNav = function () {
+      if (!wideNav.matches || !nav.classList.contains("open")) return;
+      nav.classList.remove("open"); toggle.setAttribute("aria-expanded", "false"); setInert(false);
+    };
+    if (wideNav && wideNav.addEventListener) wideNav.addEventListener("change", onWideNav);
+    else if (wideNav && wideNav.addListener) wideNav.addListener(onWideNav);
   }
   var yr = document.querySelector("[data-year]");
   if (yr) yr.textContent = new Date().getFullYear();

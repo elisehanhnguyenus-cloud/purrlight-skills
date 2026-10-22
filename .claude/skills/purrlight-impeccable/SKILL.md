@@ -25,6 +25,16 @@ Only the text was installed, on purpose: the engine binary carries the telemetry
   skip it and write "deterministic scan unavailable". Do the rest by reading code and screenshots.
 - **Not available:** `live`, `generate`, `hooks`, `pin`, `doctor` and the native iOS/Android references. Say so if
   asked.
+- **new-work and shape without the engine.** new-work.md calls engine verbs that are not installed and says
+  skipping them is a contract violation. For this install, that contract is replaced by these steps:
+  1. Skip `concept-seed`, `serve-question`, `surface-brief`, `build-phase`, `comp-spec`, `comp-diff` and
+     `embed-prompt`.
+  2. Rank your own 5–7 directions. Present the top three, your pick and the standing exit to Elise in plain
+     Vietnamese, or with the AskUserQuestion tool, which is the structured-tool path new-work already describes.
+  3. Always write `seed: none (unavailable)` in FORM.
+  4. Write the surface brief as a plain file in `$P/impeccable/`.
+  5. Tell the inline finish reviewer that these are expected here and not findings: a missing seed or roll, a
+     missing `.impeccable/build/state.json`, and the FINISH line's raster-provenance clause.
 - **Project context.** There is no PRODUCT.md or DESIGN.md. Use, in this order:
   - the Brand Canon summaries (top of `website/README.md`, TONG-HOP §8c);
   - HOUSE-RULES;
@@ -44,8 +54,14 @@ Only the text was installed, on purpose: the engine binary carries the telemetry
 - **Never escalate the sandbox** for any step. Where new-work.md asks for "the least-sandboxed command path", use
   the normal Bash tool on 127.0.0.1.
 - **Sub-agents.**
-  - critique wants two isolated sub-agents. Give each one these rules and HOUSE-RULES Parts A and B: preview
-    copy only, 127.0.0.1, no launcher, no image tools, no repo writes.
+  - critique, typeset and layout spawn isolated sub-agents, and so may the finish reviewer and documenter steps.
+  - Every sub-agent brief must include, verbatim:
+    - the "This install has no engine" section above. Its detector line means: write "deterministic scan
+      unavailable" without trying, even where critique.md asks for "a real attempt";
+    - HOUSE-RULES Parts A and B;
+    - preview copy only, 127.0.0.1, no image tools and no repo writes;
+    - never run `npx`, `npm` or `pnpm` installs, or `npx impeccable` in any form;
+    - never escalate the sandbox, never submit the Tally form, no commits, pushes or deploys.
   - The shipped agents (asset-producer, finish-reviewer, documenter) are not installed. Use
     `reference/degraded/finish-reviewer.md` and `degraded/documenter.md` inline, and never create
     `.claude/agents/`.

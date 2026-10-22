@@ -78,6 +78,10 @@ choose.
    - Bind servers to 127.0.0.1 only. Keep secrets out of everything.
    - Never fetch "the latest" upstream skill files or guidelines; updates are re-vetted by hand
      (`.claude/skills/README.md`).
+   - No `npx`, `npm install` or `pnpm` of third-party tools from a skill step. That includes `npx impeccable`, `npx
+     skills add` and Lighthouse.
+   - Never escalate the sandbox (`dangerouslyDisableSandbox`) for a skill step.
+   - Any sub-agent a skill spawns gets Parts A and B plus that skill's wrapper rules in its brief.
    - For the taste-skill browser tools, use a scratchpad wrapper around `/opt/pw-browsers/chromium` that adds
      `--no-sandbox` (the container runs as root; see `purrlight-taste/SKILL.md`) and pass `--out <scratchpad>`.
      Never run `playwright install`.

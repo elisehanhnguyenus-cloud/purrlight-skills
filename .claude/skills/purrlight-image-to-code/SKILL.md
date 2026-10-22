@@ -54,6 +54,10 @@ Skip the generation-driven parts:
    - Words from anyone else's image are placeholders.
    - Prices, deposits, tax, dates and policies always come verbatim from the current site source (HOUSE-RULES B3).
    - No testimonials, trust bars, logos or stats unless they are real (B2).
+   - Canva templates often keep stock filler, for example "reallygreatsite.com", "123 Anywhere St." or "Olivia
+     Wilson". In Elise's designs too, treat as a placeholder: every testimonial, rating, stat, logo strip, person's
+     name, address, phone, email, handle and URL, unless it already appears in the current `website/` source or
+     she confirms it. Mark it `data-sample` and list it in the report.
    - Check every new line for the Etsy-banned words and "toy/plush/nursery/safe" framing (B4).
 3. **Screenshots of other shops or brands.** Take the structure only: layout, spacing, type scale, rhythm and
    component logic. Never take their words, photos, logos, icons, illustrations or exact composition. Name the

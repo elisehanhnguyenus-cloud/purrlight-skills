@@ -14,6 +14,10 @@
      box with its add-ons).
    - Both godparents: the second set is $10 less ($95 + $85).
    - 50% deposit when ordering; the balance after the photo is approved.
+     Digital files (Elise 21/10): paid in full when ordering, no deposit — also with the crochet rosary add-on ("y
+     chang") — a preview first, up to 5 rounds of edits (after that, priced as a new piece), and the final files by
+     email once approved. Refunds (Elise 21/10): for an order not yet started and materials not yet bought, when
+     cancelled at least 5 days before work begins; not for last-minute orders.
    - Print paper: regular paper is included in the print price · fine-art
      paper +$10 · handmade Vietnamese Dó papyrus +$5.
 
@@ -110,12 +114,67 @@ var ORDER_FORM_URL = "https://tally.so/r/M1KOkY";
    and paste it. To find the id: Google Form → ⋮ → Get pre-filled link. */
 var ORDER_FORM_PREFILL_ENTRY = "";
 
-/* Where the deposit is paid (Elise 15/10/2026). The Square link is a "Custom order" payment link where the
-   customer types the amount; Zelle goes to this address. The same values are written into index.html (#pay)
-   for visitors without JavaScript — change both together. */
+/* Where the deposit is paid (Elise 15/10 + 21/10/2026): one entry per way, shown in the order of PAY.order — Elise's
+   order (Zelle, Venmo, Square, Stripe; PayPal dropped 21/10). An empty to / handle / url = that way is hidden (also
+   the allowed one-line switch during the 15/11–02/01 freeze, e.g. when an account is on hold).
+   back: true only once a real payment came back to thanks.html (the provider's redirect, README "Add a way to pay").
+   notes: true once the provider's page has a box where the customer can type the order code.
+   qr: shown on computers only. The same values are written into index.html (#pay) for visitors without JavaScript —
+   change both together: tools/check-site.js stops a deploy when they differ. Links, handles and addresses only —
+   never a key or a secret. */
 var PAY = {
-  squareUrl: "https://square.link/u/UUg2LtbP",
-  zelleTo: "purrlightstudiollc@gmail.com"
+  order: ["zelle", "venmo", "square", "stripe"],
+  zelle:  { to: "purrlightstudiollc@gmail.com" },                /* the order code goes in the memo */
+  venmo:  { handle: "", qr: "" },                                /* business profile "@name"; qr: a Venmo QR with no amount set */
+  square: { url: "https://square.link/u/UUg2LtbP", back: false, notes: false, qr: "../assets/img/custom/square-pay-qr.svg" },
+          /* the "Custom order" link: the customer types the amount (Elise tried $45 on 21/10: $45.00, no tax or tip added) */
+  stripe: { url: "", back: false, notes: true, qr: "", minCents: 600, maxCents: 1000000 },
+          /* https://buy.stripe.com/… with "Customers choose what to pay"; minCents = the link's minimum = the smallest
+             amount this page asks to pay now ($6.00: the deposit on a $12 4×6 print for a buyer outside Texas; digital
+             files are paid in full, $10 at least — the price test checks it); maxCents = the link's maximum. An amount
+             outside them is not filled in. */
+  thanks: "thanks.html"
+};
+
+/* the link for one way to pay, with the deposit filled in only where the provider documents it — Stripe:
+   ?prefilled_amount in cents on a "customers choose what to pay" link (docs.stripe.com/payment-links/customize).
+   Nothing else ever goes on a payment URL: no name, no email, no card message, no order code, no utm. */
+function payHref(key, deposit) {
+  var m = PAY[key] || {}, url = m.url || "", cents = Math.round(Number(deposit) * 100);
+  if (!url || !(cents > 0)) return url;
+  if (key === "stripe" && /^https:\/\/buy\.stripe\.com\/(?!test_)[A-Za-z0-9_]+$/.test(url) && cents >= m.minCents && cents <= m.maxCents)
+    return url + "?prefilled_amount=" + cents;
+  return url;
+}
+
+/* the order code (plan 21/10 §2.2): 4 characters that are hard to mix up — no 0/O, 1/I/L, 2/Z, 5/S, 6/G, 8/B, U/V,
+   Q. Random, not personal data. It goes first in the form's "pick" field and into the payment note (K7HM-D for the
+   deposit, K7HM-B for the balance), so Elise can match a payment to its order. "" when the browser has no
+   crypto.getRandomValues: the page then asks for "your name and your piece". */
+var CODE_CHARS = "ACDEFHJKMNPRTWXY3479";
+function newOrderCode(rnd) {
+  var c = rnd || (typeof crypto !== "undefined" && crypto && crypto.getRandomValues ? crypto : null), out = "";
+  if (!c) return "";
+  try {
+    while (out.length < 4) {
+      var b = c.getRandomValues(new Uint8Array(8));
+      for (var i = 0; i < b.length && out.length < 4; i++) if (b[i] < 240) out += CODE_CHARS.charAt(b[i] % 20);   /* 240 = 12 × 20: every character equally likely */
+    }
+  } catch (e) { return ""; }
+  return out;
+}
+function isOrderCode(s) { return typeof s === "string" && /^[ACDEFHJKMNPRTWXY3479]{4}$/.test(s); }
+
+/* the scene on thanks.html after paying (Elise 21/10: Merlin says thank you, writes 2 sheets, tosses one into the
+   mailbox, jumps down, knocks on the door: "Mommy, you have a new order!"). Off until Elise approves the frames,
+   words and alt of this version — then on: true with the day in approved (tools/check-site.js stops a deploy on
+   on: true without that date or without the files). Off = the real Merlin photo, the words and the letter. */
+var MERLIN_SCENE = {
+  on: false,
+  approved: "",                   /* "2026-10-2x": the day Elise approved this version */
+  version: "mockup-2026-10-21",   /* new files → a new value (GitHub Pages caches 10 min); added as ?v= to each file */
+  voice: false,                   /* true once the video has Merlin's voice: shows "Sound on" */
+  cc: [[1.6, 3.3, "Thank you!"], [11.5, 12.5, "[knock, knock, knock]"], [12.6, 14.6, "Mommy, you have a new order!"]]
 };
 
 var PRICES = {
@@ -226,8 +285,9 @@ function estWatercolor(o) {
   if (o && o.rosary) lines.push({ label: "Crochet rosary add-on", amount: PRICES.watercolor.rosary });
   var r = applyQty(finish(lines), o && o.qty, "painting", "paintings");
   r.digitalOnly = !isPrint && !(o && o.rosary);   /* nothing ships */
+  r.full = !isPrint;   /* a digital painting is paid in full (settle) — with the rosary add-on too (Elise 21/10) */
   r.note = r.qty > 1 ? "Estimate for " + r.qty + " paintings with the same options" : "Estimate for one painting";
-  return r;
+  return settle(r);
 }
 
 /* o.addons: [{ key, name, swapFor, swapKey }] (swapFor "" = added to the box) or plain keys. Added: the add-on's own
@@ -266,8 +326,8 @@ function estCalendar(o) {
   var pages = o && o.pages === 6 ? 6 : 1;
   var label = (kind === "print" ? "Design + print" : "Digital files only") + " · " + (pages === 1 ? "1 page" : "6 pages");
   var r = finish([{ label: label, amount: PRICES.calendar[kind][pages] }]);
-  r.digitalOnly = kind === "digital";
-  return r;
+  r.digitalOnly = r.full = kind === "digital";   /* nothing ships; paid in full (settle) */
+  return settle(r);
 }
 
 function estGodparent(o) {
@@ -360,11 +420,12 @@ function applyQty(r, qty, one, many) {
 }
 
 /* Texas sales tax on the taxed part of the price (whole cents, half a cent rounds up) — none when the order ships
-   outside Texas — then 50% deposit today and the rest after the photo is approved */
+   outside Texas — then 50% deposit today and the rest after the photo is approved. An order with a digital file (r.full)
+   is paid in full today (Elise 21/10): the "deposit" is the whole total and nothing is left after. */
 function settle(r) {
   var pre = Math.round(r.pre * 100), taxed = r.outOfTexas ? 0 : pre - Math.round((r.taxFree || 0) * 100);
   var tax = Math.round(Math.max(0, taxed) * PRICES.salesTaxBp / 10000);
-  var cents = pre + tax, dep = Math.ceil(cents * PRICES.depositRate);   /* a half cent always rounds the deposit up */
+  var cents = pre + tax, dep = r.full ? cents : Math.ceil(cents * PRICES.depositRate);   /* a half cent always rounds the deposit up */
   r.tax = tax / 100;
   r.total = cents / 100;
   r.deposit = dep / 100;
@@ -381,9 +442,82 @@ function summaryLine(product, est, how) {
   for (var i = 0; i < est.lines.length; i++) parts.push(est.lines[i].label + " " + money(est.lines[i].amount) + (est.lines[i].detail ? " (" + est.lines[i].detail + ")" : ""));
   var qty = est.qty > 1 ? " — × " + est.qty + " " + est.many + " " + money(est.subtotal) + ", order more, save more −" + money(est.saving) : "";
   var tax = est.outOfTexas ? " — no Texas sales tax (outside Texas)" : " — " + taxLabel() + " " + money(est.tax) + (est.taxFree ? " (not on the fresh fruit)" : "");
-  return "My pick: " + product + " — " + parts.join(" · ") + qty + tax + " — estimate " + money(est.total) + " · deposit (50%) " + money(est.deposit) + (est.digitalOnly ? "" : " · " + (how || (est.pickupOnly ? "Pickup at Pearland Town Center" : "Free U.S. shipping")));
+  return "My pick: " + product + " — " + parts.join(" · ") + qty + tax + " — estimate " + money(est.total) + (est.full ? " · pay in full " : " · deposit (50%) ") + money(est.deposit) + (est.digitalOnly ? "" : " · " + (how || (est.pickupOnly ? "Pickup at Pearland Town Center" : "Free U.S. shipping")));
+}
+
+/* the pick line back in parts, for the thank-you letter (Elise 21/10: the order easy to read, check and skim):
+   { items: [{label, amount, detail}], qty: {n, many, subtotal, saving} | null, tax: {label, amount, fruit} | null
+   (null = outside Texas), total, full (a digital file: "pay in full"), deposit, balance, how }. Labels may hold " · ", " — ", "$" or brackets, so the parts
+   are accepted only when summaryLine's own wording rebuilt from them gives back the very same line, AND every number is
+   the one this file would have made: the lines × qty less the saving (itemOff, item by item, as applyQty; 2 to
+   PRICES.volume.maxQty), the tax (taxLabel(), salesTaxBp of the taxed part — less with fresh fruit), the deposit (half,
+   rounded up to the cent), and a swap's working ("NAME $P − BASIC $B", only on a "Swap: BASIC → NAME" line, P − B = the
+   line). Anything else (an old, edited or cut-short line) → null (a how cut inside its own words still parses:
+   thanks.js accepts only the hows it knows), and the letter shows the line as sent. */
+function pickParts(text, product) {
+  var M = "−?\\$\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2})?", U = "\\$\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2})?";   /* money(): signed / never below zero */
+  var esc = function (s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); };
+  var num = function (s) { var v = Number(s.replace(/[−$,]/g, "")); return s.charAt(0) === "−" ? -v : v; };
+  var c = function (n) { return Math.round(n * 100); };
+  var head = "My pick: " + product + " — ";
+  if (typeof text !== "string" || typeof product !== "string" || !product || text.indexOf(head) !== 0) return null;
+  var tail = new RegExp("^([\\s\\S]+?)(?: — × (\\d+) ([a-z]+) (" + U + "), order more, save more −(" + U + "))?" +
+    "(?: — no Texas sales tax \\(outside Texas\\)| — (" + esc(taxLabel()) + ") (" + U + ")( \\(not on the fresh fruit\\))?)" +
+    " — estimate (" + U + ") · (deposit \\(50%\\)|pay in full) (" + U + ")(?: · ([^—·]+))?$").exec(text.slice(head.length));   /* how: one part, never a separator */
+  if (!tail) return null;
+  var items = [], rest = tail[1], item = new RegExp("^([\\s\\S]+?) (" + M + ")(?: \\(((?:[^()]|\\([^()]*\\))*)\\))?(?= · |$)");
+  while (rest) {
+    var m = item.exec(rest);
+    if (!m) return null;
+    items.push({ label: m[1], amount: num(m[2]), detail: m[3] || "" });
+    rest = rest.slice(m[0].length);
+    if (rest) { if (rest.indexOf(" · ") !== 0) return null; rest = rest.slice(3); if (!rest) return null; }
+  }
+  var out = {
+    items: items,
+    qty: tail[2] ? { n: Number(tail[2]), many: tail[3], subtotal: num(tail[4]), saving: num(tail[5]) } : null,
+    tax: tail[6] ? { label: tail[6], amount: num(tail[7]), fruit: !!tail[8] } : null,
+    total: num(tail[9]), full: tail[10] === "pay in full", deposit: num(tail[11]), balance: 0, how: tail[12] || ""
+  };
+  /* the same words, rebuilt */
+  var again = head + items.map(function (it) { return it.label + " " + money(it.amount) + (it.detail ? " (" + it.detail + ")" : ""); }).join(" · ") +
+    (out.qty ? " — × " + out.qty.n + " " + out.qty.many + " " + money(out.qty.subtotal) + ", order more, save more −" + money(out.qty.saving) : "") +
+    (out.tax ? " — " + out.tax.label + " " + money(out.tax.amount) + (out.tax.fruit ? " (not on the fresh fruit)" : "") : " — no Texas sales tax (outside Texas)") +
+    " — estimate " + money(out.total) + (out.full ? " · pay in full " : " · deposit (50%) ") + money(out.deposit) + (out.how ? " · " + out.how : "");
+  if (again !== text) return null;
+  /* each line: the first one is the piece (above zero); a working in brackets only on a swap, and it must add up */
+  var pre = 0;
+  for (var i = 0; i < items.length; i++) {
+    var it = items[i];
+    if (it.detail) {
+      var sw = /^Swap: ([\s\S]+?) → ([\s\S]+)$/.exec(it.label);
+      var w = sw && new RegExp("^" + esc(sw[2]) + " (" + U + ") − " + esc(sw[1]) + " (" + U + ")$").exec(it.detail);
+      if (!w || money(num(w[1])) !== w[1] || money(num(w[2])) !== w[2] || c(num(w[1])) - c(num(w[2])) !== c(it.amount)) return null;
+    }
+    pre += c(it.amount);
+  }
+  if (!(items[0].amount > 0)) return null;
+  /* × N: the lines once each, then order more, save more — the same rounding as applyQty */
+  if (out.qty) {
+    var n = out.qty.n, unit = pre / 100, off = 0;
+    if (!(n >= 2 && n <= PRICES.volume.maxQty) || c(out.qty.subtotal) !== pre * n) return null;
+    for (var k = 2; k <= n; k++) off += round2(unit * itemOff(k));
+    if (c(round2(off)) !== c(out.qty.saving)) return null;
+    pre = c(out.qty.subtotal) - c(out.qty.saving);
+  }
+  /* the tax: exactly salesTaxBp of it all, or less when the fresh fruit is left out (the same rounding as settle) */
+  if (out.tax) {
+    var full = Math.round(pre * PRICES.salesTaxBp / 10000), t = c(out.tax.amount);
+    if (out.tax.fruit ? !(t >= 0 && t < full) : t !== full) return null;
+  }
+  /* estimate = all of it with tax; deposit = half, rounded up to the cent; balance = the rest. "pay in full" (an order
+     with a digital file, Elise 21/10): the whole estimate — a how only when the rosary add-on ships with it */
+  if (pre + (out.tax ? c(out.tax.amount) : 0) !== c(out.total)) return null;
+  if (out.full ? c(out.deposit) !== c(out.total) : c(out.deposit) !== Math.ceil(c(out.total) * PRICES.depositRate)) return null;
+  out.balance = (c(out.total) - c(out.deposit)) / 100;
+  return out;
 }
 
 if (typeof module !== "undefined") {
-  module.exports = { ORDER_FORM_URL: ORDER_FORM_URL, ORDER_FORM_PREFILL_ENTRY: ORDER_FORM_PREFILL_ENTRY, PAY: PAY, PRICES: PRICES, money: money, moneyPair: moneyPair, taxLabel: taxLabel, outOfTexas: outOfTexas, itemOff: itemOff, applyQty: applyQty, estPortraitDoll: estPortraitDoll, estPet: estPet, estWatercolor: estWatercolor, estHousewarming: estHousewarming, estCalendar: estCalendar, estGodparent: estGodparent, estChristeningGown: estChristeningGown, estConfirmation: estConfirmation, TIMING: TIMING, timingKind: timingKind, timingNote: timingNote, addonPrice: addonPrice, gownPrice: gownPrice, summaryLine: summaryLine };
+  module.exports = { ORDER_FORM_URL: ORDER_FORM_URL, ORDER_FORM_PREFILL_ENTRY: ORDER_FORM_PREFILL_ENTRY, PAY: PAY, PRICES: PRICES, money: money, moneyPair: moneyPair, taxLabel: taxLabel, outOfTexas: outOfTexas, itemOff: itemOff, applyQty: applyQty, estPortraitDoll: estPortraitDoll, estPet: estPet, estWatercolor: estWatercolor, estHousewarming: estHousewarming, estCalendar: estCalendar, estGodparent: estGodparent, estChristeningGown: estChristeningGown, estConfirmation: estConfirmation, TIMING: TIMING, timingKind: timingKind, timingNote: timingNote, addonPrice: addonPrice, gownPrice: gownPrice, summaryLine: summaryLine, pickParts: pickParts, payHref: payHref, newOrderCode: newOrderCode, isOrderCode: isOrderCode, CODE_CHARS: CODE_CHARS, MERLIN_SCENE: MERLIN_SCENE };
 }

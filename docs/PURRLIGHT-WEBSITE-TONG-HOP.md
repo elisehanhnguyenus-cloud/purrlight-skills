@@ -1221,10 +1221,10 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   **Partner Program** (`partners.html`, qua TikTok Shop affiliate), mà tài liệu ghi là **chưa chạy** (TikTok Shop Open
   Collaboration chưa bật, chưa đặt hoa hồng). Em chưa đưa gì lên web, chờ chị gửi chi tiết (mục "Còn chờ chị" 11).
 
-### Phần trả cọc 4 cách + trang cảm ơn — đã làm, đang khoá chờ chị duyệt chữ (21/10)
-- Đã có trên nhánh làm việc, **chưa lên web**: file `DEPLOY-HOLD` ở gốc repo làm lệnh deploy tự dừng cho tới khi chị duyệt
-  bản xem trước chữ tiếng Anh (47 câu, có nghĩa tiếng Việt + ảnh chụp: https://claude.ai/artifact/FJp8sphU4bZjU6FuLGkRfB,
-  trang riêng tư của chị).
+### Phần trả cọc 4 cách + trang cảm ơn — chị duyệt 22/10, đã lên web
+- **22/10: chị duyệt hết 61 câu tiếng Anh** ("ok chị duyệt") ở bản xem trước
+  (https://claude.ai/artifact/FJp8sphU4bZjU6FuLGkRfB, trang riêng tư của chị). Em gỡ `DEPLOY-HOLD` và đưa lên web. Trước đó,
+  file `DEPLOY-HOLD` ở gốc repo đã làm lệnh deploy tự dừng cho tới khi chị duyệt.
 - Nhóm rà soát (4 góc + người phản biện riêng) xác nhận 6 lỗi, đã sửa hết:
   - Khi form Tally tự đưa khách về `?sent=1#pay` sau popup, trang từng thay mã đơn đã gửi bằng mã mới và mất số cọc.
     Giờ giữ nguyên đơn vừa gửi.
@@ -1307,8 +1307,7 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 9. ~~Đồng bộ Etsy~~ — xong 21/10. Bảng số trong Làng chỉ làm sau 7 đêm đồng bộ liền thành công (tới ~28/10).
 10. Thanh toán: kế hoạch chốt ở `docs/PAYMENT-MERLIN-PLAN-2026-10-21.md`. ~~Thử Square $45~~ — đúng $45.00 (21/10).
     Bỏ PayPal (21/10). Link Venmo (business profile) / Stripe gửi trước ~05/11 thì lên trước mùa lễ.
-    **Duyệt 61 câu tiếng Anh** (có lá thư làm lại + đơn file trả đủ) ở bản xem trước (link ở mục trên): nhắn "duyệt hết" hoặc "sửa câu số …". Duyệt xong em gỡ
-    `DEPLOY-HOLD` và đưa lên web. Sau đó: bật chuyển hướng về `thanks.html` + ô ghi chú ở link Square; đặt redirect của
+    ~~Duyệt 61 câu tiếng Anh~~ — chị duyệt 22/10, đã lên web. Việc của chị còn lại: bật chuyển hướng về `thanks.html` + ô ghi chú ở link Square; đặt redirect của
     form Tally về `…/custom-orders/?sent=1#pay`; link Stripe đặt mức tối thiểu $6 và ô tự điền tên "Order code or your name".
 11. **Purrlight Circle:** gửi em (a) ai tham gia được, (b) đăng ký ở đâu (link form/app), (c) hoa hồng bao nhiêu, tính
     trên gì, (d) theo dõi đơn bằng gì (mã giảm giá, link riêng, TikTok Shop…), (e) trả hoa hồng khi nào, bằng gì,

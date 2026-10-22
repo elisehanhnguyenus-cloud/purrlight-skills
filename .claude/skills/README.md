@@ -2,7 +2,8 @@
 
 **22/10/2026.** Elise gửi danh sách "8 skill thiết kế web cho Claude" (cuongmeai.com) để web bớt giống sản phẩm AI
 làm. Nhóm soát xét đọc toàn bộ phần sẽ cài, cùng mọi phần có thể tự chạy (script, hook, cài đặt, manifest) của 7
-bộ; mỗi bộ có một người đọc và một người phản biện. Bộ thứ 8, Image to Code, đã chuyển sang repo khác nên chưa soát.
+bộ; mỗi bộ có một người đọc và một người phản biện. Bộ thứ 8, Image to Code, đã chuyển sang repo khác; em soát riêng
+repo mới sau đó.
 
 Cùng ngày, chị chốt: **"đối với các skill ngoài thì chị ok không ép chặt luật nhà của mình brand thương hiệu vào.
 Chị đồng ý áp chỉ 20% rule để giữ tính sáng tạo thú vị của skill"**. Vì vậy các skill ngoài được làm theo cách của chính chúng. Luật nhà chỉ còn 2 lớp mỏng
@@ -33,15 +34,18 @@ cũng đọc được các file này; giấy phép MIT cho phép, và file LICEN
 | `purrlight-taste` | taste-skill v2.1.4 (Leonxlnx, MIT): bản đầy đủ, trừ công cụ tải ảnh | Soi trang nào "trông như AI làm", đưa ra hướng thiết kế mới, dựng bản xem trước để chị chọn |
 | `purrlight-motion` | 7 skill chuyển động của Emil Kowalski (MIT) | Tìm chỗ nên có hiệu ứng, làm hiệu ứng mới, soát độ mượt và hiệu năng |
 | `purrlight-web-guidelines` | Vercel Web Interface Guidelines (MIT), bản ghim | Kiểm tra khả năng truy cập và chi tiết giao diện, báo theo `file:dòng` |
+| `purrlight-impeccable` | Impeccable v4.7.0 (Apache-2.0): **chỉ phần chữ**, không chương trình, không hook, không gửi số liệu | Đẩy một trang theo một hướng: đậm hơn, tiết chế hơn, thêm màu, chữ đẹp hơn, dễ thương hơn, gọn hơn, trau chuốt |
+| `purrlight-image-to-code` | imagegen-skills, image-to-code (Leonxlnx, MIT) | Dựng bản xem trước giống ảnh thiết kế chị đưa (Canva, ảnh chụp trang). Không tự tạo ảnh AI |
 
 ## Không cài và lý do
 
-- **Impeccable:** chạy một chương trình tải về và cài hook chạy sau mỗi lần sửa file; mặc định gửi số liệu thống kê
-  về máy chủ của tác giả và hỏi bản cập nhật mỗi ngày. (Lý do thương hiệu không còn, nhưng lý do an toàn vẫn còn.)
+- **Phần chương trình của Impeccable:** một chương trình 21 MB tự tải về. Nó chứa hook chạy sau mỗi lần sửa file,
+  mặc định gửi số liệu thống kê về máy chủ của tác giả, và hỏi bản cập nhật mỗi ngày. Bỏ đi thì mất 2 lệnh `live`,
+  `generate` và bước quét tự động. Lệnh `live` còn tự mở một Claude khác chạy không cần xin phép.
 - **Awesome Design HTML, Awesome Claude Design:** thư viện bắt chước giao diện các hãng lớn (Stripe, Apple,
   Nike...): có logo vẽ lại và số liệu, đánh giá bịa. Bộ VoltAgent chỉ là danh sách link.
-- **Image to Code:** từ bản 2.1.1 đã chuyển sang repo Leonxlnx/imagegen-skills (bản 2.1.3 xoá luôn thư mục trỏ
-  sang đó). Chưa soát repo mới nên chưa cài.
+- **3 skill còn lại của imagegen-skills** (vẽ ảnh mẫu web, app điện thoại, bộ nhận diện): chỉ tạo ảnh và tốn
+  credit. Bộ nhận diện (brandkit) còn bắt AI vẽ lại logo và Merlin.
 - **Playwright CLI (Microsoft):** không phải skill thiết kế. Claude đã có sẵn Playwright và Chromium trong máy.
 - Trong taste-skill: công cụ tải ảnh và video từ các kho mở (`assets.mjs`), vì có rủi ro bản quyền trên trang bán
   hàng.

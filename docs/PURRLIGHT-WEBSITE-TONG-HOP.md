@@ -1277,9 +1277,15 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   - luật an toàn giữ nguyên: chưa lên web khi chị chưa duyệt bản xem trước; không bịa đánh giá hay số liệu; không đụng
     giá, cọc, hạn đặt; không dùng từ Etsy cấm; ảnh sản phẩm là ảnh thật; giữ mức tối thiểu về khả năng truy cập; code
     chạy được trên điện thoại cũ.
-- Không cài: Impeccable (tải chương trình chạy, hook sau mỗi lần sửa file, mặc định gửi số liệu thống kê), Awesome
-  Design HTML / Awesome Claude Design (nhái giao diện hãng khác), Playwright CLI (đã có sẵn). Chị chọn soát tiếp
-  Impeccable bản an toàn và Image to Code (repo mới Leonxlnx/imagegen-skills).
+- Soát thêm theo ý chị, rồi chị duyệt cài:
+  - **`purrlight-impeccable`**: chỉ phần chữ (20 lệnh bolder/quieter/colorize/typeset/critique/polish…). Không
+    lấy chương trình tự tải về, nên không có hook, không gửi số liệu, không tự cập nhật, và không có `live` (tự mở
+    Claude chạy không cần xin phép).
+  - **`purrlight-image-to-code`**: dựng bản xem trước giống ảnh thiết kế chị đưa; không tự tạo ảnh AI.
+- Không cài: Awesome Design HTML / Awesome Claude Design (nhái giao diện hãng khác), Playwright CLI (đã có sẵn), 3
+  skill chỉ vẽ ảnh của imagegen-skills.
+- Luật thêm: tạo ảnh AI (Canva, Figma, Higgsfield, Gamma) tốn credit, nên phải chị đồng ý cho từng lần. Ảnh AI chỉ
+  nằm trong bản xem trước. Khi thử, không gửi form Tally.
 - Thử thật: công cụ chụp + chấm trang của taste-skill chạy được trên bản sao web (Chromium cần `--no-sandbox` vì
   máy chạy bằng root).
 

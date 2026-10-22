@@ -1289,6 +1289,49 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 - Thử thật: công cụ chụp + chấm trang của taste-skill chạy được trên bản sao web (Chromium cần `--no-sandbox` vì
   máy chạy bằng root).
 
+### 22/10 — đưa phần trả cọc lên web + soát toàn site bằng skill mới (chị: "đưa lên đi… chạy ngay")
+- **Đã lên web:** phần trả cọc 4 cách + trang cảm ơn (gỡ `DEPLOY-HOLD`).
+- **Kiểm tra:**
+  - Mọi bộ kiểm tra đều qua: giá, dòng đơn 8,600 dòng, trả cọc + thư 196 mục, bộ dựng quà, booth, mùa lễ, lá vàng,
+    ảnh, và 69 ca lỗi cố ý của `check-site`.
+  - Trên trang thật, 23 file chữ khớp với repo; bộ dựng quà chạy qua trên trang thật.
+- **Sửa ngay, không đổi chữ, giá hay ngày** (skill `purrlight-web-guidelines` + `purrlight-motion`):
+  - Tắt JavaScript: các khối hiện dần giờ hiện sẵn (trước đó trang chủ ẩn 16 khối) và menu hiện thẳng trên điện thoại
+    (trước đó không có menu).
+  - Menu điện thoại cuộn được khi màn hình thấp. Mở menu rồi xoay hay kéo rộng màn hình không còn "đóng băng" trang.
+  - Giảm chuyển động: tắt nốt các chỗ còn chạy; video reel dừng khi khách bật giảm chuyển động giữa chừng.
+  - Hiệu ứng rê chuột chỉ chạy trên máy có chuột.
+  - Các sửa nhỏ khác:
+    - viền focus không bị che dưới thanh menu;
+    - trình đọc màn hình không đọc dấu ✦ và dấu +/−;
+    - màu thanh trình duyệt;
+    - ảnh dưới màn hình tải sau;
+    - link "place your order first" trên trang cảm ơn trỏ đúng mục `#studio`;
+    - tên Zelle/Venmo không bị dịch máy.
+- **Mức tối thiểu về khả năng truy cập:**
+  - viền focus đổi sang màu mực (màu đào chỉ đạt 1.89:1);
+  - nhãn danh mục ở trang sản phẩm đạt 5.3:1 (trước 2.6:1);
+  - dòng chữ nghiêng ở hero đạt 3.7:1 (trước 2.9:1);
+  - viền ô nhập đạt 3:1.
+- **Dễ đọc** (`purrlight-taste`): không chữ nào dưới 13px; ghi chú Custom Orders 15px; giới hạn độ dài dòng ở About;
+  ngày hạn đặt Giáng sinh luôn cùng dòng với nhãn.
+- **Đề xuất thiết kế đang chờ chị chọn** (làm bản xem trước rồi chị chọn):
+  - Trang chủ: hero thật với tiêu đề "Sketched by Merlin, stitched by us."; rút còn ~7 phần; một khối "Merlin's
+    notebook" thay cho 17 nhãn chữ nhỏ.
+  - Custom Orders: tiêu đề nói rõ món (ví dụ "Made from your photo"), bớt đường kẻ; một kiểu nút, một chiều rộng,
+    một footer cho cả site.
+  - Shop: sản phẩm lên trước, thẻ phẳng, cuối trang dẫn sang Custom Orders.
+  - About: "hai kệ" (chuyện thật / truyện), thêm ảnh người làm.
+  - Toàn site: bỏ bóng đổ khi đứng yên, vầng sáng, header mờ; menu ngắn hơn.
+  - Chuyển động: đường cong mượt hơn; lọc Shop không nháy lại thẻ; số ước tính ở Custom Orders không nháy mỗi lần
+    bấm.
+- **Câu hỏi cho chị:**
+  - Ảnh hero trang chủ (bàn mèo len) có phải ảnh thật hàng của mình không? Ảnh này trùng ảnh nhóm mèo ở Custom Orders,
+    từng ghi là "trông như ảnh dựng".
+  - Câu "kind to curious paws" có thể bị hiểu là tuyên bố an toàn; có bỏ không?
+  - "duties included" và "Etsy Star Seller ★ 4.9" còn đúng không?
+  - "start a custom order" và "message us on Etsy" đang dẫn sang Etsy, không phải Custom Orders.
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung

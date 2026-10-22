@@ -35,7 +35,12 @@ choose.
      and before/after images. A separate preview page or artifact also works.
    - Change `website/` on the working branch only after Elise picks a direction, because that branch is what gets
      deployed. Deploy only through `website/deploy-pages.sh` when she says so, and respect `DEPLOY-HOLD`.
-   - A skill never commits, pushes or deploys on its own.
+   - A skill never commits, pushes or deploys on its own, and never uses a git worktree or branch for its work.
+   - Port a chosen preview by applying only the chosen changes to `website/`, never by copying the preview folder
+     over it.
+   - In previews, never submit the Tally order form: a filled-in submission reaches Elise as a real order. Block
+     `tally.so` in Playwright scripts (`route.abort`) and only check that order and payment links still point
+     where they did.
 2. **Truth on the live site.**
    - Never invent reviews, testimonials, ratings, customer logos, stats, press, policies, prices, shipping times or
      urgency. Sample content is fine inside a preview if it is clearly marked, and it is never shipped.
@@ -51,6 +56,10 @@ choose.
    - Product pictures are Elise's own photos. Never show AI-generated or stock images as her products.
    - Other imagery (illustration, texture, archival) needs a clear licence and Elise's OK before it goes live. The
      taste-skill image downloader (`assets.mjs`) is not installed.
+   - **Image generation costs Elise's credits.** Never call an image-generation tool (Canva, Figma, Higgsfield,
+     Gamma or any other) without her OK for that exact call: which tool, how many images, what it costs.
+   - AI images appear only in previews, labelled "AI mock-up, not a product". They never show Merlin or the logo,
+     and they never go into `website/`.
 6. **Accessibility floor.** This is the legal minimum, not taste:
    - text contrast at WCAG AA, with visible keyboard focus;
    - `prefers-reduced-motion` turns motion off or down;
@@ -58,8 +67,10 @@ choose.
    - nothing is hidden when JS is off.
 7. **Tech that keeps the site working.**
    - No build step. Site JS stays plain ES5, because the site supports older phones.
-   - New libraries or fonts are fine if they are self-hosted, pinned copies with a licence file. No runtime CDNs
-     and no trackers.
+   - New libraries or fonts are fine if they are self-hosted, pinned copies with a licence file. No new runtime
+     CDNs and no trackers. The existing Tally embed and the Etsy, Square and Stripe links stay as they are.
+   - An adopted typeface is self-hosted (woff2 plus its OFL licence, in `css/fonts.css`), never a Google Fonts or
+     Fontshare `<link>`.
    - Rewrite modern or React snippets from the skills into plain JS and flat CSS when they go into `website/`.
      Previews may use anything.
 8. **Hygiene.**
@@ -84,6 +95,9 @@ choose.
       1280 px, with and without reduced motion. It checks console errors, sideways scroll and that the changed
       parts show. The repo has no committed Playwright suite yet.
     - Grep the changed site files for non-ES5 syntax.
+    - Grep them for preview leftovers too:
+      `grep -rnE "picsum\.photos|cdn\.jsdelivr|unpkg|fonts\.(googleapis|gstatic)|api\.fontshare|SAMPLE|data-sample"`
+      must find nothing.
     - Report exactly which checks ran.
 
 ## For reference: what Elise approved before, and what is still open

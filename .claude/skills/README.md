@@ -4,8 +4,8 @@
 làm. Nhóm soát xét đọc toàn bộ phần sẽ cài, cùng mọi phần có thể tự chạy (script, hook, cài đặt, manifest) của 7
 bộ; mỗi bộ có một người đọc và một người phản biện. Bộ thứ 8, Image to Code, đã chuyển sang repo khác nên chưa soát.
 
-Cùng ngày, chị chốt: **"đối với các skill ngoài thì chị ok không ép chặt luật nhà... chỉ áp 20% rule để giữ tính
-sáng tạo thú vị của skill"**. Vì vậy các skill ngoài được làm theo cách của chính chúng. Luật nhà chỉ còn 2 lớp mỏng
+Cùng ngày, chị chốt: **"đối với các skill ngoài thì chị ok không ép chặt luật nhà của mình brand thương hiệu vào.
+Chị đồng ý áp chỉ 20% rule để giữ tính sáng tạo thú vị của skill"**. Vì vậy các skill ngoài được làm theo cách của chính chúng. Luật nhà chỉ còn 2 lớp mỏng
 (xem `HOUSE-RULES.md`):
 
 - **Phần A, lõi thương hiệu (khoảng 20%):** Merlin và logo; nền kem + cam đào, kèm vàng beret và đỏ berry; vài câu
@@ -18,8 +18,15 @@ sáng tạo thú vị của skill"**. Vì vậy các skill ngoài được làm 
   - giữ mức tối thiểu về khả năng truy cập;
   - code web vẫn chạy trên điện thoại cũ.
 
+Hai lưu ý cho chị:
+- **Tạo ảnh bằng AI tốn credit của chị** (Canva, Figma, Higgsfield, Gamma). Claude chỉ dùng khi chị đồng ý cho
+  từng lần.
+- **Tên và mô tả skill mới chỉ có hiệu lực từ phiên Claude Code mới.** Trong phiên cũ, đừng gọi tên cũ
+  `purrlight-taste-critic`.
+
 Các skill chỉ chạy khi Claude Code làm việc trong repo này. Chúng không nằm trong `website/` nên không lên web, và
-không nằm trong `plugins/` hay marketplace nên không phát hành dưới tên Purrlight.
+không nằm trong `plugins/` hay marketplace nên không phát hành dưới tên Purrlight. Repo GitHub đang công khai nên ai
+cũng đọc được các file này; giấy phép MIT cho phép, và file LICENSE đã kèm theo.
 
 | Skill | Lấy từ | Dùng khi |
 |---|---|---|

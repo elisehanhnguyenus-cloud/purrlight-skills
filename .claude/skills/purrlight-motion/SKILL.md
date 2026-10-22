@@ -37,8 +37,13 @@ project (`plans/`, fixtures, toggles), put them in the scratchpad instead.
 - **Accessibility floor (B6).** Every effect respects `prefers-reduced-motion`, including when it is switched on
   mid-visit. Hover-only effects sit behind `(hover: hover) and (pointer: fine)`. Anything that runs past 5 s has a
   pause control, and nothing hides content when JS is off.
-- **The `--ease` token** (`220ms ease`) in `custom-orders.css` is used everywhere. To change the feel, add new
-  tokens or propose changing it on purpose; do not change it by accident.
+- **Timing tokens.**
+  - `--ease` (`220ms ease`) exists only in `custom-orders.css`, and only some of its transitions use it. The rest
+    hard-code 200–520 ms.
+  - The main site's `style.css` and `desk.css` hard-code 0.15–0.35 s.
+  - Change these on purpose, never by accident.
+- **No `execute`, no git worktree** (improve-animations): build a chosen plan in the scratchpad preview, with no
+  commits. In plans, the "Mechanical" checks are HOUSE-RULES B10 (there is no typecheck, lint or build).
 - **Finding the existing motion.** grep the customer CSS and JS for `transition`, `animation`, `@keyframes`,
   `transform`, `requestAnimationFrame`, `IntersectionObserver` and `prefers-reduced-motion`.
 - **Feel checks** (slow motion, a real phone, fresh eyes the next day) are suggestions to Elise. Never expose a dev

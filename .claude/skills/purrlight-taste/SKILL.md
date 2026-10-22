@@ -17,16 +17,24 @@ The full method is in `upstream/SKILL.upstream.md`. Read it and follow it. In it
 `.claude/skills/purrlight-taste/upstream`. Run the scripts from a scratchpad copy of the site, not from inside the
 repo (HOUSE-RULES B1, B8).
 
-## Setup for each session
+## Setup: repeat it in every Bash call
+
+Shell variables do not survive between Bash calls, so every command carries its own setup. Use a dedicated folder,
+and copy the site into it only when it does not exist yet, so a preview in progress is never wiped.
 
 ```sh
-P=<session scratchpad>; rm -rf "$P/site" && cp -r website "$P/site"   # work on a copy; website/ changes only after Elise picks
-# the container runs as root, so Chromium needs --no-sandbox: a tiny wrapper in the scratchpad
-printf '#!/bin/sh\nexec /opt/pw-browsers/chromium --no-sandbox "$@"\n' > "$P/chrome-nosandbox" && chmod +x "$P/chrome-nosandbox"
-export CHROME_PATH="$P/chrome-nosandbox" TASTE_SKILL_HISTORY="$P/.taste-skill-history.json"
-cd "$P/site"                                                           # .taste-skill/ working files land here
-# e.g. node /home/user/purrlight-skills/.claude/skills/purrlight-taste/upstream/scripts/inspect.mjs custom-orders/index.html --out "$P/taste-before" --widths 1280,390
+P=<session scratchpad>; K=/home/user/purrlight-skills/.claude/skills/purrlight-taste/upstream
+[ -d "$P/taste/site" ] || { mkdir -p "$P/taste/tmp" && cp -r /home/user/purrlight-skills/website "$P/taste/site"; }
+mkdir -p "$P/taste/tmp"                                                  # TASTE_SKILL_TMP must exist
+[ -x "$P/taste/chrome" ] || { printf '#!/bin/sh\nexec /opt/pw-browsers/chromium --no-sandbox "$@"\n' > "$P/taste/chrome"; chmod +x "$P/taste/chrome"; }
+cd "$P/taste/site" && CHROME_PATH="$P/taste/chrome" TASTE_SKILL_HISTORY="$P/taste/history.json" TASTE_SKILL_TMP="$P/taste/tmp" \
+  node "$K/scripts/inspect.mjs" custom-orders/index.html --out "$P/taste/before"
 ```
+
+- The Chromium wrapper is needed because the container runs as root.
+- Always pass an absolute `--out`, for `draw.mjs` too: `--out "$P/taste/.taste-skill"`.
+- `inspect.mjs` runs at its default widths (1440, 768, 390). The 360 px check belongs to the HOUSE-RULES B10 smoke
+  script.
 
 - `upstream/scripts/draw.mjs` deals a direction (idea, composition, palette, type, section blueprints) from
   `upstream/library/`. It is local only.
@@ -45,14 +53,21 @@ cd "$P/site"                                                           # .taste-
   `--keep palette` so the base colours from HOUSE-RULES A2 stay. A full redesign may also deal type and everything
   else. Merlin and the logo stay as they are (A1).
 - **Pictures.**
+  - Never call an image-generation tool without Elise's OK for that exact call (HOUSE-RULES B5). Do not count an
+    image tool as `product-photo`.
+  - Pass `--have photography,product-photo,video` to `draw.mjs`: her real product photos and the Merlin video
+    exist.
   - `assets.mjs` was not installed (HOUSE-RULES B5). Where the method says to search open collections, use Elise's
     photos from `website/assets/`, or draw shapes and illustrations for the preview.
   - Then list in the report which pictures Elise would need to shoot or supply.
   - The dealt picsum photos are fine as placeholders in a preview, clearly marked, and never shipped.
 - **Inspector findings that hit the brand core** (cream with peach reads as the "assistant palette" to the meter):
   pass `--allow palette-claude,palette-cream,palette-terracotta`. Treat other FAILs as the skill intends.
-- **CDN scenes.** GSAP and Lenis from a CDN are fine in a preview. If Elise adopts a scene, self-host pinned copies
-  (B7).
+- **CDN scenes and fonts.**
+  - GSAP and Lenis from a CDN, and dealt Google Fonts `<link>` tags, are fine in a preview.
+  - If Elise adopts one, self-host a pinned copy (B7).
+  - This pinned version has no scroll-scene library, so the draw never deals scenes. Do not fetch scene files;
+    `scenes.mjs` applies only to a scene built by hand.
 - **Two ways to run it.**
   - *Review*: the method's "A review stops here" step, giving findings and the three changes that would move the
     page most.

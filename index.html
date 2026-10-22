@@ -5,24 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Purrlight Studio — Handmade dolls, keepsakes & cat-loved things</title>
   <meta name="description" content="Purrlight Studio makes heirloom crochet and fabric dolls and keepsakes — designed in Pearland, Texas, handmade in Vietnam.">
+  <meta name="theme-color" content="#FBF6EE">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32.png">
   <link rel="icon" type="image/png" sizes="64x64" href="assets/brand/favicon-64.png">
   <link rel="stylesheet" href="css/fonts.css">
   <link rel="stylesheet" href="css/style.css">
+  <noscript><style>/* no JavaScript: the parts that fade in are simply there, and the nav links sit in place instead of a dead menu button */.reveal{opacity:1!important;transform:none!important}.nav-toggle,.nav-close{display:none!important}.main-nav{position:static!important;visibility:visible!important;transform:none!important;padding:0!important}.main-nav ul{flex-direction:row!important;flex-wrap:wrap;gap:4px 14px!important}.main-nav a{font-family:inherit!important;font-size:15px!important;border-bottom:0!important;padding:4px 0!important}@media (max-width:1199px){.site-header{position:static!important}}</style></noscript>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <div class="announce"><span class="star">✦</span> Designed in Pearland, Texas · Handmade in Vietnam · Supervised by Merlin <span class="star">✦</span></div>
+  <div class="announce"><span class="star" aria-hidden="true">✦</span> Designed in Pearland, Texas · Handmade in Vietnam · Supervised by Merlin <span class="star" aria-hidden="true">✦</span></div>
 
   <header class="site-header">
     <div class="wrap header-inner">
       <a class="logo" href="index.html" aria-label="Purrlight Studio home">
         <img src="assets/brand/logo-flat.png" alt="Purrlight Studio" width="360" height="119">
       </a>
-      <nav class="main-nav" aria-label="Main">
+      <nav class="main-nav" id="main-nav" aria-label="Main">
         <button class="nav-close" aria-label="Close menu">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </button>
         <ul>
           <li><a href="index.html" aria-current="page">Home</a></li>
@@ -36,8 +38,8 @@
         </ul>
       </nav>
       <a class="btn btn-primary btn-small header-cta" data-etsy href="#" target="_blank" rel="noopener">Shop on Etsy</a>
-      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
     </div>
   </header>
@@ -161,9 +163,9 @@
           <p>In our storybook, Merlin arrived with a tiny green backpack, a yellow beret, and a notebook full of sketches. In real life, he mostly naps on the patterns. Both feel true. A few friends are on their way to join him.</p>
           <div class="companion-strip">
             <a class="companion" href="shop.html?cat=Merlin%27s%20World%20%26%20His%20Friends"><span class="companion-art"><img src="assets/img/home/merlin-real-360.webp" alt="" width="360" height="360" loading="lazy"></span><span>Merlin</span></a>
-            <span class="companion"><span class="soon-pill">joining soon</span><span class="companion-art"><img src="assets/img/companion-tam.svg" alt="" width="300" height="300"></span><span>Tâm</span></span>
-            <span class="companion"><span class="soon-pill">joining soon</span><span class="companion-art"><img src="assets/img/companion-banhmi.svg" alt="" width="300" height="300"></span><span>Bánh Mì</span></span>
-            <span class="companion"><span class="soon-pill">joining soon</span><span class="companion-art"><img src="assets/img/companion-mochi.svg" alt="" width="300" height="300"></span><span>Mochi</span></span>
+            <span class="companion"><span class="soon-pill">joining soon</span><span class="companion-art"><img src="assets/img/companion-tam.svg" alt="" width="300" height="300" loading="lazy"></span><span>Tâm</span></span>
+            <span class="companion"><span class="soon-pill">joining soon</span><span class="companion-art"><img src="assets/img/companion-banhmi.svg" alt="" width="300" height="300" loading="lazy"></span><span>Bánh Mì</span></span>
+            <span class="companion"><span class="soon-pill">joining soon</span><span class="companion-art"><img src="assets/img/companion-mochi.svg" alt="" width="300" height="300" loading="lazy"></span><span>Mochi</span></span>
           </div>
         </div>
       </div>
@@ -292,7 +294,7 @@
           <p>New pieces, small-batch restocks, and the occasional page from the notebook — delivered gently to your inbox, never too often.</p>
           <form class="newsletter-form" data-newsletter>
             <label class="visually-hidden" for="nl-email">Email address</label>
-            <input id="nl-email" type="email" name="email" placeholder="your@email.com" required>
+            <input id="nl-email" type="email" name="email" placeholder="your@email.com" autocomplete="email" spellcheck="false" required>
             <button class="btn btn-glow" type="submit">sign up</button>
           </form>
           <p class="newsletter-msg" role="status" aria-live="polite"></p>

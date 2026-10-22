@@ -82,7 +82,7 @@ p { margin: 0; }
 .eyebrow { font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--caption); font-weight: 500; }
 .lede { font-size: 17px; line-height: 1.5; max-width: 34ch; }
 @media (min-width: 900px) { .lede { font-size: 18px; } }
-.note, .turnaround, .size-note { font-size: 14px; color: var(--caption); }
+.note, .turnaround, .size-note { font-size: 15px; color: var(--caption); }
 .turnaround { font-weight: 500; }
 
 /* ---------- buttons (Peach fill + Ink text, Figtree Medium 15px, ~10px radius, real links) ---------- */
@@ -172,7 +172,7 @@ p { margin: 0; }
 .studio { border-top: 1px solid var(--line); padding: 24px 0 40px; }
 .studio-head { display: grid; gap: 4px; margin-bottom: 18px; }
 .section-title { font-size: 28px; }
-.studio-hint { font-size: 15px; color: var(--ink-soft); }
+.studio-hint { font-size: 15px; color: var(--ink-soft); max-width: 62ch; }
 .step-title, .step legend { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; font-family: var(--font-body); font-weight: 600; font-size: 16px; color: var(--ink); padding: 0; margin: 0 0 10px; }
 .step-n { display: inline-flex; align-items: center; justify-content: center; flex: none; width: 28px; height: 28px; border: 1px solid var(--ink); border-radius: 50%; font-family: var(--font-head); font-weight: 500; font-size: 15px; line-height: 1; }
 .legend-note { font-weight: 500; font-size: 13px; color: var(--caption); }
@@ -244,10 +244,10 @@ p { margin: 0; }
 /* option tiles (native radio / checkbox inside a label) */
 .step { border: 0; margin: 0; padding: 0; min-width: 0; }
 .step.is-off .tiles { opacity: 0.55; }   /* only the tiles dim: the prices in the hint stay readable */
-.step-off { font-size: 14px; font-weight: 500; color: var(--ink); margin: -4px 0 10px; }
+.step-off { font-size: 15px; font-weight: 500; color: var(--ink); margin: -4px 0 10px; }
 .step-off[hidden] { display: none; }
-.step-hint { font-size: 14px; color: var(--ink-soft); margin: -4px 0 10px; }
-.step-note { font-size: 14px; color: var(--ink-soft); margin-top: 10px; }
+.step-hint { font-size: 15px; color: var(--ink-soft); margin: -4px 0 10px; }
+.step-note { font-size: 15px; color: var(--ink-soft); margin-top: 10px; }
 .gift-steps > .step-note { margin-top: -8px; }
 .tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 .tiles.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -378,11 +378,11 @@ p { margin: 0; }
 .idea img { width: 64px; height: 64px; object-fit: cover; border-radius: 8px; }
 .idea-text { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-width: 0; height: 100%; }
 .idea-name { font-weight: 600; font-size: 16px; line-height: 1.3; text-wrap: balance; }
-.idea-desc { font-size: 14px; color: var(--ink-soft); line-height: 1.4; text-wrap: balance; }
+.idea-desc { font-size: 15px; color: var(--ink-soft); line-height: 1.4; text-wrap: balance; }
 .idea-price { margin-top: auto; padding-top: 4px; font-family: var(--font-head); font-weight: 500; font-size: 20px; line-height: 1.2; color: var(--berry); white-space: nowrap; }
 .idea-tax { font-family: var(--font-body); font-size: 13px; font-weight: 400; color: var(--ink-soft); }
 /* the easy first click: the lowest price, said plainly */
-.idea-badge { position: absolute; top: -10px; left: 89px; z-index: 1; pointer-events: none; padding: 1px 8px; border-radius: 999px; background: var(--glow-soft); color: var(--ink); font-size: 12px; font-weight: 600; line-height: 1.6; }
+.idea-badge { position: absolute; top: -10px; left: 89px; z-index: 1; pointer-events: none; padding: 1px 8px; border-radius: 999px; background: var(--glow-soft); color: var(--ink); font-size: 13px; font-weight: 600; line-height: 1.6; }
 .idea-first { border-color: var(--ink-soft); }
 /* phones: one row that slides sideways (like the picker above), so the four ideas don't push the studio down */
 @media (max-width: 599px) {
@@ -470,7 +470,7 @@ p { margin: 0; }
 .pay-status { font-size: 14px; color: var(--ink); margin-top: 8px; }
 .pay-status:empty { height: 0; margin: 0; overflow: hidden; }   /* rendered while empty: live regions that appear with their text are often not read */
 .pay-terms { margin-top: 14px; max-width: 70ch; }
-.legal { margin-top: 10px; font-size: 12.5px; line-height: 1.5; color: var(--ink-soft); max-width: 80ch; }
+.legal { margin-top: 10px; font-size: 13px; line-height: 1.5; color: var(--ink-soft); max-width: 80ch; }
 .legal-caps { display: block; margin-top: 2px; }
 @media (min-width: 900px) {
   .pay { padding: 56px 0; }
@@ -531,7 +531,11 @@ p { margin: 0; }
 .deadlines div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 16px; padding: 10px 0; border-top: 1px solid var(--line); }
 .deadlines div:last-child { border-bottom: 1px solid var(--line); }
 .deadlines dt, .deadlines dd { margin: 0; font-size: 16px; }
-.deadlines dd { margin-left: auto; }
+.deadlines dd { margin-left: auto; white-space: nowrap; }
+/* the date stays beside its label: the label wraps, the date never drops to a line of its own */
+.deadlines div { flex-wrap: nowrap; align-items: baseline; }
+.deadlines dt { flex: 1 1 auto; min-width: 0; }
+.deadlines dd { flex: none; }
 .deadlines strong { font-weight: 600; }
 .xmas-note { font-size: 16px; }
 .xmas-times summary { width: fit-content; }   /* the hit area is the words, not the column */

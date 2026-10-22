@@ -1332,6 +1332,23 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   - "duties included" và "Etsy Star Seller ★ 4.9" còn đúng không?
   - "start a custom order" và "message us on Etsy" đang dẫn sang Etsy, không phải Custom Orders.
 
+### Elise 22/10 (tin sau) — trả lời 4 câu; giữ layout cũ
+- **Ảnh hero bàn mèo len là ảnh AI.** Lúc đầu chị đồng ý thay toàn bộ giao diện theo đề xuất (tham khảo Mushie.com
+  và Jellycat.com). Em dựng bản mới, gồm cả ảnh hero thật cắt từ video Etsy 5 bé mèo len trên sofa. Xem ảnh xong, chị
+  thấy **layout mới không đẹp bằng layout cũ** và chọn **giữ ảnh nhóm mèo trên hero, có ảnh Merlin thật của chị**.
+  - Site giữ nguyên layout cũ, ảnh hero cũ và ảnh nhóm mèo ở Custom Orders.
+  - Bản làm thử (diff + 4 ảnh thật) chỉ lưu trong scratchpad của phiên, không vào repo.
+  - Lưu ý: luật nhà (HOUSE-RULES B5) và Etsy/FTC muốn ảnh đúng hàng thật. Đây là lựa chọn của chị. Khi có ảnh thật
+    đẹp, có thể thay bất cứ lúc nào.
+- **"kind to curious paws"** → đổi sang câu nhẹ hơn, không mang tính tuyên bố: "Soft cotton yarns and fabrics, chosen
+  for how they feel in your hands and how they look on a shelf."
+- **"duties included" và "Etsy Star Seller ★ 4.9"** vẫn đúng (chị vẫn là Etsy Star Seller), giữ nguyên.
+- **Nút đặt hàng riêng dẫn về trang Custom Orders:**
+  - trang chủ: nút "start a custom order" ở khối Personalization;
+  - Shop: nút cuối trang, trước là "message us on Etsy", nay là "start a custom order".
+  - Dòng "message us on Etsy" trong mục The Purrlight Promise ở trang sản phẩm vẫn giữ: đó là chỗ báo lỗi cho đơn đã
+    mua trên Etsy.
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung

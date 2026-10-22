@@ -26,3 +26,6 @@ Thumbs.db
 node_modules/
 __pycache__/
 *.log
+
+# ---- Design-skill working files (taste-skill draw/inspect) ------------------------------
+.taste-skill/

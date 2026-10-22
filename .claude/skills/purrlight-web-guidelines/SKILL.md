@@ -1,85 +1,50 @@
 ---
 name: purrlight-web-guidelines
 description: >-
-  Review-only accessibility and interface-craft audit of Purrlight Studio's customer pages, based on a pinned copy
-  of Vercel's Web Interface Guidelines. It covers focus states, labels, forms, reduced motion, images and layout
-  shift, touch targets, typography details and performance. Use it when asked to review the UI, check
-  accessibility, audit the site or check it against best practices. It reports file:line findings and never
-  rewrites copy. This is a polish pass, not a redesign; Brand Canon v2 always wins.
+  Accessibility and interface-craft audit of Purrlight Studio's customer pages, based on a pinned copy of Vercel's
+  Web Interface Guidelines. It covers focus states, labels, forms, motion, images and layout shift, touch targets,
+  typography details, performance and copy craft. Use it when asked to review the UI, check accessibility, audit
+  the site or check it against best practices. It reports file:line findings with suggested fixes.
 ---
 
 # Purrlight web guidelines
 
-**Read `.claude/skills/BRAND-LOCKED.md` before anything else.** The rules are in
-`upstream/web-interface-guidelines.md`, a pinned, byte-identical copy of Vercel's guidelines (MIT, see
-`upstream/VENDORED.md`). Ignore its lines 1–10: the frontmatter, `$ARGUMENTS` and "Vercel compliance". Take the
-files to review from the request; if none were named, review the customer pages (BRAND-LOCKED rule 10).
+**First read `.claude/skills/HOUSE-RULES.md`.** Apply only its Part A (brand core) and Part B (safety and process);
+otherwise apply the guidelines as written. The rules are in `upstream/web-interface-guidelines.md`, a pinned,
+byte-identical copy of Vercel's guidelines (MIT, see `upstream/VENDORED.md`). Ignore its lines 1–10 (frontmatter
+and `$ARGUMENTS`). Take the files to review from the request; if none were named, review the customer pages
+(HOUSE-RULES B9).
 
-**Never fetch the guidelines.** The original skill (`upstream/SKILL.upstream.md`) downloads the latest rules from
-GitHub on every run. Here that step is removed on purpose: do not WebFetch or WebSearch for a newer version, from
-raw.githubusercontent.com, vercel.com/design/guidelines or anywhere else. Updates happen only when a person re-vets
-and diffs a new copy.
+**Never fetch the guidelines.** The original skill (`upstream/SKILL.upstream.md`) downloads the latest rules on every
+run. Here that step is removed on purpose (HOUSE-RULES B8): do not WebFetch or WebSearch for a newer version.
 
 ## How to review
 
-1. Read the target files, and the CSS and JS they load, if the question needs it.
-2. Check them against the rules, with the changes below.
-3. Output findings grouped by file, in the terse `file:line - issue` format the rules file shows. Give each finding
-   a label:
-   - `fix`: invisible or purely technical;
-   - `copy, needs Elise`: anything that adds or changes words;
-   - `approved effect, needs Elise`;
-   - `brand question`.
-4. Give Elise a short Vietnamese summary on top: what matters most, what is safe to fix, and what needs her. Edit
-   nothing until she says which fixes to make. After an agreed fix, run the Playwright tests and
-   `website/tools/check-site.js`.
+1. Read the target files, plus the CSS and JS they load where needed.
+2. Check them against every rule. Output findings grouped by file in the `file:line - issue` format the rules file
+   shows, with a suggested fix where it is not obvious.
+3. Give Elise a short Vietnamese summary on top: what matters most, and what you would fix first. Make the fixes
+   she picks, then run the checks in HOUSE-RULES B10.
 
-## Purrlight changes to the rules
+## Purrlight notes on specific rules
 
-**Turned off or report-only**
-- **Content & Copy (lines 142–150).** Report only, as `copy, needs Elise`. Two rules are fully off for this site:
-  "Title Case for headings" (the site uses sentence case) and "avoid first person" ("we / us" is Elise's voice).
-- **Text-changing typography (lines 47, 64–67).** `…`, curly quotes, `&nbsp;`, "Loading…" and placeholders: report
-  only for customer-facing strings. Add `translate="no"` or `&nbsp;` only as an attribute or entity on the existing
-  element, never as a new wrapper `<span>`, because `check-site.js` reads payment handles with a regex.
-- **Accessibility text is copy.** Alt text, `aria-label` values, skip-link text, error, loading and empty-state text
-  are drafts. Build them only from approved facts (`js/products.js`, the page copy), never invent product facts
-  (materials, sizes, "safe"), check them against the Canon banned words, and label them `copy, needs Elise`.
-- **Prices (lines 127 and 164).** Flag only. Never change how prices are formatted or rounded.
-- **Behaviour changes are report-only:** URL-state sync (97–99), `beforeunload` (49), confirm and undo (100),
-  drag and `inert` (108), autofocus (110).
+- **Content & Copy (lines 142–150) and text typography (47, 64–67).** Suggest freely, with each change written
+  out. New words go live after Elise approves them (B4). Two rules fit the brand voice poorly; mention them as
+  options only:
+  - Title Case headings (the site uses sentence case);
+  - "avoid first person" ("we / us" is Elise's voice).
+- **Dates and prices (126–127, 164).** Never re-render prices, order-by dates or `<time>` values through `Intl`
+  or `Date` (B3). A date-only ISO string read as UTC shows the day before in Texas.
+- **`translate="no"` and `&nbsp;`.** Add them as an attribute or entity on the existing element, never as a new
+  wrapper `<span>` around payment handles, because `check-site.js` reads those with a regex.
+- **Forms (39, 48).** The booth console is out of scope (B9). Never put `autocomplete="off"` on fields customers
+  fill in themselves (WCAG 1.3.5).
+- **Not for this stack.** Translate the React/Next/Tailwind rules to plain HTML and CSS:
+  - `<Link>` → `<a>`;
+  - `htmlFor` → `for`;
+  - `autoFocus` → `autofocus`;
+  - Tailwind classes → CSS;
+  - `next/image priority` → `fetchpriority="high"`.
 
-**Motion**
-- "Animate transform/opacity only" (line 54) is no licence for new motion. Approved effects are not findings, but
-  their reduced-motion handling is checked.
-- Never fix a finding by removing, retiming or swapping an approved effect to opacity without Elise.
-- Rule 45 ("spinner during request"): use a disabled or text state, never a new rotating spinner. Any new visible
-  words need Elise.
-
-**Forms**
-- The booth Event Desk is out of scope. Its `autocomplete="off"` keeps one customer's details from showing up for
-  the next one on a shared device.
-- Never put `autocomplete="off"` (line 48) on fields customers fill in themselves; that would break WCAG 1.3.5.
-
-**Colours, focus, hover (31, 105, 122, 139–140)**
-- Use existing `:root` tokens only. No new hex colours, shadows, gradients or layered borders.
-
-**Performance (90–91)**
-- Preconnect or preload only origins the page already uses (for example tally.so). Never add a new third-party
-  origin, CDN or web font.
-
-**Not for this stack.** Translate or skip the React/Next/Tailwind rules:
-- `<Link>` → `<a>`;
-- `htmlFor` → `for`;
-- `spellCheck` → `spellcheck`;
-- `autoFocus` → `autofocus`;
-- Tailwind classes → plain CSS (`:focus-visible` with an outline, `text-wrap: pretty`, `min-width: 0`,
-  `overflow-wrap: anywhere`, `-webkit-line-clamp`);
-- `next/image priority` → `fetchpriority="high"`;
-- `onKeyDown` handlers apply only to custom widgets, not native buttons or links.
-
-Skip entirely:
-- Hydration Safety (131–135), useState/nuqs (97–99), virtua (86), `.map()` (161), Accept-Language (128);
-- controlled vs uncontrolled inputs (89).
-
-Fixes stay hand-written ES5 with no new dependency.
+  Skip Hydration Safety (131–135), useState/nuqs (97–99), virtua (86), `.map()` (161), Accept-Language (128) and
+  controlled inputs (89).

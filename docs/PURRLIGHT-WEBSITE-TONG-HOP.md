@@ -1264,6 +1264,25 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   hoặc đến lấy; thư thêm câu về tràng hạt); (4) mã -F: ok.
 - Còn hỏi chị: đơn "last-minute" là đặt trước bao nhiêu ngày? Booth (Event Desk) có đổi sang câu hoàn tiền mới không?
 
+### Skill thiết kế cho Claude (Elise 22/10: link "8 skill thiết kế web cho Claude")
+- Mỗi bộ được nhóm soát xét (1 người đọc + 1 người phản biện) đọc kỹ trước khi cài. Cài vào `.claude/skills/`
+  (chỉ Claude Code dùng; không nằm trong `website/`, không vào marketplace), ghim theo commit, bản chép nguyên văn:
+  - **`purrlight-taste`**: taste-skill v2.1.4 (soi chỗ "trông như AI làm", chia hướng thiết kế, dựng bản xem trước),
+    trừ công cụ tải ảnh;
+  - **`purrlight-motion`**: 7 skill chuyển động của Emil Kowalski;
+  - **`purrlight-web-guidelines`**: Vercel Web Interface Guidelines, bản ghim, không tự tải bản mới.
+- **Chị chốt 22/10: skill ngoài chỉ áp ~20% luật thương hiệu để giữ sáng tạo** (`.claude/skills/HOUSE-RULES.md`):
+  - lõi giữ lại: Merlin + logo; nền kem + cam đào, kèm vàng beret và đỏ berry; vài câu ký tên;
+  - phần còn lại của Brand Canon đều mở cho đề xuất: font, nhãn chữ nhỏ, bóng đổ, gradient, emoji, chuyển động;
+  - luật an toàn giữ nguyên: chưa lên web khi chị chưa duyệt bản xem trước; không bịa đánh giá hay số liệu; không đụng
+    giá, cọc, hạn đặt; không dùng từ Etsy cấm; ảnh sản phẩm là ảnh thật; giữ mức tối thiểu về khả năng truy cập; code
+    chạy được trên điện thoại cũ.
+- Không cài: Impeccable (tải chương trình chạy, hook sau mỗi lần sửa file, mặc định gửi số liệu thống kê), Awesome
+  Design HTML / Awesome Claude Design (nhái giao diện hãng khác), Playwright CLI (đã có sẵn). Chị chọn soát tiếp
+  Impeccable bản an toàn và Image to Code (repo mới Leonxlnx/imagegen-skills).
+- Thử thật: công cụ chụp + chấm trang của taste-skill chạy được trên bản sao web (Chromium cần `--no-sandbox` vì
+  máy chạy bằng root).
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung

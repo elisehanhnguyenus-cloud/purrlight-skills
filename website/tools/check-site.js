@@ -343,35 +343,64 @@ counts.refs = refs;
 
 /* ---------- home page: the favorites and collection tiles written into index.html (seen without JavaScript and by
    search engines and link previews, 25/10) = products.js and js/main.js. js/main.js redraws them with live prices and
-   sales; change a name, a full price, a photo, a collection or the favorites in both places. ---------- */
+   sales; change a name, a full price, a photo, a badge, a collection or the favorites in both places. ---------- */
+var decodeEnt = function (t) {   /* the HTML entities a hand edit may use, so a correct spelling never blocks a deploy */
+  var named = { amp: "&", apos: "'", quot: '"', rsquo: "’", lsquo: "‘", ldquo: "“", rdquo: "”", nbsp: " ", mdash: "—", ndash: "–" };
+  return String(t || "").replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, function (all, e) {
+    if (e[0] === "#") { var n = e[1] === "x" || e[1] === "X" ? parseInt(e.slice(2), 16) : parseInt(e.slice(1), 10); return isNaN(n) ? all : String.fromCharCode(n); }
+    return Object.prototype.hasOwnProperty.call(named, e.toLowerCase()) ? named[e.toLowerCase()] : all;
+  });
+};
+var sameText = function (a, b) {   /* ’ and ' count as the same apostrophe */
+  var n = function (t) { return decodeEnt(t).replace(/[‘’]/g, "'").replace(/\s+/g, " ").trim(); };
+  return n(a) === n(b);
+};
 if (cat && has("index.html") && has("js/main.js")) {
   var home = readText(path.join(ROOT, "index.html")).replace(/<!--[\s\S]*?-->/g, "");
   var PP = Array.isArray(cat.out.PRODUCTS) ? cat.out.PRODUCTS : [], CC = cat.out.CATEGORIES || [];
-  var unesc = function (t) { return String(t || "").replace(/&amp;/g, "&").replace(/&#39;|&rsquo;/g, "'").trim(); };
   var money = function (n) { return "$" + Number(n).toFixed(2).replace(/\.00$/, ""); };
+  var BADGES = { "made-to-order": "made-to-order", "new": "new", "the-original": "original" };
   var favSrc = (/var favIds = \[([^\]]*)\]/.exec(readText(path.join(ROOT, "js/main.js"))) || [])[1] || "";
   var favIds = (favSrc.match(/"([^"]+)"/g) || []).map(function (q) { return q.slice(1, -1); });
-  var cardRe = /<a class="product-card"[^>]*\sdata-static-id="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g, cm, staticIds = [];
-  while ((cm = cardRe.exec(home))) {
-    var sid = cm[1], body = cm[2], sp = PP.filter(function (x) { return x.id === sid; })[0];
+  var favOpen = home.search(/<div[^>]*\sdata-favorites[\s>]/), favGrid = "";
+  if (favOpen > -1) { var fe = home.indexOf("</section>", favOpen); favGrid = home.slice(favOpen, fe > -1 ? fe : undefined); }
+  var cardRe = /<a class="product-card"([^>]*)>([\s\S]*?)<\/a>/g, cm, staticIds = [];
+  while ((cm = cardRe.exec(favGrid))) {
+    var attrs = cm[1], body = cm[2], sidM = /\sdata-static-id="([^"]+)"/.exec(attrs);
+    if (!sidM) { fail("index.html", "một thẻ sản phẩm viết sẵn trong [data-favorites] thiếu data-static-id"); continue; }
+    var sid = sidM[1], sp = PP.filter(function (x) { return x.id === sid; })[0];
     staticIds.push(sid);
     if (!sp) { fail("index.html", 'món viết sẵn "' + sid + '" không có trong js/products.js'); continue; }
-    var g = function (re) { var x = re.exec(body); return x ? x[1] : null; };
-    if (unesc(g(/<h3>([\s\S]*?)<\/h3>/)) !== sp.name) fail("index.html", 'tên món viết sẵn "' + sid + '" ≠ products.js ("' + sp.name + '")');
+    var g = function (re, src) { var x = re.exec(src === undefined ? body : src); return x ? x[1] : null; };
+    if (decodeEnt(g(/\shref="([^"]*)"/, attrs)) !== "product.html?id=" + encodeURIComponent(sid)) fail("index.html", 'link món viết sẵn "' + sid + '" phải là product.html?id=' + encodeURIComponent(sid));
+    if (!sameText(g(/<h3>([\s\S]*?)<\/h3>/), sp.name)) fail("index.html", 'tên món viết sẵn "' + sid + '" ≠ products.js ("' + sp.name + '")');
     var want = (sp.priceFrom ? '<span class="price-from">from</span> ' : "") + money(sp.regular || sp.price);
     if (String(g(/<p class="price">([\s\S]*?)<\/p>/) || "").trim() !== want) fail("index.html", 'giá món viết sẵn "' + sid + '" phải là giá gốc ' + money(sp.regular || sp.price) + (sp.priceFrom ? ' (có chữ "from")' : "") + " như products.js");
     if (g(/<img src="([^"]+)"/) !== sp.img) fail("index.html", 'ảnh món viết sẵn "' + sid + '" ≠ products.js (' + sp.img + ")");
-    if (unesc(g(/<p class="card-cat">([\s\S]*?)<\/p>/)) !== sp.category) fail("index.html", 'danh mục món viết sẵn "' + sid + '" ≠ products.js ("' + sp.category + '")');
+    var srcset = g(/\ssrcset="([^"]*)"/), wantSet = sp.imgLarge ? sp.img + " 600w, " + sp.imgLarge + " " + (sp.imgLargeW || 1000) + "w" : null;
+    if ((srcset || null) !== wantSet) fail("index.html", 'srcset món viết sẵn "' + sid + '" ≠ products.js (' + (wantSet || "không có ảnh lớn — bỏ srcset") + ")");
+    if (!sameText(g(/<p class="card-cat">([\s\S]*?)<\/p>/), sp.category)) fail("index.html", 'danh mục món viết sẵn "' + sid + '" ≠ products.js ("' + sp.category + '")');
+    var badgeHas = g(/<span class="badge ([a-z-]+)">/), badgeWant = BADGES[sp.badge] || null;
+    if ((badgeHas || null) !== badgeWant) fail("index.html", 'nhãn món viết sẵn "' + sid + '" ≠ products.js badge ("' + (sp.badge || "") + '")');
   }
   if (staticIds.join(",") !== favIds.join(",")) fail("index.html", "các món viết sẵn (" + staticIds.join(", ") + ") ≠ favIds trong js/main.js (" + favIds.join(", ") + ")");
   var tileRe = /<a class="cat-tile" href="shop\.html\?cat=([^"]+)">[\s\S]*?<img src="([^"]+)"[\s\S]*?<\/span><span>([\s\S]*?)<\/span><\/a>/g, tm, tiles = [];
-  while ((tm = tileRe.exec(home))) tiles.push({ q: (function () { try { return decodeURIComponent(tm[1]); } catch (e) { return tm[1]; } })(), img: tm[2], name: unesc(tm[3]) });
+  while ((tm = tileRe.exec(home))) tiles.push({ q: (function () { try { return decodeURIComponent(decodeEnt(tm[1])); } catch (e) { return tm[1]; } })(), img: tm[2], name: tm[3] });
   if (tiles.length !== CC.length) fail("index.html", "có " + tiles.length + " ô danh mục viết sẵn, CATEGORIES trong products.js có " + CC.length);
   CC.forEach(function (c, i) {
     var t = tiles[i];
-    if (t && (t.name !== c.name || t.q !== c.name || t.img !== c.img)) fail("index.html", "ô danh mục viết sẵn thứ " + (i + 1) + ' ≠ CATEGORIES "' + c.name + '" (tên, link hoặc ảnh)');
+    if (t && (!sameText(t.name, c.name) || t.q !== c.name || t.img !== c.img)) fail("index.html", "ô danh mục viết sẵn thứ " + (i + 1) + ' ≠ CATEGORIES "' + c.name + '" (tên, link hoặc ảnh)');
   });
 }
+/* every Etsy link written into the pages (data-etsy) = ETSY_SHOP_URL in products.js — js/main.js sets them too, but
+   without JavaScript the written one is what a visitor gets (25/10) */
+if (cat && cat.out.ETSY_SHOP_URL) byExt(".html").forEach(function (f) {
+  var h = readText(f).replace(/<!--[\s\S]*?-->/g, ""), m, re = /<a\b[^>]*\sdata-etsy\b[^>]*>/g;
+  while ((m = re.exec(h))) {
+    var href = (/\shref="([^"]*)"/.exec(m[0]) || [])[1];
+    if (decodeEnt(href) !== cat.out.ETSY_SHOP_URL) fail(rel(f), 'link data-etsy "' + href + '" ≠ ETSY_SHOP_URL (' + cat.out.ETSY_SHOP_URL + ")");
+  }
+});
 
 /* ---------- result ---------- */
 if (errors.length) {

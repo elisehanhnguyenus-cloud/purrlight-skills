@@ -253,21 +253,27 @@ h1, h2, h3, h4 {
 
 .btn-small { padding: 9px 20px; font-size: 14px; }
 
-/* ---------- hero (Elise 25/10): one photo with the words beside it. The photo fills the right of the hero, edge to
-   edge, its left, top and bottom edges melting into the cream — the masks of the Custom Orders hero, so no colour is
-   painted. Phones: the words, then the photo full width (top and bottom edges fade), Merlin on it. ---------- */
+/* ---------- hero (Elise 25/10, "kiểu 3 Mycora"): the photo fills the whole hero, edge to edge, and the words sit on
+   it, low on the left. A warm dark wash over the photo, deepest at the bottom left, keeps the white words readable:
+   measured >=4.5:1 for the small text and >=3:1 for the h1 from 320 to 1920 px. The cat-group photo and the real Merlin
+   stay (Elise 22/10). The dark ground behind the photo keeps the words readable if the photo does not load. ---------- */
 
 .hero {
   position: relative;
   overflow: hidden;
-  background: var(--cream);
+  display: flex;
+  align-items: flex-end;
+  min-height: min(90vh, 820px);
+  background: #2E241D;
+  color: #fff;
 }
 .hero-inner {
   position: relative;
-  z-index: 1;
-  padding-block: clamp(36px, 7vw, 56px) 8px;
+  z-index: 2;
+  width: 100%;
+  padding-block: 120px clamp(48px, 7vw, 96px);
 }
-.hero-copy { max-width: 560px; }
+.hero-copy { max-width: 540px; }
 
 .hero-eyebrow {
   display: inline-flex;
@@ -277,51 +283,61 @@ h1, h2, h3, h4 {
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--accent-text);
-  margin-bottom: 18px;
+  color: #fff;
+  margin-bottom: 16px;
 }
 
 .hero h1 {
-  font-size: clamp(34px, 3.9vw, 54px);
-  font-weight: 500;
-  line-height: 1.12;
-  margin-bottom: 20px;
+  font-size: clamp(34px, 4.2vw, 58px);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: #fff;
+  margin-bottom: 16px;
   text-wrap: balance;
 }
-.hero h1 em {
-  font-style: italic;
-  font-weight: 400;
-  color: #B0652D;   /* 4.1:1 on the cream — large text needs 3:1 */
-}
+.hero h1 em { font-style: italic; font-weight: 400; color: #F6DCC4; }
 
 .hero-sub {
-  font-size: clamp(16.5px, 1.3vw, 18.5px);
-  color: var(--ink-soft);
-  max-width: 46ch;
-  margin-bottom: 30px;
+  font-size: clamp(16px, 1.25vw, 18px);
+  color: rgba(255, 255, 255, 0.92);
+  max-width: 44ch;
+  margin-bottom: 26px;
 }
 
 .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; }
 @media (max-width: 480px) { .hero-actions .btn { flex: 1 1 100%; } }
+.hero .btn-ghost { color: #fff; box-shadow: inset 0 0 0 1.5px #fff; }
+.hero .btn-ghost:hover { background: rgba(255, 255, 255, 0.14); }
+.hero :focus-visible { outline-color: #fff; }
 
-.hero-art { position: relative; }
+.hero-art { position: absolute; inset: 0; }
+.hero-art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(0deg, rgba(30, 23, 18, 0.86) 0%, rgba(30, 23, 18, 0.62) 50%, rgba(30, 23, 18, 0.38) 100%),
+    linear-gradient(90deg, rgba(30, 23, 18, 0.5) 0%, rgba(30, 23, 18, 0) 62%);
+}
 .hero-photo {
   display: block;
   width: 100%;
-  height: auto;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 22%, #000 82%, transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0, #000 22%, #000 82%, transparent 100%);
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
 }
 
-/* the real Merlin, a small round photo on the hero photo */
+/* the real Merlin, a small round photo in the top right corner of the hero */
 .hero-merlin {
   position: absolute;
-  left: var(--pad);
-  bottom: 14%;
-  width: clamp(84px, 22vw, 132px);
+  top: 28px;
+  right: var(--pad);
+  width: clamp(96px, 9vw, 140px);
   margin: 0;
   text-align: center;
-  z-index: 2;
+  z-index: 3;
 }
 .hero-merlin img {
   width: 100%;
@@ -345,30 +361,12 @@ h1, h2, h3, h4 {
   white-space: nowrap;
 }
 
-/* tablets and up: the photo goes behind the right of the hero; the words keep to the cream on the left, clear of the
-   photo (it is fully transparent under them, so body text keeps its 5.3:1) */
-@media (min-width: 900px) {
-  .hero {
-    min-height: clamp(540px, 46vw, 720px);
-    display: flex;
-    align-items: center;
-  }
-  .hero-inner { width: 100%; padding-block: clamp(56px, 6vw, 96px); }
-  .hero-copy { max-width: min(500px, 40vw); }
-  .hero-art { position: absolute; top: 0; right: 0; bottom: 0; width: 58%; }
-  .hero-photo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: 50% 46%;
-    -webkit-mask-image: linear-gradient(to right, transparent 0, transparent 10%, #000 44%), linear-gradient(to bottom, transparent 0, #000 14%, #000 84%, transparent 100%);
-    -webkit-mask-composite: source-in;
-    mask-image: linear-gradient(to right, transparent 0, transparent 10%, #000 44%), linear-gradient(to bottom, transparent 0, #000 14%, #000 84%, transparent 100%);
-    mask-composite: intersect;
-  }
-  .hero-merlin { left: 34%; bottom: 9%; width: clamp(96px, 9vw, 140px); }
+/* phones and small tablets: the words start below Merlin, so his photo never covers them */
+@media (max-width: 899px) {
+  .hero-inner { padding-block: 172px 36px; }
+  .hero-photo { object-position: 50% 35%; }
+  .hero-merlin { top: 18px; width: 88px; }
 }
-@media (min-width: 900px) and (max-width: 1099px) { .hero-art { width: 54%; } .hero-copy { max-width: 42vw; } }
 
 /* ---------- trust bar ---------- */
 
@@ -665,17 +663,6 @@ h1, h2, h3, h4 {
 .value h3 { font-size: 19px; margin-bottom: 8px; }
 .value p { font-size: 15px; color: var(--ink-soft); }
 
-/* ---------- glow divider ---------- */
-
-.glow-note {
-  text-align: center;
-  max-width: 620px;
-  margin: 0 auto;
-}
-.glow-note .moon { margin: 0 auto 18px; width: 54px; height: 54px; }
-.glow-note h2 { font-size: clamp(24px, 3vw, 32px); margin-bottom: 14px; }
-.glow-note p { color: var(--ink-soft); }
-
 /* ---------- newsletter ---------- */
 
 .newsletter {
@@ -750,6 +737,7 @@ h1, h2, h3, h4 {
   transition: color 0.15s;
 }
 .site-footer li a:hover { color: var(--cream); }
+.site-footer :focus-visible { outline-color: var(--cream); }
 
 .footer-bottom {
   border-top: 1px solid rgba(233, 224, 214, 0.16);
@@ -906,6 +894,10 @@ h1, h2, h3, h4 {
 }
 .pdp-note svg { flex: none; width: 20px; height: 20px; margin-top: 2px; }
 
+/* no JavaScript on the product page or the shop list (they are drawn from js/products.js) */
+.noscript-note { max-width: 560px; margin: 32px auto; padding: 18px 20px; background: var(--cream-deep); border-radius: var(--radius-s); text-align: center; color: var(--ink); }
+.noscript-note a { color: var(--purr-berry); text-decoration: underline; text-underline-offset: 2px; font-weight: 600; }
+
 /* related */
 .related { padding-bottom: clamp(52px, 7vw, 92px); }
 
@@ -985,6 +977,7 @@ h1, h2, h3, h4 {
   font-weight: 600;
   cursor: pointer;
 }
+.reel-pause[hidden] { display: none; }
 .reel-pause:hover { background: var(--ink); color: var(--cream); }
 .reel-pause:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
 .reel-pause svg { width: 14px; height: 14px; fill: currentColor; }
@@ -1275,6 +1268,8 @@ h1, h2, h3, h4 {
   padding: 2px 8px;
 }
 .follow-links { margin-top: clamp(20px, 3vw, 28px); }
+/* phones: the four Title Case buttons still pair up two by two (review: they wrapped 2+1+1 at 390 px) */
+@media (max-width: 480px) { .follow-links .btn-small { padding-inline: 14px; } }
 
 /* ---------- partners page ---------- */
 

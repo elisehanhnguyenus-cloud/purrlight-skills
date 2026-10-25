@@ -141,9 +141,13 @@
     );
   }
 
-  function renderGrid(el, items) {
+  /* instant: the cards are simply there — a grid that was already written into the page (data-static) must not
+     blink out and fade back in when it is redrawn with live prices */
+  function renderGrid(el, items, instant) {
     el.innerHTML = items.map(cardHTML).join("");
-    if ("IntersectionObserver" in window) {
+    if (instant) {
+      el.querySelectorAll(".reveal").forEach(function (c) { c.classList.add("in"); });
+    } else if ("IntersectionObserver" in window) {
       var io2 = new IntersectionObserver(function (entries) {
         entries.forEach(function (en) {
           if (en.isIntersecting) { en.target.classList.add("in"); io2.unobserve(en.target); }
@@ -161,7 +165,7 @@
     var favIds = ["christening-gown-set", "bennet-darcy-set", "calico-crochet-cat", "linen-pocket-doll"];
     renderGrid(favGrid, favIds.map(function (id) {
       return PRODUCTS.find(function (p) { return p.id === id; });
-    }).filter(Boolean));
+    }).filter(Boolean), favGrid.hasAttribute("data-static"));
   }
 
   /* ---------- homepage: category tiles ---------- */

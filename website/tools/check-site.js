@@ -341,6 +341,38 @@ byExt(".html").forEach(function (f) {
 byExt(".css").forEach(function (f) { cssRefs(f, readText(f)); });
 counts.refs = refs;
 
+/* ---------- home page: the favorites and collection tiles written into index.html (seen without JavaScript and by
+   search engines and link previews, 25/10) = products.js and js/main.js. js/main.js redraws them with live prices and
+   sales; change a name, a full price, a photo, a collection or the favorites in both places. ---------- */
+if (cat && has("index.html") && has("js/main.js")) {
+  var home = readText(path.join(ROOT, "index.html")).replace(/<!--[\s\S]*?-->/g, "");
+  var PP = Array.isArray(cat.out.PRODUCTS) ? cat.out.PRODUCTS : [], CC = cat.out.CATEGORIES || [];
+  var unesc = function (t) { return String(t || "").replace(/&amp;/g, "&").replace(/&#39;|&rsquo;/g, "'").trim(); };
+  var money = function (n) { return "$" + Number(n).toFixed(2).replace(/\.00$/, ""); };
+  var favSrc = (/var favIds = \[([^\]]*)\]/.exec(readText(path.join(ROOT, "js/main.js"))) || [])[1] || "";
+  var favIds = (favSrc.match(/"([^"]+)"/g) || []).map(function (q) { return q.slice(1, -1); });
+  var cardRe = /<a class="product-card"[^>]*\sdata-static-id="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g, cm, staticIds = [];
+  while ((cm = cardRe.exec(home))) {
+    var sid = cm[1], body = cm[2], sp = PP.filter(function (x) { return x.id === sid; })[0];
+    staticIds.push(sid);
+    if (!sp) { fail("index.html", 'món viết sẵn "' + sid + '" không có trong js/products.js'); continue; }
+    var g = function (re) { var x = re.exec(body); return x ? x[1] : null; };
+    if (unesc(g(/<h3>([\s\S]*?)<\/h3>/)) !== sp.name) fail("index.html", 'tên món viết sẵn "' + sid + '" ≠ products.js ("' + sp.name + '")');
+    var want = (sp.priceFrom ? '<span class="price-from">from</span> ' : "") + money(sp.regular || sp.price);
+    if (String(g(/<p class="price">([\s\S]*?)<\/p>/) || "").trim() !== want) fail("index.html", 'giá món viết sẵn "' + sid + '" phải là giá gốc ' + money(sp.regular || sp.price) + (sp.priceFrom ? ' (có chữ "from")' : "") + " như products.js");
+    if (g(/<img src="([^"]+)"/) !== sp.img) fail("index.html", 'ảnh món viết sẵn "' + sid + '" ≠ products.js (' + sp.img + ")");
+    if (unesc(g(/<p class="card-cat">([\s\S]*?)<\/p>/)) !== sp.category) fail("index.html", 'danh mục món viết sẵn "' + sid + '" ≠ products.js ("' + sp.category + '")');
+  }
+  if (staticIds.join(",") !== favIds.join(",")) fail("index.html", "các món viết sẵn (" + staticIds.join(", ") + ") ≠ favIds trong js/main.js (" + favIds.join(", ") + ")");
+  var tileRe = /<a class="cat-tile" href="shop\.html\?cat=([^"]+)">[\s\S]*?<img src="([^"]+)"[\s\S]*?<\/span><span>([\s\S]*?)<\/span><\/a>/g, tm, tiles = [];
+  while ((tm = tileRe.exec(home))) tiles.push({ q: (function () { try { return decodeURIComponent(tm[1]); } catch (e) { return tm[1]; } })(), img: tm[2], name: unesc(tm[3]) });
+  if (tiles.length !== CC.length) fail("index.html", "có " + tiles.length + " ô danh mục viết sẵn, CATEGORIES trong products.js có " + CC.length);
+  CC.forEach(function (c, i) {
+    var t = tiles[i];
+    if (t && (t.name !== c.name || t.q !== c.name || t.img !== c.img)) fail("index.html", "ô danh mục viết sẵn thứ " + (i + 1) + ' ≠ CATEGORIES "' + c.name + '" (tên, link hoặc ảnh)');
+  });
+}
+
 /* ---------- result ---------- */
 if (errors.length) {
   console.error("check-site: " + errors.length + " lỗi — chưa được deploy:\n");

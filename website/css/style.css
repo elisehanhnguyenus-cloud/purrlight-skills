@@ -253,24 +253,21 @@ h1, h2, h3, h4 {
 
 .btn-small { padding: 9px 20px; font-size: 14px; }
 
-/* ---------- hero ---------- */
+/* ---------- hero (Elise 25/10): one photo with the words beside it. The photo fills the right of the hero, edge to
+   edge, its left, top and bottom edges melting into the cream — the masks of the Custom Orders hero, so no colour is
+   painted. Phones: the words, then the photo full width (top and bottom edges fade), Merlin on it. ---------- */
 
 .hero {
   position: relative;
   overflow: hidden;
-  background:
-    radial-gradient(52% 68% at 74% 36%, rgba(243, 217, 164, 0.55) 0%, rgba(243, 217, 164, 0) 100%),
-    radial-gradient(44% 60% at 22% 78%, rgba(239, 197, 185, 0.4) 0%, rgba(239, 197, 185, 0) 100%),
-    var(--cream);
+  background: var(--cream);
 }
-
 .hero-inner {
-  display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  align-items: center;
-  gap: clamp(24px, 5vw, 64px);
-  padding-block: clamp(48px, 7vw, 96px);
+  position: relative;
+  z-index: 1;
+  padding-block: clamp(36px, 7vw, 56px) 8px;
 }
+.hero-copy { max-width: 560px; }
 
 .hero-eyebrow {
   display: inline-flex;
@@ -285,41 +282,46 @@ h1, h2, h3, h4 {
 }
 
 .hero h1 {
-  font-size: clamp(38px, 5.2vw, 62px);
+  font-size: clamp(34px, 3.9vw, 54px);
   font-weight: 500;
+  line-height: 1.12;
   margin-bottom: 20px;
+  text-wrap: balance;
 }
 .hero h1 em {
   font-style: italic;
   font-weight: 400;
-  color: #B0652D;   /* --accent-large is 2.9:1 on the hero glow; this shade is 3.7:1 */
+  color: #B0652D;   /* 4.1:1 on the cream — large text needs 3:1 */
 }
 
 .hero-sub {
-  font-size: clamp(16.5px, 1.4vw, 19px);
+  font-size: clamp(16.5px, 1.3vw, 18.5px);
   color: var(--ink-soft);
   max-width: 46ch;
   margin-bottom: 30px;
 }
 
 .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; }
+@media (max-width: 480px) { .hero-actions .btn { flex: 1 1 100%; } }
 
 .hero-art { position: relative; }
-.hero-art > img {
+.hero-photo {
+  display: block;
   width: 100%;
   height: auto;
-  border-radius: var(--radius-l);
-  box-shadow: var(--shadow-soft);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 22%, #000 82%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 22%, #000 82%, transparent 100%);
 }
 
-/* the real Merlin, a small round photo pinned to the corner of the hero photo */
+/* the real Merlin, a small round photo on the hero photo */
 .hero-merlin {
   position: absolute;
-  left: -18px;
-  bottom: -22px;
-  width: clamp(92px, 24%, 148px);
+  left: var(--pad);
+  bottom: 14%;
+  width: clamp(84px, 22vw, 132px);
   margin: 0;
   text-align: center;
+  z-index: 2;
 }
 .hero-merlin img {
   width: 100%;
@@ -343,11 +345,30 @@ h1, h2, h3, h4 {
   white-space: nowrap;
 }
 
-@media (max-width: 760px) {
-  .hero-inner { grid-template-columns: 1fr; }
-  .hero-art { order: -1; max-width: 420px; margin-inline: auto; }
-  .hero-merlin { left: 8px; bottom: -18px; }
+/* tablets and up: the photo goes behind the right of the hero; the words keep to the cream on the left, clear of the
+   photo (it is fully transparent under them, so body text keeps its 5.3:1) */
+@media (min-width: 900px) {
+  .hero {
+    min-height: clamp(540px, 46vw, 720px);
+    display: flex;
+    align-items: center;
+  }
+  .hero-inner { width: 100%; padding-block: clamp(56px, 6vw, 96px); }
+  .hero-copy { max-width: min(500px, 40vw); }
+  .hero-art { position: absolute; top: 0; right: 0; bottom: 0; width: 58%; }
+  .hero-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 46%;
+    -webkit-mask-image: linear-gradient(to right, transparent 0, transparent 10%, #000 44%), linear-gradient(to bottom, transparent 0, #000 14%, #000 84%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to right, transparent 0, transparent 10%, #000 44%), linear-gradient(to bottom, transparent 0, #000 14%, #000 84%, transparent 100%);
+    mask-composite: intersect;
+  }
+  .hero-merlin { left: 34%; bottom: 9%; width: clamp(96px, 9vw, 140px); }
 }
+@media (min-width: 900px) and (max-width: 1099px) { .hero-art { width: 54%; } .hero-copy { max-width: 42vw; } }
 
 /* ---------- trust bar ---------- */
 
@@ -910,6 +931,10 @@ h1, h2, h3, h4 {
   margin: 38px 0 14px;
 }
 .about-body p { color: var(--ink-soft); margin-bottom: 16px; max-width: 64ch; }
+/* shipping & returns (25/10) — the about page's reading column, with small headings */
+.help-body h3 { font-size: 19px; margin: 24px 0 8px; }
+.help-body h2 + h3 { margin-top: 6px; }
+.help-body a { color: var(--purr-berry); text-decoration: underline; text-underline-offset: 2px; }
 .about-art {
   border-radius: var(--radius-l);
   overflow: hidden;

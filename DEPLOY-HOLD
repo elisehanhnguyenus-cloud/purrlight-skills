@@ -1,0 +1,5 @@
+Trang chủ làm lại phần đầu (ảnh nhóm mèo + Merlin, chữ bên cạnh, ảnh tan vào nền kem), thứ tự khối mới, các khối
+"coming soon" ẩn tạm, nút viết hoa chữ đầu, link thật thay href="#", trang mới shipping-returns.html (25/10/2026)
+đã commit nhưng CHƯA được lên web: chờ Elise xem ảnh và duyệt câu chữ mới.
+Commit dbe7f65 (3 sửa Elise đã duyệt 22/10) nằm dưới các commit này — cũng chưa lên web.
+Khi Elise duyệt: xoá file này, commit, chạy bash website/deploy-pages.sh.

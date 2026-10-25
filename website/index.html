@@ -37,7 +37,7 @@
           <li><a href="partners.html">Partners</a></li>
         </ul>
       </nav>
-      <a class="btn btn-primary btn-small header-cta" data-etsy href="#" target="_blank" rel="noopener">Shop on Etsy</a>
+      <a class="btn btn-primary btn-small header-cta" data-etsy href="https://vietdelightfinds.etsy.com" target="_blank" rel="noopener">Shop on Etsy</a>
       <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
@@ -46,28 +46,28 @@
 
   <main id="main">
 
-    <!-- hero -->
-    <section class="hero">
+    <!-- hero (Elise 25/10): one photo with the words beside it, the photo melting into the cream like the Custom Orders
+         hero (Mushie / Mycora feel). The cat-group photo and the real Merlin stay (Elise 22/10). The h1 names what we sell. -->
+    <section class="hero" aria-labelledby="hero-h">
       <div class="wrap hero-inner">
-        <div>
-          <p class="hero-eyebrow">✦ chapter one · meet merlin</p>
-          <h1>A cat with a tiny backpack. <em>A studio with two homes.</em></h1>
-          <p class="hero-sub">Meet Merlin — our curious tuxedo cat in a little yellow beret, who sketches the world from the studio windowsill while our family stitches it into heirloom dolls and keepsakes. Sketched by Merlin, stitched by us.</p>
+        <div class="hero-copy">
+          <p class="hero-eyebrow">✦ chapter one · sketched by Merlin, stitched by us</p>
+          <h1 id="hero-h">Heirloom crochet dolls &amp; keepsakes. <em>From our studio with two homes.</em></h1>
+          <p class="hero-sub">Designed at our worktable in Pearland, Texas, and hand-stitched in small batches by our family of artisans in Vietnam. Supervised by Merlin — our curious tuxedo cat in a little yellow beret.</p>
           <div class="hero-actions">
-            <a class="btn btn-glow" href="shop.html">shop the collection</a>
-            <a class="btn btn-ghost" href="about.html">our story</a>
+            <a class="btn btn-glow" href="shop.html">Shop the Collection</a>
+            <a class="btn btn-ghost" href="custom-orders/">Start a Custom Order</a>
           </div>
         </div>
-        <div class="hero-art">
-          <img src="assets/img/home/hero-crochet-cats-1080.webp" srcset="assets/img/home/hero-crochet-cats-720.webp 720w, assets/img/home/hero-crochet-cats-1080.webp 1080w" sizes="(max-width: 760px) 92vw, 46vw" alt="A worktable crowded with our crocheted cats — tabbies, tuxedos, calicos and a Siamese" width="1080" height="1080" fetchpriority="high">
-          <figure class="hero-merlin">
-            <img src="assets/img/home/merlin-real-360.webp" alt="Merlin, our real tuxedo cat, in a red holiday bow" width="360" height="360">
-            <figcaption>the real Merlin</figcaption>
-          </figure>
-        </div>
+      </div>
+      <div class="hero-art">
+        <img class="hero-photo" src="assets/img/home/hero-crochet-cats-1080.webp" srcset="assets/img/home/hero-crochet-cats-720.webp 720w, assets/img/home/hero-crochet-cats-1080.webp 1080w" sizes="(max-width: 899px) 100vw, 60vw" alt="A worktable crowded with crocheted cats — tabbies, tuxedos, calicos and a Siamese" width="1080" height="1080" fetchpriority="high">
+        <figure class="hero-merlin">
+          <img src="assets/img/home/merlin-real-360.webp" alt="Merlin, our real tuxedo cat, in a red holiday bow" width="360" height="360">
+          <figcaption>the real Merlin</figcaption>
+        </figure>
       </div>
     </section>
-
 
     <!-- trust bar (học từ LFA nhưng không overclaim) -->
     <section class="trust-bar" aria-label="Our commitments">
@@ -87,24 +87,38 @@
       </div>
     </section>
 
-    <!-- categories -->
-    <section class="section-tight">
-      <div class="wrap">
-        <div class="section-head">
-          <h2><span class="kicker">chapter two · the collections</span>Shop by category</h2>
-        </div>
-        <div class="cat-grid" data-categories></div>
-      </div>
-    </section>
-
-    <!-- favorites -->
+    <!-- favorites: written into the page (no JavaScript, search engines and link previews see them);
+         js/main.js redraws them from products.js with live prices and sales. tools/check-site.js keeps the two the same. -->
     <section class="section">
       <div class="wrap">
         <div class="section-head">
-          <h2><span class="kicker">chapter three · from the worktable</span>Shop favorites</h2>
-          <a class="section-link" href="shop.html">view everything →</a>
+          <h2><span class="kicker">chapter two · from the worktable</span>Shop favorites</h2>
+          <a class="section-link" href="shop.html">View Everything →</a>
         </div>
-        <div class="product-grid" data-favorites></div>
+        <div class="product-grid" data-favorites data-static>
+          <a class="product-card" href="product.html?id=christening-gown-set" data-static-id="christening-gown-set"><div class="card-media"><img src="assets/img/products/christening-gown-set-600.webp" srcset="assets/img/products/christening-gown-set-600.webp 600w, assets/img/products/christening-gown-set.webp 1000w" sizes="(max-width: 720px) 46vw, (max-width: 1020px) 30vw, 290px" alt="" loading="lazy" width="600" height="600"></div><div class="card-body"><p class="card-cat">Faith &amp; Milestones</p><h3>Lace &amp; Satin Christening Gown Set</h3><p class="price">$89</p></div></a>
+          <a class="product-card" href="product.html?id=bennet-darcy-set" data-static-id="bennet-darcy-set"><span class="badge made-to-order">Made to order</span><div class="card-media"><img src="assets/img/products/bennet-darcy-set-600.webp" alt="" loading="lazy" width="600" height="600"></div><div class="card-body"><p class="card-cat">Storybook &amp; Traditional Tales</p><h3>Elizabeth Bennet &amp; Mr Darcy Crochet Doll Pair</h3><p class="price">$44</p></div></a>
+          <a class="product-card" href="product.html?id=calico-crochet-cat" data-static-id="calico-crochet-cat"><span class="badge made-to-order">Made to order</span><div class="card-media"><img src="assets/img/products/calico-crochet-cat-600.webp" alt="" loading="lazy" width="600" height="600"></div><div class="card-body"><p class="card-cat">Merlin's World &amp; His Friends</p><h3>Calico Crochet Cat</h3><p class="price">$55</p></div></a>
+          <a class="product-card" href="product.html?id=linen-pocket-doll" data-static-id="linen-pocket-doll"><div class="card-media"><img src="assets/img/products/linen-pocket-doll-600.webp" alt="" loading="lazy" width="600" height="600"></div><div class="card-body"><p class="card-cat">Little Things</p><h3>Linen Pocket Doll Bag Charm</h3><p class="price">$22</p></div></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- collections (same: in the page, redrawn by js/main.js from CATEGORIES) -->
+    <section class="section-tight">
+      <div class="wrap">
+        <div class="section-head">
+          <h2><span class="kicker">chapter three · the collections</span>Shop by category</h2>
+        </div>
+        <div class="cat-grid" data-categories>
+          <a class="cat-tile" href="shop.html?cat=Storybook%20%26%20Traditional%20Tales"><span class="cat-art"><img src="assets/img/products/bennet-darcy-set-600.webp" alt="" width="400" height="400" loading="lazy" decoding="async"></span><span>Storybook &amp; Traditional Tales</span></a>
+          <a class="cat-tile" href="shop.html?cat=Feelings%20%26%20Calm"><span class="cat-art"><img src="assets/img/products/knitted-giraffe-600.webp" alt="" width="400" height="400" loading="lazy" decoding="async"></span><span>Feelings &amp; Calm</span></a>
+          <a class="cat-tile" href="shop.html?cat=Faith%20%26%20Milestones"><span class="cat-art"><img src="assets/img/products/christening-gown-set-600.webp" alt="" width="400" height="400" loading="lazy" decoding="async"></span><span>Faith &amp; Milestones</span></a>
+          <a class="cat-tile" href="shop.html?cat=Merlin's%20World%20%26%20His%20Friends"><span class="cat-art"><img src="assets/img/products/calico-crochet-cat-600.webp" alt="" width="400" height="400" loading="lazy" decoding="async"></span><span>Merlin's World &amp; His Friends</span></a>
+          <a class="cat-tile" href="shop.html?cat=Little%20Things"><span class="cat-art"><img src="assets/img/products/linen-pocket-doll-600.webp" alt="" width="400" height="400" loading="lazy" decoding="async"></span><span>Little Things</span></a>
+          <a class="cat-tile" href="shop.html?cat=Heritage%20%26%20Celebration"><span class="cat-art"><img src="assets/img/products/christmas-elf-600.webp" alt="" width="400" height="400" loading="lazy" decoding="async"></span><span>Heritage &amp; Celebration</span></a>
+          <a class="cat-tile" href="shop.html?cat=Patterns%20%26%20Printables"><span class="cat-art"><img src="assets/img/home/story-yarn-hand-640.webp" alt="" width="400" height="400" loading="lazy" decoding="async"></span><span>Patterns &amp; Printables</span></a>
+        </div>
       </div>
     </section>
     <!-- real product videos (from the Etsy listings) — play muted while on screen, never with reduced motion -->
@@ -112,7 +126,7 @@
       <div class="wrap">
         <div class="section-head">
           <h2><span class="kicker">chapter four · on camera</span>The real pieces, up close</h2>
-          <a class="section-link" data-tiktok href="https://www.tiktok.com/@purrlightstudio" target="_blank" rel="noopener">more on TikTok →</a>
+          <a class="section-link" data-tiktok href="https://www.tiktok.com/@purrlightstudio" target="_blank" rel="noopener">More on TikTok →</a>
         </div>
         <div class="reel-grid">
           <a class="reel-card reveal" href="shop.html?cat=Merlin%27s%20World%20%26%20His%20Friends">
@@ -136,7 +150,7 @@
       </div>
     </section>
 
-    <!-- story split -->
+    <!-- the studio story and the name, together (feedback 25/10: they were two blocks far apart) -->
     <section class="section-tight">
       <div class="wrap">
         <div class="story reveal">
@@ -144,17 +158,18 @@
             <img src="assets/img/home/story-yarn-hand-1000.webp" srcset="assets/img/home/story-yarn-hand-640.webp 640w, assets/img/home/story-yarn-hand-1000.webp 1000w" sizes="(max-width: 820px) 92vw, 46vw" alt="A hand holding a soft skein of cream chenille yarn" width="1000" height="1000" loading="lazy">
           </div>
           <div class="story-body">
-            <p class="story-kicker">chapter five · two homes, one story</p>
-            <h2>Every stitch has a story</h2>
-            <p>Purrlight Studio began at a kitchen table in Pearland, Texas — one skein of yarn, one crochet hook, and one very real tuxedo cat named Merlin supervising from the windowsill.</p>
-            <p>Today we design every piece in Texas and craft them in small batches with our family of artisan makers in Vietnam. Nothing mass-produced, nothing rushed — just soft things made carefully, for people who notice the difference.</p>
-            <a class="btn btn-primary" href="about.html">read our story</a>
+            <p class="story-kicker">chapter five · from Merlin’s notebook</p>
+            <h2>Why “Purrlight”? Every stitch carries a memory.</h2>
+            <p>Purrlight Studio began at a kitchen table in Pearland, Texas — one skein of yarn, one crochet hook, and one very real tuxedo cat named Merlin supervising from the windowsill. “Purr” is for the sound that fills our studio; “Light” is for the ones we’ve loved and lost, carrying the memory of our beloved husky who passed at five years old.</p>
+            <p>That is why we only make things meant to be kept. Today, we design every piece in Texas and craft them slowly with our family of artisan makers in Vietnam. Nothing mass-produced, nothing rushed — just soft heirlooms folded into memory boxes, not landfills.</p>
+            <a class="btn btn-primary" href="about.html">Read Our Full Story →</a>
           </div>
         </div>
       </div>
     </section>
-    <!-- the studio family (canon v2: Merlin + future companions) -->
-    <section class="section-tight">
+
+    <!-- the studio family (canon v2: Merlin + future companions) hidden 25/10 (Elise: feedback — no "coming soon" on the home page); remove hidden when it is live -->
+    <section class="section-tight" hidden>
       <div class="wrap">
         <div class="companions reveal">
           <div class="section-head">
@@ -171,8 +186,9 @@
       </div>
     </section>
 
-    <!-- values -->
-    <section class="section">
+    <!-- values (hidden 25/10: the commitments bar under the hero and the story block already say this; the softened
+         "Thoughtful materials" line of 22/10 is kept here for when it comes back) -->
+    <section class="section" hidden>
       <div class="wrap">
         <div class="values">
           <div class="value reveal">
@@ -201,8 +217,8 @@
     </section>
 
 
-    <!-- purrks rewards (launching soon — do not promise an active program) -->
-    <section class="section-tight">
+    <!-- purrks rewards (launching soon — do not promise an active program) hidden 25/10 (Elise: feedback — no "coming soon" on the home page); remove hidden when it is live -->
+    <section class="section-tight" hidden>
       <div class="wrap">
         <div class="purrks reveal">
           <span class="soon">✦ launching soon</span>
@@ -225,28 +241,13 @@
               <p>Early access, member prices, and companion-only surprises.</p>
             </div>
           </div>
-          <a class="btn btn-primary" data-etsy href="#" target="_blank" rel="noopener">follow along on Etsy</a>
+          <a class="btn btn-primary" data-etsy href="https://vietdelightfinds.etsy.com" target="_blank" rel="noopener">Follow Along on Etsy</a>
         </div>
       </div>
     </section>
 
-    <!-- glow note -->
-    <section class="section-tight">
-      <div class="wrap">
-        <div class="glow-note reveal">
-          <svg class="moon" viewBox="0 0 54 54" aria-hidden="true">
-            <path d="M18,38 A16,16 0 0 0 48,38 A12.5,12.5 0 0 1 18,38 Z" fill="#F3D9A4" stroke="#4A423B" stroke-width="2.4" stroke-linejoin="round"/>
-            <path transform="translate(14,14)" fill="#E8A87C" d="M0,-8 Q1.5,-1.5 8,0 Q1.5,1.5 0,8 Q-1.5,1.5 -8,0 Q-1.5,-1.5 0,-8 Z"/>
-          </svg>
-          <h2>Why “Purrlight”?</h2>
-          <p>“Purr” for the sound that fills our studio — Merlin’s, mostly. “Light” for the ones we’ve loved: the name also carries the memory of a husky we lost at five years old. It’s why this studio makes things that are meant to be kept.</p>
-        </div>
-      </div>
-    </section>
-
-
-    <!-- journal (articles upcoming — cards link to TikTok until blog exists) -->
-    <section class="section-tight">
+    <!-- journal (articles upcoming) hidden 25/10 (Elise: feedback — no "coming soon" on the home page); remove hidden when it is live -->
+    <section class="section-tight" hidden>
       <div class="wrap">
         <div class="section-head">
           <h2><span class="kicker">the purrlight journal</span>From Merlin’s notebook</h2>
@@ -278,15 +279,15 @@
           </div>
           <p>Names embroidered by hand, keepsakes for showers and milestones, and small-batch gift sets — from one piece to a run for a whole team. Tell us who it’s for; Merlin will make a note.</p>
           <div class="social-follow">
-            <a class="btn btn-glow" href="custom-orders/">start a custom order</a>
-            <a class="btn btn-ghost" href="mailto:purrlightstudiollc@gmail.com?subject=Corporate%20Gifting">corporate inquiries</a>
+            <a class="btn btn-glow" href="custom-orders/">Start a Custom Order</a>
+            <a class="btn btn-ghost" href="mailto:purrlightstudiollc@gmail.com?subject=Corporate%20Gifting">Corporate Inquiries</a>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- newsletter -->
-    <section class="section" id="newsletter">
+    <!-- newsletter (no sign-up service yet) hidden 25/10 (Elise: feedback — no "coming soon" on the home page); remove hidden when it is live -->
+    <section class="section" id="newsletter" hidden>
       <div class="wrap">
         <div class="newsletter reveal">
           <p class="newsletter-kicker">epilogue</p>
@@ -333,15 +334,15 @@
           <ul>
             <li><a href="about.html">Our story</a></li>
             <li><a href="partners.html">Partner program</a></li>
-            <li><a data-etsy href="#" target="_blank" rel="noopener">Etsy shop</a></li>
+            <li><a data-etsy href="https://vietdelightfinds.etsy.com" target="_blank" rel="noopener">Etsy shop</a></li>
             <li><a data-tiktok href="https://www.tiktok.com/@purrlightstudio" target="_blank" rel="noopener">TikTok Shop</a></li>
           </ul>
         </div>
         <div>
           <h2>Help</h2>
           <ul>
-            <li><a data-etsy href="#" target="_blank" rel="noopener">Shipping &amp; processing</a></li>
-            <li><a data-etsy href="#" target="_blank" rel="noopener">Returns &amp; exchanges</a></li>
+            <li><a href="shipping-returns.html#shipping">Shipping &amp; processing</a></li>
+            <li><a href="shipping-returns.html#returns">Returns &amp; exchanges</a></li>
             <li><a href="mailto:purrlightstudiollc@gmail.com">Contact us — purrlightstudiollc@gmail.com</a></li>
           </ul>
         </div>

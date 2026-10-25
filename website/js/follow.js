@@ -16,10 +16,10 @@
   var web = function (url) { return /^https:\/\/[^\s"'<>]+$/.test(url || "") ? url : ""; };
 
   var NETWORKS = {
-    instagram: { name: "Instagram", cta: "follow on Instagram" },
-    tiktok: { name: "TikTok", cta: "watch on TikTok" },
-    pinterest: { name: "Pinterest", cta: "pin us on Pinterest" },
-    facebook: { name: "Facebook", cta: "find us on Facebook" }
+    instagram: { name: "Instagram", cta: "Follow on Instagram" },
+    tiktok: { name: "TikTok", cta: "Watch on TikTok" },
+    pinterest: { name: "Pinterest", cta: "Pin Us on Pinterest" },
+    facebook: { name: "Facebook", cta: "Find Us on Facebook" }
   };
   /* small line icons, drawn here so the strip needs no icon font or brand logo files */
   var ICONS = {

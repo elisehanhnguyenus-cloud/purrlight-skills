@@ -1383,6 +1383,20 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
     tên, giá gốc, ảnh, nhãn (cả chữ trên nhãn) hay danh mục, hoặc nếu link Etsy viết sẵn nào sai.
 - **Soát 2 vòng** (hình + tiếp cận, chữ đúng sự thật, lỗi lùi/test, SEO; mỗi lỗi có người phản biện chạy lại): đã
   sửa hết lỗi thật thuộc phần kỹ thuật; 16 bộ test đều qua. Phần chữ cần chị quyết nằm ở "Còn chờ chị" 13–14.
+- **Chị nhắc (25/10, tin sau): "Chị vẫn muốn giữ lại Chapter. Đây là thương hiệu."** Dòng nhỏ ngắn em đề xuất đã
+  làm mất "chapter one" (góp ý không hề yêu cầu). Đã đưa lại: đầu trang "✦ chapter one · sketched by Merlin, stitched
+  by us" (điện thoại: "✦ chapter one ·" một dòng riêng), các khối dưới là chapter two → five, khối Merlin đang ẩn mang
+  số six. Đo lại: tương phản chữ ≥ 5,1:1, không đè ảnh Merlin, điện thoại từ 360 px thấy đủ 2 nút.
+- **Soát lại cả 2 bản góp ý** (trang chủ + Custom Orders) theo thương hiệu, sự thật, hiệu quả bán hàng và dữ kiện
+  Custom Orders: `docs/FEEDBACK-REVIEW-2026-10-25.md` — chỗ em nhận sai, chỗ góp ý sai (con số 40–50%, "authentic
+  watercolor", "custom slot", bỏ hẳn Viet Delight, "high-end studio in Texas"…), chỗ đúng một phần, bảng chương đề
+  xuất cho trang chủ, bản sửa câu chuyện chương five và 11 câu hỏi cho chị.
+- **Trang About — Merlin tự kể (chị gửi video hiệu ứng cỏ 3D, 25/10):** bản xem thử trong scratchpad, chưa vào
+  `website/`. Sợi len chenille màu đào vuốt được (lông len rẽ ra, sẫm như nhung rồi dựng lại; canvas 2D, ES5, không
+  thư viện), tiêu đề "Every stitch tells a story.", rồi Merlin kể ngôi thứ nhất 5 chương dọc một sợi len vẽ dần theo
+  cuộn trang; câu chuyện thật của chị giữ nguyên bên dưới. Giảm chuyển động: đứng yên; đung đưa vài giây rồi dừng; máy
+  yếu tự bớt sợi. Chờ chị: thích hướng này không, duyệt lời Merlin, ảnh Merlin khác (hiện chỉ có ảnh Giáng sinh),
+  tiêu đề trang.
 
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
@@ -1414,15 +1428,22 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
     what's on our hooks today, or tell us about a piece made from your photos." Duyệt, sửa, hoặc thay khối cuối bằng
     câu cũ "Come say hi" + "Our little corner of the internet lives on Etsy — come see what’s currently on our hooks."
 14. **Câu giao hàng Etsy** (trang sản phẩm và trang Shipping & returns, đang giống nhau): "a few ready-made pieces ship
-    from our Texas studio" chưa đúng hẳn, vì vài món làm theo đơn được hoàn thiện và gửi từ Pearland (Rosary Charm,
-    Crochet Feelings Faces, Bride & Groom Couple). Đề xuất: "…; some pieces are finished in and ship from our Pearland,
-    Texas studio — each Etsy listing says where it ships from." Chị duyệt thì em đổi cả hai chỗ.
+    from our Texas studio" chưa đúng hẳn, vì vài món làm theo đơn được làm hoặc hoàn thiện và gửi từ Pearland (Rosary
+    Charm, Crochet Feelings Faces, Bride & Groom Couple), vài món chỉ gửi từ kho Pearland. Đề xuất (sửa 25/10): "Most
+    pieces ship with tracking straight from our Vietnam workshop, duties and import fees already paid; some pieces ship
+    from Pearland, Texas instead, and a few are made or finished in our studio there — each Etsy listing says where it
+    ships from." Chị duyệt thì em đổi cả hai chỗ.
 15. **Khối đánh giá của khách** trên trang chủ: gửi em 3 đánh giá thật trên Etsy (không bịa).
 16. **Góp ý trang Custom Orders** chị chuyển tiếp — mỗi điểm chị quyết: giá, số lần sửa, chuỗi mân côi; bỏ chữ
     "Viet Delight" ở dòng nhỏ đầu trang (giữ ở dòng Etsy và ghi chú Square); chuyển "(not on the fresh fruit)" khỏi
     dòng thuế chung (giữ ở phần ước tính housewarming); không dùng "hand-illustrated… authentic watercolor" (tranh vẽ
-    trên bảng vẽ điện tử, luật trung thực 16/10), có thể dùng "Painted by hand on a drawing tablet…"; tránh "Request
-    Your Custom Slot" (tạo cảm giác khan hiếm giả), "Start Your Custom Piece" thì được.
+    số, quyết định 15–16/10), dùng "Painted digitally on a drawing tablet from your photo, in a watercolor style —
+    every print is made from that digital painting."; tránh "Request Your Custom Slot" (khan hiếm giả), "Start Your
+    Custom Piece" thì được. Chi tiết từng điểm: `docs/FEEDBACK-REVIEW-2026-10-25.md`.
+17. **Trang chủ — chương:** duyệt bảng chương và các câu hỏi trong `docs/FEEDBACK-REVIEW-2026-10-25.md` mục 5–7
+    (dòng chapter one, đưa Merlin lại, "epilogue · your chapter", câu chuyện chương five, thuế, tracking, mạng xã hội,
+    ảnh Bennet & Darcy, giấy dó).
+18. **Trang About — Merlin tự kể:** xem 2 video bản xem thử, cho em biết hướng, lời Merlin, ảnh Merlin khác.
 
 ## 9. Link & tài nguyên
 

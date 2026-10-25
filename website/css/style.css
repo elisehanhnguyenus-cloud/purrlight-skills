@@ -276,9 +276,6 @@ h1, h2, h3, h4 {
 .hero-copy { max-width: 540px; }
 
 .hero-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
   font-size: 13.5px;
   font-weight: 600;
   letter-spacing: 0.14em;
@@ -371,6 +368,11 @@ h1, h2, h3, h4 {
   .hero-inner { padding-block: 172px 36px; }
   .hero-photo { object-position: 50% 35%; }
   .hero-merlin { top: 18px; width: 88px; }
+}
+/* phones: "✦ chapter one ·" on its own line, so the signature line is never cut after "sketched" */
+@media (max-width: 599px) {
+  .hero-chapter { display: block; margin-bottom: 2px; }
+  .hero-eyebrow { letter-spacing: 0.1em; }
 }
 
 /* ---------- trust bar ---------- */

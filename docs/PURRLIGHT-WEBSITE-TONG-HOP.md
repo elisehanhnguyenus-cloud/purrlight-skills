@@ -1349,6 +1349,41 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   - Dòng "message us on Etsy" trong mục The Purrlight Promise ở trang sản phẩm vẫn giữ: đó là chỗ báo lỗi cho đơn đã
     mua trên Etsy.
 
+### Elise 25/10 — đầu trang chủ kiểu Mycora; làm theo góp ý trang chủ (chưa lên web)
+- **Chị duyệt 3 sửa ngày 22/10** ("ok em có thể sửa"). Lúc deploy, hệ thống an toàn chặn vì cần chị nói rõ
+  "đưa lên". Các sửa đó (dbe7f65) và mọi việc dưới đây đang nằm trên nhánh. File `DEPLOY-HOLD` ở gốc repo chặn
+  `deploy-pages.sh` cho tới khi chị duyệt; lúc đưa lên thì xóa file này.
+- **Đầu trang chủ (hero):** chị muốn "1 hình ảnh và 1 đoạn mô tả ngay bên cạnh, tiệp với ảnh". Em dựng thử kiểu
+  Custom Orders, 2 kiểu Mushie và kiểu Mycora; **chị chọn kiểu 3 Mycora**.
+  - Ảnh nhóm mèo len phủ hết khung đầu trang. Một lớp nâu ấm phủ mờ, đậm dần về góc dưới bên trái, nên chữ trắng ở đó
+    luôn đọc rõ: đo trên ảnh thật, mọi dòng chữ ≥ 5:1 từ 320 đến 2560 px. Ảnh Merlin thật vẫn ở góc trên bên phải.
+  - Chữ bản rút gọn chị duyệt: dòng nhỏ "✦ sketched by Merlin, stitched by us"; tiêu đề "Heirloom crochet dolls &
+    keepsakes."; câu dưới "Designed in Texas, hand-stitched in small batches by our family of artisans in Vietnam.";
+    2 nút "Shop the Collection" và "Start a Custom Order". Khối chữ thu nhỏ một chút theo ý chị.
+  - Điện thoại: chữ bắt đầu dưới ảnh Merlin; khung đầu trang vừa màn hình nên thấy đủ 2 nút mà không phải cuộn
+    (từ 360 px). Màn hình rất rộng (≥ 2000 px): ảnh dịch lên để không cắt đầu các bé mèo và chiếc mũ vàng.
+- **Ảnh hero sửa lại** (từ ảnh gốc 1932 px; thêm cỡ 1600 px nên màn hình lớn nét hơn):
+  - Xóa số "29" và "4" in trên nhãn 2 cuộn len.
+  - Nhãn gỗ "Handmade" trên bé mèo nằm: bản đầu em phủ len lên che cả nhãn; chị thấy "che quá lộ", muốn **giữ nhãn,
+    chỉ xóa chữ Nana**. Bản mới: vùng chữ "Nana" bị nhòe (và nét đuôi cong của nó) thành mặt gỗ trơn cùng màu, cùng
+    vân; chữ "Handmade" và viền hoa văn giữ nguyên.
+- **Theo góp ý trang chủ chị chuyển tiếp:**
+  - Nút kiếm tiền viết hoa chữ đầu (Shop the Collection, Start a Custom Order, Visit Our Etsy Shop, Follow on
+    Instagram…), cả ở các trang khác và dải "follow".
+  - Hết link chết `href="#"`: nút Shop on Etsy, link Etsy ở chân trang và trang sản phẩm đều ghi thẳng link thật.
+  - Chân trang: "Shipping & processing" và "Returns & exchanges" dẫn tới trang mới `shipping-returns.html`. Các đoạn
+    chính sách là câu chữ đã có trên site (đoạn giao hàng của trang sản phẩm, lời hứa "message us on Etsy", dòng giao
+    hàng và điều khoản hoàn tiền của Custom Orders). **5 dòng mới chờ chị duyệt** (xem "Còn chờ chị" 13).
+  - Thứ tự mới: hero + dải cam kết → chapter one: Shop favorites → chapter two: Shop by category → chapter three:
+    4 video → chapter four: câu chuyện gộp "Why “Purrlight”?" → Personalization & corporate gifting.
+  - Ẩn tạm bằng `hidden` (bật lại được): Meet Merlin & friends (3 bạn "joining soon"), Purrks, Journal, dải 3 giá trị,
+    newsletter (chưa có dịch vụ đăng ký).
+  - Sản phẩm yêu thích và 7 danh mục được viết sẵn vào trang (Google, Facebook, AI đọc được cả khi không chạy
+    JavaScript). Khi chạy, trang vẽ lại từ `products.js` với giá và sale đang chạy. `check-site` báo lỗi nếu hai bên lệch
+    tên, giá gốc, ảnh, nhãn (cả chữ trên nhãn) hay danh mục, hoặc nếu link Etsy viết sẵn nào sai.
+- **Soát 2 vòng** (hình + tiếp cận, chữ đúng sự thật, lỗi lùi/test, SEO; mỗi lỗi có người phản biện chạy lại): đã
+  sửa hết lỗi thật thuộc phần kỹ thuật; 16 bộ test đều qua. Phần chữ cần chị quyết nằm ở "Còn chờ chị" 13–14.
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
@@ -1372,6 +1407,22 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 11. **Purrlight Circle:** gửi em (a) ai tham gia được, (b) đăng ký ở đâu (link form/app), (c) hoa hồng bao nhiêu, tính
     trên gì, (d) theo dõi đơn bằng gì (mã giảm giá, link riêng, TikTok Shop…), (e) trả hoa hồng khi nào, bằng gì,
     (f) khách của người giới thiệu có được giảm gì không, (g) Circle thay trang Partner Program hay đứng riêng.
+12. **Trang chủ mới + 3 sửa 22/10:** nhắn "đưa lên" khi muốn lên web (xóa `DEPLOY-HOLD`, chạy deploy, kiểm tra live).
+13. **Trang Shipping & returns — 5 dòng mới:** câu mở đầu "How shipping and returns work for pieces from our Etsy shop
+    and for custom pieces ordered on our Custom Orders page."; "On the Custom Orders page, each piece shows how soon it
+    ships."; "Each Etsy listing shows its return and exchange terms."; tiêu đề "Ready when you are" và câu "Browse
+    what's on our hooks today, or tell us about a piece made from your photos." Duyệt, sửa, hoặc thay khối cuối bằng
+    câu cũ "Come say hi" + "Our little corner of the internet lives on Etsy — come see what’s currently on our hooks."
+14. **Câu giao hàng Etsy** (trang sản phẩm và trang Shipping & returns, đang giống nhau): "a few ready-made pieces ship
+    from our Texas studio" chưa đúng hẳn, vì vài món làm theo đơn được hoàn thiện và gửi từ Pearland (Rosary Charm,
+    Crochet Feelings Faces, Bride & Groom Couple). Đề xuất: "…; some pieces are finished in and ship from our Pearland,
+    Texas studio — each Etsy listing says where it ships from." Chị duyệt thì em đổi cả hai chỗ.
+15. **Khối đánh giá của khách** trên trang chủ: gửi em 3 đánh giá thật trên Etsy (không bịa).
+16. **Góp ý trang Custom Orders** chị chuyển tiếp — mỗi điểm chị quyết: giá, số lần sửa, chuỗi mân côi; bỏ chữ
+    "Viet Delight" ở dòng nhỏ đầu trang (giữ ở dòng Etsy và ghi chú Square); chuyển "(not on the fresh fruit)" khỏi
+    dòng thuế chung (giữ ở phần ước tính housewarming); không dùng "hand-illustrated… authentic watercolor" (tranh vẽ
+    trên bảng vẽ điện tử, luật trung thực 16/10), có thể dùng "Painted by hand on a drawing tablet…"; tránh "Request
+    Your Custom Slot" (tạo cảm giác khan hiếm giả), "Start Your Custom Piece" thì được.
 
 ## 9. Link & tài nguyên
 

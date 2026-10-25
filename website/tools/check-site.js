@@ -359,8 +359,11 @@ if (cat && has("index.html") && has("js/main.js")) {
   var home = readText(path.join(ROOT, "index.html")).replace(/<!--[\s\S]*?-->/g, "");
   var PP = Array.isArray(cat.out.PRODUCTS) ? cat.out.PRODUCTS : [], CC = cat.out.CATEGORIES || [];
   var money = function (n) { return "$" + Number(n).toFixed(2).replace(/\.00$/, ""); };
-  var BADGES = { "made-to-order": "made-to-order", "new": "new", "the-original": "original" };
-  var favSrc = (/var favIds = \[([^\]]*)\]/.exec(readText(path.join(ROOT, "js/main.js"))) || [])[1] || "";
+  var mainSrc = readText(path.join(ROOT, "js/main.js"));
+  var BADGES = {}, bm, badgeRe = /p\.badge === "([a-z-]+)"\) badge = '(<span class="badge [a-z-]+">[^<]*<\/span>)'/g;   /* the labels cardHTML() writes */
+  while ((bm = badgeRe.exec(mainSrc))) BADGES[bm[1]] = bm[2];
+  if (!Object.keys(BADGES).length) fail("js/main.js", "không đọc được nhãn (badge) trong cardHTML() — sửa check-site.js theo");
+  var favSrc = (/var favIds = \[([^\]]*)\]/.exec(mainSrc) || [])[1] || "";
   var favIds = (favSrc.match(/"([^"]+)"/g) || []).map(function (q) { return q.slice(1, -1); });
   var favOpen = home.search(/<div[^>]*\sdata-favorites[\s>]/), favGrid = "";
   if (favOpen > -1) { var fe = home.indexOf("</section>", favOpen); favGrid = home.slice(favOpen, fe > -1 ? fe : undefined); }
@@ -380,8 +383,9 @@ if (cat && has("index.html") && has("js/main.js")) {
     var srcset = g(/\ssrcset="([^"]*)"/), wantSet = sp.imgLarge ? sp.img + " 600w, " + sp.imgLarge + " " + (sp.imgLargeW || 1000) + "w" : null;
     if ((srcset || null) !== wantSet) fail("index.html", 'srcset món viết sẵn "' + sid + '" ≠ products.js (' + (wantSet || "không có ảnh lớn — bỏ srcset") + ")");
     if (!sameText(g(/<p class="card-cat">([\s\S]*?)<\/p>/), sp.category)) fail("index.html", 'danh mục món viết sẵn "' + sid + '" ≠ products.js ("' + sp.category + '")');
-    var badgeHas = g(/<span class="badge ([a-z-]+)">/), badgeWant = BADGES[sp.badge] || null;
-    if ((badgeHas || null) !== badgeWant) fail("index.html", 'nhãn món viết sẵn "' + sid + '" ≠ products.js badge ("' + (sp.badge || "") + '")');
+    var badgeHas = g(/(<span class="badge [^"]*">[\s\S]*?<\/span>)/), badgeWant = BADGES[sp.badge] || null;
+    if (sp.badge && !badgeWant) fail("js/main.js", 'cardHTML() không có nhãn cho badge "' + sp.badge + '" (món ' + sid + ")");
+    else if (badgeHas || badgeWant ? !(badgeHas && badgeWant && sameText(badgeHas, badgeWant)) : false) fail("index.html", 'nhãn món viết sẵn "' + sid + '" phải là ' + (badgeWant || "không có nhãn") + " như js/main.js cardHTML() với badge \"" + (sp.badge || "") + '"');
   }
   if (staticIds.join(",") !== favIds.join(",")) fail("index.html", "các món viết sẵn (" + staticIds.join(", ") + ") ≠ favIds trong js/main.js (" + favIds.join(", ") + ")");
   var tileRe = /<a class="cat-tile" href="shop\.html\?cat=([^"]+)">[\s\S]*?<img src="([^"]+)"[\s\S]*?<\/span><span>([\s\S]*?)<\/span><\/a>/g, tm, tiles = [];

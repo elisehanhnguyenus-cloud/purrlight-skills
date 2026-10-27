@@ -1426,8 +1426,9 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   lỗi hay hỏng thì shop chịu 100%) + link "Refund terms" tới điều khoản hoàn tiền.
 - **O3 — "Questions before you order":** 8 câu hỏi mở/đóng giữa "How it works" và phần trả cọc. Mọi câu trả lời
   chép câu có sẵn trên trang: 4 câu chép nguyên đoạn (trả tiền, hủy/hỏng, giao hàng, thuế); 4 câu ghép từ các dòng
-  có sẵn (ảnh cần gửi; mockup, ảnh món xong và 5 lần sửa file số; thời gian làm + giao theo danh sách "See holiday
-  timing"; câu Giáng sinh, tự ẩn hết mùa). Bản cho Google/AI (FAQ JSON-LD) có 7 câu.
+  có sẵn (ảnh cần gửi; mockup, ảnh món xong và 5 lần sửa file số; thời gian: dòng "Ships within…" của từng hộp món,
+  đúng quanh năm, + "Each piece's estimate also shows when it is delivered."; câu Giáng sinh, tự ẩn hết mùa). Bản cho
+  Google/AI (FAQ JSON-LD) có 7 câu.
 - **O5 — ảnh xem trước khi chia sẻ link:** thêm cho trang chủ, Shop, sản phẩm, About, Partners, Shipping & returns
   (trước chỉ Custom Orders có). Dùng 2 ảnh share đã có: ảnh Merlin mùa lễ (trang chủ, About, Partners, Shipping —
   ghi "SEASONAL", thay sau mùa cùng Custom Orders) và ảnh ghép búp bê (Shop, sản phẩm). Trang chủ có thêm thông tin
@@ -1441,14 +1442,15 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 - **O9 — trang 404 riêng:** ảnh Merlin thật trong khung tròn, "We couldn't find that page", 3 nút (Shop All, Start a
   Custom Order, Home) và email. Chạy đúng ở mọi địa chỉ sai, kể cả sâu nhiều tầng, cả khi tắt JavaScript. Chân
   trang Custom Orders thêm link "Shipping & returns"; khối cuối About thêm nút "Start a Custom Order".
-- **Soát:** 4 hướng (chữ đúng sự thật, hiển thị + tiếp cận, lỗi JavaScript, SEO), mỗi lỗi có người phản biện chạy
-  lại: 13 lỗi thật đã sửa, 6 bị bác. Đáng kể: trang lỗi/không tìm thấy vẫn hiện nút Buy và dòng "differ from the
-  pictures" (sửa); thanh Buy đè lên menu và che ô đang chọn bằng phím Tab (sửa); câu "How long does it take?" chỉ
-  nói thời gian gửi, chưa nói thời gian giao (viết lại từ danh sách có sẵn); một nửa câu hỏi đáp chưa có chốt chặn
-  (giờ cả 8 câu đều có).
+- **Soát 3 vòng** (chữ đúng sự thật, hiển thị + tiếp cận, lỗi JavaScript, SEO; vòng 2–3 kiểm lại chính các chỗ
+  sửa), mỗi lỗi có người phản biện chạy lại. Đáng kể đã sửa: trang lỗi/không tìm thấy vẫn hiện nút Buy và dòng "differ
+  from the pictures"; thanh Buy đè lên menu, che ô đang chọn bằng phím Tab, và không hiện khi nút Buy nằm sau thanh
+  menu dính; câu "How long does it take?" lúc đầu chỉ nói thời gian gửi, bản sửa lần 1 lại chép danh sách mùa lễ (sai
+  sau 2/1) — giờ chép dòng "Ships within…" quanh năm; một nửa câu hỏi đáp chưa có chốt chặn (giờ cả 8 câu đều có).
 - **`check-site` chặn deploy thêm khi:** câu hỏi đáp hay dòng cam kết lệch câu gốc, có con số gõ ngoài phần chép,
   FAQ JSON-LD lệch hoặc còn sót khi ẩn phần hỏi đáp, có thẻ `<base>`, hay đường dẫn trong `404.html` không bắt đầu
-  bằng `/purrlight-skills/`. Bộ thử lỗi cố ý: 90/90 qua; 16 bộ test đều qua.
+  bằng `/purrlight-skills/`. Chép một phần câu thì phải là trọn câu / trọn dòng (bản gốc thêm chữ "Two or…" là bị
+  bắt). Bộ thử lỗi cố ý: 106/106 qua; 16 bộ test đều qua.
 
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26

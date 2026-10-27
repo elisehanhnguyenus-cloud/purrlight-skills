@@ -165,11 +165,16 @@ giá của lựa chọn khách mua. Danh sách chip có thanh cuộn riêng đ�
   1–90 hay `ends` không đúng dạng `2026-10-26T05:00:00Z`, sale bộ đầm lệch giữa `products.js` và `prices.js`, giá
   Custom Orders gõ thành chữ, JSON hỏng, `content/follow.json` sai dạng, mọi file mà HTML/CSS trỏ tới mà không
   có (so đúng chữ hoa/thường như GitHub Pages), và link/ảnh bắt đầu bằng `/` (hỏng trên `github.io/purrlight-skills/`). Tự chạy lúc nào cũng được: `node website/tools/check-site.js`. Cần Node (deploy báo nếu máy chưa có).
+  Từ 27/10/2026 nó bắt thêm: câu hỏi đáp và 3 dòng cam kết ở Custom Orders lệch với câu gốc trên trang
+  (`data-copy-of` / `data-part-of`), con số gõ ngoài phần chép, FAQ JSON-LD lệch với chữ khách thấy hay còn sót khi
+  phần hỏi đáp bị ẩn; thẻ `<base>` ở bất kỳ trang nào; và đường dẫn của `404.html` không bắt đầu bằng
+  `/purrlight-skills/` (trang này hiện ở mọi địa chỉ sai, kể cả `/a/b/c`).
 - **Domain riêng purrlight.studio:** khi sẵn sàng, thêm file `CNAME` (nội dung
   `purrlight.studio`) vào `website/` (hoặc branch `gh-pages` — từ 20/10/2026 deploy giữ lại `CNAME` đang có trên
   `gh-pages`, trước đó nó bị xoá mỗi lần deploy) và trỏ DNS theo GitHub Pages
   (Settings → Pages → Custom domain). `publicBaseUrl` của Event Desk tự lấy theo
-  URL đang chạy (https) nên không cần điền tay.
+  URL đang chạy (https) nên không cần điền tay. Cùng lúc, bỏ `/purrlight-skills` khỏi mọi đường dẫn trong `404.html`
+  (check-site nhắc khi có `CNAME`).
 
 ## Catalog — nguồn sự thật (cập nhật 20/10/2026: đủ 31 món)
 

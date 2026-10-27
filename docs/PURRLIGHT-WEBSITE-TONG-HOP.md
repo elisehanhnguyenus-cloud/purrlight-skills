@@ -1413,6 +1413,43 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   6/8 trang không có ảnh xem trước khi chia sẻ link; Shop trống khi tắt JavaScript; chưa có trang privacy, sitemap;
   nút "Buy on Etsy" nằm dưới màn hình đầu trên điện thoại.
 
+### Elise 27/10 (tin sau) — làm 7 phương án + nút trang chủ nhỏ lại (chưa lên web)
+- Chị: "Ok làm 7 cái và thêm 1 số nút trên trang chủ cho nhỏ lại: shop the collection và our story, vị trí mấy nút đó
+  trên trang chủ đang chiếm vị trí quá to".
+- **Nút trang chủ nhỏ lại:** "Shop the Collection", "Start a Custom Order" (đầu trang) và "Read Our Full Story →"
+  (khối câu chuyện) dùng cỡ gọn: chữ 14,5 px, cao 44 px (vẫn vừa ngón tay). Điện thoại không còn nút kéo hết bề
+  ngang; ở 360–390 px hai nút đầu trang xếp 2 dòng gọn bên trái, từ máy tính bảng nằm cùng một dòng.
+- **O1 — bằng chứng sớm:** Custom Orders có dòng "Etsy Star Seller ★ 4.9" ngay trên nút đặt hàng (trước đây chỉ ở
+  cuối trang). Trang chủ có dòng "Visit our Etsy shop — Viet Delight, Etsy Star Seller ★ 4.9" dưới dải cam kết.
+- **O2 — lời hứa cạnh nút:** 3 dòng có dấu tick dưới nút đặt hàng của Custom Orders, chép từ câu đã có trên trang
+  (mockup trước khi làm; trả phần còn lại khi duyệt ảnh món xong, file số trả đủ; hàng làm riêng không đổi trả nhưng
+  lỗi hay hỏng thì shop chịu 100%) + link "Refund terms" tới điều khoản hoàn tiền.
+- **O3 — "Questions before you order":** 8 câu hỏi mở/đóng giữa "How it works" và phần trả cọc. Mọi câu trả lời
+  chép câu có sẵn trên trang: 4 câu chép nguyên đoạn (trả tiền, hủy/hỏng, giao hàng, thuế); 4 câu ghép từ các dòng
+  có sẵn (ảnh cần gửi; mockup, ảnh món xong và 5 lần sửa file số; thời gian làm + giao theo danh sách "See holiday
+  timing"; câu Giáng sinh, tự ẩn hết mùa). Bản cho Google/AI (FAQ JSON-LD) có 7 câu.
+- **O5 — ảnh xem trước khi chia sẻ link:** thêm cho trang chủ, Shop, sản phẩm, About, Partners, Shipping & returns
+  (trước chỉ Custom Orders có). Dùng 2 ảnh share đã có: ảnh Merlin mùa lễ (trang chủ, About, Partners, Shipping —
+  ghi "SEASONAL", thay sau mùa cùng Custom Orders) và ảnh ghép búp bê (Shop, sản phẩm). Trang chủ có thêm thông tin
+  doanh nghiệp cho Google (tên, Viet Delight, email, Pearland TX, Etsy, Instagram @vietdelight_us).
+- **O6 — trang sản phẩm:** lúc đang tải hiện khối màu kem thay cho "$0" và "Product name"; file sản phẩm không tải
+  được thì báo "We couldn't load this piece" + nút "Visit Our Etsy Shop"; link sai hoặc thiếu mã món thì báo "We
+  couldn't find that piece" (trước đây link thiếu mã hiện món đầu tiên). Menu đánh dấu đúng danh mục đang xem (trang
+  sản phẩm và các nút lọc của Shop).
+- **O15 — thanh "Buy on Etsy" dính đáy trên điện thoại** (≤ 820 px): tên món + nút, tự ẩn khi nút "Buy on Etsy"
+  trong trang đang hiện; nằm dưới menu khi mở menu; máy tính không có thanh này.
+- **O9 — trang 404 riêng:** ảnh Merlin thật trong khung tròn, "We couldn't find that page", 3 nút (Shop All, Start a
+  Custom Order, Home) và email. Chạy đúng ở mọi địa chỉ sai, kể cả sâu nhiều tầng, cả khi tắt JavaScript. Chân
+  trang Custom Orders thêm link "Shipping & returns"; khối cuối About thêm nút "Start a Custom Order".
+- **Soát:** 4 hướng (chữ đúng sự thật, hiển thị + tiếp cận, lỗi JavaScript, SEO), mỗi lỗi có người phản biện chạy
+  lại: 13 lỗi thật đã sửa, 6 bị bác. Đáng kể: trang lỗi/không tìm thấy vẫn hiện nút Buy và dòng "differ from the
+  pictures" (sửa); thanh Buy đè lên menu và che ô đang chọn bằng phím Tab (sửa); câu "How long does it take?" chỉ
+  nói thời gian gửi, chưa nói thời gian giao (viết lại từ danh sách có sẵn); một nửa câu hỏi đáp chưa có chốt chặn
+  (giờ cả 8 câu đều có).
+- **`check-site` chặn deploy thêm khi:** câu hỏi đáp hay dòng cam kết lệch câu gốc, có con số gõ ngoài phần chép,
+  FAQ JSON-LD lệch hoặc còn sót khi ẩn phần hỏi đáp, có thẻ `<base>`, hay đường dẫn trong `404.html` không bắt đầu
+  bằng `/purrlight-skills/`. Bộ thử lỗi cố ý: 90/90 qua; 16 bộ test đều qua.
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
@@ -1459,9 +1496,20 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
     (dòng chapter one, đưa Merlin lại, "epilogue · your chapter", câu chuyện chương five, thuế, tracking, mạng xã hội,
     ảnh Bennet & Darcy, giấy dó).
 18. **Trang About — Merlin tự kể:** xem 2 video bản xem thử, cho em biết hướng, lời Merlin, ảnh Merlin khác.
-19. **Phương án cải thiện web (27/10):** chọn phương án nào làm trước trong `docs/ELAYA-SKILLS-REVIEW-2026-10-27.md`
-    (em đề xuất O1, O2, O3, O5, O6, O15, O9) và trả lời phần "Chị cần" của từng phương án đã chọn (ảnh xem trước, ô ẩn
-    utm trong form Tally, Search Console, dữ kiện trang privacy, đánh giá thật và cặp ảnh khách → món).
+19. **Phương án cải thiện web (27/10):** ~~chọn phương án~~ — chị chọn 7 cái (O1, O2, O3, O5, O6, O15, O9), đã làm
+    (chưa lên web). Các phương án còn lại (O4, O7, O8, O10–O14) chờ chị khi muốn làm tiếp.
+20. **Duyệt chữ mới của 7 phương án (27/10)** — xem trong bản xem thử:
+    - Custom Orders: 8 câu hỏi "Questions before you order" (câu trả lời đều chép từ trang; 4 câu ghép nhiều dòng:
+      ảnh cần gửi, mockup/ảnh món xong/5 lần sửa, thời gian làm + giao, Giáng sinh); 3 dòng cam kết cạnh nút (có thể
+      thêm "Pay a 50% deposit." vào dòng đầu nếu chị muốn khách thấy tiền cọc ngay đó); dòng "Etsy Star Seller ★ 4.9".
+    - Trang chủ: "Visit our Etsy shop — Viet Delight, Etsy Star Seller ★ 4.9" (chỗ đặt và cách viết).
+    - Trang sản phẩm: "We couldn't load this piece" / "Please try again in a moment. Every piece is also in our Etsy
+      shop." (khi không tải được), chữ "Not loaded" trên dòng đường dẫn.
+    - Trang 404: "We couldn't find that page" / "It may have moved. Everything currently on our hooks is in the shop."
+      / "Looking for something special? Email …".
+    - Ảnh share link: ảnh Merlin mùa lễ cho trang chủ, About, Partners, Shipping (hết mùa phải thay) hay chị chọn một
+      ảnh thật quanh năm; ảnh ghép búp bê cho Shop và trang sản phẩm.
+    - Số "4.9" và huy hiệu Star Seller: kiểm lại trên Etsy trước mỗi lần đưa lên.
 
 ## 9. Link & tài nguyên
 

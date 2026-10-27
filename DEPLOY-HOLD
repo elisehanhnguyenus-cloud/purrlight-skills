@@ -2,4 +2,7 @@ Trang chủ làm lại phần đầu (ảnh nhóm mèo + Merlin, chữ bên cạ
 "coming soon" ẩn tạm, nút viết hoa chữ đầu, link thật thay href="#", trang mới shipping-returns.html (25/10/2026)
 đã commit nhưng CHƯA được lên web: chờ Elise xem ảnh và duyệt câu chữ mới.
 Commit dbe7f65 (3 sửa Elise đã duyệt 22/10) nằm dưới các commit này — cũng chưa lên web.
+Thêm 27/10/2026: 7 phương án (O1 O2 O3 O5 O6 O15 O9 — dòng Etsy Star Seller, 3 dòng cam kết và 8 câu hỏi đáp ở
+Custom Orders, ảnh share link, trang sản phẩm khi tải/lỗi, thanh Buy trên điện thoại, trang 404) + nút trang chủ nhỏ
+lại — chờ Elise duyệt chữ mới (TONG-HOP, "Còn chờ chị" 20).
 Khi Elise duyệt: xoá file này, commit, chạy bash website/deploy-pages.sh.

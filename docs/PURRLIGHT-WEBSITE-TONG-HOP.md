@@ -1453,6 +1453,18 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   bằng `/purrlight-skills/`. Chép một phần câu thì phải là trọn câu / trọn dòng (bản gốc thêm chữ "Two or…" là bị
   bắt). Bộ thử lỗi cố ý: 125/125 qua (gồm cả các sửa hợp lệ phải được cho qua); 16 bộ test đều qua.
 
+### Elise 27/10 (tin sau) — có nên chuyển web sang WordPress / Cloudflare?
+- Chị hỏi có nên đưa toàn bộ sang WordPress, Cloudflare, vì dashboard em làm chưa hoàn thiện, và sau này muốn nối
+  Amazon (Seller Central, KDP, sàn chính), Etsy, Faire, Walmart, eBay, Target, X, YouTube, Mercari, Facebook,
+  Instagram, Stripe/PayPal/Square và nhiều SaaS khác.
+- **Khuyên:** không chuyển sang WordPress. Cloudflare là chỗ đặt web, không phải cửa hàng. Giữ web hiện tại, chuyển
+  chỗ đặt sang Cloudflare + tên miền riêng (luật GitHub Pages không cho chạy trang thương mại); khi mở thêm sàn ngoài
+  Etsy/TikTok (từ tháng 1/2027) thì thêm Shopify Basic làm văn phòng phía sau. Giữ Custom Orders, Event Desk, các chốt
+  duyệt; dừng làm tiếp admin Sveltia. KDP, Mercari, X không hệ thống nào tự động được; Amazon Handmade, Faire, Walmart,
+  Target Plus, YouTube Shopping phải xin duyệt trước.
+- Tóm tắt cho chị: `docs/PLATFORM-DECISION-2026-10-27.md`; nghiên cứu đầy đủ có nguồn:
+  `docs/PLATFORM-RESEARCH-2026-10-27.md`.
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
@@ -1516,6 +1528,9 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
     - Dòng thời gian của hộp Christening & Confirmation ghi "ready after Nov 12" không có năm (có từ trước, nay câu hỏi
       đáp chép lại): sau 12/11 nên đổi thành câu không có ngày, hoặc thêm năm. Hộp lịch (calendar) chưa có dòng "Ships
       within…" như các hộp khác — chị muốn ghi gì thì em thêm, câu hỏi đáp sẽ tự có dòng đó.
+21. **Nền tảng (27/10):** trả lời 7 câu cuối `docs/PLATFORM-DECISION-2026-10-27.md` (dashboard chị muốn làm gì, 2–3 sàn
+    năm 2027, hàng để ở Pearland hay gửi từ Việt Nam, món độc nhất hay làm lại, tên miền + Cloudflare trước ~5/11
+    hay tháng 1, booth nhận thẻ bằng gì, ngân sách).
 
 ## 9. Link & tài nguyên
 

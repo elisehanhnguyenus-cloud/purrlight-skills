@@ -262,7 +262,8 @@
     if (failRel) failRel.hidden = true;   /* no pieces to suggest without products.js */
     pdpReady();
   }
-  if (pdp && typeof PRODUCTS !== "undefined") {
+  /* a function, so a missing piece can stop here while the shared code below (Etsy links, footer year) still runs */
+  if (pdp && typeof PRODUCTS !== "undefined") (function () {
     var id = new URLSearchParams(location.search).get("id");
     var p = PRODUCTS.find(function (x) { return x.id === id; });
     var set = function (sel, val, attr) {
@@ -393,7 +394,7 @@
       });
       renderGrid(relGrid, rel.slice(0, 4));
     }
-  }
+  })();
 
   /* ---------- etsy / tiktok links (one constant each, in products.js) ---------- */
   if (typeof ETSY_SHOP_URL !== "undefined") {   /* products.js may not have loaded: the written href stays */

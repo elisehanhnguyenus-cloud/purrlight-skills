@@ -503,6 +503,8 @@ p { margin: 0; }
 .faq-item[open] summary::after { transform: rotate(-135deg); }
 .faq-item summary:hover { color: var(--berry); }
 .faq-item p { font-size: 16px; line-height: 1.55; color: var(--ink-soft); padding: 0 0 16px; max-width: 64ch; }
+.faq-item .faq-times { margin: 0 0 10px; padding: 0 0 0 18px; max-width: 64ch; font-size: 16px; line-height: 1.55; color: var(--ink-soft); }
+.faq-item .faq-times li { margin: 0 0 4px; padding-left: 2px; }
 @media (prefers-reduced-motion: reduce) { .faq-item summary::after { transition: none; } }
 
 .how { padding: 32px 0 36px; border-top: 1px solid var(--line); }

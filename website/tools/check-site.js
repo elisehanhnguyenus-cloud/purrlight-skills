@@ -314,13 +314,14 @@ counts.json = Object.keys(json).length;
 var refs = 0;
 function checkRef(file, ref) {
   ref = ref.trim().replace(/&amp;/g, "&");
+  if (!ref && rel(file) === "404.html") { fail(rel(file), 'link trống (href="") — trên trang 404 nó ở lại địa chỉ sai; viết "' + SITE_ROOT + '…"'); return; }
   /* any scheme (https:, mailto:, webcal:, sms:…), an in-page #anchor, //host, or a value built by a script */
   if (!ref || /^[a-z][a-z0-9+.-]*:/i.test(ref) || /^(#|\/\/)/.test(ref) || /[{}+$]/.test(ref)) return;
   var clean = ref.split("#")[0].split("?")[0];
   try { clean = decodeURIComponent(clean); } catch (e) { fail(rel(file), 'đường dẫn có dấu "%" lạ: ' + ref + ' (dấu cách viết %20, dấu % viết %25)'); return; }
   /* 404.html is served at any missing address and any depth, so it is the one page written from the site root (a link
      like "?cat=…" would stay on the missing address) */
-  if (rel(file) === "404.html" && clean + "/" === SITE_ROOT) clean = SITE_ROOT;
+  if (rel(file) === "404.html" && clean && clean + "/" === SITE_ROOT) clean = SITE_ROOT;
   if (!clean && rel(file) !== "404.html") return;
   refs++;
   if (rel(file) === "404.html") {
@@ -349,6 +350,7 @@ byExt(".html").forEach(function (f) {
   var h = readText(f).replace(/<!--[\s\S]*?-->/g, "").replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, function (tag) { return tag.replace(/>[\s\S]*$/, ">"); });
   var m, attr = /\s(?:src|href|poster)\s*=\s*(["'])([\s\S]*?)\1/g, set = /\ssrcset\s*=\s*(["'])([\s\S]*?)\1/g;
   while ((m = attr.exec(h))) checkRef(f, m[2]);
+  if (rel(f) === "404.html") { var unq = /<[^>]*?\s(?:src|href|poster)\s*=\s*([^\s"'>]+)/g; while ((m = unq.exec(h))) checkRef(f, m[1]); }   /* href=shop.html, no quotes */
   while ((m = set.exec(h))) m[2].split(",").forEach(function (part) { checkRef(f, part.trim().split(/\s+/)[0]); });
   cssRefs(f, h);   /* style="…url()…" and <style> blocks */
 });
@@ -359,7 +361,7 @@ counts.refs = refs;
    search engines and link previews, 25/10) = products.js and js/main.js. js/main.js redraws them with live prices and
    sales; change a name, a full price, a photo, a badge, a collection or the favorites in both places. ---------- */
 var decodeEnt = function (t) {   /* the HTML entities a hand edit may use, so a correct spelling never blocks a deploy */
-  var named = { amp: "&", apos: "'", quot: '"', rsquo: "’", lsquo: "‘", ldquo: "“", rdquo: "”", nbsp: " ", mdash: "—", ndash: "–" };
+  var named = { amp: "&", apos: "'", quot: '"', rsquo: "’", lsquo: "‘", ldquo: "“", rdquo: "”", nbsp: " ", mdash: "—", ndash: "–", middot: "·", hellip: "…", bull: "•" };
   return String(t || "").replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, function (all, e) {
     if (e[0] === "#") { var n = e[1] === "x" || e[1] === "X" ? parseInt(e.slice(2), 16) : parseInt(e.slice(1), 10); return isNaN(n) ? all : String.fromCharCode(n); }
     return Object.prototype.hasOwnProperty.call(named, e.toLowerCase()) ? named[e.toLowerCase()] : all;
@@ -432,7 +434,7 @@ if (has("custom-orders/index.html")) {
      block is a boundary (BLOCK), which plain() reads as a space */
   var textOf = function (h) {
     return decodeEnt(String(h || "").replace(/<br\s*\/?>|<\/(?:p|li|div|dd|dt|ul|ol|h[1-6])>/gi, BLOCK).replace(/<[^>]+>/g, ""))
-      .replace(/[^\S\u2029]+/g, " ").replace(/ ?\u2029[ \u2029]*/g, BLOCK).replace(/^\u2029|\u2029$/g, "").trim();
+      .replace(/[‘’]/g, "'").replace(/[^\S\u2029]+/g, " ").replace(/ ?\u2029[ \u2029]*/g, BLOCK).replace(/^\u2029|\u2029$/g, "").trim();
   };
   var plain = function (h) { return textOf(h).replace(/\u2029/g, " ").replace(/\s+/g, " ").trim(); };
   /* every element whose opening tag matches attrRe, with its inner HTML up to the matching close tag (nesting counted,
@@ -449,26 +451,36 @@ if (has("custom-orders/index.html")) {
     return out;
   };
   var attrOf = function (attrs, name) { var m = new RegExp("\\s" + name + '="([^"]*)"').exec(attrs); return m ? m[1] : null; };
-  var byId = function (id) { var e = elementsWith(coHtml, new RegExp('\\sid="' + id.replace(/[^\w-]/g, "") + '"'))[0]; return e ? textOf(e.inner) : null; };
+  /* the source element a quote names: exactly one, and not the quote itself or something around it */
+  var sourceOf = function (id, q) {
+    var esc = String(id).replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), all = elementsWith(coHtml, new RegExp("\\sid=([\"'])" + esc + "\\1"));
+    if (!all.length) return { err: 'không có phần tử id="' + id + '"' };
+    if (all.length > 1) return { err: 'có ' + all.length + ' phần tử cùng id="' + id + '" — id phải là duy nhất' };
+    if (q && all[0].start <= q.start && all[0].end >= q.end) return { err: 'trỏ vào chính nó hoặc phần bao quanh nó — phải trỏ tới câu gốc ở chỗ khác trên trang' };
+    return { text: textOf(all[0].inner) };
+  };
   elementsWith(coHtml, /\sdata-copy-of="/).forEach(function (e) {
-    var id = attrOf(e.attrs, "data-copy-of"), src = byId(id);
-    if (src === null) fail(CO, 'data-copy-of="' + id + '": không có phần tử id="' + id + '"');
-    else if (plain(e.inner) !== src.replace(/\u2029/g, " ")) fail(CO, 'câu hỏi đáp chép "' + id + '" đã lệch với bản gốc trên trang — sửa cả hai cùng lúc');
+    var id = attrOf(e.attrs, "data-copy-of"), so = sourceOf(id, e);
+    if (so.err) fail(CO, 'data-copy-of="' + id + '": ' + so.err);
+    else if (plain(e.inner) !== so.text.replace(/\u2029/g, " ")) fail(CO, 'câu hỏi đáp chép "' + id + '" đã lệch với bản gốc trên trang — sửa cả hai cùng lúc');
   });
   elementsWith(coHtml, /\sdata-part-of="/).forEach(function (e) {
-    var id = attrOf(e.attrs, "data-part-of"), src = byId(id), q = plain(e.inner);
-    if (src === null) { fail(CO, 'data-part-of="' + id + '": không có phần tử id="' + id + '"'); return; }
-    var lo = src.toLowerCase(), lq = q.toLowerCase(), i = lo.indexOf(lq), whole = false, found = i > -1;
-    for (; i > -1 && !whole; i = lo.indexOf(lq, i + 1)) {
+    var id = attrOf(e.attrs, "data-part-of"), so = sourceOf(id, e), q = plain(e.inner);
+    if (so.err) { fail(CO, 'data-part-of="' + id + '": ' + so.err); return; }
+    if (!q) { fail(CO, 'data-part-of="' + id + '": đoạn chép trống'); return; }
+    /* search with a line break read as a space (same length), judge the edges on the source as written */
+    var src = so.text, lo = src.replace(/\u2029/g, " ").toLowerCase(), lq = q.toLowerCase(), i = lo.indexOf(lq), whole = false, found = i > -1;
+    for (; i > -1 && i < lo.length && !whole; i = lo.indexOf(lq, i + 1)) {
       var before = src.slice(0, i), after = src.slice(i + q.length);
-      var startOk = !before || before.slice(-1) === BLOCK || /[.!?:·;]\s$/.test(before);
-      var endOk = !after || after.charAt(0) === BLOCK || /[.!?]$/.test(q) || /^[.!?]/.test(after) || /^\s[·;]/.test(after);
+      /* a quote starts a sentence, a line or a "·" part, and ends one */
+      var startOk = !before || before.slice(-1) === BLOCK || /[.!?]\s$/.test(before) || /\s·\s$/.test(before);
+      var endOk = !after || after.charAt(0) === BLOCK || /^\s·\s/.test(after) || (/[.!?]$/.test(q) && /^(?:\s+[A-Z“"'(]|\u2029)/.test(after));
       whole = startOk && endOk;
     }
     if (!found) fail(CO, 'đoạn chép "' + q.slice(0, 40) + '…" không còn nằm trong "' + id + '" — sửa cả hai cùng lúc');
     else if (!whole) fail(CO, 'đoạn chép "' + q.slice(0, 40) + '…" chỉ còn là một phần câu trong "' + id + '" (bản gốc đã thêm chữ trước hoặc sau) — sửa cả hai cùng lúc');
   });
-  var NUMS = /\d|\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|fifteen|twenty|thirty|forty|fifty|hundred|thousand|half|dozen|once|twice|first|second|third)\b/i;
+  var NUMS = /\d|\b(?:zero|one(?!-of-a-kind)|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|\w+teen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand|million|half|dozen|couple|several|twice|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|\w+teenth|\w+tieth)\b|\ba (?:few )?(?:days?|weeks?|fortnight|months?|years?)\b/i;
   var section = elementsWith(coHtml, /\sid="faq"/)[0], sectionHidden = !!section && /\shidden\b|display\s*:\s*none/i.test(section.attrs);
   var faqItems = [], parsed = 0;
   (section ? elementsWith(section.inner, /\sclass="[^"]*\bfaq-item\b/) : []).forEach(function (d) {
@@ -476,14 +488,14 @@ if (has("custom-orders/index.html")) {
     if (!sm) return;
     parsed++;
     var q = plain(sm[1]), rest = d.inner.slice(sm.index + sm[0].length), cut = rest, guards = elementsWith(rest, /\sdata-(?:copy|part)-of="/);
-    var whole = /^\s*<\w+\b[^>]*\sdata-copy-of="/.test(rest);
+
     guards.sort(function (a, b) { return b.start - a.start; }).forEach(function (g, k, all) {
       if (all.some(function (o) { return o !== g && o.start < g.start && o.end >= g.end; })) return;   /* inside another quote */
       cut = cut.slice(0, g.start) + " " + cut.slice(g.end);
     });
-    var glue = whole ? "" : plain(cut);
-    if (!whole && !guards.length) fail(CO, 'câu hỏi đáp "' + q + '" không chép câu nào trên trang (cần data-copy-of hoặc data-part-of)');
-    else if (NUMS.test(glue)) fail(CO, 'câu hỏi đáp "' + q + '" có con số ngoài phần chép ("' + glue.slice(0, 60) + '") — đưa nó vào phần chép từ trang');
+    var glue = plain(cut), num = NUMS.exec(glue);
+    if (!guards.length) fail(CO, 'câu hỏi đáp "' + q + '" không chép câu nào trên trang (cần data-copy-of hoặc data-part-of)');
+    else if (num) fail(CO, 'câu hỏi đáp "' + q + '" có con số ngoài phần chép ("…' + glue.slice(Math.max(0, num.index - 25), num.index + num[0].length + 25) + '…") — đưa nó vào phần chép từ trang');
     if (!/xmas-only/.test(attrOf(d.attrs, "class")) && !/\shidden\b/.test(d.attrs)) faqItems.push({ q: q, a: plain(rest) });
   });
   var nClass = (coHtml.match(/\sclass="[^"]*\bfaq-item\b[^"]*"/g) || []).length;

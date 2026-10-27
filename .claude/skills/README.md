@@ -62,3 +62,9 @@ Muốn cập nhật:
 2. So sánh (`diff`) với bản trong `upstream/`, đọc hết phần thay đổi.
 3. Chép bằng `cp`, ghi commit mới cùng mã `git hash-object` vào `VENDORED.md`.
 4. Xem lại `SKILL.md` của Purrlight và `HOUSE-RULES.md` có cần sửa không.
+
+## Bản chép để dành, chưa kích hoạt (27/10)
+
+Elise gửi `elayadesign/ai-design-skills` ("cứ tải hết về… sau sẽ cần"). Ba skill của tác giả này
+(`landing-page-design`, `design-to-motion`, `redesign-existing-projects`) được chép nguyên văn, ghim commit, vào
+`.claude/vendor/`, không phải ở đây, nên Claude không tự nạp. Lý do và cách dùng sau này: `.claude/vendor/README.md`.

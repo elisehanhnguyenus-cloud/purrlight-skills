@@ -484,6 +484,27 @@ p { margin: 0; }
 .is-new { animation: co-fade 260ms ease; }
 
 /* ---------- how it works (3 short steps) ---------- */
+/* proof and assurances in the hero (27/10, O1 + O2) */
+.proofline { font-size: 14px; font-weight: 500; color: var(--caption); }
+.assure { list-style: none; margin: 2px 0 0; padding: 0; display: grid; gap: 6px; font-size: 14px; line-height: 1.5; color: var(--ink); }
+.assure li { position: relative; padding-left: 22px; }
+.assure li::before { content: ""; position: absolute; left: 3px; top: 0.42em; width: 9px; height: 5px; border: solid #4E6346;   /* the sage ink of the home trust bar icons, 6.3:1 on cream */ border-width: 0 0 2px 2px; transform: rotate(-45deg); }
+.assure a { font-weight: 500; white-space: nowrap; }
+
+/* Questions before you order (27/10, O3): plain details, so it reads with JavaScript off */
+.faq { padding: 32px 0 36px; border-top: 1px solid var(--line); }
+.faq .section-title { margin-bottom: 8px; }
+.faq-list { display: grid; max-width: 760px; }
+.faq-item { border-top: 1px solid var(--line); }
+.faq-item:first-child { border-top: 0; }
+.faq-item summary { cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 48px; padding: 10px 0; font-weight: 600; font-size: 16px; color: var(--ink); }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after { content: ""; flex: none; width: 8px; height: 8px; margin-right: 6px; border: solid var(--berry); border-width: 0 2px 2px 0; transform: rotate(45deg); transition: transform 200ms ease; }
+.faq-item[open] summary::after { transform: rotate(-135deg); }
+.faq-item summary:hover { color: var(--berry); }
+.faq-item p { font-size: 16px; line-height: 1.55; color: var(--ink-soft); padding: 0 0 16px; max-width: 64ch; }
+@media (prefers-reduced-motion: reduce) { .faq-item summary::after { transition: none; } }
+
 .how { padding: 32px 0 36px; border-top: 1px solid var(--line); }
 .how .section-title { margin-bottom: 8px; }
 .steps { list-style: none; margin: 0; padding: 0; display: grid; }

@@ -31,6 +31,72 @@
   <noscript><style>/* no JavaScript: show the nav links in place instead of a dead menu button */.nav-toggle,.nav-close{display:none!important}.main-nav{position:static!important;visibility:visible!important;opacity:1!important;padding:0!important}.main-nav ul{flex-direction:row!important;flex-wrap:wrap;gap:4px 14px!important}.main-nav a{font-family:inherit!important;font-size:15px!important;border-bottom:0!important;padding:4px 0!important}</style></noscript>
   <!-- ORDER FORM: every "Place your order" link reads ORDER_FORM_URL from prices.js (one constant) and carries the pick.
        The Tally link written below is the no-JavaScript fallback — change it together with prices.js. -->
+  <!-- FAQ for search and answer engines (27/10, O3): the same words as the visible "Questions before you order" (minus the
+       seasonal Christmas question). tools/check-site.js compares the two. -->
+  <script type="application/ld+json" id="faq-ld">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What photos do you need?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Face, full body, and any detail you want captured. For a pet: three photos of your pet — face and eye color, full body, markings and coat."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Will I see it before it's finished?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For every made-to-order or custom piece, we send you a design mockup before we start. We send you a photo of the finished piece. For a digital file: a preview first, up to 5 rounds of edits (after that, priced as a new piece)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long does it take?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Each piece shows its own timing in its box above — for example “Ships within 3 weeks” for crochet and “Ships within 5 days” for paintings."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I pay?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Place your order first, then pay the 50% deposit any way below. The balance is paid when you approve the photo of your finished piece. Digital files are paid in full."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I cancel, and what if it arrives damaged?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Refunds: for an order we haven't started and materials we haven't bought, if you cancel at least 5 days before we start. Last-minute orders can't be refunded. Custom pieces can't be returned, but anything wrong or damaged is on us, 100%."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is shipping free? Can I pick it up?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Order direct · Free U.S. shipping, or pickup at Pearland Town Center (Sat & Sun)"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you charge sales tax?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Prices are before tax: 8.25% Texas sales tax on orders picked up or shipped in Texas, and on digital files for buyers in Texas (not on the fresh fruit)."
+      }
+    }
+  ]
+}
+  </script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -76,8 +142,19 @@
           <p class="lede">Handcrafted keepsakes made from your photos — crochet portrait dolls, pet memorials, digital watercolor art &amp; curated gift boxes.</p>
         </div>
         <div class="hero-side">
-          <p class="shipline">Order direct · Free U.S. shipping, or pickup at Pearland Town Center (Sat &amp; Sun)</p>
+          <p class="shipline" id="shipline">Order direct · Free U.S. shipping, or pickup at Pearland Town Center (Sat &amp; Sun)</p>
+          <!-- proof in the first screen (27/10, Elise "làm 7 cái", option O1): the same line as the closing block, plain
+               text so it does not pull buyers off to Etsy here. Check the badge and the rating before every deploy. -->
+          <p class="proofline">Etsy Star Seller <span aria-hidden="true">★</span><span class="sr-only">rated</span> 4.9</p>
           <p class="hero-cta"><a class="btn btn-primary" data-order href="https://tally.so/r/M1KOkY">Place your order</a> <a class="hero-build" href="#studio">Build your gift</a></p>
+          <!-- what protects the buyer, next to the button (O2): the page's own promises, conditions kept, linked to the
+               full refund terms. Each line is a piece of a sentence elsewhere on the page (data-part-of) — check-site.js
+               stops a deploy when the source changes and the copy does not. -->
+          <ul class="assure">
+            <li data-part-of="step-deposit">For every made-to-order or custom piece, we send you a design mockup before we start.</li>
+            <li data-part-of="pay-lede">The balance is paid when you approve the photo of your finished piece. Digital files are paid in full.</li>
+            <li><span data-part-of="refunds">Custom pieces can't be returned, but anything wrong or damaged is on us, 100%.</span> <a href="#refunds">Refund terms</a></li>
+          </ul>
           <noscript><p class="note">Order by email: <a href="mailto:purrlightstudiollc@gmail.com">purrlightstudiollc@gmail.com</a></p></noscript>
         </div>
         </div>
@@ -94,7 +171,7 @@
       <div class="wrap">
         <div class="studio-head">
           <h2 id="studio-h" class="section-title">Build your <span class="nw">gift<span class="glints" aria-hidden="true"><i></i><i></i><i></i></span></span></h2>
-          <p class="studio-hint">Choose a piece, then your options — see what's inside and the estimate as you go. Prices are before tax: 8.25% Texas sales tax on orders picked up or shipped in Texas, and on digital files for buyers in Texas (not on the fresh fruit).</p>
+          <p class="studio-hint">Choose a piece, then your options — see what's inside and the estimate as you go. <span id="tax-note">Prices are before tax: 8.25% Texas sales tax on orders picked up or shipped in Texas, and on digital files for buyers in Texas (not on the fresh fruit).</span></p>
         </div>
         <p class="step-title" id="pick-label"><span class="step-n" aria-hidden="true">1</span> <span class="step-label">Choose your gift</span></p>
         <ul class="picker" aria-labelledby="pick-label">
@@ -601,10 +678,53 @@
         <h2 id="how-h" class="section-title">How it works</h2>
         <ol class="steps">
           <li><span class="step-num" aria-hidden="true">1</span><p><strong>Send your photos.</strong> Face, full body, and any detail you want captured.</p></li>
-          <li><span class="step-num" aria-hidden="true">2</span><p><strong>Pay a 50% deposit.</strong> For every made-to-order or custom piece, we send you a design mockup before we start. Digital files are paid in full.</p></li>
+          <li><span class="step-num" aria-hidden="true">2</span><p id="step-deposit"><strong>Pay a 50% deposit.</strong> For every made-to-order or custom piece, we send you a design mockup before we start. Digital files are paid in full.</p></li>
           <li><span class="step-num" aria-hidden="true">3</span><p><strong>We make it.</strong> We let you know when your piece is in the works, and can send you a progress update after about a week.</p></li>
           <li><span class="step-num" aria-hidden="true">4</span><p><strong>Approve &amp; receive.</strong> We send you a photo of the finished piece. Pay the balance, then it ships free in the U.S. — or pick it up at Pearland Town Center.</p></li>
         </ol>
+      </div>
+    </section>
+
+    <!-- Questions before you order (27/10, option O3): every answer is a sentence already on this page. Answers marked
+         data-copy-of="id" must match that element word for word, and the FAQ JSON-LD must match the visible questions
+         and answers — tools/check-site.js stops a deploy when they drift. The Christmas question hides with the season. -->
+    <section class="faq" id="faq" aria-labelledby="faq-h">
+      <div class="wrap">
+        <h2 id="faq-h" class="section-title">Questions before you order</h2>
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>What photos do you need?</summary>
+            <p>Face, full body, and any detail you want captured. For a pet: three photos of your pet — face and eye color, full body, markings and coat.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Will I see it before it's finished?</summary>
+            <p>For every made-to-order or custom piece, we send you a design mockup before we start. We send you a photo of the finished piece. For a digital file: a preview first, up to 5 rounds of edits (after that, priced as a new piece).</p>
+          </details>
+          <details class="faq-item">
+            <summary>How long does it take?</summary>
+            <p>Each piece shows its own timing in its box above — for example “Ships within 3 weeks” for crochet and “Ships within 5 days” for paintings.</p>
+          </details>
+          <details class="faq-item xmas-only" data-faq-season>
+            <summary>Will it arrive by Christmas?</summary>
+            <p>See the order-by dates in <a href="#xmas-h">Ordering for Christmas?</a> below. Orders placed after these dates still ship, but may not arrive by Christmas.</p>
+          </details>
+          <details class="faq-item">
+            <summary>How do I pay?</summary>
+            <p data-copy-of="pay-lede">Place your order first, then pay the 50% deposit any way below. The balance is paid when you approve the photo of your finished piece. Digital files are paid in full.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Can I cancel, and what if it arrives damaged?</summary>
+            <p data-copy-of="refunds">Refunds: for an order we haven't started and materials we haven't bought, if you cancel at least 5 days before we start. Last-minute orders can't be refunded. Custom pieces can't be returned, but anything wrong or damaged is on us, 100%.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Is shipping free? Can I pick it up?</summary>
+            <p data-copy-of="shipline">Order direct · Free U.S. shipping, or pickup at Pearland Town Center (Sat &amp; Sun)</p>
+          </details>
+          <details class="faq-item">
+            <summary>Do you charge sales tax?</summary>
+            <p data-copy-of="tax-note">Prices are before tax: 8.25% Texas sales tax on orders picked up or shipped in Texas, and on digital files for buyers in Texas (not on the fresh fruit).</p>
+          </details>
+        </div>
       </div>
     </section>
 
@@ -616,7 +736,7 @@
       <div class="wrap">
         <h2 id="pay-h" class="section-title">Pay your deposit</h2>
         <p class="pay-sent" role="status"></p>
-        <p class="pay-lede">Place your order first, then pay the 50% deposit any way below. The balance is paid when you approve the photo of your finished piece. Digital files are paid in full.</p>
+        <p class="pay-lede" id="pay-lede">Place your order first, then pay the 50% deposit any way below. The balance is paid when you approve the photo of your finished piece. Digital files are paid in full.</p>
         <div class="pay-pick" data-pay-pick hidden></div>
         <div class="pay-ways">
           <div class="pay-way" data-pay="zelle">
@@ -664,7 +784,7 @@
           <p><a class="btn btn-quiet" href="thanks.html">I've sent my deposit</a></p>
         </div>
         <!-- refunds: Elise 21/10 (for every order: deposit or paid in full) -->
-        <p class="note pay-terms">Refunds: for an order we haven't started and materials we haven't bought, if you cancel at least 5 days before we start. Last-minute orders can't be refunded. Custom pieces can't be returned, but anything wrong or damaged is on us, 100%.</p>
+        <p class="note pay-terms" id="refunds">Refunds: for an order we haven't started and materials we haven't bought, if you cancel at least 5 days before we start. Last-minute orders can't be refunded. Custom pieces can't be returned, but anything wrong or damaged is on us, 100%.</p>
         <p class="note pay-contact">Questions about your order or deposit? Email <a href="mailto:purrlightstudiollc@gmail.com">purrlightstudiollc@gmail.com</a></p>
         <!-- Zelle trademark guidelines (zelle.com/zelle-trademark-guidelines): the word only (no logo), as an adjective ("Zelle® payment"),
              and this capital-letter line wherever the mark shows. "Used with permission" waits until a bank or Zelle confirms it. -->
@@ -749,7 +869,7 @@
       <p class="tagline">Made by hand. Made to be kept.</p>
       <p>Designed in Texas. Made in Vietnam.</p>
       <p>Prices in USD, before Texas sales tax (8.25%) · Free U.S. shipping or pickup at Pearland Town Center</p>
-      <p class="footer-links"><a href="../index.html">Home</a> · <a href="../shop.html">Shop All</a> · <a href="../about.html">Our Story</a> · <a href="https://vietdelightfinds.etsy.com" rel="noopener">Etsy shop</a> · <a href="mailto:purrlightstudiollc@gmail.com">purrlightstudiollc@gmail.com</a></p>
+      <p class="footer-links"><a href="../index.html">Home</a> · <a href="../shop.html">Shop All</a> · <a href="../about.html">Our Story</a> · <a href="../shipping-returns.html">Shipping &amp; returns</a> · <a href="https://vietdelightfinds.etsy.com" rel="noopener">Etsy shop</a> · <a href="mailto:purrlightstudiollc@gmail.com">purrlightstudiollc@gmail.com</a></p>
       <p class="copyright">© <span data-year>2026</span> Purrlight Studio LLC · Pearland, TX</p>
     </div>
   </footer>

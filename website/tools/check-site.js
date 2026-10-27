@@ -331,8 +331,17 @@ function cssRefs(f, c) {
   while ((m = CSS_URL.exec(c))) checkRef(f, m[2]);
   while ((m = CSS_IMPORT.exec(c))) checkRef(f, m[2]);
 }
+/* <base> only on 404.html (GitHub Pages serves it at any missing address, any depth): there it must name the site
+   root, and its other links are checked as written from the root, which is where 404.html sits */
+var BASE_HREF = HAS_CNAME ? "/" : "/purrlight-skills/";
 byExt(".html").forEach(function (f) {
-  var h = readText(f).replace(/<!--[\s\S]*?-->/g, "").replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, function (tag) { return tag.replace(/>[\s\S]*$/, ">"); });
+  var tags = readText(f).replace(/<!--[\s\S]*?-->/g, "").match(/<base\b[^>]*>/gi) || [];
+  if (rel(f) !== "404.html") { if (tags.length) fail(rel(f), "chỉ 404.html được có <base> (nó đổi đích của mọi link trong trang)"); return; }
+  var bh = tags.length === 1 && /\shref="([^"]*)"/.exec(tags[0]);
+  if (!bh || bh[1] !== BASE_HREF) fail(rel(f), 'cần đúng một <base href="' + BASE_HREF + '"> — không có nó, trang 404 ở địa chỉ sâu như /purrlight-skills/a/b mất hết CSS, ảnh và link');
+});
+byExt(".html").forEach(function (f) {
+  var h = readText(f).replace(/<!--[\s\S]*?-->/g, "").replace(/<base\b[^>]*>/gi, "").replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, function (tag) { return tag.replace(/>[\s\S]*$/, ">"); });
   var m, attr = /\s(?:src|href|poster)\s*=\s*(["'])([\s\S]*?)\1/g, set = /\ssrcset\s*=\s*(["'])([\s\S]*?)\1/g;
   while ((m = attr.exec(h))) checkRef(f, m[2]);
   while ((m = set.exec(h))) m[2].split(",").forEach(function (part) { checkRef(f, part.trim().split(/\s+/)[0]); });
@@ -405,6 +414,44 @@ if (cat && cat.out.ETSY_SHOP_URL) byExt(".html").forEach(function (f) {
     if (decodeEnt(href) !== cat.out.ETSY_SHOP_URL) fail(rel(f), 'link data-etsy "' + href + '" ≠ ETSY_SHOP_URL (' + cat.out.ETSY_SHOP_URL + ")");
   }
 });
+
+/* ---------- Custom Orders "Questions before you order" (27/10): the answers repeat sentences that live elsewhere on the
+   page (refund terms, tax, deposit, shipping) — each [data-copy-of="id"] must equal that element word for word, and the
+   FAQ JSON-LD must equal the visible questions (the seasonal Christmas one, .xmas-only, stays out of the JSON-LD) ---------- */
+if (has("custom-orders/index.html")) {
+  var coHtml = readText(path.join(ROOT, "custom-orders/index.html"));
+  var plain = function (h) { return decodeEnt(String(h || "").replace(/<[^>]+>/g, "")).replace(/\s+/g, " ").trim(); };
+  var byId = function (id) {
+    var m = new RegExp('<(\\w+)[^>]*\\sid="' + id + '"[^>]*>([\\s\\S]*?)</\\1>').exec(coHtml);
+    return m ? plain(m[2]) : null;
+  };
+  var cm2, copyRe = /<(\w+)[^>]*\sdata-copy-of="([^"]+)"[^>]*>([\s\S]*?)<\/\1>/g, copies = 0;
+  while ((cm2 = copyRe.exec(coHtml))) {
+    copies++;
+    var src = byId(cm2[2]);
+    if (src === null) fail("custom-orders/index.html", 'data-copy-of="' + cm2[2] + '": không có phần tử id="' + cm2[2] + '"');
+    else if (plain(cm2[3]) !== src) fail("custom-orders/index.html", 'câu hỏi đáp chép "' + cm2[2] + '" đã lệch với bản gốc trên trang — sửa cả hai cùng lúc');
+  }
+  var pm2, partRe = /<(\w+)[^>]*\sdata-part-of="([^"]+)"[^>]*>([\s\S]*?)<\/\1>/g;
+  while ((pm2 = partRe.exec(coHtml))) {
+    var whole = byId(pm2[2]);
+    if (whole === null) fail("custom-orders/index.html", 'data-part-of="' + pm2[2] + '": không có phần tử id="' + pm2[2] + '"');
+    else if (whole.indexOf(plain(pm2[3])) === -1) fail("custom-orders/index.html", 'dòng cam kết cạnh nút ("' + plain(pm2[3]).slice(0, 40) + '…") không còn nằm trong "' + pm2[2] + '" — sửa cả hai cùng lúc');
+  }
+  var faqItems = [], fm, faqRe = /<details class="faq-item([^"]*)"[^>]*>\s*<summary>([\s\S]*?)<\/summary>\s*<p[^>]*>([\s\S]*?)<\/p>\s*<\/details>/g;
+  while ((fm = faqRe.exec(coHtml))) if (fm[1].indexOf("xmas-only") === -1) faqItems.push({ q: plain(fm[2]), a: plain(fm[3]) });
+  var ldm = /<script type="application\/ld\+json" id="faq-ld">([\s\S]*?)<\/script>/.exec(coHtml);
+  if (faqItems.length || ldm) {
+    var ld = null;
+    try { ld = ldm ? JSON.parse(ldm[1]) : null; } catch (e) { fail("custom-orders/index.html", "FAQ JSON-LD không đọc được: " + e.message); }
+    var ents = ld && ld.mainEntity ? ld.mainEntity : [];
+    if (ldm && ents.length !== faqItems.length) fail("custom-orders/index.html", "FAQ JSON-LD có " + ents.length + " câu, trang hiện " + faqItems.length + " câu");
+    faqItems.forEach(function (it, i) {
+      var e = ents[i];
+      if (!e || e.name !== it.q || !e.acceptedAnswer || e.acceptedAnswer.text !== it.a) fail("custom-orders/index.html", 'FAQ JSON-LD câu ' + (i + 1) + ' ("' + it.q + '") ≠ chữ hiện trên trang');
+    });
+  }
+}
 
 /* ---------- result ---------- */
 if (errors.length) {

@@ -14,6 +14,14 @@
     return from + '<s><span class="visually-hidden">Was </span>' + fmt(p.regular + d) + '</s> <span class="visually-hidden">now </span>' + fmt(p.price + d);
   };
 
+  /* 404.html reads every link through <base>, which would send "#main" to the home page: keep in-page anchors here */
+  if (document.querySelector("base[href]")) document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a || a.getAttribute("href").length < 2) return;
+    e.preventDefault();
+    location.hash = a.getAttribute("href").slice(1);
+  });
+
   /* ---------- mobile nav ---------- */
   var toggle = document.querySelector(".nav-toggle");
   var nav = document.querySelector(".main-nav");
@@ -216,6 +224,16 @@
       bar.querySelectorAll(".filter-chip").forEach(function (b) {
         b.setAttribute("aria-pressed", b.dataset.cat === cat ? "true" : "false");
       });
+      /* the menu marks the collection being shown when it has a link for it, otherwise Shop All (27/10) */
+      var shopLinks = document.querySelectorAll(".main-nav a[href^='shop.html']"), current = null;
+      Array.prototype.forEach.call(shopLinks, function (a) {
+        a.removeAttribute("aria-current");
+        var c = null;
+        try { c = new URL(a.getAttribute("href"), location.href).searchParams.get("cat"); } catch (err) { /* old browsers */ }
+        if ((c || "All") === cat) current = a;
+      });
+      current = current || document.querySelector(".main-nav a[href='shop.html']");
+      if (current) current.setAttribute("aria-current", "page");
       try {
         var url = new URL(location.href);
         if (cat === "All") url.searchParams.delete("cat");
@@ -236,6 +254,20 @@
 
   /* ---------- product detail page ---------- */
   var pdp = document.querySelector("[data-pdp]");
+  /* the page ships with no name, price or category (27/10, option O6): a skeleton shows until the piece is drawn, so a
+     slow or failed js/products.js never leaves "$0" or "Product name" on screen */
+  var pdpReady = function () { if (pdp) { pdp.classList.remove("is-loading"); pdp.removeAttribute("aria-busy"); } };
+  if (pdp && typeof PRODUCTS === "undefined") {
+    var failSet = function (sel, val) { var el = pdp.querySelector(sel); if (el) el.textContent = val; };
+    var failHide = function (sel) { var el = pdp.querySelector(sel); if (el) el.hidden = true; };
+    failSet("[data-pdp-crumb]", "Not loaded");
+    failSet("[data-pdp-name]", "We couldn't load this piece");
+    failSet("[data-pdp-desc]", "Please try again in a moment. Every piece is also in our Etsy shop.");
+    [".price", ".pdp-addons", ".pdp-details", ".pdp-note", ".pdp-media", "[data-pdp-cat]"].forEach(failHide);
+    var failBuy = pdp.querySelector("[data-pdp-buy]");
+    if (failBuy) failBuy.textContent = "Visit Our Etsy Shop";   /* its written href is the shop front */
+    pdpReady();
+  }
   if (pdp && typeof PRODUCTS !== "undefined") {
     var id = new URLSearchParams(location.search).get("id");
     var p = PRODUCTS.find(function (x) { return x.id === id; });
@@ -247,8 +279,9 @@
     };
     var hide = function (sel) { var el = pdp.querySelector(sel); if (el) el.hidden = true; };
 
-    /* a shared link to a retired or mistyped id must not quietly show a different piece at a different price */
-    if (id && !p) {
+    /* a shared link to a retired or mistyped id — or a link with no id at all — must not quietly show a different piece
+       at a different price */
+    if (!p) {
       document.title = "Piece not found — Purrlight Studio";
       set("[data-pdp-crumb]", "Not found");
       set("[data-pdp-cat]", "");
@@ -257,9 +290,9 @@
       [".price", ".pdp-addons", "[data-pdp-buy]", ".pdp-details", ".pdp-note", ".pdp-media"].forEach(hide);
       var relGrid0 = document.querySelector("[data-related]");
       if (relGrid0) renderGrid(relGrid0, PRODUCTS.filter(notQuiet).slice(0, 4));
+      pdpReady();
       return;
     }
-    p = p || PRODUCTS[0];
 
     document.title = p.name + " — Purrlight Studio";
     set("[data-pdp-crumb]", p.name);
@@ -308,6 +341,49 @@
     if (skipSafety) hide("[data-pdp-safety]");
     if (!p.details.some(function (d) { return /spot clean/i.test(d); })) hide("[data-pdp-care]");
     if (notHandmade) hide(".pdp-note");
+
+    pdpReady();
+
+    /* the menu marks where this piece lives: its collection when the menu has it, otherwise Shop All */
+    var navLinks = document.querySelectorAll(".main-nav a[href^='shop.html']"), navHit = null;
+    Array.prototype.forEach.call(navLinks, function (a) {
+      var cat = null;
+      try { cat = new URL(a.getAttribute("href"), location.href).searchParams.get("cat"); } catch (err) { /* old browsers: Shop All */ }
+      if (cat && cat === p.category) navHit = a;
+    });
+    if (!navHit) navHit = document.querySelector(".main-nav a[href='shop.html']");
+    if (navHit) navHit.setAttribute("aria-current", "true");
+
+    /* phones: "Buy on Etsy" sits below the first screen (27/10, option O15) — a slim bar keeps it in reach while the
+       button itself is out of view, and hides when the button shows. Nothing moves; it simply appears. */
+    var buyBtn = pdp.querySelector("[data-pdp-buy]");
+    if (buyBtn && "IntersectionObserver" in window && window.matchMedia) {
+      var phone = window.matchMedia("(max-width: 820px)");
+      var buyBar = document.createElement("div");
+      buyBar.className = "buy-bar";
+      buyBar.hidden = true;
+      buyBar.setAttribute("role", "region");
+      buyBar.setAttribute("aria-label", "Buy this piece");
+      var buyName = document.createElement("span");
+      buyName.className = "buy-bar-name";
+      buyName.textContent = p.name;
+      var buyLink = document.createElement("a");
+      buyLink.className = "btn btn-glow btn-compact";
+      buyLink.href = buyHref(p);
+      buyLink.target = "_blank";
+      buyLink.rel = "noopener";
+      buyLink.textContent = "Buy on Etsy";
+      buyBar.appendChild(buyName);
+      buyBar.appendChild(buyLink);
+      document.body.appendChild(buyBar);
+      var buyInView = true;
+      var syncBar = function () {
+        buyBar.hidden = !phone.matches || buyInView;
+        document.body.classList.toggle("has-buy-bar", !buyBar.hidden);
+      };
+      new IntersectionObserver(function (en) { buyInView = en[0].isIntersecting; syncBar(); }).observe(buyBtn);
+      if (phone.addEventListener) phone.addEventListener("change", syncBar); else if (phone.addListener) phone.addListener(syncBar);
+    }
 
     /* related: same category first, then others — never a QUIET piece */
     var relGrid = document.querySelector("[data-related]");

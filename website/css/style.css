@@ -148,7 +148,7 @@ h1, h2, h3, h4 {
   border-bottom: 2px solid transparent;
   transition: color 0.18s, border-color 0.18s;
 }
-.main-nav a:hover, .main-nav a[aria-current="page"] {
+.main-nav a:hover, .main-nav a[aria-current="page"], .main-nav a[aria-current="true"] {
   color: var(--ink);
   border-color: var(--glow);
 }
@@ -252,6 +252,9 @@ h1, h2, h3, h4 {
 .btn-ghost:hover { background: var(--card); }
 
 .btn-small { padding: 9px 20px; font-size: 14px; }
+/* compact buttons on the home page (Elise 27/10: "Shop the Collection" and "Our Story" took too much room): smaller,
+   sized to their words on phones too, still a 44 px tap target */
+.btn-compact { padding: 10px 20px; font-size: 14.5px; min-height: 44px; }
 
 /* ---------- hero (Elise 25/10, "kiểu 3 Mycora"): the photo fills the whole hero, edge to edge, and the words sit on
    it, low on the left. A warm dark wash over the photo, deepest at the bottom left, keeps the white words readable:
@@ -303,8 +306,7 @@ h1, h2, h3, h4 {
   margin-bottom: 26px;
 }
 
-.hero-actions { display: flex; flex-wrap: wrap; gap: 14px; }
-@media (max-width: 480px) { .hero-actions .btn { flex: 1 1 100%; } }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 .hero .btn-ghost { color: #fff; box-shadow: inset 0 0 0 1.5px #fff; }
 .hero .btn-ghost:hover { background: rgba(255, 255, 255, 0.14); }
 .hero :focus-visible { outline-color: #fff; }
@@ -388,6 +390,9 @@ h1, h2, h3, h4 {
   padding-block: 20px;
 }
 @media (max-width: 760px) { .trust-inner { grid-template-columns: 1fr; gap: 12px; } }
+.trust-proof { padding-bottom: 16px; margin-top: -4px; text-align: center; font-size: 14px; color: var(--ink-soft); text-wrap: pretty; }
+.trust-proof a { color: var(--accent-text); font-weight: 600; }
+@media (max-width: 760px) { .trust-proof { text-align: left; } }
 .trust-item {
   display: flex;
   align-items: center;
@@ -830,6 +835,25 @@ h1, h2, h3, h4 {
   margin-bottom: 14px;
 }
 .pdp-main img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+/* while the piece loads (27/10, O6): soft blocks where the photo, category, name and price will be — never "$0" */
+[data-pdp].is-loading .pdp-main { background: var(--cream-deep); }
+[data-pdp].is-loading .pdp-main img { visibility: hidden; }
+[data-pdp].is-loading [data-pdp-cat]:empty::before,
+[data-pdp].is-loading [data-pdp-name]:empty::before,
+[data-pdp].is-loading [data-pdp-price]:empty::before { content: ""; display: block; border-radius: 8px; background: var(--cream-deep); }
+[data-pdp].is-loading [data-pdp-cat]:empty::before { width: 9em; height: 1em; }
+[data-pdp].is-loading [data-pdp-name]:empty::before { width: 78%; height: 1.1em; }
+[data-pdp].is-loading [data-pdp-price]:empty::before { width: 4.5em; height: 1.1em; }
+
+/* phones: the Buy bar while "Buy on Etsy" is out of view (27/10, O15) */
+.buy-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; display: flex; align-items: center; gap: 12px;
+  padding: 8px var(--pad) calc(8px + env(safe-area-inset-bottom, 0px)); background: rgba(251, 246, 238, 0.97);
+  border-top: 1px solid var(--line); box-shadow: 0 -6px 18px rgba(122, 96, 68, 0.10); }
+.buy-bar[hidden] { display: none; }
+.buy-bar-name { flex: 1; min-width: 0; font-weight: 600; font-size: 15px; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.buy-bar .btn { flex: none; }
+body.has-buy-bar { padding-bottom: 72px; }
+@media (min-width: 821px) { .buy-bar { display: none !important; } body.has-buy-bar { padding-bottom: 0; } }
 .pdp-thumbs { display: flex; gap: 12px; }
 .pdp-thumbs button {
   width: 76px;
@@ -934,6 +958,15 @@ h1, h2, h3, h4 {
 .help-body h3 { font-size: 19px; margin: 24px 0 8px; }
 .help-body h2 + h3 { margin-top: 6px; }
 .help-body a { color: var(--purr-berry); text-decoration: underline; text-underline-offset: 2px; }
+/* branded 404 (27/10, O9): the real Merlin photo in a circle, the way back below it */
+.notfound { padding-bottom: clamp(56px, 8vw, 96px); }
+.notfound-merlin {
+  width: 148px; height: 148px; border-radius: 50%; object-fit: cover;
+  margin: 0 auto 22px; border: 4px solid var(--cream-deep);
+}
+.notfound .notfound-actions { margin-top: 26px; }
+.about-hero .notfound-mail { margin-top: 22px; font-size: 15.5px; }
+.notfound-mail a { color: var(--purr-berry); text-decoration: underline; text-underline-offset: 2px; overflow-wrap: anywhere; }
 .about-art {
   border-radius: var(--radius-l);
   overflow: hidden;

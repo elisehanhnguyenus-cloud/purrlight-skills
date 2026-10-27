@@ -338,7 +338,7 @@ byExt(".html").forEach(function (f) {
   var tags = readText(f).replace(/<!--[\s\S]*?-->/g, "").match(/<base\b[^>]*>/gi) || [];
   if (rel(f) !== "404.html") { if (tags.length) fail(rel(f), "chỉ 404.html được có <base> (nó đổi đích của mọi link trong trang)"); return; }
   var bh = tags.length === 1 && /\shref="([^"]*)"/.exec(tags[0]);
-  if (!bh || bh[1] !== BASE_HREF) fail(rel(f), 'cần đúng một <base href="' + BASE_HREF + '"> — không có nó, trang 404 ở địa chỉ sâu như /purrlight-skills/a/b mất hết CSS, ảnh và link');
+  if (!bh || bh[1] !== BASE_HREF) fail(rel(f), 'cần đúng một <base href="' + BASE_HREF + '">' + (HAS_CNAME ? " (có CNAME: web ở tên miền riêng)" : "") + ' — không có nó, trang 404 ở địa chỉ sâu (vd. /a/b) mất hết CSS, ảnh và link');
 });
 byExt(".html").forEach(function (f) {
   var h = readText(f).replace(/<!--[\s\S]*?-->/g, "").replace(/<base\b[^>]*>/gi, "").replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, function (tag) { return tag.replace(/>[\s\S]*$/, ">"); });

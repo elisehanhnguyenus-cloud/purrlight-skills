@@ -320,6 +320,13 @@ function checkRef(file, ref) {
   try { clean = decodeURIComponent(clean); } catch (e) { fail(rel(file), 'đường dẫn có dấu "%" lạ: ' + ref + ' (dấu cách viết %20, dấu % viết %25)'); return; }
   if (!clean) return;
   refs++;
+  /* 404.html is served at any missing address and any depth, so it is the one page written from the site root */
+  if (rel(file) === "404.html") {
+    if (HAS_CNAME && clean.indexOf("/purrlight-skills/") === 0) { fail(rel(file), '"' + ref + '": có CNAME (web ở tên miền riêng) — bỏ "/purrlight-skills" khỏi mọi đường dẫn trong 404.html'); return; }
+    if (clean.indexOf(SITE_ROOT) !== 0) { fail(rel(file), '"' + ref + '" phải bắt đầu bằng "' + SITE_ROOT + '"' + (HAS_CNAME ? " (có CNAME: web ở tên miền riêng, bỏ /purrlight-skills)" : "") + " — trang này hiện ở mọi địa chỉ sai, kể cả /a/b/c, nên đường dẫn tương đối sẽ hỏng"); return; }
+    if (!has(clean.slice(SITE_ROOT.length) || "index.html")) fail(rel(file), "trỏ tới file không có: " + ref + " (tên file phải đúng cả chữ hoa/thường)");
+    return;
+  }
   if (clean.charAt(0) === "/" && !HAS_CNAME) { fail(rel(file), '"' + ref + '" bắt đầu bằng "/" — trên github.io/purrlight-skills/ link này hỏng; viết đường dẫn tương đối'); return; }
   var target = clean.charAt(0) === "/" ? clean.slice(1) : path.posix.join(path.posix.dirname(rel(file)), clean);
   if (!has(target)) fail(rel(file), "trỏ tới file không có: " + ref + " (tên file phải đúng cả chữ hoa/thường)");
@@ -331,17 +338,13 @@ function cssRefs(f, c) {
   while ((m = CSS_URL.exec(c))) checkRef(f, m[2]);
   while ((m = CSS_IMPORT.exec(c))) checkRef(f, m[2]);
 }
-/* <base> only on 404.html (GitHub Pages serves it at any missing address, any depth): there it must name the site
-   root, and its other links are checked as written from the root, which is where 404.html sits */
-var BASE_HREF = HAS_CNAME ? "/" : "/purrlight-skills/";
+/* no <base> anywhere: it changes where every link on the page goes (404.html writes its paths from the root instead) */
+var SITE_ROOT = HAS_CNAME ? "/" : "/purrlight-skills/";
 byExt(".html").forEach(function (f) {
-  var tags = readText(f).replace(/<!--[\s\S]*?-->/g, "").match(/<base\b[^>]*>/gi) || [];
-  if (rel(f) !== "404.html") { if (tags.length) fail(rel(f), "chỉ 404.html được có <base> (nó đổi đích của mọi link trong trang)"); return; }
-  var bh = tags.length === 1 && /\shref="([^"]*)"/.exec(tags[0]);
-  if (!bh || bh[1] !== BASE_HREF) fail(rel(f), 'cần đúng một <base href="' + BASE_HREF + '">' + (HAS_CNAME ? " (có CNAME: web ở tên miền riêng)" : "") + ' — không có nó, trang 404 ở địa chỉ sâu (vd. /a/b) mất hết CSS, ảnh và link');
+  if (/<base\b/i.test(readText(f).replace(/<!--[\s\S]*?-->/g, ""))) fail(rel(f), "có thẻ <base> — bỏ đi (nó đổi đích của mọi link trong trang)");
 });
 byExt(".html").forEach(function (f) {
-  var h = readText(f).replace(/<!--[\s\S]*?-->/g, "").replace(/<base\b[^>]*>/gi, "").replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, function (tag) { return tag.replace(/>[\s\S]*$/, ">"); });
+  var h = readText(f).replace(/<!--[\s\S]*?-->/g, "").replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, function (tag) { return tag.replace(/>[\s\S]*$/, ">"); });
   var m, attr = /\s(?:src|href|poster)\s*=\s*(["'])([\s\S]*?)\1/g, set = /\ssrcset\s*=\s*(["'])([\s\S]*?)\1/g;
   while ((m = attr.exec(h))) checkRef(f, m[2]);
   while ((m = set.exec(h))) m[2].split(",").forEach(function (part) { checkRef(f, part.trim().split(/\s+/)[0]); });
@@ -419,7 +422,7 @@ if (cat && cat.out.ETSY_SHOP_URL) byExt(".html").forEach(function (f) {
    page (refund terms, tax, deposit, shipping) — each [data-copy-of="id"] must equal that element word for word, and the
    FAQ JSON-LD must equal the visible questions (the seasonal Christmas one, .xmas-only, stays out of the JSON-LD) ---------- */
 if (has("custom-orders/index.html")) {
-  var coHtml = readText(path.join(ROOT, "custom-orders/index.html"));
+  var coHtml = readText(path.join(ROOT, "custom-orders/index.html")).replace(/<!--[\s\S]*?-->/g, "");
   var plain = function (h) { return decodeEnt(String(h || "").replace(/<[^>]+>/g, "")).replace(/\s+/g, " ").trim(); };
   var byId = function (id) {
     var m = new RegExp('<(\\w+)[^>]*\\sid="' + id + '"[^>]*>([\\s\\S]*?)</\\1>').exec(coHtml);
@@ -436,10 +439,21 @@ if (has("custom-orders/index.html")) {
   while ((pm2 = partRe.exec(coHtml))) {
     var whole = byId(pm2[2]);
     if (whole === null) fail("custom-orders/index.html", 'data-part-of="' + pm2[2] + '": không có phần tử id="' + pm2[2] + '"');
-    else if (whole.indexOf(plain(pm2[3])) === -1) fail("custom-orders/index.html", 'dòng cam kết cạnh nút ("' + plain(pm2[3]).slice(0, 40) + '…") không còn nằm trong "' + pm2[2] + '" — sửa cả hai cùng lúc');
+    else if (whole.toLowerCase().indexOf(plain(pm2[3]).toLowerCase()) === -1) fail("custom-orders/index.html", 'đoạn chép "' + plain(pm2[3]).slice(0, 40) + '…" không còn nằm trong "' + pm2[2] + '" — sửa cả hai cùng lúc');
   }
   var faqItems = [], fm, faqRe = /<details class="faq-item([^"]*)"[^>]*>\s*<summary>([\s\S]*?)<\/summary>\s*<p[^>]*>([\s\S]*?)<\/p>\s*<\/details>/g;
-  while ((fm = faqRe.exec(coHtml))) if (fm[1].indexOf("xmas-only") === -1) faqItems.push({ q: plain(fm[2]), a: plain(fm[3]) });
+  var GUARDED = /<(\w+)[^>]*\sdata-(?:copy|part)-of="[^"]+"[^>]*>[\s\S]*?<\/\1>/g;
+  while ((fm = faqRe.exec(coHtml))) {
+    /* every answer quotes the page: the whole <p> or parts of it marked data-copy-of / data-part-of, and the words in
+       between carry no numbers (times, rounds, prices, dates live only in the quoted parts, so they cannot go stale) */
+    var whole2 = /^<p[^>]*\sdata-copy-of=/.test(fm[0].slice(fm[0].indexOf("<p", fm[0].indexOf("</summary>"))));
+    var glue = whole2 ? "" : plain(fm[3].replace(GUARDED, " "));
+    if (!whole2 && !GUARDED.test(fm[3])) fail("custom-orders/index.html", 'câu hỏi đáp "' + plain(fm[2]) + '" không chép câu nào trên trang (cần data-copy-of hoặc data-part-of)');
+    else if (/\d/.test(glue)) fail("custom-orders/index.html", 'câu hỏi đáp "' + plain(fm[2]) + '" có con số ngoài phần chép ("' + glue.slice(0, 50) + '") — đưa nó vào phần chép từ trang');
+    GUARDED.lastIndex = 0;
+    if (fm[1].indexOf("xmas-only") === -1) faqItems.push({ q: plain(fm[2]), a: plain(fm[3]) });
+  }
+  if (/<section\b[^>]*\bid="faq"[^>]*\shidden\b/.test(coHtml) && /id="faq-ld"/.test(coHtml)) fail("custom-orders/index.html", "phần hỏi đáp đang ẩn (hidden) mà FAQ JSON-LD vẫn còn — ẩn thì bỏ cả JSON-LD");
   var ldm = /<script type="application\/ld\+json" id="faq-ld">([\s\S]*?)<\/script>/.exec(coHtml);
   if (faqItems.length || ldm) {
     var ld = null;

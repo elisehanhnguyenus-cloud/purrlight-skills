@@ -11,7 +11,8 @@
   <meta property="og:description" content="Handcrafted keepsakes made from your photos — crochet portrait dolls, pet memorials, digital watercolor art & gift boxes. Free U.S. shipping, or pickup at Pearland Town Center.">
   <!-- share card (Elise 17/10): Merlin from the hero photo, cut to 1200x630, him in the middle so a square crop keeps him.
        SEASONAL Christmas 2026 like the hero photo — swap it with the hero after the season. A new file name, so apps
-       don't keep the old cached card (og-custom-orders.jpg stays for links already shared). -->
+       don't keep the old cached card (og-custom-orders.jpg stays for links already shared). Since 27/10 the home page,
+       About, Partners and Shipping & returns share this card too — swap them together. -->
   <meta property="og:image" content="https://elisehanhnguyenus-cloud.github.io/purrlight-skills/assets/img/custom/og-custom-orders-merlin.jpg">
   <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1200">
@@ -43,7 +44,7 @@
       "name": "What photos do you need?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Face, full body, and any detail you want captured. For a pet: three photos of your pet — face and eye color, full body, markings and coat."
+        "text": "Face, full body, and any detail you want captured. For a crocheted pet: three photos of your pet — face and eye color, full body, markings and coat. For a watercolor painting: a photo of your pet or your home."
       }
     },
     {
@@ -59,7 +60,7 @@
       "name": "How long does it take?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Each piece shows its own timing in its box above — for example “Ships within 3 weeks” for crochet and “Ships within 5 days” for paintings."
+        "text": "Crochet — dolls, pets and saints made for you: made in 2–3 weeks (Fluffy yarn about 2 weeks more), then 2–3 weeks from our workshop to you — within 15 days in Pearland. Paintings: made in 3–5 days, then 3 days–1 week (2–3 days in Pearland). Housewarming boxes & calendars: made in 3–5 days, then 2–3 days in Pearland, or 3–6 days elsewhere in the U.S. Alaska & Hawaii: allow 7–8 days or more."
       }
     },
     {
@@ -308,7 +309,7 @@
             </fieldset>
             <fieldset class="step step-photos">
               <legend><span class="step-n" aria-hidden="true">5</span> <span class="step-label">Your photos</span></legend>
-              <ul class="photo-list"><li>Three photos of your pet</li><li>Face and eye color</li><li>Full body, markings and coat</li></ul>
+              <ul class="photo-list" id="pet-photos"><li>Three photos of your pet</li><li>Face and eye color</li><li>Full body, markings and coat</li></ul>
               <p class="step-hint photo-how" data-photo-how>Upload them in the order form. Photos won't attach? Email them to purrlightstudiollc@gmail.com.</p>
             </fieldset>
 
@@ -401,7 +402,7 @@
             </fieldset>
             <fieldset class="step step-photos">
               <legend><span class="step-n" aria-hidden="true">7</span> <span class="step-label">Your photos</span></legend>
-              <ul class="photo-list"><li>A photo of your pet or your home</li></ul>
+              <ul class="photo-list" id="wc-photos"><li>A photo of your pet or your home</li></ul>
               <p class="step-hint photo-how" data-photo-how>Upload them in the order form. Photos won't attach? Email them to purrlightstudiollc@gmail.com.</p>
             </fieldset>
           </form>
@@ -421,7 +422,7 @@
                 <li class="incl" data-when="format=digital">.png and .pdf files, at least 4×6 in</li>
                 <!-- Elise 21/10: a digital file is paid in full (with the rosary add-on too); a preview first, up to 5 rounds of edits (after that, priced as a new piece), and the files by email once the final is approved -->
                 <li class="incl" data-when="format=digital">Paid in full when you order</li>
-                <li class="incl" data-when="format=digital">A preview first, up to 5 rounds of edits (after that, priced as a new piece) · your files by email once you approve the final</li>
+                <li class="incl" id="wc-digital" data-when="format=digital">A preview first, up to 5 rounds of edits (after that, priced as a new piece) · your files by email once you approve the final</li>
               </ul>
               <div class="box-end">
                 <p><a class="btn btn-primary btn-block" data-order href="https://tally.so/r/M1KOkY">Place your order</a></p>
@@ -677,36 +678,40 @@
       <div class="wrap">
         <h2 id="how-h" class="section-title">How it works</h2>
         <ol class="steps">
-          <li><span class="step-num" aria-hidden="true">1</span><p><strong>Send your photos.</strong> Face, full body, and any detail you want captured.</p></li>
+          <li><span class="step-num" aria-hidden="true">1</span><p id="step-photos"><strong>Send your photos.</strong> Face, full body, and any detail you want captured.</p></li>
           <li><span class="step-num" aria-hidden="true">2</span><p id="step-deposit"><strong>Pay a 50% deposit.</strong> For every made-to-order or custom piece, we send you a design mockup before we start. Digital files are paid in full.</p></li>
           <li><span class="step-num" aria-hidden="true">3</span><p><strong>We make it.</strong> We let you know when your piece is in the works, and can send you a progress update after about a week.</p></li>
-          <li><span class="step-num" aria-hidden="true">4</span><p><strong>Approve &amp; receive.</strong> We send you a photo of the finished piece. Pay the balance, then it ships free in the U.S. — or pick it up at Pearland Town Center.</p></li>
+          <li><span class="step-num" aria-hidden="true">4</span><p id="step-approve"><strong>Approve &amp; receive.</strong> We send you a photo of the finished piece. Pay the balance, then it ships free in the U.S. — or pick it up at Pearland Town Center.</p></li>
         </ol>
       </div>
     </section>
 
-    <!-- Questions before you order (27/10, option O3): every answer is a sentence already on this page. Answers marked
-         data-copy-of="id" must match that element word for word, and the FAQ JSON-LD must match the visible questions
-         and answers — tools/check-site.js stops a deploy when they drift. The Christmas question hides with the season. -->
+    <!-- Questions before you order (27/10, option O3): the answers quote this page. A part marked data-copy-of="id" must
+         match that element word for word, data-part-of="id" must still be inside it, and the words in between carry no
+         numbers; the FAQ JSON-LD must match the visible questions and answers — tools/check-site.js stops a deploy when
+         any of them drift. The Christmas question hides with the season. -->
     <section class="faq" id="faq" aria-labelledby="faq-h">
       <div class="wrap">
         <h2 id="faq-h" class="section-title">Questions before you order</h2>
         <div class="faq-list">
           <details class="faq-item">
             <summary>What photos do you need?</summary>
-            <p>Face, full body, and any detail you want captured. For a pet: three photos of your pet — face and eye color, full body, markings and coat.</p>
+            <p><span data-part-of="step-photos">Face, full body, and any detail you want captured.</span> For a crocheted pet: <span data-part-of="pet-photos">three photos of your pet</span> — face and eye color, full body, markings and coat. For a watercolor painting: <span data-part-of="wc-photos">a photo of your pet or your home</span>.</p>
           </details>
           <details class="faq-item">
             <summary>Will I see it before it's finished?</summary>
-            <p>For every made-to-order or custom piece, we send you a design mockup before we start. We send you a photo of the finished piece. For a digital file: a preview first, up to 5 rounds of edits (after that, priced as a new piece).</p>
+            <p><span data-part-of="step-deposit">For every made-to-order or custom piece, we send you a design mockup before we start.</span> <span data-part-of="step-approve">We send you a photo of the finished piece.</span> For a digital file: <span data-part-of="wc-digital">a preview first, up to 5 rounds of edits (after that, priced as a new piece)</span>.</p>
           </details>
           <details class="faq-item">
             <summary>How long does it take?</summary>
-            <p>Each piece shows its own timing in its box above — for example “Ships within 3 weeks” for crochet and “Ships within 5 days” for paintings.</p>
+            <p><span data-copy-of="time-crochet"><strong>Crochet</strong> — dolls, pets and saints made for you: made in 2–3&nbsp;weeks (Fluffy yarn about 2&nbsp;weeks more), then 2–3&nbsp;weeks from our workshop to you — within 15&nbsp;days in Pearland.</span><br>
+              <span data-copy-of="time-paint"><strong>Paintings:</strong> made in 3–5&nbsp;days, then 3&nbsp;days–1&nbsp;week (2–3&nbsp;days in Pearland).</span><br>
+              <span data-copy-of="time-boxes"><strong>Housewarming boxes &amp; calendars:</strong> made in 3–5&nbsp;days, then 2–3&nbsp;days in Pearland, or 3–6&nbsp;days elsewhere in the U.S.</span><br>
+              <span data-copy-of="time-akhi"><strong>Alaska &amp; Hawaii:</strong> allow 7–8&nbsp;days or more.</span></p>
           </details>
           <details class="faq-item xmas-only" data-faq-season>
             <summary>Will it arrive by Christmas?</summary>
-            <p>See the order-by dates in <a href="#xmas-h">Ordering for Christmas?</a> below. Orders placed after these dates still ship, but may not arrive by Christmas.</p>
+            <p>See the order-by dates in <a href="#xmas-h">Ordering for Christmas?</a> below. <span data-copy-of="xmas-after">Orders placed after these dates still ship, but may not arrive by Christmas.</span></p>
           </details>
           <details class="faq-item">
             <summary>How do I pay?</summary>
@@ -807,18 +812,18 @@
           <div><dt>Crochet dolls &amp; custom crochet — order by</dt><dd><strong><time id="xmas-by-crochet" datetime="2026-11-08">Sun, Nov 8</time></strong></dd></div>
           <div><dt>Paintings, calendars &amp; housewarming boxes — order by</dt><dd><strong><time id="xmas-by-paint" datetime="2026-11-15">Sun, Nov 15</time></strong></dd></div>
         </dl>
-        <p class="xmas-after">Orders placed after these dates still ship, but may not arrive by Christmas.</p>
+        <p class="xmas-after" id="xmas-after">Orders placed after these dates still ship, but may not arrive by Christmas.</p>
         <!-- Timing: Elise 16/10 (13th and 14th messages); the box shows the same per piece (prices.js TIMING) -->
         <!-- Elise 17/10: the section stays short — the timing list opens with "See holiday timing" (each product's box
              also shows its own timing) -->
         <details class="xmas-times">
           <summary>See holiday timing</summary>
           <ul>
-            <li><strong>Crochet</strong> — dolls, pets and saints made for you: made in <span class="nw">2–3 weeks</span> (Fluffy yarn about 2&nbsp;weeks more), then <span class="nw">2–3 weeks</span> from our workshop to you — within <span class="nw">15 days</span> in Pearland.</li>
-            <li><strong>Paintings:</strong> made in <span class="nw">3–5 days</span>, then <span class="nw">3 days–1 week</span> (<span class="nw">2–3 days</span> in Pearland).</li>
-            <li><strong>Housewarming boxes &amp; calendars:</strong> made in <span class="nw">3–5 days</span>, then <span class="nw">2–3 days</span> in Pearland, or <span class="nw">3–6 days</span> elsewhere in the U.S.</li>
+            <li id="time-crochet"><strong>Crochet</strong> — dolls, pets and saints made for you: made in <span class="nw">2–3 weeks</span> (Fluffy yarn about 2&nbsp;weeks more), then <span class="nw">2–3 weeks</span> from our workshop to you — within <span class="nw">15 days</span> in Pearland.</li>
+            <li id="time-paint"><strong>Paintings:</strong> made in <span class="nw">3–5 days</span>, then <span class="nw">3 days–1 week</span> (<span class="nw">2–3 days</span> in Pearland).</li>
+            <li id="time-boxes"><strong>Housewarming boxes &amp; calendars:</strong> made in <span class="nw">3–5 days</span>, then <span class="nw">2–3 days</span> in Pearland, or <span class="nw">3–6 days</span> elsewhere in the U.S.</li>
             <li><strong>Ready to ship:</strong> the Christening gown set in <span class="nw">2–3 days</span>; a saint we have ready from <span class="nw">Nov 12</span>&nbsp;— <span class="nw">2 days</span> in Pearland, <span class="nw">3–7 days</span> elsewhere.</li>
-            <li><strong>Alaska &amp; Hawaii:</strong> allow <span class="nw">7–8 days</span> or more.</li>
+            <li id="time-akhi"><strong>Alaska &amp; Hawaii:</strong> allow <span class="nw">7–8 days</span> or more.</li>
           </ul>
         </details>
         <p class="xmas-note">Most pieces are made to order — order <span class="hand">early</span> to secure your spot.</p>

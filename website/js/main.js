@@ -374,9 +374,13 @@
       var syncBar = function () {
         buyBar.hidden = !phone.matches || buyInView;
         document.body.classList.toggle("has-buy-bar", !buyBar.hidden);
-        document.documentElement.classList.toggle("has-buy-bar", !buyBar.hidden);   /* scroll-padding: focus stays above it */
+        /* scroll-padding for the whole phone page, set before the bar shows: the Tab that scrolls the Buy button away
+           is worked out with it too */
+        document.documentElement.classList.toggle("has-buy-bar", phone.matches);
       };
-      new IntersectionObserver(function (en) { buyInView = en[0].isIntersecting; syncBar(); }).observe(buyBtn);
+      /* the button behind the sticky header counts as out of view */
+      var head = document.querySelector(".site-header"), headH = head ? Math.round(head.getBoundingClientRect().height) : 0;
+      new IntersectionObserver(function (en) { buyInView = en[0].isIntersecting; syncBar(); }, { rootMargin: "-" + headH + "px 0px 0px 0px" }).observe(buyBtn);
       if (phone.addEventListener) phone.addEventListener("change", syncBar); else if (phone.addListener) phone.addListener(syncBar);
     }
 
@@ -392,9 +396,11 @@
   }
 
   /* ---------- etsy / tiktok links (one constant each, in products.js) ---------- */
-  document.querySelectorAll("[data-etsy]").forEach(function (el) {
-    el.href = ETSY_SHOP_URL;
-  });
+  if (typeof ETSY_SHOP_URL !== "undefined") {   /* products.js may not have loaded: the written href stays */
+    document.querySelectorAll("[data-etsy]").forEach(function (el) {
+      el.href = ETSY_SHOP_URL;
+    });
+  }
   if (typeof TIKTOK_SHOP_URL !== "undefined") {
     document.querySelectorAll("[data-tiktok]").forEach(function (el) { el.href = TIKTOK_SHOP_URL; });
   }

@@ -318,9 +318,11 @@ function checkRef(file, ref) {
   if (!ref || /^[a-z][a-z0-9+.-]*:/i.test(ref) || /^(#|\/\/)/.test(ref) || /[{}+$]/.test(ref)) return;
   var clean = ref.split("#")[0].split("?")[0];
   try { clean = decodeURIComponent(clean); } catch (e) { fail(rel(file), 'đường dẫn có dấu "%" lạ: ' + ref + ' (dấu cách viết %20, dấu % viết %25)'); return; }
-  if (!clean) return;
+  /* 404.html is served at any missing address and any depth, so it is the one page written from the site root (a link
+     like "?cat=…" would stay on the missing address) */
+  if (rel(file) === "404.html" && clean + "/" === SITE_ROOT) clean = SITE_ROOT;
+  if (!clean && rel(file) !== "404.html") return;
   refs++;
-  /* 404.html is served at any missing address and any depth, so it is the one page written from the site root */
   if (rel(file) === "404.html") {
     if (HAS_CNAME && clean.indexOf("/purrlight-skills/") === 0) { fail(rel(file), '"' + ref + '": có CNAME (web ở tên miền riêng) — bỏ "/purrlight-skills" khỏi mọi đường dẫn trong 404.html'); return; }
     if (clean.indexOf(SITE_ROOT) !== 0) { fail(rel(file), '"' + ref + '" phải bắt đầu bằng "' + SITE_ROOT + '"' + (HAS_CNAME ? " (có CNAME: web ở tên miền riêng, bỏ /purrlight-skills)" : "") + " — trang này hiện ở mọi địa chỉ sai, kể cả /a/b/c, nên đường dẫn tương đối sẽ hỏng"); return; }
@@ -418,51 +420,85 @@ if (cat && cat.out.ETSY_SHOP_URL) byExt(".html").forEach(function (f) {
   }
 });
 
-/* ---------- Custom Orders "Questions before you order" (27/10): the answers repeat sentences that live elsewhere on the
-   page (refund terms, tax, deposit, shipping) — each [data-copy-of="id"] must equal that element word for word, and the
-   FAQ JSON-LD must equal the visible questions (the seasonal Christmas one, .xmas-only, stays out of the JSON-LD) ---------- */
+/* ---------- Custom Orders "Questions before you order" and the three assurances by the order button (27/10) quote the
+   page: [data-copy-of="id"] equals that element word for word; [data-part-of="id"] is a whole sentence, list item or
+   "·" part of it (so a new condition or number at the source cannot hide behind a substring); the words between the
+   quotes in an answer carry no numbers, in digits or words; the FAQ JSON-LD equals the visible questions and answers
+   (the seasonal Christmas one, .xmas-only, and any hidden item stay out of it) ---------- */
 if (has("custom-orders/index.html")) {
-  var coHtml = readText(path.join(ROOT, "custom-orders/index.html")).replace(/<!--[\s\S]*?-->/g, "");
-  var plain = function (h) { return decodeEnt(String(h || "").replace(/<[^>]+>/g, "")).replace(/\s+/g, " ").trim(); };
-  var byId = function (id) {
-    var m = new RegExp('<(\\w+)[^>]*\\sid="' + id + '"[^>]*>([\\s\\S]*?)</\\1>').exec(coHtml);
-    return m ? plain(m[2]) : null;
+  var CO = "custom-orders/index.html", BLOCK = "\u2029";
+  var coHtml = readText(path.join(ROOT, CO)).replace(/<!--[\s\S]*?-->/g, "");
+  /* text as read: tags out, entities decoded, spaces collapsed; a line break or the end of a paragraph, list item or
+     block is a boundary (BLOCK), which plain() reads as a space */
+  var textOf = function (h) {
+    return decodeEnt(String(h || "").replace(/<br\s*\/?>|<\/(?:p|li|div|dd|dt|ul|ol|h[1-6])>/gi, BLOCK).replace(/<[^>]+>/g, ""))
+      .replace(/[^\S\u2029]+/g, " ").replace(/ ?\u2029[ \u2029]*/g, BLOCK).replace(/^\u2029|\u2029$/g, "").trim();
   };
-  var cm2, copyRe = /<(\w+)[^>]*\sdata-copy-of="([^"]+)"[^>]*>([\s\S]*?)<\/\1>/g, copies = 0;
-  while ((cm2 = copyRe.exec(coHtml))) {
-    copies++;
-    var src = byId(cm2[2]);
-    if (src === null) fail("custom-orders/index.html", 'data-copy-of="' + cm2[2] + '": không có phần tử id="' + cm2[2] + '"');
-    else if (plain(cm2[3]) !== src) fail("custom-orders/index.html", 'câu hỏi đáp chép "' + cm2[2] + '" đã lệch với bản gốc trên trang — sửa cả hai cùng lúc');
-  }
-  var pm2, partRe = /<(\w+)[^>]*\sdata-part-of="([^"]+)"[^>]*>([\s\S]*?)<\/\1>/g;
-  while ((pm2 = partRe.exec(coHtml))) {
-    var whole = byId(pm2[2]);
-    if (whole === null) fail("custom-orders/index.html", 'data-part-of="' + pm2[2] + '": không có phần tử id="' + pm2[2] + '"');
-    else if (whole.toLowerCase().indexOf(plain(pm2[3]).toLowerCase()) === -1) fail("custom-orders/index.html", 'đoạn chép "' + plain(pm2[3]).slice(0, 40) + '…" không còn nằm trong "' + pm2[2] + '" — sửa cả hai cùng lúc');
-  }
-  var faqItems = [], fm, faqRe = /<details class="faq-item([^"]*)"[^>]*>\s*<summary>([\s\S]*?)<\/summary>\s*<p[^>]*>([\s\S]*?)<\/p>\s*<\/details>/g;
-  var GUARDED = /<(\w+)[^>]*\sdata-(?:copy|part)-of="[^"]+"[^>]*>[\s\S]*?<\/\1>/g;
-  while ((fm = faqRe.exec(coHtml))) {
-    /* every answer quotes the page: the whole <p> or parts of it marked data-copy-of / data-part-of, and the words in
-       between carry no numbers (times, rounds, prices, dates live only in the quoted parts, so they cannot go stale) */
-    var whole2 = /^<p[^>]*\sdata-copy-of=/.test(fm[0].slice(fm[0].indexOf("<p", fm[0].indexOf("</summary>"))));
-    var glue = whole2 ? "" : plain(fm[3].replace(GUARDED, " "));
-    if (!whole2 && !GUARDED.test(fm[3])) fail("custom-orders/index.html", 'câu hỏi đáp "' + plain(fm[2]) + '" không chép câu nào trên trang (cần data-copy-of hoặc data-part-of)');
-    else if (/\d/.test(glue)) fail("custom-orders/index.html", 'câu hỏi đáp "' + plain(fm[2]) + '" có con số ngoài phần chép ("' + glue.slice(0, 50) + '") — đưa nó vào phần chép từ trang');
-    GUARDED.lastIndex = 0;
-    if (fm[1].indexOf("xmas-only") === -1) faqItems.push({ q: plain(fm[2]), a: plain(fm[3]) });
-  }
-  if (/<section\b[^>]*\bid="faq"[^>]*\shidden\b/.test(coHtml) && /id="faq-ld"/.test(coHtml)) fail("custom-orders/index.html", "phần hỏi đáp đang ẩn (hidden) mà FAQ JSON-LD vẫn còn — ẩn thì bỏ cả JSON-LD");
-  var ldm = /<script type="application\/ld\+json" id="faq-ld">([\s\S]*?)<\/script>/.exec(coHtml);
-  if (faqItems.length || ldm) {
+  var plain = function (h) { return textOf(h).replace(/\u2029/g, " ").replace(/\s+/g, " ").trim(); };
+  /* every element whose opening tag matches attrRe, with its inner HTML up to the matching close tag (nesting counted,
+     so <span class="nw"> inside a quoted <span> is fine) */
+  var elementsWith = function (h, attrRe) {
+    var out = [], open = /<(\w+)\b([^>]*)>/g, m;
+    while ((m = open.exec(h))) {
+      if (!attrRe.test(m[2])) continue;
+      var tagRe = new RegExp("<(/?)" + m[1] + "\\b[^>]*>", "gi"), depth = 1, t = null, from = m.index + m[0].length;
+      tagRe.lastIndex = from;
+      while (depth && (t = tagRe.exec(h))) depth += t[1] ? -1 : 1;
+      out.push({ attrs: m[2], inner: h.slice(from, t ? t.index : h.length), start: m.index, end: t ? t.index + t[0].length : h.length });
+    }
+    return out;
+  };
+  var attrOf = function (attrs, name) { var m = new RegExp("\\s" + name + '="([^"]*)"').exec(attrs); return m ? m[1] : null; };
+  var byId = function (id) { var e = elementsWith(coHtml, new RegExp('\\sid="' + id.replace(/[^\w-]/g, "") + '"'))[0]; return e ? textOf(e.inner) : null; };
+  elementsWith(coHtml, /\sdata-copy-of="/).forEach(function (e) {
+    var id = attrOf(e.attrs, "data-copy-of"), src = byId(id);
+    if (src === null) fail(CO, 'data-copy-of="' + id + '": không có phần tử id="' + id + '"');
+    else if (plain(e.inner) !== src.replace(/\u2029/g, " ")) fail(CO, 'câu hỏi đáp chép "' + id + '" đã lệch với bản gốc trên trang — sửa cả hai cùng lúc');
+  });
+  elementsWith(coHtml, /\sdata-part-of="/).forEach(function (e) {
+    var id = attrOf(e.attrs, "data-part-of"), src = byId(id), q = plain(e.inner);
+    if (src === null) { fail(CO, 'data-part-of="' + id + '": không có phần tử id="' + id + '"'); return; }
+    var lo = src.toLowerCase(), lq = q.toLowerCase(), i = lo.indexOf(lq), whole = false, found = i > -1;
+    for (; i > -1 && !whole; i = lo.indexOf(lq, i + 1)) {
+      var before = src.slice(0, i), after = src.slice(i + q.length);
+      var startOk = !before || before.slice(-1) === BLOCK || /[.!?:·;]\s$/.test(before);
+      var endOk = !after || after.charAt(0) === BLOCK || /[.!?]$/.test(q) || /^[.!?]/.test(after) || /^\s[·;]/.test(after);
+      whole = startOk && endOk;
+    }
+    if (!found) fail(CO, 'đoạn chép "' + q.slice(0, 40) + '…" không còn nằm trong "' + id + '" — sửa cả hai cùng lúc');
+    else if (!whole) fail(CO, 'đoạn chép "' + q.slice(0, 40) + '…" chỉ còn là một phần câu trong "' + id + '" (bản gốc đã thêm chữ trước hoặc sau) — sửa cả hai cùng lúc');
+  });
+  var NUMS = /\d|\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|fifteen|twenty|thirty|forty|fifty|hundred|thousand|half|dozen|once|twice|first|second|third)\b/i;
+  var section = elementsWith(coHtml, /\sid="faq"/)[0], sectionHidden = !!section && /\shidden\b|display\s*:\s*none/i.test(section.attrs);
+  var faqItems = [], parsed = 0;
+  (section ? elementsWith(section.inner, /\sclass="[^"]*\bfaq-item\b/) : []).forEach(function (d) {
+    var sm = /<summary\b[^>]*>([\s\S]*?)<\/summary>/.exec(d.inner);
+    if (!sm) return;
+    parsed++;
+    var q = plain(sm[1]), rest = d.inner.slice(sm.index + sm[0].length), cut = rest, guards = elementsWith(rest, /\sdata-(?:copy|part)-of="/);
+    var whole = /^\s*<\w+\b[^>]*\sdata-copy-of="/.test(rest);
+    guards.sort(function (a, b) { return b.start - a.start; }).forEach(function (g, k, all) {
+      if (all.some(function (o) { return o !== g && o.start < g.start && o.end >= g.end; })) return;   /* inside another quote */
+      cut = cut.slice(0, g.start) + " " + cut.slice(g.end);
+    });
+    var glue = whole ? "" : plain(cut);
+    if (!whole && !guards.length) fail(CO, 'câu hỏi đáp "' + q + '" không chép câu nào trên trang (cần data-copy-of hoặc data-part-of)');
+    else if (NUMS.test(glue)) fail(CO, 'câu hỏi đáp "' + q + '" có con số ngoài phần chép ("' + glue.slice(0, 60) + '") — đưa nó vào phần chép từ trang');
+    if (!/xmas-only/.test(attrOf(d.attrs, "class")) && !/\shidden\b/.test(d.attrs)) faqItems.push({ q: q, a: plain(rest) });
+  });
+  var nClass = (coHtml.match(/\sclass="[^"]*\bfaq-item\b[^"]*"/g) || []).length;
+  if (nClass !== parsed) fail(CO, "có " + nClass + ' câu hỏi đáp (class "faq-item") nhưng chỉ đọc được ' + parsed + ' — viết theo mẫu <details class="faq-item"><summary>Câu hỏi</summary><p>Trả lời</p></details>, trong <section id="faq">');
+  var ldm = /<script\b(?=[^>]*\sid="faq-ld")[^>]*>([\s\S]*?)<\/script>/.exec(coHtml);
+  if (sectionHidden) { if (ldm) fail(CO, "phần hỏi đáp đang ẩn (hidden) mà FAQ JSON-LD vẫn còn — ẩn thì bỏ cả JSON-LD"); }
+  else if (faqItems.length && !ldm) fail(CO, 'thiếu FAQ JSON-LD (<script type="application/ld+json" id="faq-ld">) cho ' + faqItems.length + " câu hỏi đáp đang hiện");
+  else if (ldm) {
     var ld = null;
-    try { ld = ldm ? JSON.parse(ldm[1]) : null; } catch (e) { fail("custom-orders/index.html", "FAQ JSON-LD không đọc được: " + e.message); }
+    try { ld = JSON.parse(ldm[1]); } catch (e) { fail(CO, "FAQ JSON-LD không đọc được: " + e.message); }
     var ents = ld && ld.mainEntity ? ld.mainEntity : [];
-    if (ldm && ents.length !== faqItems.length) fail("custom-orders/index.html", "FAQ JSON-LD có " + ents.length + " câu, trang hiện " + faqItems.length + " câu");
-    faqItems.forEach(function (it, i) {
+    if (ld && ents.length !== faqItems.length) fail(CO, "FAQ JSON-LD có " + ents.length + " câu, trang hiện " + faqItems.length + " câu");
+    if (ld) faqItems.forEach(function (it, i) {
       var e = ents[i];
-      if (!e || e.name !== it.q || !e.acceptedAnswer || e.acceptedAnswer.text !== it.a) fail("custom-orders/index.html", 'FAQ JSON-LD câu ' + (i + 1) + ' ("' + it.q + '") ≠ chữ hiện trên trang');
+      if (!e || e.name !== it.q || !e.acceptedAnswer || e.acceptedAnswer.text !== it.a) fail(CO, 'FAQ JSON-LD câu ' + (i + 1) + ' ("' + it.q + '") ≠ chữ hiện trên trang');
     });
   }
 }

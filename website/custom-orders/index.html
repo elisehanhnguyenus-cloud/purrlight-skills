@@ -60,7 +60,7 @@
       "name": "How long does it take?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Crochet — dolls, pets and saints made for you: made in 2–3 weeks (Fluffy yarn about 2 weeks more), then 2–3 weeks from our workshop to you — within 15 days in Pearland. Paintings: made in 3–5 days, then 3 days–1 week (2–3 days in Pearland). Housewarming boxes & calendars: made in 3–5 days, then 2–3 days in Pearland, or 3–6 days elsewhere in the U.S. Alaska & Hawaii: allow 7–8 days or more."
+        "text": "Portrait dolls: Ships within 3 weeks. Pets: Ships within 3 weeks · Fluffy yarn: within 5 weeks. Godparent gift sets: Ships within 3 weeks. Watercolor paintings: Ships within 5 days · digital files sent within 5 days. Housewarming boxes: Ships within 5 days. Christening gown set: ready to ship in 2–3 days. Each piece's estimate also shows when it is delivered."
       }
     },
     {
@@ -207,7 +207,7 @@
               <li>Full doll accessories included — wings, flowers, outfit, fine embroidered details</li>
               <li>Display accessories &amp; U.S. shipping all included</li>
             </ul>
-            <p class="turnaround">Ships within 3 weeks</p>
+            <p class="turnaround" id="turn-doll">Ships within 3 weeks</p>
           </div>
           <form class="gift-steps" aria-label="Options — Custom Portrait Crochet Doll">
             <fieldset class="step">
@@ -257,7 +257,7 @@
             <h3 id="pet-h" class="gift-title">Custom Cat / Dog / Pet Crochet</h3>
             <p class="price">from $40</p>
             <p class="desc">Your pet, in yarn. Show us three photos and we hand-crochet a portrait of that exact pet — your markings, your eye color, your coat. A beautiful memorial or a gift they will keep forever.</p>
-            <p class="turnaround">Ships within 3 weeks · Fluffy yarn: within 5 weeks</p>
+            <p class="turnaround" id="turn-pet">Ships within 3 weeks · Fluffy yarn: within 5 weeks</p>
           </div>
           <form class="gift-steps" aria-label="Options — Custom Cat / Dog / Pet Crochet">
             <fieldset class="step">
@@ -354,7 +354,7 @@
             <p class="price">from $10</p>
             <p class="desc">A digital watercolor portrait of your pet or your home — a tender pet memorial, or a housewarming &amp; closing gift from your photos.</p>
             <p class="desc-note">Painted digitally on a tablet, not by hand — prints are made from that file.</p>
-            <p class="turnaround">Ships within 5 days · digital files sent within 5 days</p>
+            <p class="turnaround" id="turn-wc">Ships within 5 days · digital files sent within 5 days</p>
           </div>
           <form class="gift-steps" aria-label="Options — Custom Digital Watercolor Painting">
             <fieldset class="step">
@@ -437,7 +437,7 @@
             <h3 id="hw-h" class="gift-title">Housewarming &amp; Closing Gift Box</h3>
             <p class="price">$60</p>
             <p class="desc">A curated welcome-home box — perfect for new neighbors, friends, and realtor closing gifts.</p>
-            <p class="turnaround">Ships within 5 days</p>
+            <p class="turnaround" id="turn-house">Ships within 5 days</p>
           </div>
           <form class="gift-steps" aria-label="Options — Housewarming &amp; Closing Gift Box">
             <fieldset class="step">
@@ -519,7 +519,7 @@
             <h3 id="ch-h" class="gift-title">Christening &amp; Confirmation Gifts</h3>
             <p class="price">from $55</p>
             <p class="sale-line" data-sale-note="gown" hidden></p>
-            <p class="turnaround">Gown set: ready to ship in 2–3 days · Confirmation gift box: ready after Nov 12; a saint made for you takes 2–3 weeks</p>
+            <p class="turnaround" id="turn-christening">Gown set: ready to ship in 2–3 days · Confirmation gift box: ready after Nov 12; a saint made for you takes 2–3 weeks</p>
           </div>
           <form class="gift-steps" aria-label="Options — Christening &amp; Confirmation Gifts">
             <fieldset class="step">
@@ -581,7 +581,7 @@
             <h3 id="gp-h" class="gift-title">Godparent Gift Set</h3>
             <p class="price">$95</p>
             <p class="desc">A meaningful thank-you for godparents: a custom crochet portrait doll of them, paired with a handmade crochet rosary chain.</p>
-            <p class="turnaround">Ships within 3 weeks</p>
+            <p class="turnaround" id="turn-godparent">Ships within 3 weeks</p>
           </div>
           <form class="gift-steps" aria-label="Options — Godparent Gift Set">
             <fieldset class="step">
@@ -687,16 +687,18 @@
     </section>
 
     <!-- Questions before you order (27/10, option O3): the answers quote this page. A part marked data-copy-of="id" must
-         match that element word for word, data-part-of="id" must still be inside it, and the words in between carry no
-         numbers; the FAQ JSON-LD must match the visible questions and answers — tools/check-site.js stops a deploy when
-         any of them drift. The Christmas question hides with the season. -->
+         match that element word for word; data-part-of="id" must still be a whole sentence, list item or "·" part of it;
+         the words in between carry no numbers (in digits or words); the FAQ JSON-LD must match the visible questions and
+         answers — tools/check-site.js stops a deploy when any of them drift. Timing quotes the boxes' year-round
+         "Ships within" lines, not the holiday list. The Christmas question hides with the season (and stays out of the
+         JSON-LD). -->
     <section class="faq" id="faq" aria-labelledby="faq-h">
       <div class="wrap">
         <h2 id="faq-h" class="section-title">Questions before you order</h2>
         <div class="faq-list">
           <details class="faq-item">
             <summary>What photos do you need?</summary>
-            <p><span data-part-of="step-photos">Face, full body, and any detail you want captured.</span> For a crocheted pet: <span data-part-of="pet-photos">three photos of your pet</span> — face and eye color, full body, markings and coat. For a watercolor painting: <span data-part-of="wc-photos">a photo of your pet or your home</span>.</p>
+            <p><span data-part-of="step-photos">Face, full body, and any detail you want captured.</span> For a crocheted pet: <span data-part-of="pet-photos">three photos of your pet</span> — <span data-part-of="pet-photos">face and eye color</span>, <span data-part-of="pet-photos">full body, markings and coat</span>. For a watercolor painting: <span data-part-of="wc-photos">a photo of your pet or your home</span>.</p>
           </details>
           <details class="faq-item">
             <summary>Will I see it before it's finished?</summary>
@@ -704,10 +706,13 @@
           </details>
           <details class="faq-item">
             <summary>How long does it take?</summary>
-            <p><span data-copy-of="time-crochet"><strong>Crochet</strong> — dolls, pets and saints made for you: made in 2–3&nbsp;weeks (Fluffy yarn about 2&nbsp;weeks more), then 2–3&nbsp;weeks from our workshop to you — within 15&nbsp;days in Pearland.</span><br>
-              <span data-copy-of="time-paint"><strong>Paintings:</strong> made in 3–5&nbsp;days, then 3&nbsp;days–1&nbsp;week (2–3&nbsp;days in Pearland).</span><br>
-              <span data-copy-of="time-boxes"><strong>Housewarming boxes &amp; calendars:</strong> made in 3–5&nbsp;days, then 2–3&nbsp;days in Pearland, or 3–6&nbsp;days elsewhere in the U.S.</span><br>
-              <span data-copy-of="time-akhi"><strong>Alaska &amp; Hawaii:</strong> allow 7–8&nbsp;days or more.</span></p>
+            <p>Portrait dolls: <span data-copy-of="turn-doll">Ships within 3 weeks</span>.<br>
+              Pets: <span data-copy-of="turn-pet">Ships within 3 weeks · Fluffy yarn: within 5 weeks</span>.<br>
+              Godparent gift sets: <span data-copy-of="turn-godparent">Ships within 3 weeks</span>.<br>
+              Watercolor paintings: <span data-copy-of="turn-wc">Ships within 5 days · digital files sent within 5 days</span>.<br>
+              Housewarming boxes: <span data-copy-of="turn-house">Ships within 5 days</span>.<br>
+              Christening gown set: <span data-part-of="turn-christening">ready to ship in <span class="nw">2–3 days</span></span>.<br>
+              Each piece's estimate also shows when it is delivered.</p>
           </details>
           <details class="faq-item xmas-only" data-faq-season>
             <summary>Will it arrive by Christmas?</summary>
@@ -819,11 +824,11 @@
         <details class="xmas-times">
           <summary>See holiday timing</summary>
           <ul>
-            <li id="time-crochet"><strong>Crochet</strong> — dolls, pets and saints made for you: made in <span class="nw">2–3 weeks</span> (Fluffy yarn about 2&nbsp;weeks more), then <span class="nw">2–3 weeks</span> from our workshop to you — within <span class="nw">15 days</span> in Pearland.</li>
-            <li id="time-paint"><strong>Paintings:</strong> made in <span class="nw">3–5 days</span>, then <span class="nw">3 days–1 week</span> (<span class="nw">2–3 days</span> in Pearland).</li>
-            <li id="time-boxes"><strong>Housewarming boxes &amp; calendars:</strong> made in <span class="nw">3–5 days</span>, then <span class="nw">2–3 days</span> in Pearland, or <span class="nw">3–6 days</span> elsewhere in the U.S.</li>
+            <li><strong>Crochet</strong> — dolls, pets and saints made for you: made in <span class="nw">2–3 weeks</span> (Fluffy yarn about 2&nbsp;weeks more), then <span class="nw">2–3 weeks</span> from our workshop to you — within <span class="nw">15 days</span> in Pearland.</li>
+            <li><strong>Paintings:</strong> made in <span class="nw">3–5 days</span>, then <span class="nw">3 days–1 week</span> (<span class="nw">2–3 days</span> in Pearland).</li>
+            <li><strong>Housewarming boxes &amp; calendars:</strong> made in <span class="nw">3–5 days</span>, then <span class="nw">2–3 days</span> in Pearland, or <span class="nw">3–6 days</span> elsewhere in the U.S.</li>
             <li><strong>Ready to ship:</strong> the Christening gown set in <span class="nw">2–3 days</span>; a saint we have ready from <span class="nw">Nov 12</span>&nbsp;— <span class="nw">2 days</span> in Pearland, <span class="nw">3–7 days</span> elsewhere.</li>
-            <li id="time-akhi"><strong>Alaska &amp; Hawaii:</strong> allow <span class="nw">7–8 days</span> or more.</li>
+            <li><strong>Alaska &amp; Hawaii:</strong> allow <span class="nw">7–8 days</span> or more.</li>
           </ul>
         </details>
         <p class="xmas-note">Most pieces are made to order — order <span class="hand">early</span> to secure your spot.</p>

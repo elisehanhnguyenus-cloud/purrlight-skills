@@ -474,7 +474,8 @@ if (has("custom-orders/index.html")) {
       var before = src.slice(0, i), after = src.slice(i + q.length);
       /* a quote starts a sentence, a line or a "·" part, and ends one */
       var startOk = !before || before.slice(-1) === BLOCK || /[.!?]\s$/.test(before) || /\s·\s$/.test(before);
-      var endOk = !after || after.charAt(0) === BLOCK || /^\s·\s/.test(after) || (/[.!?]$/.test(q) && /^(?:\s+[A-Z“"'(]|\u2029)/.test(after));
+      var endOk = !after || after.charAt(0) === BLOCK || /^\s·\s/.test(after) || /^[.!?](?=\s|\u2029|$)/.test(after) ||
+        (/[.!?]$/.test(q) && /^(?:\s+[A-Z0-9$“"'(]|\u2029)/.test(after));   /* the sentence ends here (its full stop may sit outside the quote) */
       whole = startOk && endOk;
     }
     if (!found) fail(CO, 'đoạn chép "' + q.slice(0, 40) + '…" không còn nằm trong "' + id + '" — sửa cả hai cùng lúc');
@@ -510,7 +511,8 @@ if (has("custom-orders/index.html")) {
     if (ld && ents.length !== faqItems.length) fail(CO, "FAQ JSON-LD có " + ents.length + " câu, trang hiện " + faqItems.length + " câu");
     if (ld) faqItems.forEach(function (it, i) {
       var e = ents[i];
-      if (!e || e.name !== it.q || !e.acceptedAnswer || e.acceptedAnswer.text !== it.a) fail(CO, 'FAQ JSON-LD câu ' + (i + 1) + ' ("' + it.q + '") ≠ chữ hiện trên trang');
+      var ap = function (t) { return String(t == null ? "" : t).replace(/[‘’]/g, "'"); };   /* ’ and ' read the same on both sides */
+      if (!e || ap(e.name) !== it.q || !e.acceptedAnswer || ap(e.acceptedAnswer.text) !== it.a) fail(CO, 'FAQ JSON-LD câu ' + (i + 1) + ' ("' + it.q + '") ≠ chữ hiện trên trang');
     });
   }
 }

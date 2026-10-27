@@ -1426,8 +1426,9 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   lỗi hay hỏng thì shop chịu 100%) + link "Refund terms" tới điều khoản hoàn tiền.
 - **O3 — "Questions before you order":** 8 câu hỏi mở/đóng giữa "How it works" và phần trả cọc. Mọi câu trả lời
   chép câu có sẵn trên trang: 4 câu chép nguyên đoạn (trả tiền, hủy/hỏng, giao hàng, thuế); 4 câu ghép từ các dòng
-  có sẵn (ảnh cần gửi; mockup, ảnh món xong và 5 lần sửa file số; thời gian: dòng "Ships within…" của từng hộp món,
-  đúng quanh năm, + "Each piece's estimate also shows when it is delivered."; câu Giáng sinh, tự ẩn hết mùa). Bản cho
+  có sẵn (ảnh cần gửi; mockup, ảnh món xong và 5 lần sửa file số; thời gian: danh sách dòng "Ships within…" của từng
+  hộp món, đúng quanh năm, + "For crochet, paintings, calendars and boxes that ship, the estimate also shows when it
+  arrives." — em đã thử mọi lựa chọn, câu này đúng cả trong và ngoài mùa; câu Giáng sinh, tự ẩn hết mùa). Bản cho
   Google/AI (FAQ JSON-LD) có 7 câu.
 - **O5 — ảnh xem trước khi chia sẻ link:** thêm cho trang chủ, Shop, sản phẩm, About, Partners, Shipping & returns
   (trước chỉ Custom Orders có). Dùng 2 ảnh share đã có: ảnh Merlin mùa lễ (trang chủ, About, Partners, Shipping —
@@ -1442,7 +1443,7 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 - **O9 — trang 404 riêng:** ảnh Merlin thật trong khung tròn, "We couldn't find that page", 3 nút (Shop All, Start a
   Custom Order, Home) và email. Chạy đúng ở mọi địa chỉ sai, kể cả sâu nhiều tầng, cả khi tắt JavaScript. Chân
   trang Custom Orders thêm link "Shipping & returns"; khối cuối About thêm nút "Start a Custom Order".
-- **Soát 3 vòng** (chữ đúng sự thật, hiển thị + tiếp cận, lỗi JavaScript, SEO; vòng 2–3 kiểm lại chính các chỗ
+- **Soát 4 vòng** (chữ đúng sự thật, hiển thị + tiếp cận, lỗi JavaScript, SEO; vòng 2–4 kiểm lại chính các chỗ
   sửa), mỗi lỗi có người phản biện chạy lại. Đáng kể đã sửa: trang lỗi/không tìm thấy vẫn hiện nút Buy và dòng "differ
   from the pictures"; thanh Buy đè lên menu, che ô đang chọn bằng phím Tab, và không hiện khi nút Buy nằm sau thanh
   menu dính; câu "How long does it take?" lúc đầu chỉ nói thời gian gửi, bản sửa lần 1 lại chép danh sách mùa lễ (sai
@@ -1450,7 +1451,7 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 - **`check-site` chặn deploy thêm khi:** câu hỏi đáp hay dòng cam kết lệch câu gốc, có con số gõ ngoài phần chép,
   FAQ JSON-LD lệch hoặc còn sót khi ẩn phần hỏi đáp, có thẻ `<base>`, hay đường dẫn trong `404.html` không bắt đầu
   bằng `/purrlight-skills/`. Chép một phần câu thì phải là trọn câu / trọn dòng (bản gốc thêm chữ "Two or…" là bị
-  bắt). Bộ thử lỗi cố ý: 106/106 qua; 16 bộ test đều qua.
+  bắt). Bộ thử lỗi cố ý: 125/125 qua (gồm cả các sửa hợp lệ phải được cho qua); 16 bộ test đều qua.
 
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
@@ -1512,6 +1513,9 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
     - Ảnh share link: ảnh Merlin mùa lễ cho trang chủ, About, Partners, Shipping (hết mùa phải thay) hay chị chọn một
       ảnh thật quanh năm; ảnh ghép búp bê cho Shop và trang sản phẩm.
     - Số "4.9" và huy hiệu Star Seller: kiểm lại trên Etsy trước mỗi lần đưa lên.
+    - Dòng thời gian của hộp Christening & Confirmation ghi "ready after Nov 12" không có năm (có từ trước, nay câu hỏi
+      đáp chép lại): sau 12/11 nên đổi thành câu không có ngày, hoặc thêm năm. Hộp lịch (calendar) chưa có dòng "Ships
+      within…" như các hộp khác — chị muốn ghi gì thì em thêm, câu hỏi đáp sẽ tự có dòng đó.
 
 ## 9. Link & tài nguyên
 

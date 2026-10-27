@@ -1398,6 +1398,21 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   yếu tự bớt sợi. Chờ chị: thích hướng này không, duyệt lời Merlin, ảnh Merlin khác (hiện chỉ có ảnh Giáng sinh),
   tiêu đề trang.
 
+### Elise 27/10 — soát repo elayadesign/ai-design-skills, phương án cải thiện web
+- Chị gửi https://github.com/elayadesign/ai-design-skills: "xỉa nó… đưa ra các phương án để cải thiện website", và
+  "cứ tải hết về, bây giờ chưa cần nhưng sau sẽ cần".
+- **Repo:** 2 skill viết bằng chữ (`landing-page-design`, `design-to-motion`), MIT, không có code. Em tải luôn repo anh
+  em `redesign-skill` (`redesign-existing-projects`) mà nó giới thiệu cho web có sẵn.
+- **Đã tải về, để ngủ:** bản chép nguyên văn ghim commit trong `.claude/vendor/` (đổi tên `SKILL.md` →
+  `SKILL.upstream.md`), nên Claude không tự dùng. Lý do: cả ba tự bật cho mọi việc làm web và đè luật nhà (một font,
+  bỏ chữ nghiêng, bỏ gradient, nút viết kiểu câu, bịa tên khách và số liệu, ảnh picsum). Muốn dùng thì làm skill bọc
+  ngoài, chỉ chạy khi gọi tên, theo cách ngày 22/10.
+- **Kết quả soát và 15 phương án:** `docs/ELAYA-SKILLS-REVIEW-2026-10-27.md`. Phần đáng giá nhất là khung landing
+  page (phần A) và danh sách việc trước khi lên web (B10). Soát web theo đó ra lỗ hổng thật: dòng "Etsy Star Seller"
+  chỉ có ở cuối trang Custom Orders; trang sản phẩm hiện "$0" và "Product name" khi đang tải; chưa có trang 404 riêng;
+  6/8 trang không có ảnh xem trước khi chia sẻ link; Shop trống khi tắt JavaScript; chưa có trang privacy, sitemap;
+  nút "Buy on Etsy" nằm dưới màn hình đầu trên điện thoại.
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
@@ -1444,6 +1459,9 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
     (dòng chapter one, đưa Merlin lại, "epilogue · your chapter", câu chuyện chương five, thuế, tracking, mạng xã hội,
     ảnh Bennet & Darcy, giấy dó).
 18. **Trang About — Merlin tự kể:** xem 2 video bản xem thử, cho em biết hướng, lời Merlin, ảnh Merlin khác.
+19. **Phương án cải thiện web (27/10):** chọn phương án nào làm trước trong `docs/ELAYA-SKILLS-REVIEW-2026-10-27.md`
+    (em đề xuất O1, O2, O3, O5, O6, O15, O9) và trả lời phần "Chị cần" của từng phương án đã chọn (ảnh xem trước, ô ẩn
+    utm trong form Tally, Search Console, dữ kiện trang privacy, đánh giá thật và cặp ảnh khách → món).
 
 ## 9. Link & tài nguyên
 

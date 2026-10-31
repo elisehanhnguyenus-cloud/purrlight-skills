@@ -1,0 +1,171 @@
+/* Purrlight Studio — the welcome door on the home page (js/intro.js). Only used while html.pl-intro is set, so
+   without JavaScript, with reduced motion and on later visits none of this applies. */
+
+html.pl-intro { overflow: hidden; }
+/* a cream curtain for the instant before the door is built, so the page never flashes first */
+html.pl-intro:not(.pl-built) body::before { content: ""; position: fixed; inset: 0; z-index: 2147482999; background: #FBF6EE; }
+/* the page waits a little smaller behind the door, then comes forward as we step through */
+html.pl-intro body > :not(.pl-intro-overlay):not(script) { transform: scale(0.94); transform-origin: 50% 35vh; }
+html.pl-intro.pl-reveal body > :not(.pl-intro-overlay):not(script) { transform: none; transition: transform 1.3s cubic-bezier(0.2, 0.7, 0.2, 1); }
+
+.pl-intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(60% 45% at 50% 62%, rgba(232, 168, 124, 0.30) 0%, rgba(232, 168, 124, 0) 100%),
+    #FBF6EE;
+  outline: none;
+}
+.pl-stitches { position: absolute; inset: 0; width: 100%; height: 100%; transition: opacity 0.6s ease; }
+
+.pl-intro-card {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  padding: 28px 30px 8px;
+  text-align: center;
+  /* a soft cream halo, so the stitches fade under the words */
+  background: radial-gradient(closest-side, rgba(251, 246, 238, 0.96) 55%, rgba(251, 246, 238, 0.7) 78%, rgba(251, 246, 238, 0) 100%);
+  transition: opacity 0.5s ease;
+}
+.pl-intro-logo { width: min(250px, 62vw); height: auto; }
+.pl-intro-line {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: clamp(27px, 7.4vw, 38px);
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.pl-intro-line em { font-style: normal; color: var(--purr-berry); }
+.pl-intro-hand { font-family: 'Caveat', cursive; font-size: 23px; color: var(--accent-text); margin-top: -4px; }
+
+/* the arched door */
+.pl-door {
+  --arch: 84px;
+  position: relative;
+  width: 168px;
+  height: 224px;
+  margin-top: 14px;
+  padding: 0;
+  border: 1.5px solid #C98A5E;
+  border-bottom: 0;
+  border-radius: var(--arch) var(--arch) 0 0;
+  background: transparent;
+  cursor: pointer;
+  perspective: 700px;
+  color: var(--ink);
+  font: inherit;
+}
+.pl-door::after {   /* the warm sill light */
+  content: "";
+  position: absolute;
+  left: -36px; right: -36px; bottom: -14px;
+  height: 28px;
+  border-top: 1.5px solid #C98A5E;
+  background: radial-gradient(50% 100% at 50% 0%, rgba(232, 168, 124, 0.55), rgba(232, 168, 124, 0));
+  pointer-events: none;
+}
+.pl-door-light {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: calc(var(--arch) - 2px) calc(var(--arch) - 2px) 0 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 10px;
+  background: radial-gradient(70% 60% at 50% 55%, #FFF3E2 0%, #F6DCC4 55%, #E8A87C 100%);
+}
+.pl-door-light img {
+  width: 92px; height: 92px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #FFFDF9;
+  box-shadow: 0 6px 18px rgba(122, 96, 68, 0.22);
+  opacity: 0;
+  transform: scale(0.72);
+  transition: opacity 0.55s ease 0.35s, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.35s;
+}
+.pl-door-chapter {
+  font-size: 12px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent-text);
+  opacity: 0; transition: opacity 0.5s ease 0.6s;
+}
+.pl-door-leaf {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 50%;
+  background: linear-gradient(180deg, #FFFDF9 0%, #FBF1E4 70%, #F6DCC4 100%);
+  transition: transform 0.95s cubic-bezier(0.6, 0.04, 0.3, 1);
+  backface-visibility: hidden;
+}
+.pl-door-l { left: 0; border-radius: calc(var(--arch) - 2px) 0 0 0; transform-origin: left center; box-shadow: inset -1px 0 0 rgba(201, 138, 94, 0.55); }
+.pl-door-r { right: 0; border-radius: 0 calc(var(--arch) - 2px) 0 0; transform-origin: right center; box-shadow: inset 1px 0 0 rgba(201, 138, 94, 0.55); }
+.pl-door-l::after, .pl-door-r::after {   /* two small knobs */
+  content: ""; position: absolute; top: 58%; width: 5px; height: 5px; border-radius: 50%; background: #C98A5E;
+}
+.pl-door-l::after { right: 8px; }
+.pl-door-r::after { left: 8px; }
+.pl-door-label {
+  position: absolute;
+  left: 0; right: 0; bottom: 26px;
+  z-index: 2;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition: opacity 0.3s ease;
+}
+.pl-door:focus-visible { outline: 3px solid var(--ink); outline-offset: 6px; }
+@media (hover: hover) and (pointer: fine) {
+  .pl-door:hover .pl-door-l { transform: rotateY(-14deg); }
+  .pl-door:hover .pl-door-r { transform: rotateY(14deg); }
+}
+
+.pl-skip {
+  position: absolute;
+  top: max(14px, env(safe-area-inset-top, 0px));
+  right: 14px;
+  z-index: 3;
+  min-height: 44px;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 253, 249, 0.85);
+  color: var(--ink-soft);
+  font: 600 14px var(--font-body);
+  cursor: pointer;
+}
+.pl-skip:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+
+/* open: the leaves swing back onto the real Merlin */
+.pl-intro-overlay.is-open .pl-door-l { transform: rotateY(-108deg); }
+.pl-intro-overlay.is-open .pl-door-r { transform: rotateY(108deg); }
+.pl-intro-overlay.is-open .pl-door-label { opacity: 0; }
+.pl-intro-overlay.is-open .pl-door-light img { opacity: 1; transform: none; }
+.pl-intro-overlay.is-open .pl-door-chapter { opacity: 1; }
+.pl-intro-overlay.is-open .pl-door { cursor: default; }
+
+/* through: the words go, Merlin steps aside, and the doorway grows until its warm light fills the screen */
+.pl-intro-overlay.is-through .pl-stitches,
+.pl-intro-overlay.is-through .pl-skip,
+.pl-intro-overlay.is-through .pl-intro-logo,
+.pl-intro-overlay.is-through .pl-intro-line,
+.pl-intro-overlay.is-through .pl-intro-hand,
+.pl-intro-overlay.is-through .pl-door::after,
+.pl-intro-overlay.is-through .pl-door-light img,
+.pl-intro-overlay.is-through .pl-door-chapter { opacity: 0; transition: opacity 0.28s ease; }
+.pl-intro-overlay.is-through .pl-intro-card { background: none; }
+.pl-intro-overlay.is-through .pl-door { transform: scale(9); border-color: transparent; transition: transform 0.8s cubic-bezier(0.55, 0, 0.3, 1), border-color 0.3s ease; }
+/* gone: the light lifts off the page */
+.pl-intro-overlay.is-gone { opacity: 0; pointer-events: none; transition: opacity 0.65s ease; }
+
+@media (min-width: 900px) {
+  .pl-intro-logo { width: 280px; }
+  .pl-door { width: 184px; height: 244px; --arch: 92px; }
+}

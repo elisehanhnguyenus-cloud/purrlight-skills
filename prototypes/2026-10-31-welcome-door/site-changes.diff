@@ -1,0 +1,81 @@
+--- a/website/index.html	2026-10-31 03:53:26.206853812 +0000
++++ b/website/index.html	2026-10-31 23:33:52.221728434 +0000
+@@ -30,6 +30,9 @@
+   <link rel="icon" type="image/png" sizes="64x64" href="assets/brand/favicon-64.png">
+   <link rel="stylesheet" href="css/fonts.css">
+   <link rel="stylesheet" href="css/style.css">
++  <!-- the welcome door (31/10 preview): once per visit, home page only, skipped for reduced motion — js/intro.js -->
++  <link rel="stylesheet" href="css/intro.css">
++  <script src="js/intro.js"></script>
+   <noscript><style>/* no JavaScript: the parts that fade in are simply there, and the nav links sit in place instead of a dead menu button */.reveal{opacity:1!important;transform:none!important}.nav-toggle,.nav-close{display:none!important}.main-nav{position:static!important;visibility:visible!important;transform:none!important;padding:0!important}.main-nav ul{flex-direction:row!important;flex-wrap:wrap;gap:4px 14px!important}.main-nav a{font-family:inherit!important;font-size:15px!important;border-bottom:0!important;padding:4px 0!important}@media (max-width:1199px){.site-header{position:static!important}}</style></noscript>
+ </head>
+ <body>
+@@ -74,7 +77,7 @@
+       <div class="wrap hero-inner">
+         <div class="hero-copy">
+           <p class="hero-eyebrow"><span class="hero-chapter">✦ chapter one ·</span> sketched by Merlin, stitched by us</p>
+-          <h1 id="hero-h">Heirloom crochet dolls &amp; keepsakes.</h1>
++          <h1 id="hero-h">Heirloom crochet dolls &amp; <em>keepsakes.</em></h1>
+           <p class="hero-sub">Designed in Texas, hand-stitched in small batches by our family of artisans in Vietnam.</p>
+           <div class="hero-actions">
+             <a class="btn btn-glow btn-compact" href="shop.html">Shop the Collection</a>
+--- a/website/css/style.css	2026-10-31 04:00:07.635104713 +0000
++++ b/website/css/style.css	2026-10-31 23:33:52.224573105 +0000
+@@ -236,7 +236,7 @@
+   transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+ }
+ @media (hover: hover) and (pointer: fine) { .btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-soft); } }
+-.btn:active { transform: translateY(0); }
++.btn:active { transform: translateY(0) scale(0.98); }
+ 
+ .btn-primary { background: var(--ink); color: var(--cream); }
+ .btn-primary:hover { background: #362f29; }
+@@ -299,7 +299,8 @@
+   margin-bottom: 16px;
+   text-wrap: balance;
+ }
+-.hero h1 em { font-style: italic; font-weight: 400; color: #F6DCC4; }
++/* two-tone headline (31/10, from kenailapp.com): the last words in a second colour; Fraunces has no italic here */
++.hero h1 em { font-style: normal; color: #F6DCC4; }
+ 
+ .hero-sub {
+   font-size: clamp(16px, 1.25vw, 18px);
+@@ -376,6 +377,7 @@
+   .hero-inner { padding-block: 14px 30px; }
+   .hero-eyebrow { color: var(--accent-text); margin-bottom: 10px; }
+   .hero h1 { color: var(--ink); margin-bottom: 10px; }
++  .hero h1 em { color: var(--purr-berry); }
+   .hero-sub { color: var(--ink-soft); margin-bottom: 18px; }
+   .hero .btn-ghost { color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); }
+   .hero .btn-ghost:hover { background: var(--card); }
+@@ -1446,3 +1448,14 @@
+   border-radius: 0 0 var(--radius-s) 0;
+ }
+ .skip-link:focus { left: 0; }
++
++/* ---------- page to page (31/10 preview): one soft cross-fade between pages, the header staying put, in browsers that
++   support cross-document view transitions (others simply load the next page). Off with reduced motion. ---------- */
++@media (prefers-reduced-motion: no-preference) {
++  @view-transition { navigation: auto; }
++  ::view-transition-old(root) { animation: pl-page-out 0.18s ease-in both; }
++  ::view-transition-new(root) { animation: pl-page-in 0.34s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
++  .site-header { view-transition-name: site-header; }
++}
++@keyframes pl-page-out { to { opacity: 0; } }
++@keyframes pl-page-in { from { opacity: 0; transform: translateY(10px); } }
+--- a/website/custom-orders/custom-orders.css	2026-10-31 03:53:26.205639967 +0000
++++ b/website/custom-orders/custom-orders.css	2026-10-31 23:33:52.225726792 +0000
+@@ -972,3 +972,13 @@
+   .tl-n { font-size: 13.5px; }
+   .tl-text { font-size: 13px; line-height: 1.4; margin-top: 0; }
+ }
++
++/* page to page (31/10 preview): the same soft cross-fade as css/style.css */
++@media (prefers-reduced-motion: no-preference) {
++  @view-transition { navigation: auto; }
++  ::view-transition-old(root) { animation: pl-page-out 0.18s ease-in both; }
++  ::view-transition-new(root) { animation: pl-page-in 0.34s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
++  .site-header { view-transition-name: site-header; }
++}
++@keyframes pl-page-out { to { opacity: 0; } }
++@keyframes pl-page-in { from { opacity: 0; transform: translateY(10px); } }

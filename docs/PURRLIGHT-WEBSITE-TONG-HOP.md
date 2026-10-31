@@ -1465,6 +1465,16 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 - Tóm tắt cho chị: `docs/PLATFORM-DECISION-2026-10-27.md`; nghiên cứu đầy đủ có nguồn:
   `docs/PLATFORM-RESEARCH-2026-10-27.md`.
 
+### Elise 31/10 — đầu trang chủ trên điện thoại "vẫn quá dài và khối text che mờ ảnh" (chưa lên web)
+- **Điện thoại và máy tính bảng (dưới 900 px):** bỏ lớp nâu phủ ảnh. Ảnh đứng trên, thấp lại (điện thoại 3:2, máy
+  tính bảng 16:9), rõ màu, chân ảnh tan nhẹ vào nền kem; chữ và 2 nút nằm dưới trên nền kem, màu chữ như phần còn lại
+  của web. Merlin nhỏ lại ở góc trên, không che đầu các bé mèo; nhãn "the real Merlin" không còn tràn mép. Đo ở cỡ
+  điện thoại của chị (khoảng 410 × 720 px nhìn thấy): cả ảnh, chữ và 2 nút (nằm cùng một hàng) vừa màn hình đầu.
+  Ở 360 px hàng nút xuống 2 dòng.
+- **Máy tính (từ 900 px):** chưa đổi (kiểu Mycora chị chọn 25/10). Bản xem thử có thêm kiểu B để chị so: chữ bên trái
+  trên nền kem, ảnh bên phải không phủ, mép ảnh tan vào nền — đúng ý "1 hình ảnh và 1 đoạn mô tả ngay bên cạnh" ngày
+  25/10. Chị chọn A (giữ) hay B.
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
@@ -1531,6 +1541,8 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 21. **Nền tảng (27/10):** trả lời 7 câu cuối `docs/PLATFORM-DECISION-2026-10-27.md` (dashboard chị muốn làm gì, 2–3 sàn
     năm 2027, hàng để ở Pearland hay gửi từ Việt Nam, món độc nhất hay làm lại, tên miền + Cloudflare trước ~5/11
     hay tháng 1, booth nhận thẻ bằng gì, ngân sách).
+22. **Đầu trang chủ trên máy tính (31/10):** giữ kiểu A (chữ trắng trên ảnh phủ nâu) hay đổi sang kiểu B (chữ bên trái
+    trên nền kem, ảnh bên phải rõ màu) — xem trong bản xem thử.
 
 ## 9. Link & tài nguyên
 

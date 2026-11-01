@@ -1,0 +1,808 @@
+/* PREVIEW 01/11 — Direction 3, "Merlin's house" (js/c-house.js builds everything; never shipped).
+   The scene is drawn in units: the facade is 360 x 800, scaled to the screen by the script (scale3d), so every length
+   below is a design unit. Depth: +z comes out of the wall towards the street, -z goes into the rooms. Only leaves carry
+   opacity (a parent with preserve-3d never does, or it would flatten). */
+
+/* ================================================================================================================
+   1. While the welcome runs (html.c-house-intro, home page only)
+   ================================================================================================================ */
+html.c-house-intro { overflow: hidden; }
+html.c-house-intro:not(.c-house-built) body::before { content: ""; position: fixed; inset: 0; z-index: 2147482999; background: #1E1B2B; }
+html.c-house-intro body > :not(.c-house-ov):not(script) { transform: scale(0.94); transform-origin: 50% 35vh; }
+html.c-house-intro.c-house-built:not(.c-house-reveal) body > :not(.c-house-ov):not(script) { visibility: hidden; }
+html.c-house-intro.c-house-reveal body > :not(.c-house-ov):not(script) { transform: none; transition: transform 0.62s cubic-bezier(0.2, 0.7, 0.2, 1); }
+
+.c-house-ov {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  overflow: hidden;
+  background: #1E1B2B;
+  outline: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  font-family: 'Figtree', -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+}
+.c-house-ov * { box-sizing: border-box; }
+.c-house-ov i, .c-house-ov span { display: block; font-style: normal; }
+.c-house-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+/* ---------- the dusk sky ---------- */
+.c-house-sky {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #181626 0%, #262238 26%, #3F3753 50%, #6B5466 70%, #A9716F 86%, #CF8E74 100%);
+}
+.c-house-stars {
+  position: absolute;
+  inset: 0 0 45% 0;
+  background:
+    radial-gradient(1.2px 1.2px at 12% 18%, rgba(255, 246, 225, 0.85), transparent),
+    radial-gradient(1px 1px at 27% 8%, rgba(255, 246, 225, 0.7), transparent),
+    radial-gradient(1.3px 1.3px at 41% 26%, rgba(255, 246, 225, 0.6), transparent),
+    radial-gradient(1px 1px at 63% 12%, rgba(255, 246, 225, 0.75), transparent),
+    radial-gradient(1.2px 1.2px at 78% 30%, rgba(255, 246, 225, 0.55), transparent),
+    radial-gradient(1px 1px at 88% 6%, rgba(255, 246, 225, 0.8), transparent),
+    radial-gradient(1px 1px at 6% 40%, rgba(255, 246, 225, 0.5), transparent),
+    radial-gradient(1.1px 1.1px at 94% 44%, rgba(255, 246, 225, 0.5), transparent),
+    radial-gradient(1px 1px at 52% 4%, rgba(255, 246, 225, 0.6), transparent);
+}
+.c-house-moon {
+  position: absolute;
+  left: 17%;
+  top: 1.6%;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 36%, #FFF8E6 0%, #F3E2BC 60%, #D9C29A 100%);
+  box-shadow: 0 0 22px 6px rgba(246, 226, 188, 0.18), 0 0 70px 26px rgba(246, 226, 188, 0.08);
+}
+.c-house-haze {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 42%;
+  background: radial-gradient(70% 80% at 50% 100%, rgba(240, 168, 120, 0.35), rgba(240, 168, 120, 0));
+}
+
+/* ---------- the camera ---------- */
+.c-house-cam { position: absolute; inset: 0; overflow: hidden; }
+.c-house-world {
+  position: absolute;
+  width: 360px;
+  height: 800px;
+  transform-origin: 180px 0 0;
+  transform-style: preserve-3d;
+  will-change: transform;   /* rasterised once at this scale: the zoom stays smooth (a little soft at the very end) */
+}
+.c-house-ov.is-on .c-house-world { transition: transform 2.8s cubic-bezier(0.25, 0.6, 0.25, 1); }
+.c-house-ov.is-settled .c-house-world { transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.c-house-world i, .c-house-world span, .c-house-world div, .c-house-world svg, .c-house-world img { position: absolute; }
+.c-house-world svg { overflow: visible; }
+.c-house-facade, .c-house-door, .c-house-awning { transform-style: preserve-3d; }
+.c-house-facade, .c-house-flat { left: 0; top: 0; width: 360px; height: 800px; }
+.c-house-flat { transform-style: flat; }
+/* each plane keeps the raster it was first drawn at while the camera moves (no re-raster mid-zoom, no missing tiles) */
+.c-house-flat, .c-house-street, .c-house-nb, .c-house-balc, .c-house-awning, .c-house-door > i, .c-house-door > span, .c-house-lantern, .c-house-pot, .c-house-lamp { will-change: transform; }
+
+/* ---------- the neighbours, faintly ---------- */
+.c-house-nb {
+  transform: translateZ(-30px);
+  -webkit-mask-image: linear-gradient(var(--c-house-nbdir, 90deg), rgba(0, 0, 0, 0.15), #000 70%);
+  mask-image: linear-gradient(var(--c-house-nbdir, 90deg), rgba(0, 0, 0, 0.15), #000 70%);
+}
+.c-house-nb-l {
+  left: -300px; top: 196px; width: 300px; height: 640px;
+  background:
+    linear-gradient(180deg, rgba(20, 18, 38, 0.55), rgba(20, 18, 38, 0.32) 60%, rgba(20, 18, 38, 0.5)),
+    linear-gradient(180deg, #4C5466, #3F4757);
+}
+.c-house-nb-r {
+  --c-house-nbdir: 270deg;
+  left: 360px; top: 112px; width: 300px; height: 724px;
+  background:
+    linear-gradient(180deg, rgba(20, 18, 38, 0.52) 0 14px, rgba(20, 18, 38, 0.36) 14px 60%, rgba(20, 18, 38, 0.5)),
+    linear-gradient(180deg, #74595E 0 14px, #644E53 14px);
+}
+.c-house-nbroof {
+  left: -10px; right: -10px; top: -40px; height: 44px;
+  background:
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.28) 0 2px, rgba(0, 0, 0, 0) 2px 9px),
+    repeating-linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0 2px, rgba(0, 0, 0, 0) 2px 8px),
+    linear-gradient(180deg, #4E3A33, #6A4A3C);
+  clip-path: polygon(6% 0, 100% 0, 100% 100%, 0 100%);
+}
+.c-house-nbw {
+  width: 52px; height: 74px;
+  background: linear-gradient(170deg, #343B52, #22263A);
+  box-shadow: inset 0 0 0 3px #3C4458, -14px 0 0 -2px #39524B, 14px 0 0 -2px #39524B;
+}
+.c-house-nbw-lit { background: radial-gradient(80% 70% at 50% 60%, #E7A877, #A9603E 70%, #6E3A28); }
+.c-house-nbw-a { left: 196px; top: 70px; }
+.c-house-nbw-b { left: 92px; top: 70px; }
+.c-house-nbw-c { left: 196px; top: 236px; }
+.c-house-nbw-d { left: 92px; top: 236px; }
+.c-house-nbw-e { left: 56px; top: 64px; width: 48px; height: 80px; border-radius: 24px 24px 0 0; }
+.c-house-nbw-f { left: 150px; top: 64px; width: 48px; height: 80px; border-radius: 24px 24px 0 0; }
+.c-house-nbw-g { left: 56px; top: 270px; width: 48px; height: 86px; }
+.c-house-nbw-h { left: 150px; top: 270px; width: 48px; height: 86px; opacity: 0.8; }
+.c-house-nb-r::before { content: ""; position: absolute; left: -6px; right: -6px; top: 14px; height: 7px; background: #4E3C40; box-shadow: 0 216px 0 #4E3C40, 0 3px 4px rgba(0, 0, 0, 0.3); }
+.c-house-nb-l::before { content: ""; position: absolute; left: -4px; right: -4px; top: 196px; height: 6px; background: #3A4150; }
+.c-house-nbbal { left: 30px; top: 344px; width: 196px; height: 26px; background: repeating-linear-gradient(90deg, #1E1C22 0 2px, rgba(0, 0, 0, 0) 2px 9px); border-top: 3px solid #1E1C22; opacity: 0.8; }
+.c-house-nbshop {
+  left: 24px; right: 30px; bottom: 36px; height: 168px;
+  background:
+    repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0 2px, rgba(0, 0, 0, 0.18) 2px 6px),
+    linear-gradient(180deg, #3D4150, #2C2F3A);
+  border-top: 10px solid #3A3F4E;
+}
+.c-house-nbshop-r {
+  left: 30px; right: 24px; height: 200px; border-top-color: #5A4446;
+  background:
+    linear-gradient(90deg, #2E2426 0 5px, rgba(0, 0, 0, 0) 5px 64px, #2E2426 64px 68px, rgba(0, 0, 0, 0) 68px 128px, #2E2426 128px 134px, rgba(0, 0, 0, 0) 134px 186px, #2E2426 186px 192px, rgba(0, 0, 0, 0) 192px) 0 0 / 100% 132px no-repeat,
+    linear-gradient(180deg, #2E2426 0 5px, rgba(0, 0, 0, 0) 5px 30px, #2E2426 30px 34px, rgba(0, 0, 0, 0) 34px 128px, #2E2426 128px 132px, rgba(0, 0, 0, 0) 132px) 0 0 / 134px 132px no-repeat,
+    linear-gradient(180deg, rgba(255, 196, 140, 0.32), rgba(232, 168, 124, 0.12) 60%, rgba(0, 0, 0, 0)) 5px 34px / 123px 94px no-repeat,
+    linear-gradient(180deg, #3A2E30, #2B2224) 186px 0 / 60px 100% no-repeat,
+    linear-gradient(180deg, #4C3B3C, #362B2D);
+}
+
+/* ---------- the pavement and the road: a ground plane that comes out towards us ---------- */
+.c-house-street {
+  left: -700px; top: 800px; width: 1760px; height: 330px;
+  transform-origin: 50% 0;
+  transform: rotateX(90deg);   /* it must start at the wall line: a plane that crosses the facade gets culled */
+  background:
+    radial-gradient(150px 115px at 830px 70px, rgba(255, 186, 118, 0.6), rgba(255, 170, 100, 0.22) 55%, rgba(255, 170, 100, 0)),
+    radial-gradient(85px 85px at 1005px 50px, rgba(255, 196, 132, 0.5), rgba(255, 196, 132, 0)),
+    radial-gradient(70px 90px at 1048px 40px, rgba(255, 150, 96, 0.4), rgba(255, 150, 96, 0)),
+    radial-gradient(130px 115px at 1174px 170px, rgba(255, 210, 150, 0.4), rgba(255, 210, 150, 0)),
+    linear-gradient(180deg, rgba(8, 5, 8, 0.6), rgba(8, 5, 8, 0.18) 12px, rgba(8, 5, 8, 0) 30px),
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 0 170px, #8A7C6D 170px 173px, #3A332F 173px 181px, rgba(0, 0, 0, 0) 181px),
+    repeating-linear-gradient(90deg, rgba(18, 12, 9, 0.55) 0 1.5px, rgba(0, 0, 0, 0) 1.5px 48px) 0 0 / 100% 170px no-repeat,
+    repeating-linear-gradient(180deg, rgba(18, 12, 9, 0.5) 0 1.5px, rgba(0, 0, 0, 0) 1.5px 40px) 0 0 / 100% 170px no-repeat,
+    linear-gradient(180deg, #5A4C43 0, #463C36 170px, #262225 181px, #1A181C 100%);
+}
+.c-house-mat {
+  left: 938px; top: 0; width: 88px; height: 26px;
+  background:
+    radial-gradient(circle at 50% 50%, #B42249 0 2px, rgba(180, 34, 73, 0) 3.4px) 0 2px / 22px 22px,
+    radial-gradient(circle at 0 0, #3F6E60 0 5px, rgba(63, 110, 96, 0) 6.6px) 0 2px / 22px 22px,
+    radial-gradient(circle at 100% 0, #3F6E60 0 5px, rgba(63, 110, 96, 0) 6.6px) 0 2px / 22px 22px,
+    radial-gradient(circle at 0 100%, #3F6E60 0 5px, rgba(63, 110, 96, 0) 6.6px) 0 2px / 22px 22px,
+    radial-gradient(circle at 100% 100%, #3F6E60 0 5px, rgba(63, 110, 96, 0) 6.6px) 0 2px / 22px 22px,
+    #D9C7A6;
+  box-shadow: inset 0 0 0 1.5px #8E6B4A;
+}
+.c-house-mat::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255, 200, 140, 0.28), rgba(20, 14, 20, 0.35)); }
+
+/* ---------- the wall: ochre stucco with the window openings cut out ---------- */
+.c-house-wall {
+  left: 0; top: 84px; width: 360px; height: 716px;
+  clip-path: path(evenodd, "M0 0H360V716H0Z M112 194V76A68 34 0 0 1 248 76V194Z M104 412V246H256V412Z M34 664V510H226V664Z M238 716V502H326V716Z");
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .19 0 0 0 0 .1 0 0 0 .7 -.26'/%3E%3C/filter%3E%3Crect width='96' height='96' filter='url(%23n)'/%3E%3C/svg%3E") 0 0 / 96px 96px,   /* fine stucco grain */
+    linear-gradient(180deg, rgba(36, 24, 22, 0.22), rgba(36, 24, 22, 0)) 118px 204px / 124px 60px no-repeat,
+    linear-gradient(180deg, rgba(36, 24, 22, 0.2), rgba(36, 24, 22, 0)) 100px 420px / 160px 50px no-repeat,
+    radial-gradient(50% 40% at 18% 30%, rgba(60, 40, 30, 0.14), rgba(60, 40, 30, 0)),
+    radial-gradient(40% 30% at 82% 64%, rgba(60, 40, 30, 0.12), rgba(60, 40, 30, 0)),
+    linear-gradient(180deg, rgba(22, 16, 26, 0.6) 0, rgba(22, 16, 26, 0) 26px) 0 18px / 100% 30px no-repeat,
+    linear-gradient(180deg, rgba(22, 16, 26, 0.5) 0, rgba(22, 16, 26, 0) 18px) 0 227px / 100% 24px no-repeat,
+    linear-gradient(180deg, rgba(14, 8, 18, 0.42), rgba(14, 8, 18, 0)) 60px 421px / 240px 18px no-repeat,
+    radial-gradient(closest-side, rgba(14, 8, 16, 0.34), rgba(14, 8, 16, 0)) 34px 66px / 92px 146px no-repeat,
+    radial-gradient(closest-side, rgba(14, 8, 16, 0.34), rgba(14, 8, 16, 0)) 236px 66px / 92px 146px no-repeat,
+    radial-gradient(closest-side, rgba(14, 8, 16, 0.34), rgba(14, 8, 16, 0)) 16px 238px / 104px 190px no-repeat,
+    radial-gradient(closest-side, rgba(14, 8, 16, 0.34), rgba(14, 8, 16, 0)) 240px 238px / 104px 190px no-repeat,
+    linear-gradient(180deg, rgba(34, 28, 74, 0.42) 0%, rgba(34, 28, 74, 0.1) 46%, rgba(34, 28, 74, 0.2) 100%),
+    linear-gradient(180deg, #C98C3A 0%, #E1A947 44%, #D49A40 100%);
+}
+.c-house-glow {
+  inset: 0;
+  opacity: 0;
+  transition: opacity 2.2s ease 0.35s;
+  background:
+    radial-gradient(150px 125px at 180px 131px, rgba(255, 184, 118, 0.6), rgba(255, 170, 100, 0.2) 58%, rgba(255, 170, 100, 0)),
+    radial-gradient(170px 145px at 180px 341px, rgba(255, 184, 118, 0.58), rgba(255, 170, 100, 0.2) 58%, rgba(255, 170, 100, 0)),
+    radial-gradient(220px 150px at 180px 560px, rgba(255, 184, 118, 0.42), rgba(255, 170, 100, 0)),
+    radial-gradient(95px 100px at 345px 510px, rgba(255, 150, 96, 0.5), rgba(255, 150, 96, 0));
+}
+.c-house-ov.is-on .c-house-glow { opacity: 1; }
+.c-house-parapet { left: 0; top: 0; width: 360px; height: 92px; }
+
+/* pilasters, painted standing a little proud of the wall */
+.c-house-pil {
+  top: 92px; width: 22px; height: 708px;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 0 194px, #D7BC8C 194px 197px, #8E7050 197px 199px, rgba(0, 0, 0, 0) 199px 420px, #D7BC8C 420px 423px, #8E7050 423px 425px, rgba(0, 0, 0, 0) 425px),
+    repeating-linear-gradient(90deg, rgba(255, 228, 186, 0.13) 0 2px, rgba(0, 0, 0, 0) 2px 4.5px, rgba(40, 24, 14, 0.14) 4.5px 6.5px) 4px 0 / 14px 100% no-repeat,
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 0 464px, rgba(40, 24, 14, 0.32) 464px 465.5px, rgba(0, 0, 0, 0) 465.5px) 0 0 / 100% 100%,
+    repeating-linear-gradient(180deg, rgba(0, 0, 0, 0) 0 22px, rgba(40, 24, 14, 0.3) 22px 23.5px, rgba(255, 226, 180, 0.16) 23.5px 24.5px) 0 464px / 100% 244px no-repeat,
+    linear-gradient(180deg, rgba(34, 28, 74, 0.42), rgba(34, 28, 74, 0.1) 52%, rgba(34, 28, 74, 0.2)),
+    linear-gradient(90deg, #E8B256, #D29A42 70%, #B87D33);
+}
+.c-house-pil-l { left: 0; }
+.c-house-pil-r { left: 338px; }
+.c-house-pil-l { box-shadow: 3px 0 0 #7A582F, 7px 0 8px rgba(20, 10, 10, 0.3); }
+.c-house-pil-r { box-shadow: -3px 0 0 #7A582F, -7px 0 8px rgba(20, 10, 10, 0.3); }
+.c-house-pil-r::after { content: ""; position: absolute; inset: 0; background: radial-gradient(90px 160px at 50% 500px, rgba(255, 160, 100, 0.45), rgba(255, 160, 100, 0)); }
+
+/* cornices: a moulded front and the underside we see from the street */
+.c-house-cor {
+  background:
+    linear-gradient(180deg, rgba(34, 28, 74, 0.34), rgba(34, 28, 74, 0.2)),
+    linear-gradient(180deg, #EEDAB0 0 2px, #B99B6E 2px 4px, #D6BC8F 4px 7px, #8C7150 7px 8px, #CBB183 8px 11px, #776045 11px 12px, #BDA274 12px);
+}
+.c-house-cor-top { left: -6px; top: 84px; width: 372px; height: 18px; }
+.c-house-cor-top::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 5px; background: repeating-linear-gradient(90deg, #B79C6F 0 5px, #4E3E2E 5px 8px); }
+.c-house-cor::before { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 6px; background: linear-gradient(180deg, #3E3128, rgba(62, 49, 40, 0)); }
+.c-house-cor-mid { left: -2px; top: 298px; width: 364px; height: 13px; }
+
+/* ---------- windows: a room behind, the reveals of the opening, the frame and shutters in front ---------- */
+.c-house-room { overflow: hidden; background: #2A1F1A; }
+.c-house-room::after { content: ""; position: absolute; inset: 0; box-shadow: inset 0 0 22px 6px rgba(26, 14, 10, 0.55); }
+.c-house-w2 .c-house-room::after { border-radius: inherit; box-shadow: inset 22px 0 0 -6px rgba(92, 66, 40, 0.9), inset -22px 0 0 -6px rgba(92, 66, 40, 0.9), inset 0 30px 26px -6px rgba(26, 14, 10, 0.6), inset 0 0 22px 6px rgba(26, 14, 10, 0.45); }
+.c-house-w1 .c-house-room::after { box-shadow: inset 24px 0 0 -12px rgba(92, 66, 40, 0.9), inset -24px 0 0 -12px rgba(92, 66, 40, 0.9), inset 0 0 22px 6px rgba(26, 14, 10, 0.5); }
+.c-house-photo { left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; }
+.c-house-dark {
+  inset: 0;
+  background:
+    linear-gradient(118deg, rgba(0, 0, 0, 0) 28%, rgba(170, 160, 210, 0.16) 36%, rgba(0, 0, 0, 0) 46%),
+    linear-gradient(172deg, rgba(58, 66, 104, 0.95) 0%, rgba(26, 28, 50, 0.97) 62%, rgba(18, 18, 34, 0.98) 100%);
+  transition: opacity 0.9s ease, visibility 0s linear 0.9s;
+}
+.c-house-ov.is-on .c-house-dark { visibility: hidden; }
+/* top floor: Merlin's reading room */
+.c-house-w2 { left: 112px; top: 126px; width: 136px; height: 152px; }
+.c-house-w2 .c-house-room { left: 0; top: 0; width: 136px; height: 152px; border-radius: 68px 68px 0 0 / 34px 34px 0 0; }
+.c-house-w2 .c-house-dark { background: linear-gradient(180deg, rgba(20, 18, 30, 0.96), rgba(14, 12, 22, 0.97)); }
+.c-house-arch {
+  left: -7px; top: -7px; width: 150px; height: 166px;
+  border: 7px solid #A8916C;
+  border-bottom: 0;
+  border-radius: 75px 75px 0 0 / 41px 41px 0 0;
+  box-shadow: inset 0 0 0 1px rgba(80, 56, 34, 0.5), 0 0 0 1px rgba(80, 56, 34, 0.35);
+}
+.c-house-arch::before {
+  content: ""; position: absolute; left: 53px; top: -14px; width: 16px; height: 21px;
+  background: linear-gradient(180deg, #CDB48A, #9C8058);
+  clip-path: polygon(0 0, 100% 0, 78% 100%, 22% 100%);
+}
+
+/* jade louvered shutters, folded back almost flat to the wall */
+.c-house-sh {
+  top: 34px; width: 68px; height: 118px;
+  background-color: #3B6B5E;
+  background-image:
+    linear-gradient(90deg, #284A41 0 4px, rgba(0, 0, 0, 0) 4px calc(100% - 4px), #284A41 calc(100% - 4px)),
+    linear-gradient(180deg, #284A41 0 4px, rgba(0, 0, 0, 0) 4px 48%, #284A41 48% 52%, rgba(0, 0, 0, 0) 52% calc(100% - 4px), #284A41 calc(100% - 4px)),
+    repeating-linear-gradient(180deg, #6C9D8C 0 1.3px, #457A6B 1.3px 3.5px, #22433A 3.5px 4.6px);
+  box-shadow: inset 0 0 0 1px rgba(16, 30, 26, 0.6);
+}
+.c-house-shg { inset: 0; background: linear-gradient(90deg, rgba(255, 186, 120, 0.2), rgba(20, 18, 40, 0.16) 30%, rgba(20, 18, 40, 0.52)); }
+.c-house-sh-l { left: 0; transform-origin: 0 50%; transform: scaleX(-0.956); }   /* folded back, 17 degrees off the wall */
+.c-house-sh-r { left: 68px; transform-origin: 100% 50%; transform: scaleX(-0.956); }
+.c-house-sh-r .c-house-shg { background: linear-gradient(270deg, rgba(255, 186, 120, 0.2), rgba(20, 18, 40, 0.16) 30%, rgba(20, 18, 40, 0.52)); }
+.c-house-sh1 { top: 0; width: 76px; height: 166px; }
+.c-house-sh1.c-house-sh-l { transform: scaleX(-0.97); }
+.c-house-sh1.c-house-sh-r { left: 76px; transform: scaleX(-0.97); }
+
+/* the sill, with the books and the blue-and-white teacup */
+.c-house-sill {
+  left: -14px; top: 54px; width: 164px; height: 8px;
+  background: linear-gradient(180deg, #E6D1A8 0 1.5px, #BFA27A 1.5px 5px, #8F7454 5px);
+}
+.c-house-sill::after { content: ""; position: absolute; inset: 0; background: rgba(30, 28, 62, 0.28); }
+.c-house-sill::before { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 7px; background: linear-gradient(180deg, #3E3128, rgba(62, 49, 40, 0)); }
+.c-house-props { left: 0; top: 98px; width: 136px; height: 64px; }
+.c-house-books { left: 3px; top: 30px; width: 38px; height: 25px; }
+.c-house-books svg, .c-house-cupsvg { width: 100%; height: auto; }
+.c-house-cup { left: 95px; top: 2px; width: 32px; height: 54px; }
+.c-house-cupsvg { position: absolute; left: 0; bottom: 0; }
+.c-house-steam { left: 5px; top: 0; width: 22px; height: 29px; }
+.c-house-steam path { fill: none; stroke: rgba(255, 246, 232, 0.7); stroke-width: 1.5; stroke-linecap: round; opacity: 0; }
+
+/* first floor: the studio behind French doors */
+.c-house-w1 { left: 104px; top: 330px; width: 152px; height: 166px; }
+.c-house-w1 .c-house-room { left: 0; top: 0; width: 152px; height: 166px; }
+.c-house-fd {
+  inset: 0;
+  background:
+    linear-gradient(90deg, #DCCDB0 0 5px, rgba(0, 0, 0, 0) 5px 73px, #DCCDB0 73px 79px, rgba(0, 0, 0, 0) 79px 147px, #DCCDB0 147px),
+    linear-gradient(180deg, #DCCDB0 0 5px, rgba(0, 0, 0, 0) 5px 28px, #DCCDB0 28px 33px, rgba(0, 0, 0, 0) 33px 96px, #DCCDB0 96px 99px, rgba(0, 0, 0, 0) 99px),
+    linear-gradient(118deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0) 32%, rgba(255, 255, 255, 0.07) 58%, rgba(255, 255, 255, 0) 68%);
+}
+.c-house-fd::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(30, 28, 62, 0.25), rgba(30, 28, 62, 0.1)); -webkit-mask: linear-gradient(90deg, #000 0 5px, transparent 5px 73px, #000 73px 79px, transparent 79px 147px, #000 147px); mask: linear-gradient(90deg, #000 0 5px, transparent 5px 73px, #000 73px 79px, transparent 79px 147px, #000 147px); }
+.c-house-fd { isolation: isolate; }
+.c-house-fd .c-house-dark { z-index: -1; }
+.c-house-arch1 {
+  left: -7px; top: -7px; width: 166px; height: 173px;
+  --c-house-hood-x: -9px;
+  border: 7px solid #A8916C;
+  border-bottom: 0;
+  box-shadow: inset 0 0 0 1px rgba(80, 56, 34, 0.5), 0 0 0 1px rgba(80, 56, 34, 0.35);
+}
+.c-house-hood {
+  left: -16px; top: -22px; margin-left: 0; width: 184px; height: 12px;
+  background: linear-gradient(180deg, #E1C99C 0 2px, #B99B6E 2px 5px, #D2B88A 5px 8px, #7D654A 8px 9px, #B1956A 9px);
+}
+.c-house-hood::after { content: ""; position: absolute; inset: 0; background: rgba(30, 28, 62, 0.3); }
+
+/* the balcony: a stone slab, wrought-iron railings, bougainvillea */
+.c-house-slab-top { left: 80px; top: 496px; width: 200px; height: 11px; background: linear-gradient(180deg, #6E5A44, #A88E6C); }   /* the slab seen from above, painted in the wall plane */
+.c-house-balc { left: 80px; top: 432px; width: 232px; height: 110px; transform: translateZ(45px); }
+.c-house-slab { left: 0; top: 64px; width: 200px; height: 9px; background: linear-gradient(180deg, #DCC499 0 2px, #A88D66 2px 6px, #6E5840 6px); }
+.c-house-rail { left: 2px; top: 24px; width: 196px; height: 40px; }
+.c-house-rail svg { width: 100%; height: 100%; }
+.c-house-boug { left: 112px; top: 0; width: 120px; height: 110px; }
+.c-house-boug svg { width: 100%; height: 100%; }
+
+/* the shop sign: an ivory board with gold beading; Elise's logo on its own plate, never tinted */
+.c-house-fascia {
+  left: 16px; top: 520px; width: 328px; height: 34px;
+  background:
+    radial-gradient(120px 60px at 100% 50%, rgba(255, 170, 110, 0.35), rgba(255, 170, 110, 0)),
+    linear-gradient(180deg, rgba(34, 28, 74, 0.2), rgba(34, 28, 74, 0.08)),
+    linear-gradient(180deg, #F7EAD0, #E6D1A8);
+  box-shadow: inset 0 0 0 2px #B98F44, inset 0 0 0 4px #EADCBE, inset 0 0 0 5px rgba(150, 110, 46, 0.55), 0 4px 6px rgba(20, 12, 10, 0.35), 0 -3px 0 #C9B48C;
+}
+.c-house-fascia::before, .c-house-fascia::after { content: "✦"; position: absolute; top: 7px; font-size: 13px; line-height: 20px; color: #A9782E; }
+.c-house-fascia::before { left: 70px; }
+.c-house-fascia::after { right: 70px; }
+.c-house-fascia-plate {
+  left: 112px; top: 3px; width: 104px; height: 28px;
+  border-radius: 14px;
+  background: #FFFBF3;
+  box-shadow: 0 0 0 1.5px #C9A04E, 0 1px 3px rgba(60, 40, 20, 0.4);
+}
+.c-house-fascia-plate img { left: 10px; top: 2px; width: 84px; height: auto; }
+
+/* the shopfront: painted jade wood, gold pinstripes */
+.c-house-sf {
+  left: 22px; top: 556px; width: 316px; height: 244px;
+  clip-path: path(evenodd, "M0 0H316V244H0Z M12 192V38H204V192Z M216 244V30H304V244Z");
+  background:
+    linear-gradient(180deg, rgba(8, 6, 16, 0.62) 0, rgba(8, 6, 16, 0) 44px) 0 0 / 100% 50px no-repeat,
+    linear-gradient(#C9A04E, #C9A04E) 20px 200px / 176px 1px no-repeat,
+    linear-gradient(#C9A04E, #C9A04E) 20px 232px / 176px 1px no-repeat,
+    linear-gradient(#C9A04E, #C9A04E) 20px 200px / 1px 33px no-repeat,
+    linear-gradient(#C9A04E, #C9A04E) 195px 200px / 1px 33px no-repeat,
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 0 192px, rgba(255, 220, 170, 0.07) 192px 195px, rgba(0, 0, 0, 0.22) 195px 198px, rgba(0, 0, 0, 0) 198px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.25), rgba(255, 255, 255, 0.04) 45%, rgba(0, 0, 0, 0.2)),
+    linear-gradient(180deg, #2F5449, #284840);
+}
+.c-house-sf::after { content: ""; position: absolute; inset: 0; background: radial-gradient(60% 55% at 38% 62%, rgba(255, 176, 110, 0.34), rgba(255, 176, 110, 0)); }
+
+/* the gift shop window: a warm room, three of Elise's pieces in gilt frames on a velvet riser */
+.c-house-dw { left: 34px; top: 594px; width: 192px; height: 154px; }
+.c-house-dw-back {
+  left: 0; top: 0; width: 192px; height: 154px;
+  background:
+    radial-gradient(34px 60px at 30% 30%, rgba(255, 244, 220, 0.75), rgba(255, 244, 220, 0)),
+    radial-gradient(34px 60px at 50% 26%, rgba(255, 244, 220, 0.8), rgba(255, 244, 220, 0)),
+    radial-gradient(34px 60px at 70% 30%, rgba(255, 244, 220, 0.75), rgba(255, 244, 220, 0)),
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 0 64%, #8B5A3A 64% 66%, rgba(0, 0, 0, 0) 66%),
+    repeating-linear-gradient(90deg, rgba(120, 150, 118, 0.22) 0 6px, rgba(0, 0, 0, 0) 6px 18px),
+    linear-gradient(180deg, #F1D6AF, #DDB283 70%, #A97352);
+}
+.c-house-display { left: 0; top: 0; width: 192px; height: 154px; isolation: isolate; }
+.c-house-display::after {
+  content: ""; position: absolute; left: -4px; right: -4px; bottom: -4px; height: 30px;
+  background:
+    linear-gradient(180deg, rgba(255, 210, 170, 0.45) 0 1.5px, rgba(0, 0, 0, 0) 1.5px),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.12) 0 2px, rgba(0, 0, 0, 0) 2px 16px),
+    linear-gradient(180deg, #8E2142, #5A1027);
+}
+.c-house-fr {
+  z-index: 1;
+  padding: 3px;
+  border-radius: 27px 27px 3px 3px;
+  background: linear-gradient(160deg, #F6E3A6, #C9963E 45%, #8C5F1F 70%, #E2BE72);
+  box-shadow: 0 10px 10px -3px rgba(44, 12, 10, 0.55), 0 2px 3px rgba(44, 12, 10, 0.4);
+}
+.c-house-fr img { position: static; display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 24px 24px 1.5px 1.5px; }
+.c-house-fr-a { left: 8px; top: 60px; width: 54px; height: 66px; }
+.c-house-fr-b { left: 69px; top: 50px; width: 54px; height: 76px; }
+.c-house-fr-c { left: 130px; top: 60px; width: 54px; height: 66px; }
+.c-house-display::before { content: ""; position: absolute; inset: 0; z-index: 2; box-shadow: inset 10px 0 0 -4px #1F3B33, inset -10px 0 0 -4px #1F3B33, inset 0 18px 16px -8px rgba(30, 14, 10, 0.55); pointer-events: none; }
+.c-house-glass {
+  inset: 0;
+  background:
+    linear-gradient(90deg, #24443B 0 4px, rgba(0, 0, 0, 0) 4px 188px, #24443B 188px) 0 0 / 100% 100%,
+    linear-gradient(90deg, rgba(0, 0, 0, 0) 0 63px, #24443B 63px 66px, rgba(0, 0, 0, 0) 66px 126px, #24443B 126px 129px, rgba(0, 0, 0, 0) 129px) 0 0 / 100% 20px no-repeat,   /* bars in the transom lights only: the main pane is one plate, so the gilt lettering runs unbroken */
+    linear-gradient(180deg, #24443B 0 4px, rgba(0, 0, 0, 0) 4px 17px, #24443B 17px 20px, rgba(0, 0, 0, 0) 20px 150px, #24443B 150px),
+    linear-gradient(116deg, rgba(255, 255, 255, 0) 30%, rgba(255, 248, 236, 0.1) 37%, rgba(255, 255, 255, 0) 44%, rgba(255, 255, 255, 0) 70%, rgba(255, 248, 236, 0.07) 74%, rgba(255, 255, 255, 0) 78%);
+}
+.c-house-glass { isolation: isolate; }
+.c-house-glass .c-house-dark { z-index: -1; }
+.c-house-gilt { left: 0; top: 0; width: 192px; height: 60px; }
+
+/* the shop door: deep reveals, the warm shop inside, a sunburst fanlight, two jade leaves */
+.c-house-door { left: 238px; top: 586px; width: 88px; height: 214px; }
+.c-house-in {
+  left: -56px; top: -36px; width: 200px; height: 270px;
+  transform: translateZ(-150px);
+  background: #E8B988;
+}
+.c-house-backsvg { left: 0; top: 0; width: 100%; height: 100%; }
+/* gach bong tiles. The flight magnifies this plane about four times past the scale it was painted at, so the motifs are
+   large with soft edges: they read as a little out of focus rather than stair-stepped */
+.c-house-infloor {
+  left: 0; top: 64px; width: 88px; height: 150px;
+  transform-origin: 50% 100%;
+  transform: rotateX(90deg);
+  background:
+    linear-gradient(180deg, rgba(255, 230, 190, 0.45), rgba(120, 70, 40, 0.12) 80%, rgba(60, 40, 30, 0.45)),
+    linear-gradient(90deg, rgba(110, 80, 50, 0.28) 0 0.8px, rgba(110, 80, 50, 0) 1.8px) 0 0 / 22px 22px,
+    linear-gradient(180deg, rgba(110, 80, 50, 0.28) 0 0.8px, rgba(110, 80, 50, 0) 1.8px) 0 0 / 22px 22px,
+    radial-gradient(circle at 50% 50%, #B42249 0 2px, rgba(180, 34, 73, 0) 3.4px) 0 0 / 22px 22px,
+    radial-gradient(circle at 50% 0, #3F6E60 0 1.6px, rgba(63, 110, 96, 0) 2.8px) 0 0 / 22px 22px,
+    radial-gradient(circle at 0 50%, #3F6E60 0 1.6px, rgba(63, 110, 96, 0) 2.8px) 0 0 / 22px 22px,
+    radial-gradient(circle at 0 0, #3F6E60 0 5px, rgba(63, 110, 96, 0) 6.6px) 0 0 / 22px 22px,
+    radial-gradient(circle at 100% 0, #3F6E60 0 5px, rgba(63, 110, 96, 0) 6.6px) 0 0 / 22px 22px,
+    radial-gradient(circle at 0 100%, #3F6E60 0 5px, rgba(63, 110, 96, 0) 6.6px) 0 0 / 22px 22px,
+    radial-gradient(circle at 100% 100%, #3F6E60 0 5px, rgba(63, 110, 96, 0) 6.6px) 0 0 / 22px 22px,
+    #E9D6B6;
+}
+/* a pressed-tin ceiling, as in an old American shop, warm under the lamp. It starts behind the fanlight (z -12) and the
+   lintel's underside fills the 12 units in front: a plane crossing the fanlight's plane gets mis-sorted by Chrome */
+.c-house-soffit {
+  left: 0; top: 0; width: 88px; height: 12px;
+  transform-origin: 50% 0;
+  transform: rotateX(-90deg);
+  background: linear-gradient(180deg, #5A4330, #3A2A1E);
+}
+.c-house-inceil {
+  left: 0; top: 0; width: 88px; height: 138px;
+  transform-origin: 50% 0;
+  transform: translateZ(-12px) rotateX(-90deg);
+  background:
+    linear-gradient(180deg, #4A3626 0 16px, #2E2218 16px 17px, rgba(0, 0, 0, 0) 17px),   /* a dark beam just behind the fanlight: where Chrome sorts the planes loosely it reads as the door head */
+    radial-gradient(60px 50px at 50% 48%, rgba(255, 236, 200, 0.55), rgba(255, 236, 200, 0)),
+    linear-gradient(180deg, rgba(70, 40, 20, 0.5), rgba(70, 40, 20, 0) 30%),
+    radial-gradient(circle at 50% 50%, #F6E6C6 0 2.6px, #B8915A 3.6px 4.4px, rgba(184, 145, 90, 0) 5.6px) 0 0 / 22px 22px,
+    linear-gradient(90deg, rgba(120, 84, 40, 0.4) 0 1px, rgba(120, 84, 40, 0) 2px) 0 0 / 22px 22px,
+    linear-gradient(180deg, rgba(120, 84, 40, 0.4) 0 1px, rgba(120, 84, 40, 0) 2px) 0 0 / 22px 22px,
+    linear-gradient(180deg, #DDBE8C, #E9CFA1);
+}
+.c-house-pend { left: 24px; top: 0; width: 40px; height: 62px; transform: translateZ(-62px); }
+.c-house-pendsvg { left: 0; top: 0; width: 100%; height: 100%; }
+.c-house-dside { top: 0; width: 150px; height: 214px; }
+/* the shop's side walls: warm wooden shelves with a little yarn on them, lit from the back of the shop */
+/* we see these walls almost edge-on, so the stock on the shelves is painted as rows (kraft boxes, yarn, cream boxes) that
+   still read as a stocked shelf when foreshortened */
+.c-house-dside-l {
+  left: 0; transform-origin: 0 50%; transform: rotateY(90deg);
+  background:
+    repeating-linear-gradient(90deg, #C9A27A 0 9px, #B42249 9px 10.5px, #C9A27A 10.5px 16px, rgba(0, 0, 0, 0) 16px 19px, #C9516E 19px 26px, rgba(0, 0, 0, 0) 26px 28px, #E5B95C 28px 34px, rgba(0, 0, 0, 0) 34px 38px) 34px 58px / 114px 14px no-repeat,
+    repeating-linear-gradient(90deg, #F1E3CC 0 12px, rgba(0, 0, 0, 0) 12px 15px, #8FAF96 15px 22px, rgba(0, 0, 0, 0) 22px 25px, #D8B68E 25px 36px, rgba(0, 0, 0, 0) 36px 40px) 36px 113px / 112px 15px no-repeat,
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 0 72px, #8A5634 72px 75px, rgba(60, 30, 20, 0.35) 75px 80px, rgba(0, 0, 0, 0) 80px 128px, #8A5634 128px 131px, rgba(60, 30, 20, 0.35) 131px 136px, rgba(0, 0, 0, 0) 136px) 30px 0 / 120px 100% no-repeat,
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 0 150px, #2F5449 150px 151.5px, rgba(0, 0, 0, 0) 151.5px) 13px 0 / 137px 100% no-repeat,
+    linear-gradient(90deg, #5E4632 0 13px, #B97E55 13px, #EDBE90 100%);
+}
+.c-house-dside-r {
+  left: -62px; transform-origin: 100% 50%; transform: rotateY(-90deg);
+  background:
+    repeating-linear-gradient(270deg, #E5B95C 0 7px, rgba(0, 0, 0, 0) 7px 10px, #C9A27A 10px 20px, #B42249 20px 21.5px, #C9A27A 21.5px 26px, rgba(0, 0, 0, 0) 26px 29px, #F1E3CC 29px 35px, rgba(0, 0, 0, 0) 35px 38px) 2px 58px / 114px 14px no-repeat,
+    repeating-linear-gradient(270deg, #C9516E 0 7px, rgba(0, 0, 0, 0) 7px 10px, #D8B68E 10px 22px, rgba(0, 0, 0, 0) 22px 25px, #8FAF96 25px 32px, rgba(0, 0, 0, 0) 32px 36px) 2px 113px / 112px 15px no-repeat,
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 0 72px, #8A5634 72px 75px, rgba(60, 30, 20, 0.35) 75px 80px, rgba(0, 0, 0, 0) 80px 128px, #8A5634 128px 131px, rgba(60, 30, 20, 0.35) 131px 136px, rgba(0, 0, 0, 0) 136px) 0 0 / 120px 100% no-repeat,
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 0 150px, #2F5449 150px 151.5px, rgba(0, 0, 0, 0) 151.5px) 0 0 / 137px 100% no-repeat,
+    linear-gradient(270deg, #5E4632 0 13px, #B97E55 13px, #EDBE90 100%);
+}
+.c-house-fan {
+  left: 0; top: 0; width: 88px; height: 26px;
+  transform: translateZ(-12px);
+  background: radial-gradient(70% 120% at 50% 100%, #FFE8C4, #F0B783 60%, #C98154);
+  box-shadow: inset 0 0 0 2px #1F3D35;
+}
+.c-house-fansvg { left: 0; top: 0; width: 100%; height: 100%; }
+.c-house-leaf {
+  top: 26px; width: 44px; height: 188px;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.28), rgba(255, 255, 255, 0.05) 35%, rgba(0, 0, 0, 0.16)),
+    linear-gradient(180deg, #31594D, #284A40);
+  box-shadow: inset 0 0 0 1.5px #1B342D;
+  transition: transform 0.95s cubic-bezier(0.5, 0, 0.25, 1);
+}
+.c-house-leaf::before {
+  content: ""; position: absolute; left: 7px; right: 7px; top: 112px; height: 62px;
+  box-shadow: inset 0 0 0 2px #1E3A32, inset 0 0 0 3px rgba(201, 160, 78, 0.4), inset 0 0 0 5px rgba(255, 255, 255, 0.05);
+}
+.c-house-leaf-l { left: 0; transform-origin: 0 50%; transform: translateZ(-12px); }
+.c-house-leaf-r { left: 44px; transform-origin: 100% 50%; transform: translateZ(-12px); }
+.c-house-pane {
+  left: 7px; right: 7px; top: 9px; height: 94px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.22) 0 1px, rgba(0, 0, 0, 0) 1.6px) 0 0 / 6px 6px,
+    radial-gradient(70% 60% at 50% 40%, #FFEED2, #F2BC88 70%, #D08A58);
+  box-shadow: 0 0 0 1.5px #C9A04E, inset 0 0 6px rgba(120, 60, 20, 0.4);
+}
+.c-house-knob { top: 102px; width: 6px; height: 6px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #FBEBB8, #B5832F 60%, #6E4A16); box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5); }
+.c-house-leaf-l .c-house-knob { right: 3px; }
+.c-house-leaf-r .c-house-knob { left: 3px; }
+.c-house-lshade { inset: 0; background: rgba(12, 10, 18, 0.7); opacity: 0; transition: opacity 0.95s ease; }
+
+/* the striped awning: hinged under the sign, tipped out towards the street, a scalloped valance */
+.c-house-awning {
+  left: 28px; top: 556px; width: 304px; height: 50px;
+  transform-origin: 50% 0;
+  transform: rotateX(62deg);
+  background:
+    linear-gradient(180deg, rgba(16, 8, 18, 0.6) 0%, rgba(16, 8, 18, 0.22) 30%, rgba(255, 214, 176, 0.1) 80%, rgba(16, 8, 18, 0.3) 100%),
+    repeating-linear-gradient(90deg, #A51F45 0 15.2px, #E8D9C0 15.2px 30.4px);
+}
+.c-house-val {
+  left: 0; top: 50px; width: 304px; height: 14px;
+  transform-origin: 50% 0;
+  transform: rotateX(-62deg);
+  background:
+    linear-gradient(180deg, #C9A04E 0 1.6px, rgba(0, 0, 0, 0) 1.6px),
+    linear-gradient(180deg, rgba(16, 8, 18, 0.25), rgba(16, 8, 18, 0.45)),
+    repeating-linear-gradient(90deg, #A51F45 0 15.2px, #E8D9C0 15.2px 30.4px);
+  -webkit-mask: linear-gradient(#000 0 0) 0 0 / 100% 7px no-repeat, radial-gradient(circle at 50% 0, #000 7.2px, rgba(0, 0, 0, 0) 7.7px) 0 6px / 15.2px 8px repeat-x;
+  mask: linear-gradient(#000 0 0) 0 0 / 100% 7px no-repeat, radial-gradient(circle at 50% 0, #000 7.2px, rgba(0, 0, 0, 0) 7.7px) 0 6px / 15.2px 8px repeat-x;
+}
+
+/* the silk lantern on its iron bracket: the warm key light of the street */
+.c-house-lantern { left: 333px; top: 562px; width: 28px; height: 60px; transform: translateZ(36px); }
+.c-house-lantsvg { left: 0; top: 0; width: 100%; height: 100%; transform-origin: 50% 0; }
+.c-house-lglow { left: -56px; top: -34px; width: 140px; height: 140px; background: radial-gradient(closest-side, rgba(255, 150, 96, 0.55), rgba(255, 130, 90, 0.18) 55%, rgba(255, 130, 90, 0)); }
+
+.c-house-pot { width: 34px; height: 49px; transform: translateZ(18px); }
+.c-house-pot svg { width: 100%; height: 100%; }
+.c-house-pot-l { left: 22px; top: 752px; }
+.c-house-pot-r { left: 327px; top: 752px; }
+
+/* the street lamp in front of us (desktop sees it; on a phone it sits just off the edge) */
+.c-house-lamp { left: 452px; top: 330px; width: 44px; height: 470px; transform: translateZ(150px); }
+.c-house-lampsvg { left: 0; top: 0; width: 100%; height: 100%; }
+
+.c-house-wash { position: absolute; inset: 0; pointer-events: none; opacity: 0; visibility: hidden; background: radial-gradient(75% 65% at 50% 50%, #FFF7EA 0%, #FBE6CC 50%, #F0C29A 100%); }
+
+/* ---------- the light comes on, floor by floor, from the street to the roof ---------- */
+.c-house-ov.is-on .c-house-dw .c-house-dark,
+.c-house-ov.is-on .c-house-door .c-house-dark { opacity: 0; transition-delay: 0.35s, 1.25s; }
+.c-house-ov.is-on .c-house-w1 .c-house-dark { opacity: 0; transition-delay: 0.95s, 1.85s; }
+.c-house-ov.is-on .c-house-w2 .c-house-dark { opacity: 0; transition-delay: 1.55s, 2.45s; }
+.c-house-ov.is-on .c-house-steam path { animation: c-house-steam 2.3s ease-in-out 2 both; }
+.c-house-ov.is-on .c-house-steam path:nth-child(1) { animation-delay: 2s; }
+.c-house-ov.is-on .c-house-steam path:nth-child(2) { animation-delay: 2.45s; }
+.c-house-ov.is-on .c-house-steam path:nth-child(3) { animation-delay: 2.9s; }
+.c-house-ov.is-on .c-house-lantsvg { animation: c-house-sway 3.4s ease-in-out 0.6s 2 both; }
+.c-house-ov.is-paused * { animation-play-state: paused !important; }
+@keyframes c-house-steam { 0% { opacity: 0; transform: translateY(5px); } 35% { opacity: 0.8; } 100% { opacity: 0; transform: translateY(-9px); } }
+@keyframes c-house-sway { 0%, 100% { transform: rotate(0deg); } 30% { transform: rotate(3deg); } 70% { transform: rotate(-2.4deg); } }
+
+/* ---------- the words ---------- */
+.c-house-card {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  z-index: 3;
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  padding: 26px 20px max(20px, env(safe-area-inset-bottom, 0px));
+  text-align: center;
+  background: linear-gradient(0deg, rgba(14, 10, 16, 0.94) 0%, rgba(14, 10, 16, 0.8) 58%, rgba(14, 10, 16, 0) 100%);
+  cursor: default;
+  transition: opacity 0.3s ease;
+}
+.c-house-line {
+  margin: 0;
+  font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+  font-weight: 600;
+  font-size: clamp(24px, 6.6vw, 34px);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: #FBF6EE;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.55);
+  animation: c-house-rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.5s both;
+}
+.c-house-line em { font-style: normal; color: #F6DCC4; }
+.c-house-go {
+  position: relative;
+  min-height: 50px;
+  min-width: 200px;
+  padding: 0 30px;
+  border: 0;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #FFFBF3, #F4E9D6);
+  color: #4A423B;
+  font: 600 13.5px/1 'Figtree', -apple-system, 'Segoe UI', sans-serif;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1px #B98F44, inset 0 0 0 4px #FBF5EA, inset 0 0 0 5px rgba(185, 143, 68, 0.75), 0 12px 26px rgba(0, 0, 0, 0.4);
+  animation: c-house-rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.75s both;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.c-house-go span { display: inline; }
+.c-house-go:focus-visible { outline: 3px solid #F6DCC4; outline-offset: 4px; }
+@media (hover: hover) and (pointer: fine) { .c-house-go:hover { transform: translateY(-1px); box-shadow: inset 0 0 0 1px #B98F44, inset 0 0 0 4px #FBF5EA, inset 0 0 0 5px rgba(185, 143, 68, 0.75), 0 16px 30px rgba(0, 0, 0, 0.45); } }
+.c-house-go:active { transform: scale(0.98); }
+.c-house-skip {
+  position: absolute;
+  top: max(10px, env(safe-area-inset-top, 0px));
+  right: 12px;
+  z-index: 4;
+  min-height: 44px;
+  padding: 8px 16px;
+  border: 1px solid rgba(251, 246, 238, 0.34);
+  border-radius: 999px;
+  background: rgba(20, 16, 26, 0.55);
+  color: #FBF6EE;
+  font: 600 14px/1 'Figtree', -apple-system, 'Segoe UI', sans-serif;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+.c-house-skip:focus-visible { outline: 3px solid #F6DCC4; outline-offset: 2px; }
+@keyframes c-house-rise { from { opacity: 0; transform: translateY(10px); } }
+
+/* wide screens: the words on the left, the house in the street */
+.c-house-ov.is-wide .c-house-card {
+  left: max(48px, 6vw); right: auto; top: 50%; bottom: auto;
+  width: min(400px, 34vw);
+  transform: translateY(-50%);
+  justify-items: start;
+  text-align: left;
+  gap: 22px;
+  padding: 0;
+  background: none;
+}
+.c-house-ov.is-wide .c-house-card::before {
+  content: ""; position: absolute; z-index: -1; left: -60px; top: -70px; right: -60px; bottom: -70px;
+  background: radial-gradient(closest-side, rgba(14, 10, 18, 0.62), rgba(14, 10, 18, 0));
+}
+.c-house-ov.is-wide .c-house-line { font-size: clamp(34px, 3.3vw, 46px); }
+
+/* ---------- the tap: fly in under the awning, the door opens, through into the light ---------- */
+.c-house-ov.is-go { cursor: default; }
+.c-house-ov.is-go .c-house-world { transition: transform 2.15s cubic-bezier(0.55, 0.06, 0.3, 1); }
+.c-house-ov.is-go .c-house-card, .c-house-ov.is-go .c-house-skip { opacity: 0; pointer-events: none; }
+.c-house-ov.is-go .c-house-card { visibility: hidden; transition: opacity 0.3s ease, visibility 0s 0.3s; }
+.c-house-ov.is-doors:not(.is-wide) .c-house-nb { visibility: hidden; }   /* off screen on a phone by then; on a wide screen the street stays */
+.c-house-ov.is-go .c-house-near { opacity: 0; transition: opacity 0.5s ease 0.9s; }
+.c-house-ov.is-go .c-house-dark { opacity: 0; transition-delay: 0s, 0.3s; transition-duration: 0.3s, 0s; }
+.c-house-ov.is-go .c-house-glow { opacity: 1; transition-delay: 0s; transition-duration: 0.3s; }
+.c-house-ov.is-doors .c-house-leaf-l { transform: translateZ(-12px) rotateY(102deg); }
+.c-house-ov.is-doors .c-house-leaf-r { transform: translateZ(-12px) rotateY(-102deg); }
+.c-house-ov.is-doors .c-house-lshade { opacity: 1; }
+.c-house-ov.is-through .c-house-wash { opacity: 1; visibility: visible; transition: opacity 0.45s ease-in; }
+.c-house-ov.is-gone { opacity: 0; pointer-events: none; transition: opacity 0.7s ease; }
+.c-house-ov.is-ff .c-house-wash { transition-duration: 0.2s; }
+.c-house-ov.is-ff.is-gone { transition-duration: 0.5s; }
+
+/* ================================================================================================================
+   2. The whole site: the floor dial in the header and a trim per floor
+   ================================================================================================================ */
+html[data-concept="house"] .c-house-lift { display: flex; align-items: center; gap: 9px; flex-shrink: 0; margin-left: auto; }
+html[data-concept="house"] .site-header .c-house-lift ~ .header-cta { margin-left: 14px; }
+html[data-concept="house"] .site-header .c-house-lift ~ .nav-toggle { margin-left: 6px; }
+html[data-concept="house"] .c-house-lift i, html[data-concept="house"] .c-house-lift b { position: absolute; display: block; }
+.c-house-dial { position: relative; display: block; width: 52px; height: 29px; flex-shrink: 0; }
+.c-house-dial-face {
+  inset: 0;
+  border-radius: 27px 27px 3px 3px;
+  background:
+    repeating-conic-gradient(from -90deg at 50% 100%, rgba(185, 143, 68, 0.16) 0 3deg, rgba(0, 0, 0, 0) 3deg 12deg),
+    radial-gradient(circle 24px at 50% 100%, #FFFBF2 0 20px, #E9D8B5 20px 21px, rgba(0, 0, 0, 0) 21.5px),
+    linear-gradient(180deg, #F2D999, #C9963E 55%, #8E6222);
+  box-shadow: 0 1px 2px rgba(74, 50, 20, 0.35), inset 0 1px 0 rgba(255, 244, 210, 0.7);
+}
+.c-house-dial::after { content: ""; position: absolute; left: -3px; right: -3px; bottom: -3px; height: 3px; border-radius: 2px; background: linear-gradient(90deg, #8E6222, #F2D999 40%, #B98F44); }
+.c-house-dial b {
+  left: 50%; bottom: -5px;
+  width: 12px; height: 10px; margin-left: -6px;
+  font: 600 9px/10px 'Fraunces', Georgia, serif;
+  text-align: center;
+  color: #4A423B;
+  transform: rotate(var(--a)) translateY(-14.5px) rotate(calc(-1 * var(--a)));
+}
+.c-house-dial-dot { left: 50%; bottom: -1.5px; width: 3px; height: 3px; margin-left: -1.5px; border-radius: 50%; background: #9C5325; transform: rotate(var(--a)) translateY(-15px); }
+html[data-house-floor="G"] .c-house-dial b:nth-of-type(1),
+html[data-house-floor="1"] .c-house-dial b:nth-of-type(2),
+html[data-house-floor="2"] .c-house-dial b:nth-of-type(3) { color: #B42249; }
+.c-house-needle {
+  left: 50%; bottom: 0;
+  width: 5px; height: 19px; margin-left: -2.5px;
+  background: linear-gradient(180deg, #B42249, #5E1028);
+  clip-path: polygon(50% 0, 100% 34%, 66% 34%, 62% 100%, 38% 100%, 34% 34%, 0 34%);
+  transform-origin: 50% 100%;
+}
+.c-house-hub { left: 50%; bottom: -4px; width: 9px; height: 9px; margin-left: -4.5px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #FBEBB8, #B5832F 65%, #6E4A16); box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3); }
+.c-house-fname {
+  display: block;
+  font: 600 10.5px/1.2 'Figtree', -apple-system, 'Segoe UI', sans-serif;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #9C5325;
+  white-space: nowrap;
+}
+@media (max-width: 479px) { .c-house-fname { display: none; } }
+html[data-concept="house"] .site-header .header-inner { position: relative; }
+html[data-concept="house"] .c-house-lift.c-house-hang {
+  position: absolute;
+  right: var(--pad, var(--gutter, 24px));
+  top: 100%;
+  z-index: 2;
+  margin: 0;
+  padding: 7px 14px 8px 12px;
+  gap: 10px;
+  background: #FBF6EE;
+  border: 1px solid rgba(185, 143, 68, 0.75);
+  border-top: 0;
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 8px 18px rgba(74, 50, 30, 0.14), inset 0 -2px 0 rgba(185, 143, 68, 0.18);
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .c-house-needle { transition: transform 0.95s cubic-bezier(0.55, 0, 0.2, 1); }
+}
+
+/* a trim under the header for each floor: the gift shop's awning, the studio's measuring tape, the tea room's wallpaper */
+html[data-concept="house"][data-house-floor="G"] .site-header::after,
+html[data-concept="house"][data-house-floor="1"] .site-header::after,
+html[data-concept="house"][data-house-floor="2"] .site-header::after {
+  content: ""; position: absolute; left: 0; right: 0; top: 100%; pointer-events: none;
+}
+html[data-concept="house"][data-house-floor="G"] .site-header::after {
+  height: 14px;
+  background:
+    linear-gradient(180deg, rgba(60, 20, 30, 0.22), rgba(60, 20, 30, 0) 4px),
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 0 5px, #C9A04E 5px 6px, rgba(0, 0, 0, 0) 6px),
+    repeating-linear-gradient(90deg, #B42249 0 12px, #F6ECDC 12px 24px);
+  -webkit-mask: linear-gradient(#000 0 0) 0 0 / 100% 6px no-repeat, radial-gradient(circle at 50% 0, #000 11.5px, rgba(0, 0, 0, 0) 12px) 0 5px / 24px 9px repeat-x;
+  mask: linear-gradient(#000 0 0) 0 0 / 100% 6px no-repeat, radial-gradient(circle at 50% 0, #000 11.5px, rgba(0, 0, 0, 0) 12px) 0 5px / 24px 9px repeat-x;
+}
+/* the stitch line runs along the tape itself, so nothing floats over the page as it scrolls under the header */
+html[data-concept="house"][data-house-floor="1"] .site-header::after {
+  height: 11px;
+  background:
+    repeating-linear-gradient(90deg, rgba(74, 66, 59, 0.7) 0 1px, rgba(0, 0, 0, 0) 1px 40px) 0 0 / 100% 5px no-repeat,
+    repeating-linear-gradient(90deg, rgba(74, 66, 59, 0.42) 0 1px, rgba(0, 0, 0, 0) 1px 8px) 0 0 / 100% 2.5px no-repeat,
+    repeating-linear-gradient(90deg, rgba(156, 83, 37, 0.75) 0 5px, rgba(0, 0, 0, 0) 5px 9px) 0 7.5px / 100% 1.3px no-repeat,
+    linear-gradient(180deg, #F5DDA9, #ECCB88);
+  box-shadow: 0 1px 0 rgba(156, 83, 37, 0.35), 0 3px 6px rgba(74, 40, 20, 0.12);
+}
+html[data-concept="house"][data-house-floor="2"] .site-header::after {
+  height: 12px;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 0 9px, #C9A04E 9px 10px, rgba(74, 66, 59, 0.14) 10px 12px),
+    radial-gradient(circle at 50% 50%, rgba(156, 83, 37, 0.4) 0 1px, rgba(0, 0, 0, 0) 1.5px) 6px 0 / 22px 9px,
+    repeating-linear-gradient(90deg, #E3EADD 0 8px, #CCD9C3 8px 9.5px, #E3EADD 9.5px 13px, #F7F2E8 13px 22px) 0 0 / 100% 9px no-repeat;
+}
+
+/* ================================================================================================================
+   3. Page to page: like a lift. Going up, the old floor slides down out of sight and the next one arrives from above,
+      a cornice passing between them; going down, the other way; on the same floor a soft cross-fade; from the street
+      a step in through the door. The header stays. Off with reduced motion (the view transition itself is too).
+   ================================================================================================================ */
+@media (prefers-reduced-motion: no-preference) {
+  html[data-concept="house"]::view-transition-group(site-header) { z-index: 5; }
+  html[data-concept="house"]::view-transition-old(root),
+  html[data-concept="house"]::view-transition-new(root) { mix-blend-mode: normal; }
+  html.c-house-vt-up[data-concept="house"]::view-transition-old(root) { animation: c-house-out-down 0.56s cubic-bezier(0.65, 0, 0.35, 1) both; }
+  html.c-house-vt-up[data-concept="house"]::view-transition-new(root) {
+    animation: c-house-in-top 0.56s cubic-bezier(0.65, 0, 0.35, 1) both;
+    box-shadow: 0 2px 0 #C9A04E, 0 15px 0 #4A3A2E, 0 17px 0 #C9A04E;
+  }
+  html.c-house-vt-down[data-concept="house"]::view-transition-old(root) { animation: c-house-out-up 0.56s cubic-bezier(0.65, 0, 0.35, 1) both; }
+  html.c-house-vt-down[data-concept="house"]::view-transition-new(root) {
+    animation: c-house-in-bottom 0.56s cubic-bezier(0.65, 0, 0.35, 1) both;
+    box-shadow: 0 -2px 0 #C9A04E, 0 -15px 0 #4A3A2E, 0 -17px 0 #C9A04E;
+  }
+  html.c-house-vt-in[data-concept="house"]::view-transition-old(root) { animation: c-house-step-old 0.44s cubic-bezier(0.4, 0, 0.6, 1) both; }
+  html.c-house-vt-in[data-concept="house"]::view-transition-new(root) { animation: c-house-step-new 0.52s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  html.c-house-vt-out[data-concept="house"]::view-transition-old(root) { animation: c-house-back-old 0.44s cubic-bezier(0.4, 0, 0.6, 1) both; }
+  html.c-house-vt-out[data-concept="house"]::view-transition-new(root) { animation: c-house-back-new 0.52s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  html.c-house-vt-same[data-concept="house"]::view-transition-old(root) { animation: c-house-fade-out 0.24s ease both; }
+  html.c-house-vt-same[data-concept="house"]::view-transition-new(root) { animation: c-house-fade-in 0.36s ease both; }
+}
+@keyframes c-house-out-down { to { transform: translateY(100%); } }
+@keyframes c-house-in-top { from { transform: translateY(-100%); } }
+@keyframes c-house-out-up { to { transform: translateY(-100%); } }
+@keyframes c-house-in-bottom { from { transform: translateY(100%); } }
+@keyframes c-house-step-old { to { opacity: 0; transform: scale(1.06); } }
+@keyframes c-house-step-new { from { opacity: 0; transform: scale(0.965); } }
+@keyframes c-house-back-old { to { opacity: 0; transform: scale(0.95); } }
+@keyframes c-house-back-new { from { opacity: 0; transform: scale(1.04); } }
+@keyframes c-house-fade-out { to { opacity: 0; } }
+@keyframes c-house-fade-in { from { opacity: 0; } }

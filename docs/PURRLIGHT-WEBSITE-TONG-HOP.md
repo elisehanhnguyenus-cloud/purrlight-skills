@@ -1475,6 +1475,39 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   trên nền kem, ảnh bên phải không phủ, mép ảnh tan vào nền — đúng ý "1 hình ảnh và 1 đoạn mô tả ngay bên cạnh" ngày
   25/10. Chị chọn A (giữ) hay B.
 
+### Elise 31/10 (tin sau) — soát kenailapp.com, màn chào "cánh cửa xưởng" (chưa lên web)
+- **Soát kenailapp.com:** `docs/KENAIL-STYLE-REVIEW-2026-10-31.md`. Không áp nguyên. Lấy 4 ý:
+  - tiêu đề hai tông;
+  - mỗi khối 1 tiêu đề và 3 dòng;
+  - hàng ảnh bấm đổi ảnh cho "Shop by category";
+  - một con số giá rõ ở Custom Orders.
+- **Màn chào + chuyển trang mượt** (chị: "hiệu ứng trang đầu tiên… trải nghiệm thú vị nhất quán"):
+  - mũi móc len rơi trên nền kem, cửa vòm "Open chapter one" mở ra Merlin thật, khoảng 2,5 giây;
+  - chuyển trang mờ dần, thanh menu đứng yên;
+  - tiêu đề hai tông "keepsakes." màu berry.
+
+  Code ở `prototypes/2026-10-31-welcome-door/`.
+
+### Elise 01/11 — sách, cửa hay nhà 3 tầng? (chưa lên web)
+- Chị hỏi nên phát triển web thành **cuốn sách**, **cửa mở + hành lang**, hay **nhà 3 tầng** (trụ sở Merlin: quán
+  trà, mèo, tầng gift shop). Chị muốn kiểu cổ điển có một chút Đông Dương, Mỹ, Anh, Pháp, hiệu ứng 3D/chân thực, "như
+  người lạ bắt đầu biết Purrlight". Chị cũng hỏi các trang khác có trải nghiệm giống vậy không.
+- **Soát web hiện tại:**
+  - giọng "cuốn sách" chỉ có ở trang chủ;
+  - Custom Orders trông như web khác (thanh đầu trang, nút vuông, chân trang), thanh menu nhảy khi chuyển trang;
+  - chuyển trang mờ dần bị bỏ qua khoảng 1/5 lần (đã tìm ra cách sửa);
+  - cửa 31/10 còn phẳng, nhỏ, và hiện giữa chừng nếu khách vào từ trang sản phẩm;
+  - Custom Orders còn hiện hạn "order by Sun, Oct 25" đã qua.
+- **Dựng thật cả 3 hướng**, mỗi hướng có màn chào và lớp áp cho mọi trang, rồi hai người chấm độc lập so sánh. Cả hai
+  chọn **sách**:
+  - điểm góc dễ làm/khách mua: sách 26/30, cửa 17, nhà 15;
+  - điểm góc thương hiệu: sách 27,5/30, cửa 23,5, nhà 21,5.
+
+  Cửa và hành lang đẹp và 3D nhất nhưng khó nhất, dễ lỗi iPhone nhất. Nhà 3 tầng hợp trụ sở Merlin nhưng chỉ đủ 3 trang
+  và nặng nhất.
+- Phân tích, bảng so sánh, kế hoạch và chữ mới: `docs/EXPERIENCE-DIRECTIONS-2026-11-01.md`. Code:
+  `prototypes/2026-11-01-experience-directions/`. Bản xem thử (bản 6): https://claude.ai/artifact/319xv2mZQU6k8GBBxtUbLs
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
@@ -1543,6 +1576,18 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
     hay tháng 1, booth nhận thẻ bằng gì, ngân sách).
 22. **Đầu trang chủ trên máy tính (31/10):** giữ kiểu A (chữ trắng trên ảnh phủ nâu) hay đổi sang kiểu B (chữ bên trái
     trên nền kem, ảnh bên phải rõ màu) — xem trong bản xem thử.
+23. **Hướng trải nghiệm (01/11):**
+    - Chọn sách (em đề xuất), cửa và hành lang, hay nhà 3 tầng.
+    - Duyệt chữ mới: "Open the book"; bìa ghi "From Merlin's Notebook" hay "Purrlight Studio"; dòng tên trang có số La
+      Mã.
+    - Gửi 1 clip Merlin thật quanh năm (tối đa 10 giây) và 2–4 ảnh Merlin không theo mùa.
+    - Ai thấy màn chào (đề xuất: bỏ qua khách từ Google và Etsy, nhớ 30 ngày).
+    - Lật trang mọi lần bấm hay chỉ giữa các mục chính.
+    - Nhà 3 tầng: để dành hay bỏ; pet sitting có phải dịch vụ của Purrlight không.
+    - Dòng "order by Sun, Oct 25" đã qua ở Custom Orders: giữ, gỡ hay đổi chữ.
+    - Có làm Custom Orders giống các trang khác không.
+    - Muốn lên trước đợt khóa web 15/11: quyết trước khoảng 08/11. Chi tiết: `docs/EXPERIENCE-DIRECTIONS-2026-11-01.md`
+      mục 5.
 
 ## 9. Link & tài nguyên
 

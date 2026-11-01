@@ -1,0 +1,694 @@
+/* PREVIEW 01/11 — Direction 1, "Merlin's book" (loaded by js/concept-boot.js with ?concept=book; never shipped).
+   Everything here is scoped to html[data-concept="book"] and the c-book- classes that js/c-book.js builds, so with
+   JavaScript off (or the direction off) the site is exactly as it was. Motion only under prefers-reduced-motion:
+   no-preference. Textures are tiny inline SVG noise; Merlin is only ever Elise's real photo and video. */
+
+html[data-concept="book"] {
+  /* paper grain for the site (very light) and a stronger one for the book's own pages */
+  --c-book-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .36 0 0 0 0 .25 0 0 0 0 .14 .42 0 0 0 -.17'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  --c-book-grain-2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' seed='8' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .34 0 0 0 0 .23 0 0 0 0 .12 .62 0 0 0 -.27'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  /* the printer's ornament: a hedera leaf between two rules */
+  --c-book-fleuron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 24'%3E%3Cpath d='M60 21c-6-2-10-6-10-10c0-3 2-5 5-5c2 0 4 1 5 4c1-3 3-4 5-4c3 0 5 2 5 5c0 4-4 8-10 10z' fill='%23CA8D41'/%3E%3Cpath d='M4 12h38M78 12h38M42 12c3-4 6-4 7-1M78 12c-3-4-6-4-7-1' fill='none' stroke='%23CA8D41' stroke-width='1.3' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* ================================================================================================================
+   THE WHOLE SITE
+   ================================================================================================================ */
+
+/* paper: a very light grain over the cream */
+html[data-concept="book"] body { background-image: var(--c-book-grain); background-size: 180px 180px; }
+
+/* the running head and folio, under the header like a printed book */
+.c-book-rh { position: relative; z-index: 1; }
+.c-book-rh-in {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 9px clamp(16px, 4vw, 48px) 8px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 500;
+  font-size: 11.5px;
+  line-height: 1.3;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #8A4A21;   /* 5.9:1 on cream */
+}
+.c-book-rh-l, .c-book-rh-r { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.c-book-rh-r { min-width: 0; }
+.c-book-rh-orn {
+  flex: 1;
+  min-width: 40px;
+  height: 14px;
+  background:
+    var(--c-book-fleuron) center / 58px 12px no-repeat,
+    linear-gradient(#D9BE8F, #D9BE8F) left center / calc(50% - 34px) 1px no-repeat,
+    linear-gradient(#D9BE8F, #D9BE8F) right center / calc(50% - 34px) 1px no-repeat;
+}
+.c-book-folio { margin-left: 12px; letter-spacing: 0.08em; text-transform: none; font-size: 13px; color: #6F655B; }
+@media (max-width: 520px) {
+  .c-book-rh-in { font-size: 10.5px; letter-spacing: 0.16em; gap: 10px; }
+  .c-book-rh-l { display: none; }
+  .c-book-rh-orn { order: -1; flex: 0 0 auto; width: 26px; background: var(--c-book-fleuron) center / 58px 12px no-repeat; background-size: 52px 11px; }
+  .c-book-rh-r { flex: 1; }
+}
+
+/* the berry silk ribbon on the current menu link */
+html[data-concept="book"] .main-nav a[aria-current] { position: relative; }
+html[data-c-book-nav="bar"] .main-nav a[aria-current] { border-color: transparent; }
+html[data-c-book-nav="bar"] .main-nav a[aria-current]::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: calc(-1 * var(--c-book-rib, 18px));
+  width: 11px;
+  height: calc(var(--c-book-rib, 18px) + 4px);
+  margin-left: -5.5px;
+  background: linear-gradient(90deg, #7A1430 0%, #C2405F 38%, #E0809A 52%, #B42249 70%, #6E1129 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 5px), 0 100%);
+  pointer-events: none;
+}
+html[data-c-book-nav="drawer"] .main-nav a[aria-current]::after {
+  content: "";
+  position: absolute;
+  right: 6px;
+  top: 0;
+  width: 14px;
+  height: 40px;
+  background: linear-gradient(90deg, #7A1430 0%, #C2405F 38%, #E0809A 52%, #B42249 70%, #6E1129 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 7px), 0 100%);
+  pointer-events: none;
+}
+
+/* a thin gold rule under each section heading (drawn in once as it comes into view) */
+.c-book-h::after {
+  content: "";
+  display: block;
+  width: 72px;
+  height: 2px;
+  margin-top: 12px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #A9782F, #E9CC86 45%, #B98A3E 75%, rgba(185, 138, 62, 0));
+  transform-origin: 0 50%;
+}
+.c-book-h-c::after { margin-left: auto; margin-right: auto; transform-origin: 50% 50%; background: linear-gradient(90deg, rgba(185, 138, 62, 0), #B98A3E 25%, #E9CC86 50%, #B98A3E 75%, rgba(185, 138, 62, 0)); }
+.site-footer .c-book-h::after, .follow .c-book-h::after { display: none; }
+
+/* the colophon: the footer reads as the book's last page */
+html[data-concept="book"] .footer-bottom { flex-direction: column; align-items: center; text-align: center; gap: 8px; }
+html[data-concept="book"] .footer-bottom p:last-child,
+html[data-concept="book"] .co-footer .tagline {
+  order: -1;
+  padding-top: 34px;
+  background: var(--c-book-fleuron) center top / 120px 24px no-repeat;
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 500;
+  font-size: 19px;
+  letter-spacing: 0.02em;
+  color: #F6EEE1;
+}
+html[data-concept="book"] .co-footer .tagline { margin-bottom: 6px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  html.c-book-rules .c-book-h::after { transform: scaleX(0); transition: transform 0.6s cubic-bezier(0.3, 0.7, 0.2, 1) 0.1s; }
+  html.c-book-rules .c-book-h.c-book-h-in::after { transform: none; }
+
+  /* .reveal settles in like ink: a breath of blur to sharp, once (js/main.js still adds .in) */
+  html[data-concept="book"] .reveal { transform: translateY(8px); filter: blur(1.5px); transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.5s ease, box-shadow 0.2s ease; }
+  html[data-concept="book"] .reveal.in { transform: none; filter: none; }
+  html[data-concept="book"] .story.reveal, html[data-concept="book"] .companions.reveal,
+  html[data-concept="book"] .newsletter.reveal, html[data-concept="book"] .purrks.reveal { filter: none; }
+  html[data-concept="book"].motion .rv { filter: blur(1.5px); transition: opacity 520ms ease, transform 520ms cubic-bezier(0.2, 0.7, 0.2, 1), filter 480ms ease; transition-delay: var(--rv-delay, 0ms); }
+  html[data-concept="book"].motion .rv.in { filter: none; }
+
+  /* page to page: the old page turns away around its left edge, the header stays still, the new page waits beneath.
+     js/c-book.js adds .c-book-back for back/forward, and one plain layer (c-book-leaf) that turns with the page to
+     carry its shading. 520 ms. */
+  html[data-concept="book"]::view-transition-group(root) { animation-duration: 0.52s; }
+  html[data-concept="book"]::view-transition-old(root),
+  html[data-concept="book"]::view-transition-new(root) { mix-blend-mode: normal; transform-origin: 0 50%; }
+  html[data-concept="book"]::view-transition-old(root) {
+    z-index: 1;
+    animation: c-book-turn-out 0.52s cubic-bezier(0.45, 0.05, 0.3, 1) both;
+    box-shadow: 0 0 60px 6px rgba(40, 24, 10, 0.32);
+  }
+  html[data-concept="book"]::view-transition-new(root) { animation: none; }
+  html[data-concept="book"]::view-transition-group(site-header) { z-index: 3; }
+  html[data-concept="book"]::view-transition-group(c-book-leaf) { z-index: 2; animation: none; }
+  html[data-concept="book"]::view-transition-new(c-book-leaf) { transform-origin: 0 50%; animation: c-book-shade-out 0.52s cubic-bezier(0.45, 0.05, 0.3, 1) both; }
+  html[data-concept="book"]::view-transition-old(c-book-leaf) { display: none; }
+  /* back: the page we came from turns back down onto the pile */
+  html.c-book-back[data-concept="book"]::view-transition-old(root) { z-index: 0; animation: none; box-shadow: none; }
+  html.c-book-back[data-concept="book"]::view-transition-new(root) { z-index: 1; animation: c-book-turn-in 0.52s cubic-bezier(0.45, 0.05, 0.3, 1) both; box-shadow: 0 0 60px 6px rgba(40, 24, 10, 0.32); }
+  html.c-book-back[data-concept="book"]::view-transition-new(c-book-leaf) { animation-name: c-book-shade-in; }
+}
+.c-book-vtl {
+  position: fixed;
+  inset: 0;
+  z-index: 2147482500;
+  pointer-events: none;
+  view-transition-name: c-book-leaf;
+  background: linear-gradient(90deg, rgba(48, 30, 14, 0) 0%, rgba(48, 30, 14, 0.07) 40%, rgba(255, 246, 232, 0.14) 72%, rgba(48, 30, 14, 0.26) 100%);
+}
+@keyframes c-book-turn-out {
+  0% { transform: perspective(240vw) rotateY(0deg); opacity: 1; }
+  72% { opacity: 1; }
+  100% { transform: perspective(240vw) rotateY(-96deg); opacity: 0; }
+}
+@keyframes c-book-turn-in {
+  0% { transform: perspective(240vw) rotateY(-96deg); opacity: 0; }
+  28% { opacity: 1; }
+  100% { transform: perspective(240vw) rotateY(0deg); opacity: 1; }
+}
+@keyframes c-book-shade-out {
+  0% { transform: perspective(240vw) rotateY(0deg); opacity: 0; }
+  45% { opacity: 1; }
+  72% { opacity: 1; }
+  100% { transform: perspective(240vw) rotateY(-96deg); opacity: 0; }
+}
+@keyframes c-book-shade-in {
+  0% { transform: perspective(240vw) rotateY(-96deg); opacity: 0; }
+  28% { opacity: 1; }
+  100% { transform: perspective(240vw) rotateY(0deg); opacity: 0; }
+}
+
+/* ================================================================================================================
+   THE WELCOME (home page only; js/c-book.js adds html.c-book-intro from the <head>)
+   ================================================================================================================ */
+
+html.c-book-intro { overflow: hidden; }
+/* a walnut curtain for the instant before the table is built, so the home page never flashes first */
+html.c-book-intro:not(.c-book-built) body::before { content: ""; position: fixed; inset: 0; z-index: 2147482999; background: #23170F; }
+/* the page waits a little back, then settles as the chapter page comes forward */
+html.c-book-intro body > :not(.c-book-ov):not(script) { transform: scale(0.97); transform-origin: 50% 30vh; }
+html.c-book-intro.c-book-reveal body > :not(.c-book-ov):not(script) { transform: none; transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); }
+
+.c-book-ov {
+  --bw: min(400px, 29vw, calc((100vh - 290px) / 1.36));
+  --bh: calc(var(--bw) * 1.36);
+  --cy: 53%;
+  --tilt0: 24deg;
+  --tilt1: 9deg;
+  --s1: 1.2;
+  --s2: 2.0;
+  --pan1: calc(var(--bw) * 0.5);
+  --oy: 0px;
+  --cup-x: calc(var(--bw) * 1.12);
+  --cup-y: calc(var(--bh) * -0.2);
+  --cup-w: calc(var(--bw) * 0.56);
+  --quilt-x: calc(var(--bw) * 1.1);
+  --quilt-y: calc(var(--bh) * -0.17);
+  --quilt-w: calc(var(--bw) * 0.58);
+  --yarn-x: calc(var(--bw) * -1.22);
+  --yarn-y: calc(var(--bh) * 0.62);   /* below the book, so the cover never opens onto it */
+  --seam1: 31%;
+  --seam2: 79%;
+  --yarn-w: calc(var(--bw) * 0.58);
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  overflow: hidden;
+  background: #23170F;
+  color: #FBF6EE;
+  font-family: 'Figtree', -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+  outline: none;
+  opacity: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.c-book-ov.is-in { opacity: 1; transition: opacity 0.5s ease; }
+.c-book-ov.is-fade { opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
+.c-book-ov.is-ff.is-fade { transition-duration: 0.34s; }
+.c-book-ov.is-phone {
+  --bw: min(78vw, calc((100vh - 290px) / 1.36));
+  --cy: 51%;
+  --tilt0: 22deg;
+  --tilt1: 6deg;
+  --s1: 1.12;
+  --oy: -12px;
+  --s2: 1.9;
+  --pan1: 0px;
+  --cup-x: calc(50vw - 46px);
+  --cup-y: calc(var(--bh) * 0.5 + 104px);
+  --cup-w: 146px;
+  --quilt-x: calc(50vw - 38px);
+  --quilt-y: calc(var(--bh) * 0.5 + 110px);
+  --quilt-w: 150px;
+  --yarn-x: calc(-50vw + 58px);
+  --yarn-y: calc(var(--bh) * 0.5 + 104px);
+  --yarn-w: 164px;
+  --seam1: 33%;
+  --seam2: 86%;
+}
+.c-book-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+/* ---------- the walnut table under a warm lamp ---------- */
+.c-book-table, .c-book-table i { position: absolute; inset: 0; display: block; pointer-events: none; }
+.c-book-table {
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 0 var(--seam1), rgba(8, 4, 1, 0.55) var(--seam1), rgba(8, 4, 1, 0.55) calc(var(--seam1) + 1.5px), rgba(255, 214, 170, 0.07) calc(var(--seam1) + 1.5px), rgba(0, 0, 0, 0) calc(var(--seam1) + 4px), rgba(0, 0, 0, 0) var(--seam2), rgba(8, 4, 1, 0.55) var(--seam2), rgba(8, 4, 1, 0.55) calc(var(--seam2) + 1.5px), rgba(255, 214, 170, 0.07) calc(var(--seam2) + 1.5px), rgba(0, 0, 0, 0) calc(var(--seam2) + 4px)),
+    linear-gradient(180deg, #3A2414 0 var(--seam1), #46301C var(--seam1) var(--seam2), #3C2616 var(--seam2) 100%);
+}
+.c-book-grain {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='600'%3E%3Cfilter id='g' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.0011 .026' numOctaves='3' seed='21' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='discrete' tableValues='0 0 0 0 0 0 0 0 0 0 0 .62 0 0 .62 0 .3 0 .62 0 0 .62 0 .3 0 .62 0 0 .62 0 .3 0 .62 0 0 0 0 0 0 0'/%3E%3C/feComponentTransfer%3E%3CfeColorMatrix values='0 0 0 0 .06 0 0 0 0 .03 0 0 0 0 .01 0 0 0 .75 0'/%3E%3C/filter%3E%3Crect width='1200' height='600' filter='url(%23g)'/%3E%3C/svg%3E") 0 0 / 1200px 600px,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1100' height='640'%3E%3Cfilter id='w' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.0014 .022' numOctaves='3' seed='5' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='table' tableValues='0 .5 .08 .62 0 .45 .12 .6 0 .5 .1 .58 0 .48 .08 .6 0 .5 0'/%3E%3C/feComponentTransfer%3E%3CfeColorMatrix values='0 0 0 0 .1 0 0 0 0 .055 0 0 0 0 .02 0 0 0 .62 0'/%3E%3C/filter%3E%3Crect width='1100' height='640' filter='url(%23w)'/%3E%3C/svg%3E") 0 0 / 1100px 640px,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='300'%3E%3Cfilter id='p' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.006 .45' numOctaves='2' seed='9' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .06 0 0 0 0 .03 0 0 0 0 .01 1.6 0 0 0 -.78'/%3E%3C/filter%3E%3Crect width='600' height='300' filter='url(%23p)'/%3E%3C/svg%3E") 0 0 / 600px 300px,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='500'%3E%3Cfilter id='h' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.0011 .012' numOctaves='2' seed='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .36 0 0 0 0 .2 1.2 0 0 0 -.58'/%3E%3C/filter%3E%3Crect width='900' height='500' filter='url(%23h)'/%3E%3C/svg%3E") 0 0 / 900px 500px;
+}
+/* the lamp: one warm key light, soft falloff, and its faint reflection in the lacquer */
+.c-book-pool {
+  background:
+    radial-gradient(ellipse 34% 26% at 50% 40%, rgba(255, 226, 186, 0.16), rgba(255, 226, 186, 0) 70%),
+    radial-gradient(ellipse 62% 54% at 50% 48%, rgba(255, 190, 132, 0.36) 0%, rgba(232, 168, 124, 0.16) 42%, rgba(232, 168, 124, 0) 74%);
+  opacity: 0.55;
+  transition: opacity 1.4s ease 0.2s;
+}
+.c-book-ov.is-in .c-book-pool { opacity: 1; }
+.c-book-vig { background: radial-gradient(ellipse 85% 80% at 50% 48%, rgba(12, 6, 2, 0) 45%, rgba(12, 6, 2, 0.55) 82%, rgba(8, 4, 1, 0.82) 100%); }
+
+/* ---------- the camera ---------- */
+.c-book-stage { position: absolute; inset: 0; perspective: 1500px; perspective-origin: 50% 40%; }
+.c-book-cam, .c-book-world { position: absolute; left: 0; top: 0; width: 0; height: 0; transform-style: preserve-3d; }
+.c-book-cam {
+  left: 50%;
+  top: var(--cy);
+  transform: translate3d(0, 0, 0) scale(1) rotateX(var(--tilt0)) rotateZ(-3deg);
+  transition: transform 1.2s cubic-bezier(0.55, 0.06, 0.25, 1);
+}
+.c-book-world { transform: translate3d(0, 0, 0); transition: transform 1.2s cubic-bezier(0.55, 0.06, 0.25, 1); }
+.c-book-ov.is-open .c-book-cam { transform: translate3d(0, var(--oy), 0) scale(var(--s1)) rotateX(var(--tilt1)) rotateZ(0deg); }
+.c-book-ov.is-open .c-book-world { transform: translate3d(var(--pan1), 0, 0); }
+.c-book-ov.is-zoom .c-book-sound, .c-book-ov.is-zoom .c-book-skip { opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0s 0.25s; }
+.c-book-ov.is-zoom .c-book-p2-in { opacity: 0; transition: opacity 0.26s ease 0.08s; }
+.c-book-ov.is-zoom .c-book-cam { transform: translate3d(0, 0, 0) scale(var(--s2)) rotateX(0deg) rotateZ(0deg); transition: transform 0.95s cubic-bezier(0.6, 0, 0.4, 1); }
+.c-book-ov.is-zoom .c-book-world { transform: translate3d(0, 0, 0); transition: transform 0.95s cubic-bezier(0.6, 0, 0.4, 1); }
+
+/* ---------- the props on the table: quilt-patch coaster, teacup, yarn and hook, the ribbon ---------- */
+.c-book-prop { position: absolute; left: 0; top: 0; transform-style: preserve-3d; pointer-events: none; }
+.c-book-prop svg { display: block; width: 100%; height: auto; overflow: visible; }
+.c-book-p-quilt { width: var(--quilt-w); transform: translate3d(calc(var(--quilt-x) - 50%), calc(var(--quilt-y) - 50%), -23px) rotate(11deg); }
+.c-book-p-cup { width: var(--cup-w); transform: translate3d(calc(var(--cup-x) - 50%), calc(var(--cup-y) - 50%), -21px) rotate(-8deg); }
+.c-book-p-yarn { width: var(--yarn-w); transform: translate3d(calc(var(--yarn-x) - 50%), calc(var(--yarn-y) - 50%), -22px) rotate(-6deg); }
+.c-book-p-ribbon { width: 42px; transform: translate3d(calc(var(--bw) * 0.16), calc(var(--bh) * 0.5 - 30px), -21px) rotate(-7deg); }
+.c-book-ov.is-phone .c-book-p-ribbon { width: 36px; }
+
+/* steam: three soft wisps that rise and stop by themselves (4.9 s) */
+.c-book-steam { position: absolute; left: 22%; top: -38%; width: 56%; height: 90%; transform: translateZ(26px) rotate(8deg); }
+.c-book-steam i {
+  position: absolute;
+  bottom: 0;
+  width: 34%;
+  height: 100%;
+  opacity: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 160'%3E%3Cfilter id='b' x='-60%25' y='-10%25' width='220%25' height='120%25'%3E%3CfeGaussianBlur stdDeviation='3.2'/%3E%3C/filter%3E%3Cpath d='M30 156c-14-24 14-38 0-64s12-40 2-88' fill='none' stroke='%23FFF4E4' stroke-width='8' stroke-linecap='round' opacity='.55' filter='url(%23b)'/%3E%3Cpath d='M30 156c-14-24 14-38 0-64s12-40 2-88' fill='none' stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' opacity='.25' filter='url(%23b)'/%3E%3C/svg%3E") center bottom / contain no-repeat;
+}
+.c-book-steam i:nth-child(1) { left: 6%; }
+.c-book-steam i:nth-child(2) { left: 34%; transform: scaleX(-1); }
+.c-book-steam i:nth-child(3) { left: 58%; }
+@media (prefers-reduced-motion: no-preference) {
+  .c-book-ov.is-in .c-book-steam i { animation: c-book-steam 2.1s cubic-bezier(0.3, 0.2, 0.4, 1) 2 both; }
+  .c-book-ov.is-in .c-book-steam i:nth-child(2) { animation-delay: 0.4s; animation-name: c-book-steam-b; }
+  .c-book-ov.is-in .c-book-steam i:nth-child(3) { animation-delay: 0.7s; }
+}
+@keyframes c-book-steam {
+  0% { opacity: 0; transform: translate3d(0, 14%, 0) scale(0.9, 0.85); }
+  35% { opacity: 0.85; }
+  100% { opacity: 0; transform: translate3d(8%, -26%, 0) scale(1.2, 1.12); }
+}
+@keyframes c-book-steam-b {
+  0% { opacity: 0; transform: translate3d(0, 14%, 0) scale(-0.9, 0.85); }
+  35% { opacity: 0.75; }
+  100% { opacity: 0; transform: translate3d(-8%, -24%, 0) scale(-1.2, 1.1); }
+}
+
+/* ---------- the book ---------- */
+.c-book-book {
+  position: absolute;
+  left: calc(var(--bw) / -2);
+  top: calc(var(--bh) / -2);
+  width: var(--bw);
+  height: var(--bh);
+  transform-style: preserve-3d;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.c-book-ov.is-open .c-book-book { cursor: default; }
+.c-book-book > *, .c-book-face, .c-book-book i { position: absolute; display: block; }
+.c-book-shadow {
+  inset: 0;
+  border-radius: 4px;
+  transform: translateZ(-23px);
+  box-shadow: 0 18px 38px 6px rgba(6, 3, 1, 0.62), 0 4px 10px rgba(6, 3, 1, 0.55), 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+.c-book-shadow-l { inset: 0 auto 0 calc(var(--bw) * -1); width: var(--bw); opacity: 0; transition: opacity 0.7s ease 0.4s; }
+.c-book-ov.is-open .c-book-shadow-l { opacity: 1; }
+
+/* the page block, with its tail edge (and the back board) showing under the tilt */
+.c-book-block {
+  top: 3px; bottom: 3px; left: 0; right: 4px;
+  transform-style: preserve-3d;
+  transform: translateZ(0);
+  background: #EFE5D0;
+}
+.c-book-tail, .c-book-fore { background-repeat: no-repeat; }
+.c-book-tail {
+  left: 0; right: -4px; top: 100%; height: 23px;
+  transform-origin: 50% 0;
+  transform: rotateX(-90deg);
+  background:
+    linear-gradient(180deg, rgba(60, 38, 18, 0.0) 0, rgba(60, 38, 18, 0.25) 100%) 0 0 / 100% 19px no-repeat,
+    repeating-linear-gradient(180deg, #F3EAD7 0 1px, #E2D5BC 1px 2px) 0 0 / 100% 19px no-repeat,
+    linear-gradient(180deg, #1E342B, #15251E) 0 19px / 100% 4px no-repeat;
+}
+.c-book-fore {
+  top: 0; bottom: 0; left: 100%; width: 23px;
+  transform-origin: 0 50%;
+  transform: rotateY(90deg);
+  background:
+    repeating-linear-gradient(90deg, #F3EAD7 0 1px, #E2D5BC 1px 2px) 0 0 / 19px 100% no-repeat,
+    linear-gradient(90deg, #1E342B, #15251E) 19px 0 / 4px 100% no-repeat;
+}
+
+/* paper pages */
+.c-book-page {
+  top: 3px; bottom: 3px; left: 0; right: 4px;
+  overflow: hidden;
+  color: #4A423B;
+  background:
+    linear-gradient(90deg, rgba(70, 44, 20, 0.26) 0, rgba(70, 44, 20, 0.08) 6%, rgba(70, 44, 20, 0) 15%, rgba(70, 44, 20, 0) 94%, rgba(70, 44, 20, 0.07) 100%),
+    var(--c-book-grain-2),
+    radial-gradient(ellipse 90% 80% at 45% 40%, #FCF6EA 0%, #F6EDDB 70%, #EFE3CB 100%);
+  background-size: auto, 160px 160px, auto;
+}
+.c-book-face { inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.c-book-leaf .c-book-face { top: 0; bottom: 0; right: 0; }
+.c-book-p2 { transform: translateZ(1px); }
+.c-book-leaf {
+  top: 3px; bottom: 3px; left: 0; right: 4px;
+  transform-style: preserve-3d;
+  transform-origin: 0 50%;
+  transform: translateZ(2px) rotateY(0deg);
+}
+.c-book-p1 { transform: translateZ(0.3px); }
+.c-book-verso {
+  transform: rotateY(180deg) translateZ(0.3px);
+  background:
+    linear-gradient(270deg, rgba(70, 44, 20, 0.26) 0, rgba(70, 44, 20, 0.08) 6%, rgba(70, 44, 20, 0) 15%, rgba(70, 44, 20, 0) 94%, rgba(70, 44, 20, 0.07) 100%),
+    var(--c-book-grain-2),
+    radial-gradient(ellipse 90% 80% at 55% 40%, #FCF6EA 0%, #F6EDDB 70%, #EFE3CB 100%);
+  background-size: auto, 160px 160px, auto;
+}
+.c-book-through { left: 11%; right: 11%; top: 22%; aspect-ratio: 4 / 3.1; background: rgba(70, 50, 30, 0.03); box-shadow: 0 0 14px 8px rgba(70, 50, 30, 0.025); transform: rotate(-1.2deg); }
+.c-book-ov.is-phone .c-book-through { top: 27%; }
+
+/* page 1 (the leaf's front): the living photograph */
+.c-book-p1-in, .c-book-p2-in { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 8% 9% 7% 11%; }
+.c-book-ph-head { display: none; margin-bottom: 6%; }
+.c-book-ov.is-phone .c-book-ph-head { display: block; }
+.c-book-plate-t { font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: calc(var(--bw) * 0.056); line-height: 1.2; letter-spacing: 0.03em; color: #4A423B; }
+.c-book-plate-s { font-family: 'Caveat', cursive; font-size: calc(var(--bw) * 0.068); white-space: nowrap; line-height: 1.05; color: #A21F43; }
+.c-book-ph-head .c-book-plate-s { font-size: calc(var(--bw) * 0.085); }
+.c-book-photo {
+  position: relative;
+  width: 86%;
+  margin: 0;
+  padding: 6px 6px 7px;
+  background: #FDFBF5;
+  box-shadow: 0 1px 1px rgba(40, 26, 12, 0.3), 0 8px 16px -4px rgba(60, 38, 18, 0.35);
+  transform: rotate(1.4deg);
+}
+.c-book-photo-in { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #E9E2D6; }
+.c-book-photo video, .c-book-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* paper photo corners */
+.c-book-pc { width: 17px; height: 17px; background: linear-gradient(135deg, #4A3526, #2B1E15); box-shadow: 0 1px 1px rgba(0, 0, 0, 0.25); }
+.c-book-pc-tl { left: -3px; top: -3px; clip-path: polygon(0 0, 100% 0, 0 100%); }
+.c-book-pc-tr { right: -3px; top: -3px; clip-path: polygon(0 0, 100% 0, 100% 100%); }
+.c-book-pc-bl { left: -3px; bottom: -3px; clip-path: polygon(0 0, 100% 100%, 0 100%); }
+.c-book-pc-br { right: -3px; bottom: -3px; clip-path: polygon(100% 0, 100% 100%, 0 100%); }
+.c-book-cap {
+  margin-top: 9%;
+  min-height: 2.3em;
+  font-family: 'Caveat', cursive;
+  font-weight: 500;
+  font-size: calc(var(--bw) * 0.074);
+  line-height: 1.12;
+  color: #4A3628;
+  text-wrap: balance;
+}
+
+/* page 2: the chapter-one title page */
+.c-book-p2-in { padding: 10% 11% 9% 13%; gap: 0; }
+.c-book-fl { display: block; width: 34%; height: auto; margin-bottom: 7%; }
+.c-book-ch { font-weight: 600; font-size: calc(var(--bw) * 0.04); letter-spacing: 0.24em; text-transform: uppercase; color: #8A4A21; }
+.c-book-rule { position: static !important; width: 30%; height: 1px; margin: 7% auto 8%; background: linear-gradient(90deg, rgba(176, 132, 64, 0), #B08440 30%, #E3C27E 50%, #B08440 70%, rgba(176, 132, 64, 0)); }
+.c-book-h1 { font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: calc(var(--bw) * 0.092); line-height: 1.1; letter-spacing: -0.01em; color: #4A423B; text-wrap: balance; }
+.c-book-h1 em { font-style: normal; color: #B42249; }
+.c-book-folio-p { position: absolute; left: 0; right: 0; bottom: 5%; font-family: 'Fraunces', Georgia, serif; font-size: calc(var(--bw) * 0.04); color: #6F655B; }
+
+/* light and shadow that move with the pages */
+.c-book-lift, .c-book-cast, .c-book-turnshade, .c-book-coverlight, .c-book-endshade { inset: 0; pointer-events: none; }
+.c-book-lift { background: linear-gradient(90deg, rgba(24, 14, 6, 0.62), rgba(24, 14, 6, 0.5) 70%, rgba(24, 14, 6, 0)); transform-origin: 0 50%; opacity: 0; }
+.c-book-cast { background: linear-gradient(90deg, rgba(24, 14, 6, 0.5), rgba(24, 14, 6, 0.3) 72%, rgba(24, 14, 6, 0)); transform-origin: 0 50%; opacity: 0; }
+.c-book-turnshade { opacity: 0; }
+.c-book-p1 .c-book-turnshade {
+  right: -110%;
+  background: linear-gradient(90deg, rgba(40, 24, 10, 0) 0%, rgba(40, 24, 10, 0.16) 30%, rgba(255, 246, 230, 0.34) 41%, rgba(40, 24, 10, 0.2) 50%, rgba(40, 24, 10, 0.36) 100%);
+}
+.c-book-verso .c-book-turnshade { background: linear-gradient(270deg, rgba(40, 24, 10, 0.1) 0%, rgba(40, 24, 10, 0.3) 100%); }
+.c-book-coverlight { opacity: 0; background: linear-gradient(90deg, rgba(8, 14, 10, 0.2), rgba(8, 14, 10, 0.55)); }
+.c-book-endshade { opacity: 0; background: rgba(30, 20, 10, 0.5); }
+
+/* ---------- the cover: cloth, gilt frame with Art Nouveau corners, foil title, the library label ---------- */
+.c-book-cover {
+  inset: 0;
+  transform-style: preserve-3d;
+  transform-origin: 0 50%;
+  transform: translateZ(5px) rotateY(0deg);
+  transition: transform 1.1s cubic-bezier(0.5, 0.05, 0.3, 1);
+}
+.c-book-front {
+  transform: translateZ(1.5px);
+  border-radius: 2px 5px 5px 2px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 110% 85% at 38% 26%, #456A5A 0%, #2F4E42 46%, #1D3229 100%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06), inset -2px 0 3px rgba(0, 0, 0, 0.35), inset 0 -2px 3px rgba(0, 0, 0, 0.3);
+}
+.c-book-cloth {
+  inset: 0;
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.045) 0 1px, rgba(0, 0, 0, 0) 1px 3px),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.08) 0 1px, rgba(0, 0, 0, 0) 1px 3px),
+    var(--c-book-grain-2);
+  background-size: auto, auto, 160px 160px;
+  opacity: 0.9;
+}
+/* the joint by the spine: the board bends here */
+.c-book-joint { top: 0; bottom: 0; left: 0; width: 7%; background: linear-gradient(90deg, rgba(0, 0, 0, 0.35), rgba(255, 255, 255, 0.07) 55%, rgba(0, 0, 0, 0.28) 78%, rgba(255, 255, 255, 0.05) 88%, rgba(0, 0, 0, 0)); }
+.c-book-frame { border: 1.6px solid transparent; border-image: linear-gradient(135deg, #8C6526, #F1D894 28%, #B98A3E 50%, #EBCB80 74%, #8C6526) 1; box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3); }
+.c-book-frame-o { top: 4.5%; bottom: 4.5%; left: 10.5%; right: 5.5%; }
+.c-book-frame-i { top: calc(4.5% + 6px); bottom: calc(4.5% + 6px); left: calc(10.5% + 6px); right: calc(5.5% + 6px); border-width: 0.8px; }
+.c-book-corner { position: absolute; width: 17%; height: auto; overflow: visible; }
+.c-book-corner.c-tl { left: calc(10.5% + 3px); top: calc(4.5% + 3px); }
+.c-book-corner.c-tr { right: calc(5.5% + 3px); top: calc(4.5% + 3px); transform: scaleX(-1); }
+.c-book-corner.c-bl { left: calc(10.5% + 3px); bottom: calc(4.5% + 3px); transform: scaleY(-1); }
+.c-book-corner.c-br { right: calc(5.5% + 3px); bottom: calc(4.5% + 3px); transform: scale(-1, -1); }
+.c-book-title {
+  position: absolute;
+  left: 8%; right: 3%;
+  top: 14.5%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600;
+  font-size: calc(var(--bw) * 0.112);
+  line-height: 1.02;
+  letter-spacing: 0.015em;
+  color: #E3C27E;
+  background: linear-gradient(172deg, #F7E3A6 0%, #D6A951 38%, #F3D995 55%, #A97C33 82%, #E7C67F 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.5));
+}
+.c-book-title-s { margin-bottom: 0.6em; font-size: 0.34em; letter-spacing: 0.5em; text-transform: uppercase; padding-left: 0.5em; }
+.c-book-label {
+  position: absolute;
+  left: calc(8% + 18%); right: calc(3% + 18%);
+  top: 46%;
+  padding: 7% 6%;
+  border-radius: 3px;
+  background:
+    radial-gradient(ellipse 100% 100% at 50% 50%, rgba(255, 255, 255, 0) 60%, rgba(150, 110, 60, 0.18) 100%),
+    var(--c-book-grain-2),
+    #F5ECD8;
+  background-size: auto, 160px 160px, auto;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.3), inset 0 0 0 3px #F5ECD8, inset 0 0 0 4px rgba(120, 84, 44, 0.55), inset 0 0 0 6px #F5ECD8, inset 0 0 0 6.6px rgba(120, 84, 44, 0.35);
+}
+.c-book-label img { display: block; width: 100%; height: auto; }
+.c-book-motto {
+  position: absolute;
+  left: 8%; right: 3%;
+  bottom: 15.5%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45em;
+  text-align: center;
+  font-weight: 600;
+  font-size: calc(var(--bw) * 0.034);
+  line-height: 1.2;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #DDBB72;   /* 5.2:1 on the green cloth */
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.45);
+}
+
+/* the endpaper inside the cover: gach bong tiles (sage, cream, berry), pasted inside the cloth turn-ins */
+.c-book-endpaper {
+  transform: rotateY(180deg) translateZ(1.5px);
+  border-radius: 5px 2px 2px 5px;
+  background: radial-gradient(ellipse 110% 85% at 50% 30%, #3B5D4F, #213A30);
+}
+.c-book-endpaper::before {
+  content: "";
+  position: absolute;
+  top: 2.4%; bottom: 2.4%; left: 3.6%; right: 0;
+  background:
+    linear-gradient(270deg, rgba(60, 38, 18, 0.32) 0, rgba(60, 38, 18, 0.08) 7%, rgba(60, 38, 18, 0) 16%),
+    radial-gradient(ellipse 90% 90% at 40% 40%, rgba(255, 250, 238, 0.18), rgba(120, 90, 50, 0.16) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Crect width='44' height='44' fill='%23F0E6D2'/%3E%3Cg fill='%2393AC8C'%3E%3Cpath d='M0 0h10a10 10 0 0 1-10 10zM44 0v10a10 10 0 0 1-10-10zM44 44h-10a10 10 0 0 1 10-10zM0 44v-10a10 10 0 0 1 10 10z'/%3E%3Cpath d='M22 5c4.5 6 4.5 11 0 17c-4.5-6-4.5-11 0-17zM22 39c-4.5-6-4.5-11 0-17c4.5 6 4.5 11 0 17zM5 22c6-4.5 11-4.5 17 0c-6 4.5-11 4.5-17 0zM39 22c-6 4.5-11 4.5-17 0c6-4.5 11-4.5 17 0z'/%3E%3C/g%3E%3Cg fill='%23B04A5E'%3E%3Ccircle cx='22' cy='22' r='3.2'/%3E%3Cpath d='M10.5 10.5l5 1.6l-3.4 3.4zM33.5 10.5l-1.6 5l-3.4-3.4zM33.5 33.5l-5-1.6l3.4-3.4zM10.5 33.5l1.6-5l3.4 3.4z'/%3E%3C/g%3E%3Cpath d='M22 0v3M22 41v3M0 22h3M41 22h3' stroke='%2393AC8C' stroke-width='1.4'/%3E%3Cpath d='M0 .5h44M.5 0v44' stroke='%23C9B996' stroke-width='.8' opacity='.7'/%3E%3C/svg%3E") 0 0 / calc(var(--bw) * 0.15) calc(var(--bw) * 0.15),
+    #F0E6D2;
+}
+.c-book-plate {
+  position: absolute;
+  left: 13%; right: 10%;
+  top: 50%;
+  transform: translateY(-50%) rotate(-0.6deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 9% 7% 8%;
+  border-radius: 2px;
+  background:
+    var(--c-book-grain-2),
+    radial-gradient(ellipse 100% 100% at 50% 45%, #FCF7EC, #F2E7D0);
+  background-size: 160px 160px, auto;
+  box-shadow: 0 1px 2px rgba(60, 40, 20, 0.35), 0 4px 10px rgba(60, 40, 20, 0.18), inset 0 0 0 4px #FAF3E4, inset 0 0 0 5px rgba(122, 90, 58, 0.6), inset 0 0 0 8px #FAF3E4, inset 0 0 0 8.6px rgba(122, 90, 58, 0.35);
+}
+.c-book-plate .c-book-fl { width: 46%; margin: 6% 0 5%; }
+.c-book-nib { width: 15%; height: auto; margin-bottom: 6%; }
+
+/* the cover's own thickness (seen while it swings) */
+.c-book-cedge { background: linear-gradient(90deg, #1A2D25, #2E4B40 50%, #1A2D25); }
+.c-book-cedge-fore { top: 0; bottom: 0; left: 100%; width: 3px; transform-origin: 0 50%; transform: translateZ(1.5px) rotateY(90deg); }
+.c-book-cedge-tail { left: 0; right: 0; top: 100%; height: 3px; transform-origin: 50% 0; transform: translateZ(1.5px) rotateX(-90deg); background: linear-gradient(180deg, #2E4B40, #1A2D25); }
+
+/* ---------- words and buttons on the table ---------- */
+.c-book-line {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--cy) - var(--bh) * 0.5 - 18px);
+  width: min(88vw, 640px);
+  transform: translate(-50%, -100%);
+  margin: 0;
+  text-align: center;
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(25px, 6.8vw, 34px);
+  line-height: 1.14;
+  letter-spacing: -0.005em;
+  color: #FBF6EE;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.55);
+  pointer-events: none;
+}
+.c-book-line em { font-style: normal; color: #F6C7A2; }
+.c-book-line br { display: none; }
+.c-book-ov.is-phone .c-book-line br { display: inline; }
+.c-book-open, .c-book-skip, .c-book-sound {
+  position: absolute;
+  min-height: 44px;
+  cursor: pointer;
+  font-family: 'Figtree', -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+}
+.c-book-open {
+  left: 50%;
+  top: calc(var(--cy) + var(--bh) * 0.5 + 22px);
+  transform: translateX(-50%);
+  min-height: 50px;
+  padding: 12px 30px;
+  border: 1px solid #C79A52;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #FBF3E2, #EEDDBC);
+  color: #3B2A1E;
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset, 0 8px 20px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.35);
+  transition: opacity 0.3s ease, transform 0.2s ease;
+}
+.c-book-skip, .c-book-sound {
+  padding: 8px 16px;
+  border: 1px solid rgba(246, 220, 196, 0.38);
+  border-radius: 999px;
+  background: rgba(20, 12, 6, 0.55);
+  color: #F6EEE1;
+  font-weight: 600;
+  font-size: 14px;
+}
+.c-book-skip { top: max(14px, env(safe-area-inset-top, 0px)); right: 14px; z-index: 3; }
+.c-book-sound {
+  left: 50%;
+  bottom: max(22px, env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 3;
+  animation: c-book-in 0.4s ease both;
+}
+.c-book-sound[hidden] { display: none; }
+.c-book-sound svg { width: 20px; height: 20px; }
+.c-book-sound[aria-pressed="true"] { background: rgba(246, 220, 196, 0.92); color: #3B2A1E; }
+.c-book-open:focus-visible, .c-book-skip:focus-visible, .c-book-sound:focus-visible { outline: 3px solid #FBF6EE; outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) {
+  .c-book-open:hover { transform: translateX(-50%) translateY(-1px); }
+  .c-book-skip:hover, .c-book-sound:hover { background: rgba(20, 12, 6, 0.75); }
+  .c-book-ov:not(.is-open) .c-book-book:hover .c-book-cover { transform: translateZ(5px) rotateY(-11deg); transition-duration: 0.5s; }
+}
+@keyframes c-book-in { from { opacity: 0; } }
+
+/* ---------- the opening ---------- */
+.c-book-ov.is-open .c-book-line, .c-book-ov.is-open .c-book-open { opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0s 0.3s; }
+.c-book-ov.is-open .c-book-cover { transform: translateZ(-21px) rotateY(-180deg); }
+.c-book-ov.is-open .c-book-lift { animation: c-book-lift 1.1s cubic-bezier(0.5, 0.05, 0.3, 1) both; }
+.c-book-ov.is-open .c-book-coverlight { animation: c-book-coverlight 1.1s linear both; }
+.c-book-ov.is-open .c-book-endshade { animation: c-book-endshade 1.1s linear both; }
+.c-book-ov.is-turn .c-book-leaf { transform: translateZ(-19px) rotateY(-180deg); transition: transform 0.78s cubic-bezier(0.45, 0.05, 0.3, 1); }
+.c-book-ov.is-turn .c-book-p1 .c-book-turnshade { animation: c-book-turnshade 0.78s linear both; }
+.c-book-ov.is-turn .c-book-verso .c-book-turnshade { animation: c-book-versoshade 0.78s linear both; }
+.c-book-ov.is-turn .c-book-cast { animation: c-book-cast 0.78s cubic-bezier(0.45, 0.05, 0.3, 1) both; }
+@keyframes c-book-lift { 0% { opacity: 1; transform: scaleX(1); } 70% { opacity: 0.5; } 100% { opacity: 0; transform: scaleX(0.1); } }
+@keyframes c-book-coverlight { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 1; } }
+@keyframes c-book-endshade { 0% { opacity: 1; } 48% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes c-book-turnshade { 0% { opacity: 0; transform: translateX(0); } 25% { opacity: 1; } 100% { opacity: 1; transform: translateX(-46%); } }
+@keyframes c-book-versoshade { 0% { opacity: 1; } 50% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes c-book-cast { 0% { opacity: 0; transform: scaleX(1); } 22% { opacity: 1; } 60% { opacity: 0.75; transform: scaleX(0.5); } 100% { opacity: 0; transform: scaleX(0.04); } }
+
+/* portrait tablets: the spread still fits, the book a little larger than on a laptop */
+@media (orientation: portrait) and (min-width: 701px) {
+  .c-book-ov { --bw: min(380px, 38vw, calc((100vh - 300px) / 1.36)); }
+}
+/* landscape phones and short screens: a smaller book, the words tighter */
+@media (max-height: 520px) {
+  .c-book-ov { --bw: min(220px, 26vw, calc((100vh - 150px) / 1.36)); --cy: 54%; }
+  .c-book-line { font-size: 22px; top: calc(var(--cy) - var(--bh) * 0.5 - 8px); }
+  .c-book-open { top: calc(var(--cy) + var(--bh) * 0.5 + 8px); min-height: 44px; padding: 8px 22px; font-size: 15px; }
+  .c-book-sound { left: auto; right: 14px; transform: none; }
+}

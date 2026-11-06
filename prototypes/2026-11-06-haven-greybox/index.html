@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Merlin's Purrfect Haven · brainstorm</title>
+<link rel="stylesheet" href="../site/css/fonts.css">
+<style>
+:root {
+  --cream: #FBF6EE; --card: #FFFDF9; --ivory: #FFFBF4; --oat: #E9DCCB; --do: #F1E6D2; --blush: #EFC5B9; --rose: #C9937E;
+  --sage: #A9BCA0; --ink: #4A423B; --ink-soft: #6F655B; --line: #EBDFCF; --berry: #B42249; --peach: #E8A87C; --accent: #9C5325;
+  --head: 'Fraunces', Georgia, serif; --body: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--cream); color: var(--ink); font: 16px/1.6 var(--body); }
+.page { max-width: 820px; margin: 0 auto; padding: 32px max(16px, env(safe-area-inset-left)) 64px; display: grid; gap: 34px; }
+h1, h2, h3 { font-family: var(--head); font-weight: 600; line-height: 1.15; margin: 0; }
+h1 { font-size: clamp(30px, 6vw, 42px); }
+h2 { font-size: 25px; margin-bottom: 10px; }
+h3 { font-size: 18px; margin-bottom: 4px; }
+p { margin: 0 0 10px; }
+.kicker { font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin: 0 0 8px; }
+.lede { color: var(--ink-soft); }
+.hero { background: linear-gradient(180deg, var(--ivory), var(--do)); border: 1px solid var(--line); border-radius: 18px; padding: 22px; }
+.cta { display: inline-flex; align-items: center; min-height: 48px; padding: 10px 22px; border-radius: 999px; background: var(--berry); color: #FFF8F2;
+  text-decoration: none; font-weight: 600; box-shadow: inset 0 0 0 2px var(--rose); margin-top: 6px; }
+.cta:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.note { font-size: 14.5px; color: var(--ink-soft); }
+ul, ol { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.beats { display: grid; gap: 10px; counter-reset: b; }
+.beat { display: grid; grid-template-columns: 74px 1fr; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+.beat .t { font: 600 14px var(--body); color: var(--accent); }
+.beat .src { display: inline-block; margin-top: 6px; font-size: 13px; padding: 2px 9px; border-radius: 999px; background: var(--do); color: var(--ink); }
+.tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
+.tile { border-radius: 12px; padding: 16px 12px 10px; display: grid; gap: 8px; justify-items: center; border: 1px solid var(--line); }
+.tile img { width: 150px; height: auto; display: block; }
+.tile .lab { font-size: 13.5px; text-align: center; line-height: 1.35; }
+.tile.ok .lab b { color: #3E6B3A; } .tile.no .lab b { color: var(--berry); }
+.tile.sign { background: var(--ivory); box-shadow: inset 0 0 0 3px var(--rose), inset 0 0 0 6px var(--ivory), inset 0 0 0 7px rgba(201, 147, 126, .7); }
+.tile .lab.dark { color: #FBF6EE; } .tile .lab.dark b { color: #FFD5DF; }
+.sw { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.chip { border-radius: 12px; border: 1px solid var(--line); overflow: hidden; background: var(--card); font-size: 13.5px; }
+.chip i { display: block; height: 58px; }
+.chip span { display: block; padding: 8px 10px; line-height: 1.35; }
+.chip.do i { background-color: var(--do); background-image:
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9 .05' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .45 0 0 0 0 .32 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23f)'/%3E%3C/svg%3E"); }
+.demo { display: flex; flex-wrap: wrap; gap: 10px; }
+.demo button { min-height: 48px; padding: 10px 20px; border-radius: 999px; border: 0; font: 600 15px var(--body); }
+.demo .a { background: var(--berry); color: #FFF8F2; box-shadow: inset 0 0 0 2px var(--rose); }
+.demo .b { background: var(--ivory); color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--rose); }
+.crit { display: grid; gap: 10px; }
+.crit div { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--rose); border-radius: 10px; padding: 12px 14px; }
+details { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 4px 14px; }
+details + details { margin-top: 8px; }
+summary { cursor: pointer; padding: 10px 0; font-weight: 600; min-height: 44px; }
+details p { white-space: pre-line; color: var(--ink-soft); font-size: 15px; }
+.dec { display: grid; gap: 10px; }
+.dec div { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.dec .def { display: block; margin-top: 4px; font-size: 14.5px; color: var(--ink-soft); }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; background: var(--card); }
+th, td { border: 1px solid var(--line); padding: 8px; text-align: left; vertical-align: top; }
+th { background: var(--do); }
+.tbl { overflow-x: auto; }
+</style>
+</head>
+<body>
+<main class="page">
+
+<header class="hero">
+  <p class="kicker">Purrlight · brainstorm 06/11</p>
+  <h1>Merlin’s Purrfect Haven</h1>
+  <p class="lede">Ý của chị gộp cả 3 hướng: căn nhà-tiệm, cánh cửa, cuốn sách. Em và hội đồng 5 người (Morgan, Hải Đăng, Linh Trần, Minh Triết, Prue) đồng ý hướng này, kèm vài chỗ sửa. Em đề xuất một câu: <b>bìa là tranh vẽ tay, bên trong là ảnh chụp thật</b>, đúng như câu "Sketched by Merlin, stitched by us."</p>
+  <a class="cta" href="demo.html">Thử bản kỹ thuật →</a>
+  <p class="note" style="margin-top:10px">Bản kỹ thuật dùng tranh màu nước thật đang có trên web (tranh "Our 1st Home") và ảnh thật của chị, để chị cảm nhận độ thật và độ mượt. Căn nhà-tiệm thật sẽ do họa sĩ vẽ; kệ hàng thật do chị chụp.</p>
+</header>
+
+<section>
+  <h2>Vì sao bản 01/11 trông giả, và cách sửa</h2>
+  <p>Bản 01/11 không phải AI hay three.js: em vẽ bằng code (hình khối CSS). Vẽ bằng code thì dù thêm chi tiết cũng chỉ giống tranh minh họa phẳng, và cảnh càng 3D càng nặng, càng giật trên điện thoại.</p>
+  <p>Muốn <b>thật</b> thì phải dùng chất liệu thật: tranh vẽ tay và ảnh chụp. Muốn <b>mượt</b> thì chỉ di chuyển vài lớp ảnh (phóng to, mờ dần). Điện thoại cũ cũng chạy êm, không cần video.</p>
+</section>
+
+<section>
+  <h2>Kịch bản 5 nhịp (đề xuất)</h2>
+  <div class="beats">
+    <div class="beat"><span class="t">0 giây</span><div><h3>Căn nhà-tiệm của Merlin</h3>
+      <p>Nhà kiểu Colonial rộng, mái và bệ cửa sổ có cuộn len, giấy vẽ, dây leo. Cửa sổ kính sáng đèn bày 3 món thật, cửa luôn mở. Hiên cà phê kiểu Pháp có 2 tách trà, chiếc mũ, dây dắt chó, bát nước cho cún; chú Maine Coon liếm chân bên bậc cửa. Trên lầu là bàn làm việc của Merlin, đèn sáng nhưng ghế trống: Merlin đang ở dưới tiệm. Bảng hiệu màu kem mang logo thật.</p>
+      <span class="src">Họa sĩ Purrlight vẽ tay, chia lớp · logo em đặt lên</span></div></div>
+    <div class="beat"><span class="t">Bấm</span><div><h3>"Step inside"</h3><p>Chuông cửa leng keng (chỉ khi khách bật tiếng). Chú mèo cam nhỏ nhảy ra từ chỗ bấm.</p><span class="src">Em làm bằng code</span></div></div>
+    <div class="beat"><span class="t">~1,2 giây</span><div><h3>Bước qua cửa</h3><p>Đẩy vào khung cửa, thoáng thấy bên trong: kệ sách cao, đèn thả, quầy cà phê riêng, như bước vào một nhà sách lớn.</p><span class="src">Lớp "nội thất" trong cùng bức tranh</span></div></div>
+    <div class="beat"><span class="t">~2,5 giây</span><div><h3>Tranh hóa thành ảnh thật</h3><p>Ánh sáng ấm, rồi hiện ảnh chụp thật kệ 3 tầng: búp bê, mèo len, búp bê vải treo balo, sách. Ở giữa là cuốn sách bọc vải thêu, búp bê Merlin len, và Merlin thật. Mỗi món bấm được, dẫn tới trang món đó.</p><span class="src">Chị chụp kệ thật</span></div></div>
+    <div class="beat"><span class="t">Chọn</span><div><h3>"Open the book" hoặc "Stroll the shop"</h3><p>Mở sách thì vào cảnh cuốn sổ như hướng 1. Dạo tiệm thì sang Shop All. Kéo xuống vẫn gặp các chương cũ: không khách nào bị chặn.</p><span class="src">Có sẵn từ 01/11</span></div></div>
+  </div>
+  <p class="note" style="margin-top:10px">Trên điện thoại chỉ cần đọc được 3 thứ trong 3 giây: bảng hiệu Purrlight, cửa sổ có món thật, cửa mở. Hiên cà phê và chú chó hiện đủ trên máy tính. Họa sĩ chừa sẵn một khung dọc quanh cửa ra vào cho điện thoại.</p>
+</section>
+
+<section>
+  <h2>Logo trên bảng hiệu: thử với logo thật</h2>
+  <p>Logo hồng của chị có nền trong suốt, nhưng bên trong nét chữ cũng trong suốt. Vì vậy nền phía sau phải sáng.</p>
+  <div class="tiles">
+    <div class="tile ok sign"><img src="../site/assets/brand/logo-flat.png" alt="Purrlight Studio logo on an ivory sign with a rose-gold frame" width="360" height="119"><span class="lab"><b>Đề xuất · 4,4:1</b><br>bảng ngà, viền vàng hồng</span></div>
+    <div class="tile ok" style="background:#FBF6EE"><img src="../site/assets/brand/logo-flat.png" alt="" width="360" height="119"><span class="lab"><b>Tốt · 4,2:1</b><br>kem #FBF6EE</span></div>
+    <div class="tile ok" style="background:#E9DCCB"><img src="../site/assets/brand/logo-flat.png" alt="" width="360" height="119"><span class="lab"><b>Tạm được · 3,4:1</b><br>be #E9DCCB</span></div>
+    <div class="tile no" style="background:#EFC5B9"><img src="../site/assets/brand/logo-flat.png" alt="" width="360" height="119"><span class="lab"><b>Yếu · 2,9:1</b><br>hồng phấn #EFC5B9</span></div>
+    <div class="tile no" style="background:#C9937E"><img src="../site/assets/brand/logo-flat.png" alt="" width="360" height="119"><span class="lab"><b>Chìm · 1,7:1</b><br>vàng hồng #C9937E</span></div>
+    <div class="tile no" style="background:#5A4636"><img src="../site/assets/brand/logo-flat.png" alt="" width="360" height="119"><span class="lab dark"><b>Chìm · 2,0:1</b><br>gỗ nâu</span></div>
+  </div>
+  <p class="note" style="margin-top:10px">Họa sĩ vẽ bảng hiệu màu kem để trống, em đặt file logo thật lên, nên logo không bao giờ bị vẽ lại hay sai màu. Bảng hiệu rộng ít nhất 200 px trên điện thoại. File logo trên web chỉ 360 px, nên em cần file gốc (vector, hoặc PNG rộng từ 1200 px) để logo nét trên màn hình đẹp.</p>
+</section>
+
+<section>
+  <h2>Màu đồ vật: be, vàng hồng · Jellycat × Mushie</h2>
+  <div class="sw">
+    <div class="chip"><i style="background:#FBF6EE"></i><span><b>Kem #FBF6EE</b><br>nền web, bảng hiệu</span></div>
+    <div class="chip"><i style="background:#E9DCCB"></i><span><b>Be #E9DCCB</b><br>tường, khung cửa, bìa vải</span></div>
+    <div class="chip do"><i></i><span><b>Giấy Dó</b><br>gói quà, ánh đèn cửa sổ (nét Đông Dương)</span></div>
+    <div class="chip"><i style="background:#EFC5B9"></i><span><b>Hồng phấn</b><br>cửa, rèm</span></div>
+    <div class="chip"><i style="background:#C9937E"></i><span><b>Vàng hồng #C9937E</b><br>chỉ cho kim loại: tay nắm, song cửa, đèn, góc sách</span></div>
+    <div class="chip"><i style="background:#A9BCA0"></i><span><b>Xanh xô thơm</b><br>cây, dây leo</span></div>
+    <div class="chip"><i style="background:#B42249"></i><span><b>Đỏ berry</b><br>chỉ cho một nút bấm chính</span></div>
+    <div class="chip"><i style="background:#E8A87C"></i><span><b>Đào "purr light"</b><br>ánh đèn ấm</span></div>
+  </div>
+  <p class="note" style="margin-top:10px">Lấy từ Mushie: màu dịu, mờ, nhiều khoảng trống, ánh sáng ban ngày. Lấy từ Jellycat: mỗi món là một nhân vật có tên và một câu tính cách, nét tinh nghịch là Merlin. Không lấy từ hai hãng này các chữ "plush", "toy", "nursery" (luật nhà).</p>
+</section>
+
+<section>
+  <h2>Chú mèo theo con trỏ</h2>
+  <p>Trên máy tính, rê chuột vào nút thì con trỏ có thêm một chú mèo cam nhỏ. Bấm (hoặc chạm trên điện thoại) thì chú mèo nhảy lên từ chỗ bấm. Mèo cam để không ai nhầm là Merlin (Merlin là mèo tuxedo). Máy bật giảm chuyển động thì không nhảy.</p>
+  <div class="demo"><button class="a" type="button">Bấm thử</button><button class="b" type="button">Bấm thử nữa</button></div>
+</section>
+
+<section>
+  <h2>Phản biện nhẹ</h2>
+  <div class="crit">
+    <div><b>Nhiều thứ quá cho 3 giây đầu.</b> Ý hiện có 8 nơi: nhà, tiệm, cà phê, phòng trà, nhà sách, tầng pet sitter, xưởng, sách. Người lạ chỉ đọc được 1 điều. Đề xuất: căn nhà là trang bìa của cuốn sách Merlin, nên vẫn là một câu chuyện, và chương vẫn là thương hiệu.</div>
+    <div><b>Quán cà phê, góc trà, tầng pet sitter</b> làm khách tưởng có chỗ để ghé, có dịch vụ để đặt. Đề xuất: vẽ làm cảnh (tách trà, mũ, dây dắt chó) chứ không ghi dịch vụ; tầng trên chỉ là phòng làm việc của Merlin. Nếu pet sitting là dịch vụ thật ở Pearland thì nên có trang riêng, vì khách quốc tế mua quà không cần thấy ở đây.</div>
+    <div><b>Grace và Linh Trần quản lý tầng 1:</b> hai bạn là nhân viên AI. Đưa tên lên trang khách là trái điều cả nhà đã chốt ngày 20/10, và khách có thể tưởng là người thật. Cả hội đồng, kể cả Linh, đề nghị giữ hai bạn ở hậu trường. Bù lại, chính bức tranh này có thể làm "trụ sở" trong Làng riêng của chị, nơi Grace và Linh có tầng thật.</div>
+    <div><b>Ảnh tham khảo:</b>
+      <ul style="margin-top:6px">
+        <li>Ảnh 1 là nhà của chị (giống tranh "Our 1st Home"), có số nhà, nên không đưa bản có số nhà lên mạng.</li>
+        <li>Ảnh 2 có dấu "CONFIDENTIAL" và chữ "Design mockup", nên không đưa lên web.</li>
+        <li>Ảnh 3: chú mèo thật ngồi cạnh búp bê Merlin len có mặt khác Merlin (Merlin có vệt trắng giữa trán). Cảnh "Merlin thật bên Merlin len" cần chụp mới.</li>
+      </ul></div>
+    <div><b>Tên món:</b> web đang tránh chữ "Anne of Green Gables" (dùng "Red-Braid Storybook Doll Set"). Washington trên Etsy là 1 con, chưa có bộ 3. Món nào lên tủ kính cũng phải là món đang bán.</div>
+    <div><b>"Purrfect Haven":</b> theo tìm kiếm nhanh, đã có vài trại cứu mèo dùng tên này, có một nơi ở Texas. Nên chỉ dùng làm tên cuốn sách thêu, không làm tên tiệm. Trước khi thêu cần tra USPTO.</div>
+    <div><b>Lịch:</b> họa sĩ và thợ đang làm đơn Giáng sinh, web khóa từ 15/11 tới 02/01. Đề xuất lên web tháng 1, kịp Valentine và Presidents' Day.</div>
+  </div>
+</section>
+
+<section>
+  <h2>Hội đồng nói gì</h2>
+  <details><summary>Morgan Chen · Marketing</summary><p id="l-morgan"></p></details>
+  <details><summary>Hải Đăng · Ecommerce</summary><p id="l-haidang"></p></details>
+  <details><summary>Linh Trần · Social Media</summary><p id="l-linh"></p></details>
+  <details><summary>Minh Triết · R&amp;D</summary><p id="l-minh"></p></details>
+  <details><summary>Prue · Strategic Advisor</summary><p id="l-prue"></p></details>
+</section>
+
+<section>
+  <h2>Chị quyết (mỗi câu có sẵn mặc định)</h2>
+  <div class="dec">
+    <div><b>1. Làm hình bằng gì?</b><span class="def">Mặc định: tranh màu nước vẽ tay của họa sĩ Purrlight, chia lớp, bảng hiệu để trống, cộng ảnh chụp thật kệ hàng. Không AI, không three.js. Nếu chị muốn dùng AI (ảnh và video), phải đổi luật nhà và duyệt từng lần tốn credit; tài khoản Higgsfield hiện còn 0 credit.</span></div>
+    <div><b>2. Căn nhà được nói gì?</b><span class="def">Mặc định: là tranh trong sách Merlin; không tên Grace và Linh; không tầng pet sitter; quán cà phê chỉ là cảnh.</span></div>
+    <div><b>3. Giữa kệ có gì?</b><span class="def">Mặc định: chụp mới Merlin thật, ảnh không theo mùa, bên búp bê Merlin len. Chị chọn kiểu búp bê: mũ vàng và yếm xanh như ảnh 3, hay theo hình vẽ thương hiệu (mũ vàng có ngôi sao, yếm xanh lá, ba lô ô liu).</span></div>
+    <div><b>4. Tên "Merlin's Purrfect Haven"</b><span class="def">Mặc định: chỉ là tên cuốn sách thêu, có chữ Purrlight trên gáy sách. Tra USPTO trước khi thêu.</span></div>
+    <div><b>5. Nút "Open the book" dẫn đi đâu?</b><span class="def">Theo ý chị: vào cảnh mở sách như hướng 1. Hải Đăng đề nghị đi thẳng tới "chapter one" để khách không phải xem hai màn chào liền nhau. Chị chọn.</span></div>
+    <div><b>6. Khi nào lên web?</b><span class="def">Mặc định: sau 02/01. Tháng 12 dành cho tranh, ảnh và duyệt chữ.</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>Việc tiếp theo</h2>
+  <ol>
+    <li>Chị thử bản kỹ thuật trên iPhone và cho em biết: có thật và mượt hơn không. Bản 01/11 chị xem trên máy nào, đoạn nào giật?</li>
+    <li>Chị trả lời 6 câu ở trên (có thể chỉ ghi câu nào muốn khác mặc định).</li>
+    <li>Em gửi họa sĩ bản mô tả tranh và gửi chị danh sách chụp kệ. Cả hai có sẵn trong file brainstorm của em.</li>
+    <li>Tháng 1: em ráp tranh thật và ảnh thật, chị thử trên điện thoại, rồi mới lên web.</li>
+  </ol>
+</section>
+
+</main>
+<script src="cat-cursor.js"></script>
+<script src="letters.js"></script>
+</body>
+</html>

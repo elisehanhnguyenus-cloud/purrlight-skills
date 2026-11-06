@@ -1508,6 +1508,30 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 - Phân tích, bảng so sánh, kế hoạch và chữ mới: `docs/EXPERIENCE-DIRECTIONS-2026-11-01.md`. Code:
   `prototypes/2026-11-01-experience-directions/`. Bản xem thử (bản 6): https://claude.ai/artifact/319xv2mZQU6k8GBBxtUbLs
 
+### Elise 06/11 — "Merlin's Purrfect Haven": gộp nhà-tiệm, cửa và sách (chưa lên web)
+- **Chị nhắn:** bản 01/11 "nhìn không thật, không mượt" (đó là hình vẽ bằng code, không phải AI hay three.js). Chị
+  muốn gộp: căn nhà-tiệm Colonial rộng có cửa sổ kính sáng đèn → "Step inside" như vào nhà sách lớn → kệ 3 tầng có
+  Merlin thật → "Open Book" hoặc "Stroll the shop". Màu đồ vật mới: be, vàng hồng, giấy Dó. Phong cách Jellycat ×
+  Mushie.
+- **Hội đồng 5 người** (Morgan, Hải Đăng, Linh Trần, Minh Triết, Prue) và một người phản biện cuối: cả 5 "đồng ý kèm
+  sửa".
+- **Đề xuất: bìa là tranh vẽ tay, bên trong là ảnh thật.**
+  - Họa sĩ Purrlight vẽ tay căn nhà, chia lớp, bảng hiệu để trống để em đặt logo thật lên.
+  - Chị chụp kệ thật có món thật và Merlin thật.
+  - Đi qua cửa chỉ bằng phóng to và mờ dần, nên mượt cả trên điện thoại cũ.
+  - Dựng thành các phần của trang chủ, không chặn khách.
+- **Phản biện nhẹ:**
+  - không đưa tên Grace, Linh Trần (AI) lên trang khách;
+  - cà phê, góc trà, tầng pet sitter chỉ làm cảnh;
+  - logo trên vàng hồng chìm (1,7:1), nên đặt trên bảng kem (4,2:1);
+  - "Purrfect Haven" đã có trại cứu mèo dùng, nên chỉ làm tên cuốn sách, tra USPTO;
+  - ảnh 1 có số nhà của chị, ảnh 2 có dấu "CONFIDENTIAL", mèo thật trong ảnh 3 không phải Merlin;
+  - lên web sau 02/01.
+- **Đã làm:**
+  - bảng brainstorm và bản thử kỹ thuật bằng tranh và ảnh thật (thẻ "Merlin's Purrfect Haven" trong bản xem thử);
+  - `docs/HAVEN-BRAINSTORM-2026-11-06.md`, có bản mô tả cho họa sĩ và danh sách chụp kệ;
+  - code: `prototypes/2026-11-06-haven-greybox/`.
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
@@ -1588,6 +1612,17 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
     - Có làm Custom Orders giống các trang khác không.
     - Muốn lên trước đợt khóa web 15/11: quyết trước khoảng 08/11. Chi tiết: `docs/EXPERIENCE-DIRECTIONS-2026-11-01.md`
       mục 5.
+24. **Merlin's Purrfect Haven (06/11)** — thay mục 23 nếu chị theo hướng gộp:
+    - Thử bản kỹ thuật trên iPhone. Bản 01/11 chị xem trên máy nào, đoạn nào giật?
+    - Trả lời 6 câu (mỗi câu có mặc định): chất liệu; căn nhà được nói gì; giữa kệ có gì; tên; nút "Open the book"; ngày
+      lên web.
+    - Cho em biết:
+      - pet sitting có phải dịch vụ hiện tại của Purrlight;
+      - ảnh nào trong ảnh 3 là ảnh thật;
+      - búp bê Merlin len đã có chưa, và kiểu nào là chuẩn;
+      - họa sĩ có vẽ chia lớp và đồng ý bằng văn bản cho dùng tranh không;
+      - file logo gốc.
+    - Chi tiết: `docs/HAVEN-BRAINSTORM-2026-11-06.md` mục 5–6.
 
 ## 9. Link & tài nguyên
 

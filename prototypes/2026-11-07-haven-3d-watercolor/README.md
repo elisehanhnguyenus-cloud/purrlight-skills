@@ -1,42 +1,74 @@
-# Haven 3D, watercolour version (preview, 07/11/2026). Not part of website/
+# Haven 3D, watercolour version: v3 (preview, 07/11/2026). Not part of website/
 
-This preview responds to Elise's feedback on 06/11: "Căn tiệm to quá rồi. Nó sẽ nhỏ 1 nửa, nhìn ấm cúng... 1 chút retro, ngọt
-ngào, phía ngoài cửa sổ kiểu cafe Pháp... phong cách artist kiểu digital water color". She added a plant list on 07/11.
+The preview went through three rounds of Elise's feedback:
 
-It is a Three.js scene drawn entirely in code, with no AI images. The flow:
-1. Exterior idle.
-2. "Step inside": a 6 s, time-based walk through the always-open door, with glances at the café and the bookcases.
-3. The camera stops at a round 3-tier display.
-4. Then "Open the book" or "Stroll the shop". Every piece on the display links to its product page.
+| Round | Elise's request (her words) | What changed |
+|---|---|---|
+| 06/11 | "Căn tiệm to quá rồi. Nó sẽ nhỏ 1 nửa, nhìn ấm cúng... retro, ngọt ngào, cửa sổ kiểu cafe Pháp... digital water color" | v2: a half-size cozy shop, painted as digital watercolour |
+| 07/11 | Nine potted plants outside | Added to the exterior |
+| 07/11 | "Chọn mặt tiền màu be vàng hồng" | v3: beige / rose-gold façade is the default; `?palette=sage` keeps the green one |
+| 07/11 | Slower camera that looks around inside | v3: desktop walk |
+| 07/11 | Door-straight flow on mobile | v3: mobile walk |
+| 07/11 | Her logo video as the loading screen | v3: loader |
+| 07/11 | The cat from the logo as the pointer | v3: pointer and click hop |
+| 07/11 | Mobile buttons and intro redone | v3: mobile UI |
+
+v3 also applies the 15-point art review of v2 (see `ART-REVIEW-v2.txt`).
+
+It is a Three.js scene drawn entirely in code, with no AI images.
+
+## The flow
+
+1. **Loading screen**: Elise's own logo animation video (Purrlight letters, the cat playing with the "i" dot).
+2. **Exterior**: the sign carries the real logo, drawn crisp and never painted over.
+3. **"Step inside"**:
+   - Desktop: an eased walk of about 14.7 s, turning at most about 20°/s. It pauses at the door, pans slowly over the bookcases, vintage shelves and suitcase, then over the round café counter, looks up at the lantern and fairy lights, and glides to the round 3-tier display.
+   - Phones: about 4.6 s straight through the doorway to the display.
+   - Either can be skipped with ⏩, a tap or Esc. With reduced motion it is a 0.25 s cut.
+4. **At the display**: "Open the book" or "Stroll the shop", plus product cards. Every piece links to its product page.
+5. **Pointer** on fine pointers: the cat from the logo, using Elise's icon with only the white background removed. The click hop uses the same cat.
+
+## Files
 
 | Part | Files |
 |---|---|
-| Page shell, camera, UI, picking, fallbacks | `index.html`, `css/haven3d.css`, `js/main.js`, `js/cat-cursor.js` |
-| Watercolour + coloured-pencil post chain | `js/watercolor.js`: an 8-sector generalized Kuwahara with polynomial weights, then pigment pooling, cold-press paper, tremor, pencil lines that boil at 4 steps/s (frozen under reduced motion), and a deckled border. A pristine layer keeps the real logo and the real Merlin photo crisp and unpainted. |
-| Exterior | `js/exterior.js`, `js/exterior-kit.js`: an 8.4 m cottage-shop with a sage shopfront (`?palette=be` gives oat-beige, blush and rose-gold), the café window with a striped awning, the bistro table, two guests and a dog, a Maine Coon, a dog bowl, and the 9 potted plants Elise listed. |
-| Interior | `js/interior.js`, `js/interior-kit.js`: a cozy retro room with a round café counter, vintage shelves, a jute rug and the round 3-tier display. |
-| Shared props and textures | `js/props.js`, `js/textures.js` |
-| Fallbacks | `js/_stub-*.js` (used if a module fails), `assets/poster-exterior.webp` (no-WebGL poster) |
-| Three.js r180 | `vendor/` (MIT, `vendor/LICENSE-three.txt`), self-hosted with no CDN. Modern JS, not ES5. |
-| Briefs the build team worked from | `CONTRACT.md`, `CONTRACT-v2.md` |
+| Page shell, camera, UI, loader, picking, fallbacks | `index.html`, `css/haven3d.css`, `js/main.js`, `js/cat-cursor.js` |
+| Watercolour + coloured-pencil post chain, pristine layer | `js/watercolor.js` |
+| Scene | `js/exterior.js`, `js/exterior-kit.js`, `js/interior.js`, `js/interior-kit.js`, `js/props.js`, `js/textures.js` |
+| Fallbacks | `js/_stub-*.js`, `assets/poster-exterior.webp` |
+| Three.js r180 | `vendor/` (MIT, self-hosted, no CDN). Modern JS, not ES5. |
+| Briefs | `CONTRACT.md`, `CONTRACT-v2.md` (includes all of Elise's v2/v3 requests verbatim) |
+| How the cat icon's white background was removed | `tools-logo-cat-c2a.js` |
 
-Assets left out of this public repo:
-- `assets/merlin-table-560.webp`, the real Merlin photo Elise sent on 06/11;
-- `assets/poster-shelf.webp`, because it shows that photo.
+## Not in this public repo
 
-The page expects them next to `index.html`. It also expects `../site/` to be a copy of `website/`, for the logo, fonts, product photos and links. That is the layout of the private preview artifact.
+These live only in the private preview artifact:
+- `assets/merlin-table-560.webp`: the real Merlin photo;
+- `assets/poster-shelf.webp`: it shows that photo;
+- `assets/logo-anim.mp4`, `logo-anim.webm`, `logo-anim-poster.webp`, `logo-anim-end.webp`: Elise's logo animation, cropped to the logo, silent, colours untouched, about 125 KB;
+- `assets/logo-cat.png`: Elise's cat icon with only the white background removed.
 
-Test hooks: `?view=exterior|door|inside|shelf`, `?cam=px,py,pz,lx,ly,lz[,fov]`, `?paint=0|raw|kuwa|lines|paper`, `?q=low|high`,
-`?stats=1`, `?palette=be`, `?nogl=1`, `window.__haven.info()`.
+The page expects these files next to `index.html`. It also expects `../site/` to be a copy of `website/`, for the logo, fonts, product photos and links.
 
-Measured in headless Chromium (SwiftShader), counting the shadow pass:
+## Measured
 
-| View | Draw calls | Triangles |
+Headless Chromium (SwiftShader), with the shadow pass forced on:
+
+| | Draw calls | Triangles |
 |---|---|---|
-| Desktop exterior | 127 | 198k |
-| Shelf | 66 | 165k |
-| Walk, peak | — | 243k |
+| Desktop exterior | 129 | 208k |
+| Desktop shelf | 59 | 167k |
+| Desktop walk, worst frame | — | 241k |
+| Phone walk, worst frame | — | 231k |
 
-- On-screen logo width: 260 CSS px on desktop, 170 on a 390×844 phone.
-- The post-chain cost is an estimate and still needs a real iPhone test.
-- Before any of this goes near `website/`, Elise has to decide on the direction, and it needs a no-JS/ES5 fallback plan.
+- On-screen logo width: 266 CSS px on desktop, 212 on a 390×844 phone.
+- Console: 0 errors.
+- Not yet checked: real-device performance on iPhone and Android, and iOS video autoplay.
+
+## Before any of this goes to website/
+
+1. Elise decides on the direction.
+2. Test on a real iPhone.
+3. Approve the new copy (only the aria-label "Close" so far). Remove the Vietnamese preview chip and the restart label.
+4. Ship a poster-first plan: show the still poster first and load the 3D only on "Step inside".
+5. Wait until after the 15/11–02/01 holiday web lock.

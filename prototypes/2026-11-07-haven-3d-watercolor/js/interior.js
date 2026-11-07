@@ -41,7 +41,9 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
   const FLOOR_Y = 0.003, INSET = 0.006;
   const RW = X1 - X0, RD = Z0 - Z1, RZC = (Z0 + Z1) / 2;
   const DC = V(0, 0, -4.6), TIERS = [[0.78, 0.8], [1.06, 0.56], [1.32, 0.32]];
-  const HS = V(1.15, 0, -4.35), HS_RY = -0.5, HS_H = 1.26, BAG = 1.3;
+  // (fix v3, review #1/#10: the stand sits a little further back, beside the display's right shoulder, facing the shelf
+  //  view: both bag charms read just right of the display, so the shelf frame no longer reaches out to a stand at the edge)
+  const HS = V(0.95, 0, -5.1), HS_RY = -0.27, HS_H = 1.26, BAG = 1.3;
   const CAFE = { x: 2.95, z: -2.55, R: 0.95, H: 1.0 };          // half-round counter, flat back toward the right wall
   const ARCH = { xa: -2.3, xb: 2.3, H: 3.1, D: 0.34 };
   const BEAMS = [-1.9, -3.75, -5.6];
@@ -50,11 +52,11 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
   const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
   function lightField(x, y, z) {
     const dd = Math.hypot(x * 0.9, (y - 1.0) * 0.75, (z + 4.4) * 0.9);
-    let f = 1.1 - 0.47 * smooth(0.9, 5.0, dd);
-    f *= 1 - 0.2 * smooth(2.4, 3.8, y);
-    f *= 1 - 0.07 * smooth(3.0, 3.95, Math.abs(x));
-    f += 0.08 * Math.exp(-((x - 2.9) ** 2 + 0.5 * (y - 1.5) ** 2 + (z + 2.55) ** 2) / 1.1);    // café pendant
-    f += 0.06 * Math.exp(-((x + 3.0) ** 2 + 0.6 * (y - 1.3) ** 2 + (z + 6.4) ** 2) / 0.9);    // reading lamp
+    let f = 1.1 - 0.6 * smooth(0.9, 4.2, dd);                                                  // v3: warmer pool, darker edges
+    f *= 1 - 0.24 * smooth(2.2, 3.8, y);
+    f *= 1 - 0.1 * smooth(2.9, 3.95, Math.abs(x));
+    f += 0.14 * Math.exp(-((x - 2.9) ** 2 + 0.5 * (y - 1.5) ** 2 + (z + 2.55) ** 2) / 1.1);    // café pendant (a warm pool)
+    f += 0.13 * Math.exp(-((x + 3.0) ** 2 + 0.6 * (y - 1.3) ** 2 + (z + 6.4) ** 2) / 0.9);    // reading lamp (a warm pool)
     f += 0.05 * smooth(-2.2, -0.4, z) * (1 - smooth(0.6, 2.6, y));                            // daylight by the front
     const w = Math.max(0, 1 - f);
     return [f, f * (0.985 - 0.07 * w), f * (0.955 - 0.17 * w)];
@@ -355,11 +357,15 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
     // centre niche: picture books face-out + a sleepy crochet cat on the floor of the niche, plants and yarn on the shelf
     const zn = Z1 + 0.008 + D * 0.55, yC = arches[0].y0;
     const r = mulberry32(23);
+    const nb = at(0, 0, Z1 + 0.008 + 0.02);
     faceOutBook(at(-0.42, yC, zn - 0.02, 0.12), 0.26, 0.29, 0); faceOutBook(at(0.42, yC, zn - 0.02, -0.12), 0.26, 0.29, 6);
-    fillBooks(at(0, 0, Z1 + 0.008 + 0.02), -0.2, 0.2, yC, 0.32, D - 0.06, r);
+    fillBooks(nb, -0.69, -0.57, yC, 0.4, D - 0.06, r); fillBooks(nb, -0.26, -0.02, yC, 0.4, D - 0.06, r);
+    K.miniAnimal(B, at(0.13, yC, zn, -0.1), 'cat', { body: '#F3E7D6', ears: '#EFC5B9', size: 0.17, pose: 'loaf' });   // a sleepy crochet cat
+    yarnBall(I, 0.62, yC, zn, 0.055, '#E8A87C');
     trailingPlant(-0.38, 1.62, zn, 0.3, V(0, 0, 1), 'cream', 9);
+    fillBooks(nb, -0.69, -0.5, 1.62, 0.44, D - 0.06, r); fillBooks(nb, -0.24, -0.02, 1.62, 0.4, D - 0.06, r); fillBooks(nb, 0.55, 0.69, 1.62, 0.44, D - 0.06, r);
     yarnBall(I, 0.05, 1.62, zn - 0.02, 0.06, '#EFC5B9'); yarnBall(I, 0.17, 1.62, zn + 0.03, 0.055, '#C5D3B8'); yarnBall(I, 0.11, 1.72, zn, 0.05, '#FBF6EE');
-    K.miniAnimal(B, at(0.42, 1.62, zn, -0.2), 'bunny', { size: 0.17 });
+    K.miniAnimal(B, at(0.38, 1.62, zn, -0.2), 'bunny', { size: 0.17 });
     // the stitched hoop (cat and moon) high in the centre arch
     { const hp = new THREE.CircleGeometry(0.2, 28); hp.translate(0, 2.42, Z1 + 0.026); B.raw('hoop', hp);
       B.add('woodVC', g.tor(0.07, 5, 32), { p: [0, 2.42, Z1 + 0.03], s: 0.205, c: '#D9B286', uv: [4, 0.3] });
@@ -367,10 +373,14 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
     // side niches: books, little crochet animals, a vase with a sprig, a tiny parcel
     for (const s of [-1, 1]) {
       const cx = s * 1.62;
-      fillBooks(at(0, 0, Z1 + 0.008 + 0.02), cx - 0.4, cx + 0.05, 1.46, 0.42, D - 0.06, r);
-      fillBooks(at(0, 0, Z1 + 0.008 + 0.02), cx - 0.05, cx + 0.4, yC, 0.46, D - 0.06, r);
+      fillBooks(nb, cx - 0.43, cx + 0.07, 1.46, 0.44, D - 0.06, r);
+      yarnBall(I, cx + 0.39, 1.46, zn, 0.045, s < 0 ? '#C5D3B8' : '#EFC5B9');
+      fillBooks(nb, cx - 0.43, cx - 0.33, yC, 0.46, D - 0.06, r);
+      fillBooks(nb, cx - 0.05, cx + 0.43, yC, 0.46, D - 0.06, r);
+      fillBooks(nb, cx - 0.1, cx + 0.05, 1.95, 0.3, D - 0.06, r);
+      yarnBall(I, cx - 0.38, 1.95, zn, 0.045, s < 0 ? '#F3D88C' : '#C9D5E3');
       K.miniAnimal(B, at(cx + 0.24, 1.46, zn, -s * 0.25), s < 0 ? 'bear' : 'duck', { size: 0.15 });
-      K.miniAnimal(B, at(cx - 0.25, yC, zn, s * 0.3), s < 0 ? 'cat' : 'sheep', { size: 0.14, pose: s < 0 ? 'loaf' : 'sit', body: s < 0 ? '#F8F2E9' : undefined });
+      K.miniAnimal(B, at(cx - 0.2, yC, zn, s * 0.3), s < 0 ? 'cat' : 'sheep', { size: 0.14, pose: s < 0 ? 'loaf' : 'sit', body: s < 0 ? '#F8F2E9' : undefined });
       const vW = at(cx - 0.22, 1.95, zn, 0);
       B.add('satin', g.lathe('vase2', [[0, 0], [0.045, 0], [0.055, 0.05], [0.038, 0.12], [0.022, 0.15], [0.03, 0.17], [0, 0.16]], 12), { c: s < 0 ? '#F4EADB' : '#E9BFB1', ao: 0.2, post: vW });
       for (let k = 0; k < 3; k++) B.add('felt', g.sph(8, 6), { p: [(k - 1) * 0.04, 0.24 + (k % 2) * 0.04, 0], s: 0.026, c: ['#F3D88C', '#FBF6EE', '#EFC5B9'][k], post: vW });
@@ -546,6 +556,20 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
     shadow(X0 + 0.36, 0, -0.56, 0.6, 0.6, 0.4);
   }
 
+  // ===================================================================================== floor clutter beside the walkway (v3)
+  B.tag = 'floorbits';
+  {
+    // a scalloped basket of yarn and a stack of picture books on the floor left of the display, a book stack on the right
+    const Wb = at(-1.32, 0, -3.25, 0.5); const top = K.scallopBasket(B, Wb, { r: 0.18, h: 0.18 });
+    yarnBall(Wb, -0.05, top - 0.07, 0.02, 0.065, '#E8A87C'); yarnBall(Wb, 0.07, top - 0.06, -0.02, 0.06, '#EFC5B9'); yarnBall(Wb, 0.0, top - 0.02, 0.06, 0.055, '#A9BCA0');
+    shadow(-1.32, 0, -3.25, 0.5, 0.5, 0.45);
+    const stack = (x, z, n, ry) => { let y = 0.003; for (let k = 0; k < n; k++) { const t = 0.034 + (k % 2) * 0.008, Wk = at(x, y, z, ry + k * 0.16); B.add('clay', g.rbox(0.22 - k * 0.008, t, 0.28 - k * 0.01, 0.005, 1), { p: [0, t / 2, 0], c: ['#A9BCA0', '#D98E80', '#F3D88C', '#8FA9C2', '#EFC5B9'][(k + n) % 5], post: Wk }); B.add('paperVC', g.box(), { p: [0.004, t / 2, 0], s: [0.21 - k * 0.008, t - 0.008, 0.27 - k * 0.01], c: '#F7F0E3', post: Wk }); y += t; } return y; };
+    // (fix v3: beside the basket, clear of the 0.9 m walkway round the display and of the door frames' bottom edge)
+    stack(-1.62, -2.98, 4, 0.3);   // (no face-out card on it: it read as a cropped white card at the frame's bottom edge)
+    shadow(-1.62, 0, -2.98, 0.4, 0.4, 0.4);
+    stack(1.5, -3.05, 3, -0.4); shadow(1.5, 0, -3.05, 0.38, 0.38, 0.4);
+  }
+
   // ===================================================================================== back-left: the reading nook
   B.tag = 'nook';
   {
@@ -575,7 +599,7 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
         const t = i / (n * 8), x = a.x + (b.x - a.x) * t, z = a.z + (b.z - a.z) * t, y = a.y + (b.y - a.y) * t - sag * Math.abs(Math.sin(t * PI * n));
         pts.push(V(x, y, z));
       }
-      K.fairyLights(B, pts, halos, { step: 0.16, haloEvery: 2, halo: 0.1 });
+      K.fairyLights(B, pts, halos, { step: 0.16, haloEvery: 2, halo: 0.07 });
     };
     swag(V(X0 + 0.1, CEIL - 0.25, -1.2), V(X1 - 0.1, CEIL - 0.25, -6.9), 0.28, 4);
     swag(V(X1 - 0.1, CEIL - 0.25, -0.9), V(X0 + 0.1, CEIL - 0.25, -6.9), 0.28, 4);
@@ -583,6 +607,8 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
 
   // ===================================================================================== THE ROUND 3-TIER DISPLAY + products
   B.tag = 'display'; B.lod = 'shelf';
+  P.eyeScale = 1.7;   // review #6: big button eyes and dark noses that survive the paint (the real pieces have safety eyes)
+  const charmBoxes = [];
   const pickables = [];
   const slots = [];
   let nextSlot = 1;
@@ -694,40 +720,48 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
     // THE HOOK STAND — the two fabric dolls on backpacks, the quilted pouch, keychains
     {
       const Wh = at(HS.x, 0, HS.z, HS_RY);
-      const hooks = K.hookStand(B, Wh, { H: HS_H, topW: 0.66, lowY: 0.74, lowW: 0.52 });
+      const hooks = K.hookStand(B, Wh, { H: HS_H, topW: 0.66, lowY: 0.9, lowW: 0.3 });   // (fix v3: the low bar higher + shorter: the pouch clears the bottom tier's pieces from the shelf view)
       shadow(HS.x, 0, HS.z, 0.55, 0.5, 0.5);
       const wp = (p, dy = 0) => p.clone().add(V(0, dy, 0)).applyMatrix4(Wh);
       const bp1 = wp(hooks.top[0], -0.185 * BAG), bp2 = wp(hooks.top[1], -0.185 * BAG);
-      place('linen-pocket-doll', bp1.x, bp1.y, bp1.z, HS_RY, BAG, null, { shadow: false });
-      place('americana-doll-bag-charm', bp2.x, bp2.y, bp2.z, HS_RY, BAG, null, { shadow: false });
+      // v3: warmer, more saturated bag linens (rose clay / dusty blue) so the paper pull leaves them coloured and the dolls read
+      const cA = place('linen-pocket-doll', bp1.x, bp1.y, bp1.z, HS_RY, BAG, P.backpack({ hex: '#D39A86', pocket: '#C2877A', doll: { dress: '#F6DCD2', hair: '#8E6A52' } }), { shadow: false });
+      const cB = place('americana-doll-bag-charm', bp2.x, bp2.y, bp2.z, HS_RY, BAG, P.backpack({ hex: '#8DA3BC', pocket: '#7B91AA', doll: { pattern: 'americana', hair: '#C9A27C', heart: '#C9937E' } }), { shadow: false });
+      for (const c of [cA, cB]) { c.updateMatrixWorld(true); charmBoxes.push(new THREE.Box3().setFromObject(c)); }
       const pp = wp(hooks.low[2].clone().add(V(0, 0, 0.03)), -0.16 * 1.15);
       // a little ribbon loop from the hook to the pouch
       const lp = wp(hooks.low[2], -0.02);
       B.lod = 'room'; B.add('felt', g.tor(0.12, 4, 12), { p: [lp.x, lp.y, lp.z], r: [0, HS_RY, 0], s: [0.016, 0.03, 0.016], c: '#EFC5B9' }); B.lod = 'shelf';
-      place('quilted-cat-pouch', pp.x, pp.y, pp.z, HS_RY, 1.15, null, { shadow: false });
+      const cP = place('quilted-cat-pouch', pp.x, pp.y, pp.z, HS_RY, 1.15, null, { shadow: false });
+      cP.updateMatrixWorld(true); charmBoxes.push(new THREE.Box3().setFromObject(cP));
       const KC = [['cat', '#F3E7D6'], ['pompom', '#EFC5B9'], ['heart', '#C9937E'], ['yarn', '#A9BCA0']];
       [0, 1, 3, 4].forEach((hi, k) => { const p = wp(hooks.low[hi], 0.005); keychainLite(p.x, p.y, p.z, KC[k][0], KC[k][1], HS_RY + (k - 1.5) * 0.3); });
     }
   }
 
+  P.eyeScale = 1;
   // ===================================================================================== build: merged meshes, books, halos, lights
   B.lod = null;
   const meshes = B.build(group, 'interior', {
     // display products: 8.5 mm clusters at the shelf view (≈ 3–4 px there, under the paint's 4 px Kuwahara), 10.5 mm from 3.3 m, 14 mm from 8 m
     // (integrator: far from 7 m and the extra-far level from 9.5 m, so the street-side walk frames stay under 250k with the plants outside)
-    shelf: { center: V(DC.x, 1.0, DC.z), dist: 7, cell: 0.014, nearCell: 0.0085, mid: { dist: 3.3, cell: 0.0105 }, mergeFar: true, xfar: { dist: 9.5, cell: 0.03 } },
+    // (v3: far from 5.6 m — from the doorway the products are ~25 px tall, so 14 mm clusters + flat clay cost nothing visible
+    //  and keep the door view under 250k with the fuller display window and niches)
+    shelf: { center: V(DC.x, 1.0, DC.z), dist: 5.6, cell: 0.014, nearCell: 0.0085, mid: { dist: 3.3, cell: 0.0105 }, mergeFar: true, xfar: { dist: 9.5, cell: 0.03 } },
     // the room: full detail once a step inside, 8 mm clusters from the threshold out (≥ 3.35 m: ≤ 2 px under the paint's
     // 4 px smoothing — the doorway frame sees the street and the whole room at once), 10 mm once back on the street
     room: { center: V(0, 1.6, RZC), dist: 7.2, cell: 0.01, mid: { dist: 3.35, cell: 0.008 }, xfar: { dist: 11, cell: 0.022 } },
   });
   const bookMeshes = books.build(group);
   // a soft glow over the display (the brightest, most inviting thing in the room)
-  halos.push({ p: V(DC.x, 1.75, DC.z + 0.3), size: 0.9, a: 0.12, color: '#FFD8B0' });
+  // (v3: above the book, not in front of the top tier — an additive glow over the products washed the black crochet
+  //  tuxedo cat to taupe under the paint's glow gain)
+  halos.push({ p: V(DC.x, 2.3, DC.z - 0.25), size: 0.75, a: 0.1, color: '#FFD8B0' });
   const haloMesh = K.halos(halos, group);
   if (haloMesh) haloMesh.material.uniforms.uGain.value = 0.85;
 
   // ≤ 2 PointLights: a warm key on the display and the café glow
-  const keyLight = new THREE.PointLight('#FFD3A8', 15, 5.2, 1.5);
+  const keyLight = new THREE.PointLight('#FFC48A', 15, 5.2, 1.5);
   keyLight.position.set(0.35, 2.6, DC.z + 1.0); keyLight.name = 'displayKey';
   const cafeLight = new THREE.PointLight('#FFD2A0', 4.5, 5.5, 1.6);
   cafeLight.position.set(CAFE.x - 0.4, 2.2, CAFE.z); cafeLight.name = 'cafeWarm';
@@ -749,11 +783,14 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
 
   // the framing points for main.js's shelf view: the display's rim, its top (book + ears) and the hook stand
   const shelfFit = [
-    V(DC.x - 0.82, 0.72, DC.z + 0.1), V(DC.x + 0.82, 0.72, DC.z + 0.1), V(DC.x, 0.0, DC.z + 0.6), V(DC.x - 0.45, 0.0, DC.z + 0.4), V(DC.x + 0.45, 0.0, DC.z + 0.4),
+    // v3: the base points sit at mid-base (y 0.42), so the frame crops through the fluted base like a product shot
+    // (fix v3, review #1: the rim points at ±0.9 so the bottom tier clears the deckled edge; for the stand only the bag
+    //  charms and the pouch count — the products — not its far arm and foot, which set the frame width before)
+    V(DC.x - 0.9, 0.72, DC.z + 0.1), V(DC.x + 0.9, 0.72, DC.z + 0.1), V(DC.x, 0.42, DC.z + 0.6), V(DC.x - 0.45, 0.42, DC.z + 0.4), V(DC.x + 0.45, 0.42, DC.z + 0.4),
     V(DC.x - 0.8, 0.98, DC.z + 0.05), V(DC.x - 0.6, 1.3, DC.z + 0.3), V(DC.x + 0.6, 1.3, DC.z + 0.3),
     V(DC.x, 1.66, DC.z - 0.1), V(DC.x - 0.3, 1.56, DC.z + 0.1), V(DC.x + 0.3, 1.56, DC.z + 0.1),
-    V(HS.x + 0.3, 0.0, HS.z + 0.15), V(HS.x + 0.3, HS_H + 0.08, HS.z), V(HS.x - 0.28, HS_H + 0.08, HS.z + 0.15),
   ];
+  for (const b of charmBoxes) for (let i = 0; i < 8; i++) shelfFit.push(V(i & 1 ? b.max.x : b.min.x, i & 2 ? b.max.y : b.min.y, i & 4 ? b.max.z : b.min.z));
 
   return {
     group, update, pickables, lights: [keyLight, cafeLight],

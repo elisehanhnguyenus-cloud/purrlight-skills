@@ -37,19 +37,24 @@ export function buildExterior(THREE, ctx) {
     honey: '#D9B78C', honeyD: '#BF9A70', stoneD: '#D8CAB8', soil: '#7A6152', bark: '#8E7666', terra: '#C98B70',
     lantern: '#58504A', chimney: '#D6A898',
   };
-  /* shopfront joinery palette. Default: the sage of the reference shopfronts. ?palette=be (owner's earlier choice):
-     oat-beige joinery, fascia, door and window frames with blush accents and rose-gold hardware. Colours only; the
+  /* shopfront joinery palette. DEFAULT (owner 07/11 #2: "mặt tiền màu be vàng hồng"): a warm golden-rose beige joinery
+     with a deeper rose-taupe fascia (so the ivory sign pops), deep joinery shadows, blush accent panels, a dark warm
+     lantern and rose-gold hardware — tuned for value contrast under the paint (wall ≈ light, joinery ≈ mid, shadows /
+     lantern ≈ dark, glazing = lit amber). ?palette=sage keeps the sage of the reference shopfronts. Colours only; the
      geometry is identical (vertex colours are chosen here, before anything is built). */
-  const PALETTE = (() => { try { return (ctx.palette || new URLSearchParams(location.search).get('palette') || 'sage').toLowerCase(); } catch (e) { return 'sage'; } })();
+  const PALETTE = (() => { try { return (ctx.palette || new URLSearchParams(location.search).get('palette') || 'be').toLowerCase(); } catch (e) { return 'be'; } })() === 'sage' ? 'sage' : 'be';
   const J = PALETTE === 'be'
-    ? { body: '#D9BE9C', deep: '#C6A282', inset: '#EFC6B8', fascia: '#C9A784', lantern: '#B98572', box: '#E9BBAE', name: 'be' }
-    : { body: C.sage, deep: C.sageD, inset: '#A6BCA3', fascia: C.fascia, lantern: C.lantern, box: C.sage, name: 'sage' };
+    ? { body: '#D8B394', deep: '#A27A66', inset: '#EDB8A7', fascia: '#BA8A73', lantern: '#76574C', box: '#E0A999', bead: '#F6E7D6', bar: '#F6E7D6', reveal: '#A27A66', name: 'be' }
+    : { body: C.sage, deep: '#6A836E', inset: '#A6BCA3', fascia: C.fascia, lantern: C.lantern, box: C.sage, bead: C.trim, bar: C.sage, reveal: C.sage, name: 'sage' };
+  /* v3 fix (review #5): the beige shopfront read as one mid-tan block. Light ivory glazing bars (the window grid reads as
+     a crisp frame over the lit glass), mid joinery, a deeper fascia under the ivory sign, a dark reveal round the open
+     door (a dark frame around the bright room). The sage palette keeps its bars and reveals in the joinery colour. */
   const std = (o, name) => { const m = new THREE.MeshStandardMaterial(Object.assign({ roughness: 0.95, metalness: 0 }, o)); m.name = name; return m; };
   const derive = (name, o) => { const m = P.mat(name).clone(); Object.assign(m, o); if (o.color) m.color = new THREE.Color(o.color); m.name = o.name || name + '+'; return m; };
   const M = {
     wall: std({ map: X.TEX.wash() }, 'wash'),
     plaster: P.mat('plaster'),
-    slate: derive('slate', { color: '#EBD3CB', name: 'slate-ext', roughness: 0.95 }),
+    slate: std({ map: X.TEX.slate(), roughness: 0.95 }, 'slate-ext'),      // big scallop rows with dark row lines (survive the paint)
     grass: derive('grass', { color: '#E9EBD6', name: 'grass-ext' }),
     lane: derive('cobbles', { color: '#D9C6B5', name: 'cobbles-lane', roughness: 1 }),
     cobbles: derive('cobbles', { color: '#F6E8D8', name: 'cobbles-ext', roughness: 1 }),
@@ -60,12 +65,14 @@ export function buildExterior(THREE, ctx) {
     pane: std({ color: '#F7DDBF', emissive: '#EFA56E', emissiveIntensity: 0.9, roughness: 1 }, 'pane-amber'),
     gingham: std({ map: X.TEX.gingham('#E39A90'), roughness: 1 }, 'gingham'),
     chalk: std({ map: X.TEX.chalk(), roughness: 1 }, 'chalk'),
-    covers: std({ map: X.TEX.covers(), roughness: 0.9 }, 'covers'),
+    covers: std({ map: X.TEX.covers(), roughness: 0.9, emissive: '#FFFFFF', emissiveMap: X.TEX.covers(), emissiveIntensity: 0.16 }, 'covers'),   // lamp-lit (review #2; more washes the dark boards out)
     icons: std({ map: X.TEX.icons(), transparent: true, depthWrite: false, roughness: 1, polygonOffset: true, polygonOffsetFactor: -1 }, 'icons'),
     bricks: std({ map: X.TEX.bricks(), transparent: true, depthWrite: false, roughness: 1, polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1 }, 'bricks'),
     clay: P.mat('clay'),
   };
-  const roomMat = new THREE.MeshBasicMaterial({ color: '#D9A27E', map: T.wallpaper() }); roomMat.name = 'diorama-room';
+  /* the lit rooms behind the glass (floor-2 dioramas, display soffit): unlit, vertex-coloured per wall (finding 12: a
+     deeper warm back wall so the props read as silhouettes against it) */
+  const roomMat = new THREE.MeshBasicMaterial({ color: '#FFFFFF', map: T.wallpaper(), vertexColors: true }); roomMat.name = 'diorama-room';
   const haloMat = new THREE.MeshBasicMaterial({ map: T.glow(), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, vertexColors: true, toneMapped: false, fog: false });
   haloMat.name = 'halo';
   const halos = new X.Decals(T.glow(), '#ffffff', 'ext:halos'); halos.mat = haloMat;
@@ -81,6 +88,9 @@ export function buildExterior(THREE, ctx) {
   const put = (obj, x, y, z, ry = 0, s = 1) => { obj.position.set(x, y, z); obj.rotation.y = ry; if (s !== 1) obj.scale.setScalar(s); return obj; };
   const addProp = (obj, x, y, z, ry = 0, s = 1, o) => { const tmp = new THREE.Group(); tmp.add(put(obj, x, y, z, ry, s)); batch.obj(tmp, o); };
   const halo = (x, y, z, w, h, k = 1, col = [1, 0.84, 0.64]) => halos.quad(X.mat4([x, y, z], [PI / 2, 0, 0], [w, 1, h]), 1, [col[0] * k, col[1] * k, col[2] * k]);
+  /* review #2: an amber "glaze" just inside a lit pane: the flat centre of the glow texture (soft edges, no hot spot), in
+     the one halo batch (no extra draw). Under the paint the exterior glows take ×5, so k stays small. */
+  const glaze = (x, y, z, w, h, k) => halos.quad(X.mat4([x, y, z], [PI / 2, 0, 0], [w, 1, h]), 1, [k, 0.71 * k, 0.42 * k], [0.28, 0.28, 0.72, 0.72]);
   const pool = (x, z, w, d, k = 1, ry = 0) => halos.quad(X.mat4([x, 0.008, z], [0, ry, 0], [w, 1, d]), 1, [0.55 * k, 0.36 * k, 0.2 * k]);
   function bar(a, b, t, c, o = {}) {
     const d = V3(b[0] - a[0], b[1] - a[1], b[2] - a[2]); const L = d.length();
@@ -335,7 +345,8 @@ export function buildExterior(THREE, ctx) {
   ];
   const WIN2 = { hw: 0.41, y0: 4.58, y1: 5.82 };
   const FD = { hw: 0.37, y0: 4.22, ys: 5.7 };                       // centre French door: rect to ys + half-round head
-  const SAGE = J.body, TRIM = C.trim;
+  const SAGE = J.body, TRIM = C.trim, BAR = J.bar;
+  const GLZ = { dorm: 0.14, door: 0.12, disp: 0.07, cafe: 0.06 };   // lit-pane glaze strength (×5 under the paint)
 
   /* ================================================================== GROUND: lawn, flagstone pavement, kerb, cobbled lane */
   {
@@ -447,7 +458,7 @@ export function buildExterior(THREE, ctx) {
       pts.push([u0, 0], [u0, v1], [d.c + ROOF.xo, v2], [u1, v1], [u1, 0]);
     }
     pts.push([Wd, 0], [Wd, Lv], [0, Lv]);
-    const tile = 2.1;
+    const tile = 3.2;                                  // 8 scallop rows per tile: 0.4 m rows (≥ 20 px in the first view)
     const top = X.planePoly(pts, O, U, Vv, tile); batch.push(M.slate, top);
     const under = X.planePoly(pts, O.clone().addScaledVector(N, -ROOF.t), U, Vv, tile); flipGeo(under); X.paintGeo(under, '#EADCCB'); batch.push(M.clay, under, { cast: false });
     // back slope
@@ -522,8 +533,10 @@ export function buildExterior(THREE, ctx) {
       roofPts.push(V3(d.c, d.yr + 0.05, zf));
     }
 
-    // chimney: a soft rose-brick stack through the front slope near the right gable, ivory cap, two terracotta pots
-    const cx = 3.0, cz = -2.7, cw = 0.62, cd = 0.52, ct = 9.05;
+    // chimney: a soft rose-brick stack low on the front slope beside the right dormer, ivory cap, two terracotta pots;
+    // short enough that its pots stay under the ridge line in the first view (the desktop frame, held by the logo's
+    // minimum width, crops just above the ridge; finding 13)
+    const cx = 3.92, cz = -1.5, cw = 0.5, cd = 0.46, ct = 7.72;
     const cb = roofY(cz + cd / 2) - 0.3;
     worldGeo(boxAt(cx - cw / 2, cx + cw / 2, cb, ct, cz - cd / 2, cz + cd / 2), std({ map: X.TEX.wash(), color: '#E9C4B5' }, 'chimney'), 1.6, { tag: 'chim' });
     clay(rb(cw + 0.14, 0.12, cd + 0.14, 0.035), [cx, ct + 0.06, cz], TRIM, { ao: 0.2 });
@@ -555,6 +568,7 @@ export function buildExterior(THREE, ctx) {
     }
     // door posts (sage)
     for (const sx of [-1, 1]) blk(sx * DOOR.hw + (sx > 0 ? 0 : -0.3), sx * DOOR.hw + (sx > 0 ? 0.3 : 0), 0, FAS.y0, 0, 0.1, SAGE, { ao: 0.2 });
+    for (const sx of [-1, 1]) blk(sx > 0 ? DOOR.hw : -DOOR.hw - 0.31, sx > 0 ? DOOR.hw + 0.31 : -DOOR.hw, 0, 0.45, 0, 0.115, J.deep, { ao: 0.2 });   // plinth (review #21), clear of the opening
     // fascia board (sage, a touch deeper so the ivory sign pops) with an ivory bead around the side panels
     blk(-FAS.x, FAS.x, FAS.y0, FAS.y1, 0, 0.06, J.fascia, { ao: 0.08 });
     small(true);
@@ -591,11 +605,11 @@ export function buildExterior(THREE, ctx) {
     // door head: sage rail + a glowing fanlight with three bars (all above y 2.5)
     blk(-DOOR.hw, DOOR.hw, yH, yH + 0.06, -0.02, 0.08, SAGE);
     { const g = new THREE.PlaneGeometry(DOOR.hw * 2, FAS.y0 - yH - 0.06); g.translate(0, (yH + 0.06 + FAS.y0) / 2, -0.1); batch.push(M.pane, g, { cast: false }); }
-    for (const x of [-0.35, 0, 0.35]) bar([x, yH + 0.06, -0.08], [x, FAS.y0, -0.08], 0.03, SAGE, { d: 0.04 });
+    for (const x of [-0.35, 0, 0.35]) bar([x, yH + 0.06, -0.08], [x, FAS.y0, -0.08], 0.03, BAR, { d: 0.04 });
     halo(0, 2.68, 0.56, 1.5, 0.4, 0.28);
     // reveal linings (outside the clear opening |x| < 0.7)
-    for (const sx of [-1, 1]) blk(sx > 0 ? DOOR.hw : -DOOR.hw - 0.025, sx > 0 ? DOOR.hw + 0.025 : -DOOR.hw, 0, yH, -WT, 0, SAGE);
-    blk(-DOOR.hw - 0.025, DOOR.hw + 0.025, yH, yH + 0.025, -WT, 0, SAGE);
+    for (const sx of [-1, 1]) blk(sx > 0 ? DOOR.hw : -DOOR.hw - 0.025, sx > 0 ? DOOR.hw + 0.025 : -DOOR.hw, 0, yH, -WT, 0, J.reveal);
+    blk(-DOOR.hw - 0.025, DOOR.hw + 0.025, yH, yH + 0.025, -WT, 0, J.reveal);
     // the double doors, open inward, lying along the inner wall (x ∈ ±[0.72, 1.42], z ≈ −0.42…−0.35)
     for (const sx of [-1, 1]) {
       const cx = sx * 1.07, z = -0.385;
@@ -604,8 +618,8 @@ export function buildExterior(THREE, ctx) {
         const zz = z + fz * 0.028;
         blk(cx - 0.25, cx + 0.25, 0.22, 0.95, zz - 0.006, zz + 0.006, PALETTE === 'be' ? J.inset : J.deep);
         { const g = new THREE.PlaneGeometry(0.5, 1.1); if (fz < 0) g.rotateY(PI); g.translate(cx, 1.72, zz + fz * 0.004); batch.push(M.pane, g, { cast: false }); }
-        for (const y of [1.45, 1.72, 1.99]) bar([cx - 0.25, y, zz + fz * 0.008], [cx + 0.25, y, zz + fz * 0.008], 0.025, SAGE, { d: 0.012 });
-        bar([cx, 1.17, zz + fz * 0.008], [cx, 2.27, zz + fz * 0.008], 0.025, SAGE, { d: 0.012 });
+        for (const y of [1.45, 1.72, 1.99]) bar([cx - 0.25, y, zz + fz * 0.008], [cx + 0.25, y, zz + fz * 0.008], 0.025, BAR, { d: 0.012 });
+        bar([cx, 1.17, zz + fz * 0.008], [cx, 2.27, zz + fz * 0.008], 0.025, BAR, { d: 0.012 });
         K.add('metal', sph(10, 8), { p: [cx - sx * 0.27, 1.08, zz + fz * 0.03], s: 0.03, c: C.rose });
       }
       for (const y of [0.3, 1.25, 2.2]) K.add('metal', rb(0.025, 0.12, 0.06, 0.008), { p: [sx * 0.725, y, -0.33], c: C.rose });
@@ -653,9 +667,9 @@ export function buildExterior(THREE, ctx) {
     for (const k of [-1, 1]) { const px = xm + k * L / 4; blk(px - L / 4 + 0.12, px + L / 4 - 0.12, 0.12, yb - 0.16, zf, zf + 0.02, J.deep); blk(px - L / 4 + 0.16, px + L / 4 - 0.16, 0.16, yb - 0.2, zf + 0.02, zf + 0.03, J.inset); }
     blk(x0 - 0.04, x1 + 0.04, yb - 0.06, yb + 0.01, -0.02, zf + 0.08, TRIM, { ao: 0.2 });
     for (const x of [x0 + 0.04, x1 - 0.04]) { blk(x - 0.045, x + 0.045, yb, yt, zf - 0.09, zf, SAGE); blk(x - 0.04, x + 0.04, yb, yt, 0, 0.08, SAGE); }
-    for (const x of [xm - L / 6, xm + L / 6]) bar([x, yb, zf - 0.03], [x, yt, zf - 0.03], 0.05, SAGE, { d: 0.05 });
-    bar([x0, 2.14, zf - 0.03], [x1, 2.14, zf - 0.03], 0.05, SAGE, { d: 0.05 });
-    for (let k = 1; k < 6; k++) { const x = x0 + k * L / 6; if (Math.abs(x - (xm - L / 6)) > 0.05 && Math.abs(x - (xm + L / 6)) > 0.05) bar([x, 2.14, zf - 0.03], [x, yt, zf - 0.03], 0.028, SAGE, { d: 0.03 }); }
+    for (const x of [xm - L / 6, xm + L / 6]) bar([x, yb, zf - 0.03], [x, yt, zf - 0.03], 0.05, BAR, { d: 0.05 });
+    bar([x0, 2.14, zf - 0.03], [x1, 2.14, zf - 0.03], 0.05, BAR, { d: 0.05 });
+    for (let k = 1; k < 6; k++) { const x = x0 + k * L / 6; if (Math.abs(x - (xm - L / 6)) > 0.05 && Math.abs(x - (xm + L / 6)) > 0.05) bar([x, 2.14, zf - 0.03], [x, yt, zf - 0.03], 0.028, BAR, { d: 0.03 }); }
     { const g = new THREE.PlaneGeometry(L - 0.1, yt - yb); g.translate(xm, (yb + yt) / 2, zf - 0.025); batch.push(M.glassSoft, g, { cast: false }); }
     for (const x of [x0 + 0.04, x1 - 0.04]) { const g = new THREE.PlaneGeometry(zf - 0.1, yt - yb); g.rotateY(x < xm ? -PI / 2 : PI / 2); g.translate(x, (yb + yt) / 2, zf / 2); batch.push(M.glassSoft, g, { cast: false }); }
     // bay head: sage board with an ivory bead, a little sloped top
@@ -665,25 +679,31 @@ export function buildExterior(THREE, ctx) {
     small(true);
     // display bed (honey boards) and a warm lit soffit
     blk(x0, x1, yb - 0.08, yb, -WT - 0.02, zf - 0.04, C.honey);
-    { const g = new THREE.PlaneGeometry(L, zf + WT); g.rotateX(PI / 2); g.translate(xm, yt - 0.005, (zf - WT) / 2); X.worldUV(g, 1.2); batch.push(roomMat, g, { cast: false, receive: false }); }
-    halo(xm, 1.55, zf + 0.05, 3.4, 2.4, 0.2, [1, 0.66, 0.36]);   // amber, saturated enough that the paint keeps it warm (integrator)
+    { const g = new THREE.PlaneGeometry(L, zf + WT); g.rotateX(PI / 2); g.translate(xm, yt - 0.005, (zf - WT) / 2); X.worldUV(g, 1.2); X.paintGeo(g, '#D99A6E'); batch.push(roomMat, g, { cast: false, receive: false }); }
+    // amber wash over the bay: kept low (the paint's glow gain ×5 would turn it into a haze that pastels the covers);
+    // the warmth comes from the hot bulbs, the lamp and the amber soffit
+    halo(xm, 1.55, zf + 0.05, 3.4, 2.4, 0.1, [1, 0.6, 0.3]);
 
-    // a dusty-rose café curtain on a little rail behind the goods: a warm backdrop, the shop still shows above it
-    bar([x0 + 0.05, 1.42, -0.27], [x1 - 0.05, 1.42, -0.27], 0.018, C.rose, { key: 'metal' });
+    // a deep terracotta-rose café curtain on a little rail behind the goods: a warm, darker backdrop the lit books and
+    // cats read against (finding 2); the shop still shows above it
+    bar([x0 + 0.05, 1.82, -0.27], [x1 - 0.05, 1.82, -0.27], 0.018, C.rose, { key: 'metal' });
     { const n = 34, pts = [], idx = [], col = [];
-      for (let i = 0; i <= n; i++) { const t = i / n, x = x0 + 0.06 + t * (L - 0.12), z = -0.25 + Math.sin(t * PI * 16) * 0.025; for (const y of [yb + 0.01, 1.4]) { pts.push(x, y, z); const k = 0.9 + 0.1 * Math.sin(t * PI * 16); col.push(0.85 * k, 0.6 * k, 0.55 * k); } }
-      for (let i = 0; i < n; i++) { const a = i * 2; idx.push(a, a + 2, a + 1, a + 1, a + 2, a + 3); }
+      // linear ≈ sRGB #A2665A (deep terracotta-rose) at the bottom; the top 40 % is lamp-lit: ×1.45 and warmer (review #2)
+      const rows = [[yb + 0.01, 1], [yb + 0.6 * (1.8 - yb), 1.05], [1.8, 1.45]];
+      for (let i = 0; i <= n; i++) { const t = i / n, x = x0 + 0.06 + t * (L - 0.12), z = -0.25 + Math.sin(t * PI * 16) * 0.025; for (const [y, h] of rows) { pts.push(x, y, z); const k = (0.9 + 0.1 * Math.sin(t * PI * 16)) * h, w = h > 1.2 ? 1.2 : 1; col.push(0.36 * k * w, 0.13 * k, 0.09 * k / w); } }
+      for (let i = 0; i < n; i++) for (let r = 0; r < 2; r++) { const a = i * 3 + r; idx.push(a, a + 3, a + 1, a + 1, a + 3, a + 4); }
       const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3)); g.setIndex(idx); g.computeVertexNormals();
       X.worldUV(g, 0.3); batch.push(P.mat('linenVC'), g, { cast: false }); }
     // hanging lamp inside the bay
     addProp(P.pendantLamp({ shade: 'dome', hex: '#F1E3D3', cord: 0.25, r: 0.13 }), xm + 0.1, 2.25, 0.02, 0);
-    halo(xm + 0.1, 2.2, 0.3, 1.0, 0.9, 0.32);
+    halo(xm + 0.1, 2.2, 0.3, 1.4, 1.2, 0.3);
     // fairy lights: a swag across the top of the window and a string along the moss on the sill
     const bulbs = [];
     for (let i = 0; i <= 22; i++) { const t = i / 22, x = x0 + 0.1 + t * (L - 0.2); bulbs.push([x, 2.42 - Math.abs(Math.sin(t * PI * 3)) * 0.13, zf - 0.12]); }
     for (let i = 0; i <= 26; i++) { const t = i / 26, x = x0 + 0.08 + t * (L - 0.16); bulbs.push([x, yb + 0.05 + Math.sin(t * 19) * 0.015, zf - 0.1 + Math.sin(t * 7) * 0.03]); }
     tube(bulbs.slice(0, 23), 0.004, '#8C7A62', { radial: 3, cast: false });
-    bulbs.forEach(([x, y, z], i) => { K.add('glowVC', sph(4, 3), { p: [x, y, z], s: 0.015, c: '#FFF2D8' }); if (i % 3 === 0) halo(x, y, z + 0.03, 0.16, 0.16, 0.45); });
+    // bulbs big enough (≈ 0.026 m) to outlive the 9 px Kuwahara footprint, each with its own halo: sparkles, not dust
+    bulbs.forEach(([x, y, z]) => { K.add('glowVC', sph(5, 4), { p: [x, y, z], s: 0.026, c: '#FFF2D8' }); halo(x, y, z + 0.03, 0.2, 0.2, 0.5); });
     // moss along the front of the sill
     for (let i = 0; i < 9; i++) { const x = x0 + 0.15 + i * (L - 0.3) / 8; K.add('leaf', X.lumpy(800 + i, 0.18, 7, 10, 6), { p: [x, yb + 0.02, zf - 0.12], s: [0.2, 0.05, 0.08], c: i % 2 ? '#8EA685' : '#9DB38F', ao: 0.3 }); }
     // picture books on little easels and crates (covers: pastel illustrations, no words)
@@ -700,8 +720,28 @@ export function buildExterior(THREE, ctx) {
       rod(at([0, 0, -0.14]), at([0, h * 0.9, -0.02]), 0.009, 0.008, C.honey);
       K.add('clay', rb(0.3, 0.02, 0.05, 0.008), { p: at([0, h * 0.28, 0.05]), r: [0, ry, 0], c: C.honey });
     };
-    miniEasel(x0 + 0.42, yb, 0.22, 0.6, 0.25); coverBook(x0 + 0.42, yb + 0.18, 0.27, 0.34, 0.36, 0, 0.25);
-    miniEasel(x1 - 0.42, yb, 0.2, 0.62, -0.3); coverBook(x1 - 0.42, yb + 0.19, 0.25, 0.34, 0.36, 3, -0.3);
+    const BD = ['#46623F', '#8E3346', '#B8862F', '#43547A'];   // saturated dark boards (forest, berry, mustard, slate blue): sunlit ×2–3 in the bay
+    miniEasel(x0 + 0.42, yb, 0.22, 0.6, 0.25); coverBook(x0 + 0.42, yb + 0.18, 0.27, 0.34, 0.36, 0, 0.25, 0.12, BD[0]);
+    miniEasel(x1 - 0.42, yb, 0.2, 0.62, -0.3); coverBook(x1 - 0.42, yb + 0.19, 0.25, 0.34, 0.36, 3, -0.3, 0.12, BD[3]);
+    // a honey ladder shelf at the left, face-out picture books on three rungs up to ~2 m (the bookshop-window look)
+    { const lx0 = x0 + 0.17, lx1 = x0 + 0.78, H = 1.38, zA = 0.04, zB = -0.2, zAt = (h) => zA + (zB - zA) * h / H;
+      for (const x of [lx0, lx1]) rod([x, yb, zA + 0.03], [x, yb + H, zB], 0.016, 0.014, C.honeyD);
+      [[0.35, [[0.2, 0.24, 0.28, 1, 1], [0.48, 0.22, 0.26, 6, 2]]], [0.75, [[0.18, 0.22, 0.27, 5, 3], [0.45, 0.24, 0.25, 2, 0]]], [1.15, [[0.3, 0.26, 0.3, 4, 1]]]].forEach(([h, bks]) => {
+        const y = yb + h, z = zAt(h);
+        blk(lx0 - 0.02, lx1 + 0.02, y - 0.025, y, z - 0.07, z + 0.07, C.honey, { ao: 0.1 });
+        for (const [dx, w, bh, cell, ci] of bks) coverBook(lx0 + dx + w / 2 - 0.08, y, z + 0.01, w, bh, cell, 0.04 * (dx - 0.3), 0.2, BD[ci]);
+      });
+      yarn(lx0 + 0.47, yb + 1.15, zAt(1.15) + 0.02, 0.05, '#B4566E'); }
+    // a second stack of crates at the right, books inside, a parcel and a face-out book on top (up to ~1.6 m)
+    { const cx0 = x1 - 0.66, cx1 = x1 - 0.16, cz0 = -0.27, cz1 = -0.01;
+      for (const [y0, y1] of [[yb, yb + 0.44], [yb + 0.44, yb + 0.86]]) {
+        blk(cx0, cx1, y0, y0 + 0.03, cz0, cz1, C.honeyD); blk(cx0, cx1, y1 - 0.03, y1, cz0, cz1, C.honeyD);
+        blk(cx0, cx0 + 0.03, y0, y1, cz0, cz1, C.honeyD); blk(cx1 - 0.03, cx1, y0, y1, cz0, cz1, C.honeyD);
+        blk(cx0, cx1, y0, y1, cz0, cz0 + 0.02, '#8E6B52');
+        const row = P.bookRow(7, cx1 - cx0 - 0.08, { h: 0.3, d: 0.16, seed: 40 + Math.round(y0 * 10) }); row.position.set((cx0 + cx1) / 2, y0 + 0.03, (cz0 + cz1) / 2 + 0.01); row.updateMatrix(); group.add(row);
+      }
+      coverBook(cx0 + 0.16, yb + 0.86, cz0 + 0.06, 0.24, 0.27, 7, -0.1, 0.18, BD[1]);
+      addProp(P.parcel({ w: 0.18, h: 0.1, d: 0.14 }), cx1 - 0.12, yb + 0.86, cz0 + 0.13, -0.2); }
     // a crate on its side full of books, a face-out book leaning on top
     { const cx0 = xm - 0.56, cx1 = xm - 0.04, cy1 = yb + 0.36, cz0 = -0.2, cz1 = 0.12;
       blk(cx0, cx1, yb, yb + 0.03, cz0, cz1, C.honeyD); blk(cx0, cx1, cy1 - 0.03, cy1, cz0, cz1, C.honeyD);
@@ -709,8 +749,10 @@ export function buildExterior(THREE, ctx) {
       blk(cx0, cx1, yb, cy1, cz0, cz0 + 0.02, '#9C7B60');
       blk(cx0 + 0.02, cx1 - 0.02, yb + 0.15, yb + 0.2, cz1 - 0.02, cz1, C.honey); }
     { const row = P.bookRow(8, 0.46, { h: 0.28, d: 0.16, seed: 31 }); row.position.set(xm - 0.3, yb + 0.03, -0.06); row.updateMatrix(); group.add(row); }
-    coverBook(x0 + 0.62, yb, -0.19, 0.28, 0.3, 1, 0.1, 0.2); coverBook(x1 - 0.59, yb, -0.2, 0.25, 0.27, 7, -0.12, 0.2);
-    coverBook(xm - 0.3, yb + 0.34, -0.05, 0.3, 0.3, 6, 0.05, 0.15);
+    // a little tower of picture books on the crate, a big face-out book on top (fills the centre of the bay to ~1.45 m)
+    { let y = yb + 0.36; const tw = [[0.34, 0.05, '#8E3346'], [0.31, 0.045, '#B8862F'], [0.33, 0.05, '#43547A'], [0.29, 0.045, '#46623F'], [0.3, 0.05, '#A85A2C']];
+      tw.forEach(([w, t, c], i) => { blk(xm - 0.3 - w / 2, xm - 0.3 + w / 2, y, y + t, 0.03 - 0.12 + (i % 2) * 0.012, 0.03 + 0.12 - (i % 2) * 0.01, c, { rad: 0.008, r: [0, (i % 2 ? 0.08 : -0.06), 0] }); blk(xm - 0.3 - w / 2 + 0.012, xm - 0.3 + w / 2 - 0.006, y + 0.006, y + t - 0.006, -0.08, 0.14, '#F6EEDF', { rad: 0.004 }); y += t; });
+      coverBook(xm - 0.3, y, 0.0, 0.34, 0.4, 0, -0.05, 0.16, '#5E4A7A'); }
     // a stepped riser with the crochet cats (ginger on top, white below; no tuxedo cat in the window)
     blk(xm + 0.02, xm + 0.6, yb, yb + 0.22, -0.18, 0.22, '#F1D9CF', { ao: 0.25 });
     blk(xm + 0.08, xm + 0.54, yb + 0.22, yb + 0.4, -0.18, 0.06, '#DCE3D2', { ao: 0.25 });
@@ -720,17 +762,18 @@ export function buildExterior(THREE, ctx) {
     addProp(P.crochetDoll({ skin: '#F4DCC9', hair: '#C9724E', hairStyle: 'braids', dress: '#A9BCA0', pinafore: '#FBF6EE', hat: 'straw', ribbon: '#EFC5B9', size: 0.3 }), x0 + 0.85, yb, 0.3, 0.3);
     basket(x1 - 0.95, yb, 0.33, 0.13, 0.1, ['#EFC5B9', '#A9BCA0', '#F3DCC9']);
     yarn(x1 - 0.72, yb, 0.4, 0.05, '#C9B6D8');
-    addProp(P.parcel({ w: 0.24, h: 0.12, d: 0.18 }), x1 - 0.32, yb, -0.1, 0.3); addProp(P.parcel({ w: 0.18, h: 0.1, d: 0.14 }), x1 - 0.3, yb + 0.12, -0.1, -0.2);
-    addProp(P.parcel({ w: 0.2, h: 0.1, d: 0.16 }), x0 + 0.3, yb, -0.1, -0.3);
+    addProp(P.parcel({ w: 0.2, h: 0.1, d: 0.16 }), x0 + 0.3, yb, 0.02, -0.3);
     for (let i = 0; i < 3; i++) {
       const y = yb + 0.02 + i * 0.04;
       blk(xm - 0.82, xm - 0.56, y - 0.02, y + 0.02, 0.18, 0.38, ['#A9BCA0', '#EFC5B9', '#E9DCCB'][i], { r: [0, 0.2 - i * 0.12, 0] });
     }
-    // felt stars hanging on threads from the bay head (pictograms, soft)
-    for (const [x, y, c] of [[x0 + 0.3, 2.2, '#F3D88C'], [xm - 0.45, 2.28, '#FBF6EE'], [xm + 0.62, 2.2, '#F3D88C'], [x1 - 0.25, 2.3, '#EFC5B9']]) {
+    // felt stars and a felt moon hanging on threads from the bay head, low enough (1.85–2.05 m) to fill the upper band
+    for (const [x, y, c, kind] of [[x0 + 0.3, 2.02, '#F3D88C'], [xm - 0.45, 1.9, '#FBF6EE', 'moon'], [xm + 0.62, 2.05, '#F3D88C'], [x1 - 0.25, 1.88, '#E9A99C'], [xm + 0.08, 1.98, '#F7E2B0']]) {
       bar([x, y + 0.06, 0.25], [x, yt, 0.25], 0.004, '#B7A088');
-      const s = new THREE.Shape(); for (let k = 0; k < 10; k++) { const a = PI / 2 + k * PI / 5, r = k % 2 ? 0.028 : 0.065; k ? s.lineTo(Math.cos(a) * r, Math.sin(a) * r) : s.moveTo(Math.cos(a) * r, Math.sin(a) * r); }
-      const sg = new THREE.ExtrudeGeometry(s, { depth: 0.015, bevelEnabled: false }); sg.translate(0, 0, -0.008);
+      const s = new THREE.Shape();
+      if (kind === 'moon') { s.absarc(0, 0, 0.085, PI * 0.35, PI * 1.65, false); s.absarc(0.045, 0, 0.07, PI * 1.45, PI * 0.55, true); }
+      else for (let k = 0; k < 10; k++) { const a = PI / 2 + k * PI / 5, r = k % 2 ? 0.032 : 0.075; k ? s.lineTo(Math.cos(a) * r, Math.sin(a) * r) : s.moveTo(Math.cos(a) * r, Math.sin(a) * r); }
+      const sg = new THREE.ExtrudeGeometry(s, { depth: 0.015, bevelEnabled: false, curveSegments: 8 }); sg.translate(0, 0, -0.008);
       K.add('felt', sg, { p: [x, y, 0.25], c });
     }
   }
@@ -747,9 +790,9 @@ export function buildExterior(THREE, ctx) {
     for (const x of [x0, x1]) blk(x - (x === x0 ? 0 : 0.03), x + (x === x0 ? 0.03 : 0), CAFE.y0, CAFE.y1, -WT, 0.02, SAGE);
     blk(x0, x1, CAFE.y1 - 0.03, CAFE.y1, -WT, 0.02, SAGE);
     // transom: small glowing panes over the open hatch
-    bar([x0, 2.12, -0.06], [x1, 2.12, -0.06], 0.05, SAGE, { d: 0.08 });
+    bar([x0, 2.12, -0.06], [x1, 2.12, -0.06], 0.05, BAR, { d: 0.08 });
     { const g = new THREE.PlaneGeometry(L, CAFE.y1 - 2.15); g.translate(xm, (2.15 + CAFE.y1) / 2, -0.09); batch.push(M.pane, g, { cast: false }); }
-    for (let k = 1; k < 6; k++) { const x = x0 + k * L / 6; bar([x, 2.14, -0.07], [x, CAFE.y1, -0.07], 0.026, SAGE, { d: 0.03 }); }
+    for (let k = 1; k < 6; k++) { const x = x0 + k * L / 6; bar([x, 2.14, -0.07], [x, CAFE.y1, -0.07], 0.026, BAR, { d: 0.03 }); }
     halo(xm, 1.75, 0.15, 3.2, 1.8, 0.18, [1, 0.68, 0.38]);
     small(true);
     // on the ledge: pastry dome, cups, teapot, herb pots, a little bell
@@ -823,7 +866,7 @@ export function buildExterior(THREE, ctx) {
       for (const y of [WIN2.y0 + (WIN2.y1 - WIN2.y0) / 3, WIN2.y0 + (WIN2.y1 - WIN2.y0) * 2 / 3]) bar([x0, y, zG], [x1, y, zG], 0.03, TRIM, { d: 0.03 });
       bar([x0, WIN2.y0 + 0.03, zG], [x1, WIN2.y0 + 0.03, zG], 0.05, TRIM, { d: 0.05 });
       { const g = new THREE.PlaneGeometry(WIN2.hw * 2, WIN2.y1 - WIN2.y0); g.translate(c, ym, zG + 0.03); batch.push(M.glassSoft, g, { cast: false }); }
-      halo(c, ym, 0.05, 1.5, 1.8, 0.06);
+      halo(c, ym, 0.05, 1.5, 1.8, 0.018);   // calm (×5 under the paint's glow gain): the lit diorama reads through the glass
       // blush shutters with a little heart cut-out, rose-gold holdbacks
       for (const sx of [-1, 1]) {
         const xs = c + sx * (WIN2.hw + 0.27);
@@ -857,7 +900,7 @@ export function buildExterior(THREE, ctx) {
       for (let k = 1; k <= 3; k++) { const y = FD.y0 + (FD.ys - FD.y0) * k / 4; bar([-FD.hw, y, zG], [FD.hw, y, zG], 0.026, TRIM, { d: 0.03 }); }
       for (let k = 1; k < 4; k++) { const a = k / 4 * PI; bar([0, FD.ys, zG], [Math.cos(a) * FD.hw, FD.ys + Math.sin(a) * FD.hw, zG], 0.022, TRIM, { d: 0.03 }); }
       bar([-FD.hw, FD.ys, zG], [FD.hw, FD.ys, zG], 0.04, TRIM, { d: 0.05 });
-      halo(0, 5.3, 0.05, 1.4, 2.0, 0.06);
+      halo(0, 5.3, 0.05, 1.4, 2.0, 0.025);
       // balcony: ivory floor on the cornice, matte rose-gold railing with bellied balusters
       const by = CORN, bz = 0.42, bw = 0.62;
       blk(-bw - 0.06, bw + 0.06, by - 0.02, by + 0.05, -0.02, bz + 0.04, TRIM, { ao: 0.15 });
@@ -874,25 +917,37 @@ export function buildExterior(THREE, ctx) {
 
   /* ================================================================== FLOOR-2 DIORAMAS (seen through the dormer windows) */
   {
-    const room = (x0, x1, y1) => {
+    // a deeper warm back wall and darker sides (unlit vertex colours) so the lit props read as bold silhouettes (finding 12)
+    const room = (x0, x1, y1, backHex = '#B98A70', sideHex = '#A87D68', lamp = null) => {
       const z0 = -1.0, z1 = -WT - 0.01, y0 = 4.15;
       const parts = [];
-      const back = new THREE.PlaneGeometry(x1 - x0, y1 - y0); back.translate((x0 + x1) / 2, (y0 + y1) / 2, z0); parts.push(back);
-      const l = new THREE.PlaneGeometry(z1 - z0, y1 - y0); l.rotateY(PI / 2); l.translate(x0, (y0 + y1) / 2, (z0 + z1) / 2); parts.push(l);
-      const r = new THREE.PlaneGeometry(z1 - z0, y1 - y0); r.rotateY(-PI / 2); r.translate(x1, (y0 + y1) / 2, (z0 + z1) / 2); parts.push(r);
-      const c = new THREE.PlaneGeometry(x1 - x0, z1 - z0); c.rotateX(PI / 2); c.translate((x0 + x1) / 2, y1, (z0 + z1) / 2); parts.push(c);
-      for (const g of parts) { X.worldUV(g, 1.0); batch.push(roomMat, g, { cast: false }); }
+      const back = new THREE.PlaneGeometry(x1 - x0, y1 - y0, 12, 8); back.translate((x0 + x1) / 2, (y0 + y1) / 2, z0); parts.push([back, backHex, lamp]);
+      const l = new THREE.PlaneGeometry(z1 - z0, y1 - y0); l.rotateY(PI / 2); l.translate(x0, (y0 + y1) / 2, (z0 + z1) / 2); parts.push([l, sideHex]);
+      const r = new THREE.PlaneGeometry(z1 - z0, y1 - y0); r.rotateY(-PI / 2); r.translate(x1, (y0 + y1) / 2, (z0 + z1) / 2); parts.push([r, sideHex]);
+      const c = new THREE.PlaneGeometry(x1 - x0, z1 - z0); c.rotateX(PI / 2); c.translate((x0 + x1) / 2, y1, (z0 + z1) / 2); parts.push([c, '#C99C80']);
+      for (const [g, hx, lp] of parts) {
+        X.worldUV(g, 1.0); X.paintGeo(g, hx);
+        if (lp) {   // review #2: the room reads lamp-lit through the glass (dark low walls kept, a hot amber pool up high)
+          const pos = g.attributes.position, col = g.attributes.color;
+          for (let i = 0; i < pos.count; i++) {
+            const d2 = ((pos.getX(i) - lp[0]) / lp[2]) ** 2 + ((pos.getY(i) - lp[1]) / (lp[2] * 0.8)) ** 2, k = 1 + 0.75 * Math.exp(-d2);
+            col.setXYZ(i, col.getX(i) * k * 1.06, col.getY(i) * k, col.getZ(i) * (1 + (k - 1) * 0.55));
+          }
+        }
+        batch.push(roomMat, g, { cast: false });
+      }
       const f = new THREE.PlaneGeometry(x1 - x0, z1 - z0); f.rotateX(-PI / 2); f.translate((x0 + x1) / 2, y0, (z0 + z1) / 2);
       X.paintGeo(f, '#D9BE9C'); batch.push(M.clay, f, { cast: false });
       clay(rb(x1 - x0, 0.1, 0.02, 0.005), [(x0 + x1) / 2, y0 + 0.05, z0 + 0.01], TRIM);
     };
-    room(-3.32, -1.68, 5.98); room(1.68, 3.32, 5.98); room(-0.56, 0.56, 6.1);
+    room(-3.32, -1.68, 5.98, undefined, undefined, [-2.4, 5.5, 0.7]); room(1.68, 3.32, 5.98, undefined, undefined, [2.5, 5.55, 0.7]); room(-0.56, 0.56, 6.1, '#D9A27E', '#C99474', [0, 5.75, 0.45]);
     const Z = -0.99;
     // --- Merlin's workroom (left): desk + lamp glow, drawings pinned to a board, yarn basket (Merlin is never drawn)
     blk(-3.15, -1.95, 4.92, 4.97, -0.9, -0.5, C.honey, { ao: 0.15 });
     for (const x of [-3.1, -2.0]) blk(x - 0.02, x + 0.02, 4.15, 4.92, -0.88, -0.84, C.honeyD);
-    blk(-3.1, -2.05, 5.12, 5.84, Z, Z + 0.025, '#E8D9C2', { ao: 0.1 });
-    for (const [x, y, rz, w, h] of [[-2.86, 5.5, 0.08, 0.28, 0.36], [-2.5, 5.55, -0.07, 0.26, 0.32], [-2.25, 5.32, 0.1, 0.22, 0.26], [-2.7, 5.24, -0.05, 0.24, 0.18]]) {
+    blk(-3.12, -2.03, 5.1, 5.86, Z, Z + 0.025, '#A87650', { ao: 0.1 });                     // cork board (dark) …
+    blk(-3.15, -2.0, 5.07, 5.89, Z - 0.004, Z + 0.018, C.honey);                            // … in a honey frame
+    for (const [x, y, rz, w, h] of [[-2.82, 5.52, 0.08, 0.32, 0.4], [-2.42, 5.56, -0.07, 0.3, 0.36], [-2.22, 5.3, 0.1, 0.24, 0.28], [-2.68, 5.22, -0.05, 0.28, 0.2]]) {   // white drawings pinned on it
       const g = new THREE.PlaneGeometry(w, h); g.applyMatrix4(X.mat4([x, y, Z + 0.035], [0, 0, rz])); batch.push(P.mat('paper'), g, { cast: false });
       K.add('metal', sph(6, 4), { p: [x - Math.sin(rz) * h * 0.42, y + Math.cos(rz) * h * 0.42, Z + 0.04], s: [0.012, 0.012, 0.006], c: C.rose });
     }
@@ -901,32 +956,38 @@ export function buildExterior(THREE, ctx) {
       tube([[lx, ly, lz], [lx - 0.02, ly + 0.22, lz], [lx - 0.1, ly + 0.36, lz + 0.04], [lx - 0.2, ly + 0.38, lz + 0.08]], 0.011, C.rose, { mat: MM.metal });
       K.add('metal', new THREE.ConeGeometry(0.09, 0.12, 12, 1, true), { p: [lx - 0.24, ly + 0.36, lz + 0.1], r: [0.2, 0, 0.5], c: C.rose });
       K.add('glowVC', sph(8, 6), { p: [lx - 0.26, ly + 0.32, lz + 0.11], s: 0.03, c: '#FFF4E6' });
-      halo(lx - 0.25, ly + 0.3, -0.35, 0.8, 0.8, 0.28); }
-    yarn(-2.7, 4.97, -0.62, 0.065, '#EFC5B9'); yarn(-2.58, 4.97, -0.72, 0.05, '#A9BCA0');
+      halo(lx - 0.22, ly + 0.28, -0.4, 0.75, 0.75, 0.13); }   // a warm pool round the lamp, not a haze over the room
+    basket(-2.72, 4.97, -0.62, 0.12, 0.08, ['#B4566E', '#D3A24A', '#B4566E']);         // berry + mustard yarn on the desk
+    yarn(-2.48, 4.97, -0.58, 0.06, '#D3A24A');
     basket(-2.95, 4.15, -0.55, 0.17, 0.15, ['#C9B6D8', '#EFC5B9', '#E8C9A0']);
-    halo(-2.5, 5.6, -0.5, 1.2, 1.0, 0.08);
+    halo(-2.5, 5.6, -0.5, 1.2, 1.0, 0.015);
     // a yarn ball on the outer sill of the workroom window, its strand falling into the flower box
-    yarn(-2.5 + 0.22, WIN2.y0, 0.08, 0.06, '#EFC5B9');
-    tube([[-2.28, WIN2.y0 + 0.02, 0.13], [-2.27, WIN2.y0 - 0.04, 0.22], [-2.32, WIN2.y0 - 0.16, 0.27]], 0.004, '#E9B3A6', { cast: false });
+    yarn(-2.5 + 0.22, WIN2.y0, 0.08, 0.096, '#B4566E');          // berry: reads against the flower box
+    tube([[-2.28, WIN2.y0 + 0.03, 0.15], [-2.26, WIN2.y0 - 0.04, 0.24], [-2.32, WIN2.y0 - 0.18, 0.28]], 0.006, '#B4566E', { cast: false });
     // --- pet-sitting corner (right): dog bed, ball, bowl, framed paw-print pictogram, a leash on a hook
     blk(1.95, 3.05, 4.15, 4.62, -0.85, -0.4, C.oat, { ao: 0.2 });
-    K.add('linenVC', new THREE.TorusGeometry(0.22, 0.075, 8, 20), { p: [2.55, 4.7, -0.6], r: [PI / 2, 0, 0], c: '#EFC5B9', ao: 0.25 });
-    K.add('linenVC', cyl(16), { p: [2.55, 4.665, -0.6], s: [0.23, 0.045, 0.23], c: '#FBF6EE' });
-    K.add('felt', sph(10, 8), { p: [2.66, 4.73, -0.55], s: 0.05, c: C.sage });
-    K.add('felt', sph(10, 8), { p: [2.12, 4.67, -0.5], s: 0.045, c: '#E8A9A0' });
+    K.add('linenVC', new THREE.TorusGeometry(0.24, 0.085, 8, 20), { p: [2.55, 4.72, -0.6], r: [PI / 2 - 0.5, 0, 0], c: '#CF7F7C', ao: 0.25 });   // rose rim tipped toward the window
+    K.add('linenVC', cyl(16), { p: [2.55, 4.68, -0.6], s: [0.25, 0.05, 0.25], r: [-0.5, 0, 0], c: '#FBF6EE' });
+    K.add('felt', sph(10, 8), { p: [2.66, 4.75, -0.5], s: 0.05, c: C.sage });
+    K.add('felt', sph(10, 8), { p: [2.1, 4.68, -0.46], s: 0.065, c: '#D3A24A' });                       // mustard ball
     K.add('satin', new THREE.CylinderGeometry(0.09, 0.07, 0.05, 14), { p: [2.95, 4.645, -0.55], c: '#F4EADB', ao: 0.3 }); K.add('satin', new THREE.TorusGeometry(0.09, 0.011, 4, 14), { p: [2.95, 4.67, -0.55], r: [PI / 2, 0, 0], c: C.blush });
-    blk(2.12, 2.6, 5.15, 5.71, Z, Z + 0.025, C.rose, { key: 'metal' });
-    blk(2.16, 2.56, 5.19, 5.67, Z + 0.025, Z + 0.032, '#FFFBF4');
-    K.add('felt', sph(12, 8), { p: [2.36, 5.37, Z + 0.04], s: [0.07, 0.056, 0.008], c: '#B88A7A' });
-    for (const [dx, dy] of [[-0.08, 0.065], [-0.028, 0.108], [0.028, 0.108], [0.08, 0.065]]) K.add('felt', sph(8, 6), { p: [2.36 + dx, 5.37 + dy, Z + 0.04], s: [0.024, 0.03, 0.008], c: '#B88A7A' });
+    blk(2.08, 2.64, 5.11, 5.75, Z, Z + 0.03, '#5E4A42');                                              // dark frame
+    blk(2.14, 2.58, 5.17, 5.69, Z + 0.03, Z + 0.036, '#FFFBF4');
+    K.add('felt', sph(12, 8), { p: [2.36, 5.36, Z + 0.044], s: [0.085, 0.066, 0.008], c: '#8E5A4E' });
+    for (const [dx, dy] of [[-0.095, 0.078], [-0.034, 0.128], [0.034, 0.128], [0.095, 0.078]]) K.add('felt', sph(8, 6), { p: [2.36 + dx, 5.36 + dy, Z + 0.044], s: [0.028, 0.036, 0.008], c: '#8E5A4E' });
     K.add('metal', new THREE.TorusGeometry(0.028, 0.008, 4, 10, PI), { p: [2.9, 5.6, Z + 0.04], r: [0, 0, PI], c: C.rose });
     tube([[2.9, 5.57, Z + 0.05], [2.83, 5.32, Z + 0.07], [2.9, 5.1, Z + 0.08], [2.97, 5.32, Z + 0.07], [2.9, 5.57, Z + 0.05]], 0.011, '#C9937E', { cast: false });
-    halo(2.5, 5.6, -0.5, 1.2, 1.0, 0.08);
+    halo(2.5, 5.6, -0.5, 1.2, 1.0, 0.015);
     // --- centre landing: a fern on a stand under a paper lantern
     blk(-0.16, 0.16, 4.15, 4.75, -0.82, -0.5, C.oat);
     addProp(P.plant('fern', 0.5, { pot: 'cream', seed: 12 }), 0, 4.75, -0.66, 0);
     { const g = new THREE.SphereGeometry(0.1, 12, 8); g.scale(1, 1.25, 1); g.translate(0, 5.82, -0.7); batch.push(P.mat('lantern'), g, { cast: false }); }
-    halo(0, 5.8, -0.4, 0.9, 0.9, 0.3);
+    halo(0, 5.8, -0.4, 0.9, 0.9, 0.14);
+    // the lit panes (review #2): the floor-2 windows and the balcony door glow amber from the street
+    for (const d of DORM) if (d.kind === 'win') glaze(d.c, (WIN2.y0 + WIN2.y1) / 2, -0.17, WIN2.hw * 2.3, (WIN2.y1 - WIN2.y0) * 1.15, GLZ.dorm);
+    glaze(0, (FD.y0 + FD.ys + FD.hw) / 2, -0.17, FD.hw * 2.3, (FD.ys + FD.hw - FD.y0) * 1.1, GLZ.door);
+    glaze((DISP.x0 + DISP.x1) / 2, (DISP.y0 + DISP.y1) / 2, DISP.zf - 0.07, (DISP.x1 - DISP.x0) * 1.08, (DISP.y1 - DISP.y0) * 1.1, GLZ.disp);
+    glaze((CAFE.x0 + CAFE.x1) / 2, (CAFE.y0 + CAFE.y1) / 2 + 0.05, -0.12, (CAFE.x1 - CAFE.x0) * 1.06, (CAFE.y1 - CAFE.y0) * 1.15, GLZ.cafe);
   }
 
   /* ================================================================== VINES: up the pilasters, over the cornice, round the door */
@@ -939,9 +1000,10 @@ export function buildExterior(THREE, ctx) {
     X.vine(batch, leaves, blooms, [[-HW + 0.05, 2.3, 0.2], [-HW + 0.3, 2.85, 0.24], [-HW + 0.42, 3.2, 0.26]], { leaf: 0.085, density: 1.0, flowers: 0.15, flowerColors: rose, seed: 17 });
     X.vine(batch, leaves, blooms, [[HW - 0.2, 0.45, 0.4], [HW - 0.07, 1.2, 0.19], [HW - 0.2, 2.0, 0.18], [HW - 0.06, 2.75, 0.24], [HW - 0.12, 3.5, 0.26], [HW - 0.1, 4.3, 0.34], [HW - 0.22, 4.85, 0.08], [HW - 0.4, 5.3, 0.06]], { leaf: 0.1, density: 1.0, flowers: 0.18, flowerColors: ['#FBF6EE', '#F2C4B8', '#EFA9A0'], seed: 11 });
     X.vine(batch, leaves, blooms, [[HW - 0.12, 4.25, 0.32], [3.55, 4.3, 0.3], [3.25, 4.26, 0.3]], { leaf: 0.09, density: 1.2, flowers: 0.15, flowerColors: ['#FBF6EE', '#F2C4B8'], seed: 19 });
-    // ivy up the left door post, over the garland, a little way down the right post (all clear of the doorway)
-    pot(-0.86, 0, 0.17, 0.1, 0.18, 'herb', 61);
-    X.vine(batch, leaves, blooms, [[-0.86, 0.2, 0.16], [-0.9, 0.9, 0.14], [-0.84, 1.6, 0.14], [-0.9, 2.3, 0.15], [-0.8, 2.66, 0.2], [-0.4, 2.78, 0.21], [0.05, 2.79, 0.21], [0.5, 2.76, 0.2], [0.86, 2.6, 0.17], [0.9, 2.35, 0.15]], { leaf: 0.075, density: 1.35, flowers: 0.1, flowerColors: ['#FBF6EE', '#F2C4B8'], seed: 31 });
+    // ivy up the right door post, over the garland, a little way down the left post (all clear of the doorway); the pot
+    // sits by the right post so the Maine Coon on the left has the threshold to itself (finding 5)
+    pot(0.86, 0, 0.17, 0.1, 0.18, 'herb', 61);
+    X.vine(batch, leaves, blooms, [[0.86, 0.2, 0.16], [0.9, 0.9, 0.14], [0.84, 1.6, 0.14], [0.9, 2.3, 0.15], [0.8, 2.66, 0.2], [0.4, 2.78, 0.21], [-0.05, 2.79, 0.21], [-0.5, 2.76, 0.2], [-0.86, 2.6, 0.17], [-0.9, 2.35, 0.15]], { leaf: 0.075, density: 1.35, flowers: 0.1, flowerColors: ['#FBF6EE', '#F2C4B8'], seed: 31 });
   }
 
   /* ================================================================== FRONT: bench, chalkboard, door pots, street lamp */
@@ -969,9 +1031,9 @@ export function buildExterior(THREE, ctx) {
     // an aged-zinc tub; right of the door, in the shaded corner by the café: a monstera and a peony; on the patio past
     // the bistro table: a blue hydrangea and a taller trà mi (japonica). Nothing in the door tunnel, none hides the
     // sign, the cat, the bowl or the guests.
-    plant('hydrangea', -1.86, 0, 1.0, 1.0, 71, { potR: 0.18, potH: 0.3, cols: ['#EDB9AC', '#F4D6CB', '#F1C3C0', '#F6E1D9'] });
-    plant('sasanqua', -1.43, 0, 0.84, 1.0, 72, { potR: 0.14, potH: 0.24, paint: '#AEB6B2' });
-    plant('monstera', 1.3, 0, 0.6, 1.0, 73, { potR: 0.15, potH: 0.3, paint: '#F3E4D8' });
+    plant('hydrangea', -2.0, 0, 1.2, 1.0, 71, { potR: 0.18, potH: 0.3, cols: ['#EDB9AC', '#F4D6CB', '#F1C3C0', '#F6E1D9'] });
+    plant('sasanqua', -1.75, 0, 0.7, 1.0, 72, { potR: 0.14, potH: 0.24, paint: '#AEB6B2' });
+    plant('monstera', 1.48, 0, 0.42, 1.0, 73, { potR: 0.15, potH: 0.3, paint: '#F3E4D8' });
     plant('peony', 1.66, 0, 1.0, 0.95, 74, { potR: 0.18, potH: 0.28, paint: '#EFC5B9' });
     plant('hydrangea', 4.32, 0, 2.08, 1.0, 75, { potR: 0.19, potH: 0.3, paint: '#F4EADB', cols: ['#B9C3E3', '#CFC2DF', '#A9B8DE', '#DCD3E8'] });
     plant('japonica', 4.58, 0, 0.86, 1.05, 76, { potR: 0.2, potH: 0.32 });
@@ -1057,14 +1119,16 @@ export function buildExterior(THREE, ctx) {
   /* ================================================================== THE CAST: Maine Coon, café guests, golden dog (animated) */
   const tableX = 2.55, tableZ = 1.75;
   const cast = new THREE.Group(); cast.name = 'ext:cast'; group.add(cast);
-  const coon = P.maineCoon({ size: 1.12 }); put(coon.group, -1.12, 0, 0.5, 0.22); cast.add(coon.group);
+  // (fix v3: a touch bigger and forward on the threshold stone, in front of the dark plinth of the door post)
+  const coon = P.maineCoon({ size: 1.4 }); put(coon.group, -1.12, 0, 0.7, 0.22); cast.add(coon.group);
   const chairs = [[tableX - 0.64, tableZ - 0.12, 1.1], [tableX + 0.64, tableZ - 0.12, -1.1]];
   const people = [
     P.person({ coat: '#9FB09A', scarf: '#EFC5B9', hair: '#6B5444', skin: '#EBC9AE', trousers: '#7D7068', hairStyle: 'bun', phase: 1, lookYaw: 0.25 }),
     P.person({ coat: '#D59A86', scarf: '#F4EADB', hair: '#3F342D', skin: '#D9AE90', trousers: '#8F8378', hairStyle: 'short', hat: 'beret', hatColor: '#E9DCCB', phase: 2, lookYaw: -0.2 }),
   ];
   people.forEach((p, i) => { put(p.group, chairs[i][0], 0, chairs[i][1], chairs[i][2]); cast.add(p.group); });
-  const dog = P.dog({ coat: 'golden', size: 1 }); put(dog.group, tableX + 0.1, 0, tableZ + 0.62, 0.5); cast.add(dog.group);
+  // the golden dog lies along x at the guests' feet, head toward the door (stays inside the first frame; finding 13)
+  const dog = P.dog({ coat: 'golden', size: 1 }); put(dog.group, tableX + 0.08, 0, tableZ + 0.42, -PI / 2 + 0.12); cast.add(dog.group);
   X.skinCharacters([coon.group, ...people.map((p) => p.group), dog.group], group, decals, 'ext:cast');
   small(true);
   // café furniture: marble-topped bistro table, rattan chairs with gingham cushions, cups + a bud vase
@@ -1085,7 +1149,11 @@ export function buildExterior(THREE, ctx) {
   K.add('satin', new THREE.CylinderGeometry(0.022, 0.03, 0.12, 12), { p: [tableX + 0.12, 0.8, tableZ + 0.12], c: '#F4EADB' });
   tube([[tableX + 0.12, 0.85, tableZ + 0.12], [tableX + 0.13, 0.92, tableZ + 0.13], [tableX + 0.14, 0.97, tableZ + 0.12]], 0.004, C.sageD, { cast: false });
   K.add('felt', sph(8, 6), { p: [tableX + 0.14, 0.985, tableZ + 0.12], s: 0.024, c: '#EFB0A3' });
-  addProp(P.dogBowl(), 0.95, 0, 0.42, -0.2, 1.15);
+  { // blush-glazed bowl with clear blue water (reads against the pale flagstones; nothing in front of it)
+    const bowl = P.dogBowl({ hex: '#D99A8E', band: '#F6E9DC' });
+    bowl.traverse((m) => { if (m.isMesh && m.material === P.mat('water')) { m.material = m.material.clone(); m.material.color = new THREE.Color('#A9C8D6'); m.material.name = 'water-blue'; } });
+    addProp(bowl, 0.86, 0, 0.66, -0.2, 1.25);
+  }
   small(false);
 
   /* ================================================================== BUILD: merge, instanced leaves, decals */
@@ -1140,7 +1208,7 @@ export function buildExterior(THREE, ctx) {
       /* framing hints for main.js: the roof silhouette (ridge ends, dormer apexes, chimney pots) and the things that
          should stay in the first view (café table + guests, the cat, the bowl) */
       roofPts: roofPts.map((p) => p.clone()),
-      keepPts: [V3(tableX + 0.9, 0, tableZ + 0.3), V3(tableX - 0.9, 0, tableZ + 0.3), V3(-0.95, 0, 0.6), V3(0.95, 0, 0.55), V3(-HW, 0, 0.1), V3(HW, 0, 0.1)],
+      keepPts: [V3(tableX + 0.9, 0, tableZ + 0.3), V3(tableX - 0.9, 0, tableZ + 0.3), V3(tableX, 0, tableZ + 0.62), V3(-1.12, 0, 0.82), V3(0.86, 0, 0.8), V3(-HW, 0, 0.1), V3(HW, 0, 0.1)],
     },
     lights: [],
   };

@@ -1,0 +1,92 @@
+1. [high/paint / lit-window glow (must-have: lit display window, cozy mood)] js/watercolor.js (PREP_FRAG, COMP_FRAG); js/exterior.js (DISPLAY WINDOW fairy lights ~L681-685); js/interior.js (fairy-light swags): The watercolour pass erases the warmth of every lit pane, lamp and fairy light. In the HDR scene target the display window is 1.28 mean / 2.53 max, the dormers 1.46–1.49 mean and the lamp head 4.55, against cream walls at 0.79 mean / 1.13 max (rv-hdr.js). PREP_FRAG tone-maps them to low-chroma near-white, and the uHi paper-pull term turns them into paper cream. Kuwahara R4 then smears the 3 px fairy-light bulbs away. In the painted first view the display, café and dormer windows read as pale beige panels, not as lit, and the whole exterior reads like flat daylight. With ?paint=0 they glow warmly.
+   FIX: watercolor.js:
+(a) PREP_FRAG, right after `vec3 lin = ...`: add `float hot = smoothstep(1.25, 2.4, max(lin.r, max(lin.g, lin.b)));`. Then:
+- multiply the paper-pull line by (1.0 - hot): `c = mix(c, uPaper, smoothstep(0.9,1.02,l)*(1.0-smoothstep(0.05,0.16,chroma))*uHi*(1.0-hot));`
+- multiply the banding amount by (1.0 - hot);
+- add `c = mix(c, c*vec3(1.0,0.84,0.6)*1.04, hot*0.55);` so glowing panes become amber, not paper.
+(b) COMP_FRAG, after the paper multiply (`col = C * paperC`): add a glow bleed from the HDR scene. Take 5 taps of `max(texture2D(tScene, uv + k*vec2(±4,±4)*uDpr/res).rgb - 1.35, 0.0)` (centre weight 0.4, diagonals 0.15) and screen it in: `col = 1.0 - (1.0-col)*(1.0 - clamp(g*vec3(1.0,0.8,0.52)*0.7, 0.0, 1.0));`. That is +5 taps, no new pass. The 1.35 threshold sits above the cream wall's 1.13.
+exterior.js DISPLAY block: bulb scale `s: 0.015` → `0.026`, and give every bulb a halo (drop `if (i % 3 === 0)`). Apply the same bulb change to the interior fairy-light swags in interior.js. A bulb then exceeds the ~9 px Kuwahara footprint and survives as a sparkle.
+2. [high/exterior display window vs the owner's bookshop-window reference] js/exterior.js (DISPLAY WINDOW block, ~L648-737): The display bay is nearly empty above about 1.2 m. The goods (two easels, one crate, two cats on a riser, a doll) sit low. The curtain backdrop is light dusty rose and stops at y 1.4. Cover colours are pastel at the same value as the backdrop. So in the first view the upper 60% of the glazing is a pale peach box with a faint ghost of the room behind it. The owner's reference window (70ec1a51) is crammed to the top, has deep amber light and saturated book covers, and uses a ladder shelf of face-out books.
+   FIX: exterior.js DISPLAY WINDOW:
+- Curtain: change the vertex colour `col.push(0.85*k, 0.6*k, 0.55*k)` to a deeper warm terracotta-rose `(0.66*k, 0.4*k, 0.33*k)`. Raise its top from y 1.4 to y 1.8, and move the rail to 1.82.
+- Add a 3-step honey ladder shelf at the left (x0+0.2…x0+0.75, rungs at yb+0.35 / +0.75 / +1.15, top about 2.0 m) holding face-out coverBooks.
+- Add a second stacked crate at the right, up to about 1.6 m.
+- Use saturated mid-dark board colours for the window books (the coverBook `col` argument): forest #5E7D5A, berry #A8485A, mustard #D3A24A, slate blue #5D6E8C. Give the M.covers cells used here bolder art, still with no words.
+- Hang two of the felt stars and a felt moon lower, at y 1.85–2.05, to fill the upper band.
+- Raise the pendant-lamp halo from `halo(xm+0.1,2.2,0.3,1.0,0.9,0.32)` to size 1.4×1.2, opacity 0.45.
+3. [high/destination shelf view: framing] js/interior.js (shelfFit, ~L751-756); js/main.js (shelfFrame, ~L295-320): shelfFit contains floor points: V(DC.x,0.0,DC.z+0.6), V(DC.x±0.45,0.0,DC.z+0.4) and the hook-stand foot V(HS.x+0.3,0.0,…). They force the frame down to the floor, so about 45% of the destination frame is the plain fluted base, the rug and the stand's pink foot. The products are only about 35–55 px tall on desktop and 20–35 px on phone. On desktop the bottom-tier rim also sits hard against the left deckle at x about 50 px.
+   FIX: interior.js shelfFit:
+- Raise the three display floor points to y 0.42 (mid-base): V(DC.x,0.42,DC.z+0.6) and V(DC.x±0.45,0.42,DC.z+0.4).
+- Raise the hook-stand foot point to y 0.55.
+main.js shelfFrame: opts.vBias 0.25 → 0.1.
+The frame bottom then crops through the fluted base, like a product shot, and the tiers grow about 1.35–1.5×. Re-check that the phone frame still sits above the sheet and that the left margin is at least 4% of rects.shelf.
+4. [high/destination shelf view: product legibility under the paint] js/main.js (state/view change → wc.setLook); js/watercolor.js (TIERS.low, PREP_FRAG deep); js/interior.js (hook stand place() ~L701-702): At the shelf view the paint flattens the crochet animals and dolls into similar pale lumps. The calico patches, Siamese points, grey shorthair and doll costumes all read clearly with ?paint=0 but not with the paint on. The two bag charms are near-white linen (#E9DCCB and #DCE3E8 in the P.product defaults), so the paper pull turns them into white blocks and their dolls disappear. The tuxedo cat is also grey-taupe at close range (rv-c-toptier.png) although it is black with ?paint=0.
+   FIX: main.js: while view==='shelf' (and for walk t > WALK_DUR-1.2), call `wc.setLook({ detail: 0.55, sharp: 900, edge: 2.4 })`, and restore LOOK when leaving. watercolor.js TIERS.low: set `detail: 1` so phones get the detail restore at the shelf (+1 tap).
+interior.js hook stand: pass custom builders to place():
+- 'linen-pocket-doll' → `P.backpack({hex:'#D39A86', pocket:'#C2877A', doll:{dress:'#F6DCD2', hair:'#8E6A52'}})`
+- 'americana-doll-bag-charm' → `P.backpack({hex:'#8DA3BC', pocket:'#7B91AA', doll:{pattern:'americana', hair:'#C9A27C', heart:'#C9937E'}})`
+This is the same mechanism the integrator used for the tuxedo body, so props.js is not touched. The bags get chroma above 0.16 and escape the paper pull.
+watercolor.js PREP_FRAG: make the `deep` term start at l 0.0–0.3 instead of 0.03–0.22 so the black knit keeps its value.
+5. [medium/exterior must-haves: dog bowl and Maine Coon] js/exterior.js (L943, L973-974, L1060, L1088): The dog bowl at (0.95,0,0.42) is white on cream flagstones. The monstera at (1.3,0,0.6) stands in front of it and its fanned leaves cover it, so the bowl is effectively invisible in the first view. The contract says nothing may cover the bowl. The Maine Coon at (-1.12,0,0.5) is about 30×45 px. It is wedged between the sasanqua zinc tub at (-1.43,0,0.84) and the ivy herb pot at (-0.86,0,0.17), so it reads as a brown smudge among pots rather than the pretty cat licking its paw.
+   FIX: exterior.js:
+- Move the bowl to `addProp(P.dogBowl(), 0.86, 0, 0.66, -0.2, 1.25)` (outside the tunnel, x > 0.7) and tint it blush-glazed: outer #D99A8E, water #A9C8D6.
+- Move the monstera back to `plant('monstera', 1.48, 0, 0.42, …)` so its leaves are behind the bowl's sightline.
+- Move the sasanqua to (-1.75, 0, 0.7) and the blush hydrangea to (-2.12, 0, 1.12). Check the bench at bx -2.78, bl 1.3.
+- Move the ivy herb pot `pot(-0.86,0,0.17,…)` to the right door post (0.86, 0, 0.17).
+- Scale the cat `P.maineCoon({size:1.12})` → 1.3.
+Re-check the tunnel and the zero-vertex test.
+6. [medium/phone rendering quality (low tier)] js/main.js (pixel ratio for phones); js/watercolor.js (TIERS.low, COMP_FRAG lap): At 390x844 the pixel ratio is capped at 1.5 (585 px buffer) and the paint runs at 0.6, i.e. 351 px wide. On a 3x phone that is about a third of native resolution. The whole frame looks like an upscaled low-res image: soft washes, stair-stepped depth lines on the tier rims and the Merlin frame, and products that are 20 px smears. The destination is the worst-looking part of the phone experience.
+   FIX: main.js: phone pixel-ratio cap 1.5 → 2 for the paint chain. watercolor.js: TIERS.low.scale 0.6 → 0.5.
+Cost: buffer 780×1688; prep and Kuwahara at 390×844 with 37 taps ≈ 12M; composite 18 taps × 1.32M ≈ 24M. Total about 36M taps per frame (was 23.7M), estimated 3–4 ms on an iPhone 12-class phone. The adaptive step already drops the pixel ratio first if it is slow.
+If that is over budget, keep 1.5 and supersample only the depth Laplacian in COMP_FRAG: evaluate `lap` at two offsets of ±0.35 px and average them (+5 taps). That removes most of the stair-stepping.
+7. [medium/overall value structure / time of day] js/main.js (ATMO, L93-96); js/watercolor.js (LOOK): Everything sits in a narrow mid-to-light value band: contrast 0.88 lifts the darks, lift 0.3 adds lavender, hi 0.25 pulls the lights to paper. The room behind the glass is lit by the outdoor hemi (1.55) and the sun (2.25), because ATMO is blended by camera z, so seen from the street the interior is as bright as the facade. The owner's watercolour café works through value contrast: a dark sage door, dark glass with warm points, a dark lantern and chalkboard. Ours reads washed out and daytime rather than cozy.
+   FIX: main.js ATMO.o: exposure 1.02→0.96, hemi 1.55→1.25, sun 2.25→1.85, sunColor '#FFD2A2'→'#FFC48C' (late golden hour). The sign is pristine and unaffected.
+watercolor.js LOOK: contrast 0.88→0.94, lift 0.3→0.2, hi 0.25→0.15.
+exterior.js: darken the door-leaf and pilaster inner shadows (J.deep) by about 10%.
+Re-shoot exterior-d/m and shelf-d against ref-cafe-crop.png. With finding 1 in place, the lit windows should then pop amber against a slightly deeper house.
+8. [medium/walk glances on portrait phones] js/main.js (walk look-target keys / naturalFrame for inside): On 390x844 the narrow horizontal field of view makes the glances miss their targets. The café glance at 3.95 s shows the counter only at the right edge, with about 50% bare floor. The gift glance at 4.85 s lands on the armchair, with the bookcases as a sliver at the left and half the frame floor. The phone inside view is also about 35% empty floor.
+   FIX: main.js walk look keys: when W/H < 1, push the glance targets outward and up.
+- cafeLook → (anchors.int.cafeLook.x + 0.6, +0.25 y): about (2.95, 1.5, -2.75).
+- giftLook → (-3.5, 1.6, -3.0), aimed at the bookcase.
+- frames.inside.look.y: +0.2 on tall screens.
+Keep the desktop keys as they are.
+9. [medium/pristine layer vs deckled border] js/watercolor.js (pristineMaterial, ~L386-410): The pristine pass draws after the composite and ignores the deckle mask. When the sign reaches the frame edge, logo and frame pixels paint over the torn paper margin. On phones in the door view, rose fragments of the sign's frame float on the white paper border between the garland leaves. In the desktop walk at 2.4 s the ivory sign runs straight through the top deckle. It looks like a glitch on an otherwise hand-made edge.
+   FIX: watercolor.js pristineMaterial onBeforeCompile: add uniforms tNoise, uDeckle and uDpr (shared from U). In main(), compute the same deckle edge distance as COMP_FRAG: `ed = min(css.x, cssRes.x-css.x, css.y, cssRes.y-css.y)`, `thr = uDeckle*(0.45+1.1*nL.a)+(h-0.5)*2.2`. Then `discard` where `ed < thr + 1.0`. The logo inside the frame, as in the first view, is untouched.
+10. [medium/coloured-pencil linework character] js/watercolor.js (COMP_FRAG pencil section): `lc = mix(c*c*0.62, uSepia, 0.5)` makes every line about the same dark sepia, at even weight on every contour. The result reads more like a toon outline around Kuwahara fills than loose coloured pencil. The owner's pencil portrait (e49ae19c) has distinctly coloured strokes (blue on the jumper, red-brown, ochre), varied pressure, and slightly doubled or overshooting contours.
+   FIX: watercolor.js COMP_FRAG:
+- `vec3 lc = mix(c*c*0.55, uSepia, 0.22); lc = mix(vec3(luma(lc)), lc, 1.35);` for a hue-keeping darker tint.
+- Pressure: `line *= 0.7 + 0.6*nL.b`.
+- Sketchy second stroke: evaluate the depth Laplacian again at `luv2 = luv + (jit.yx*1.6 + 0.8)*uDpr/res`, then `line = max(line, line2*0.55)`. That is +5 taps.
+- Keep the boil and reduced-motion behaviour unchanged.
+11. [medium/interior cosiness / clutter] js/interior.js (lightField L51-62, keyLight L730, back-wall niches L355-380, rug L595, runner L137); js/main.js (ATMO.i): The room is charming: stripes, arched niches, the round café counter, the armchair nook. But it is sparse and evenly lit, nearer a pastel showroom than the warm, cluttered references (toy shop 49c6c277, vintage shelves 74b009db, Paper Moon).
+- The door and inside views show large bare honey floor.
+- The niches hold 3–5 items each.
+- The jute rug is lighter than the floor and reads as a pale disc.
+- The rag-rug runner reads as a white rectangle in the door view.
+- No warm pools of lamplight read.
+   FIX: interior.js:
+- lightField: `f = 1.1 - 0.6*smooth(0.9, 4.2, dd)` (stronger falloff); keyLight '#FFD3A8' → '#FFC48A'.
+- Fill each niche shelf edge to edge: two P.bookRow runs plus a crochet animal per shelf.
+- Add a basket or stack of books on the floor beside the display walkway.
+- Jute rug: body #C9A77C, braided scallop #A88259, so it is darker than the floor.
+- Rag runner: cream → oat #E3D2BC, with stronger blush and sage bands.
+main.js ATMO.i: hemi 0.9→0.72, sky '#FFE6C9'→'#FFD9B0', sun 0.85→0.5.
+Re-measure the shelf share (currently 158k, cap 170k).
+12. [low/floor-2 dioramas (Merlin's workroom, pet corner)] js/exterior.js (FLOOR-2 DIORAMAS ~L875-930): Even in a close-up, with or without the paint, the workroom (desk, lamp, pinned drawings, yarn) and the pet corner (bed, ball, bowl, paw frame) read only as faint shapes behind pale amber glass. In the first view they are just lit panes, and the yarn ball on the outer sill can't be seen.
+   FIX: exterior.js FLOOR-2 DIORAMAS:
+- Give each diorama back wall a darker warm tone (#B98A70 / #A87D68).
+- Add 2–3 bold silhouettes per room at 12 px or more at 1280: a white drawing sheet on a cork board, the desk lamp halo at ×1.5, a berry or mustard yarn basket on the desk; a rose dog-bed rim facing the window, a mustard ball, the paw print in a dark frame.
+- Scale the outer-sill yarn ball 1.6× and colour it berry #B4566E so it reads against the sage flower box.
+13. [low/desktop first-view composition] js/exterior.js (chimney, dog placement, roofPts/keepPts): At 1280x800, with the logo held at 260 px, the chimney is cut by the top edge and the ridge touches it. The dog under the bistro table lies pointing toward the camera, and its front is cut by the bottom deckle. This is 'dog at feet', a must-have.
+   FIX: exterior.js:
+- Move the chimney back onto the rear slope (z -2.7 → -4.4) or lower its top from about 9.5 to about 8.9 so its projection drops below the frame top. Update roofPts.
+- Turn the dog to lie along x under the table (ry about ±PI/2, offset to z 1.85) so it stays inside the frame. Keep keepPts in sync.
+14. [low/UI chrome vs the painted look] css/haven3d.css: The exterior card and the shelf panel are crisp white modern cards with soft drop shadows. They are now the most 'modern' thing on screen, sitting on top of a hand-painted paper image.
+   FIX: css/haven3d.css .ext and the shelf panel:
+- background #FBF6EE plus a faint inline-SVG paper noise (about 4% opacity);
+- border 1px solid rgba(201,147,126,.35);
+- box-shadow 0 6px 18px rgba(90,70,54,.12);
+- radius 14px.
+Keep the copy, layout and AA contrast unchanged.
+15. [low/roof texture under the paint] js/exterior.js (roof UV / slate texture use): The scalloped slate rows are clear with ?paint=0 but disappear under the Kuwahara. The roof becomes a flat salmon wash with streaks, and loses the storybook scallop detail that v1 had.
+   FIX: exterior.js roof UVs: double the slate tile size (fewer, larger scallop rows, at least 8 px per row at 1280), and add a slightly darker row line in the slate canvas or vertex AO so the paint keeps 'indicated' rows.

@@ -350,8 +350,13 @@ export function makeProps(THREE = THREE_NS, T) {
   // CROCHET CAT
   // =====================================================================================
   const CAT_DEF = { body: '#EFE4D6', belly: null, ears: null, eyes: 'button', size: 0.18, pose: 'sit', tuxedo: false };
+  /* (fix v3, review #6) P.eyeScale > 1 makes the button eyes (and the nose) bigger and darker for pieces seen small through
+     the paint: the round display sets 1.7 while it builds (the real pieces have big safety eyes). It is part of the cache
+     key only when it is not 1, so every other build is unchanged. */
+  P.eyeScale = 1;
+  const eyeOpt = () => (P.eyeScale !== 1 ? { eyeScale: P.eyeScale } : {});
   P.crochetCat = (opts = {}) => {
-    const o = Object.assign({}, CAT_DEF, opts);
+    const o = Object.assign({}, CAT_DEF, eyeOpt(), opts);
     const g = cached(keyOf('cat', o), () => buildCat(o));
     return g;
   };
@@ -379,25 +384,26 @@ export function makeProps(THREE = THREE_NS, T) {
       if (o.tufts) k.add('felt', cone(6), { p: [sx * 0.046, hy + 0.074, hz - 0.008], r: [-0.1, 0, -sx * 0.3], s: [0.0042, 0.02, 0.0042], c: shadeHex(earCol, -0.25) });
     }
     // --- face
-    const eyeY = -0.06, eyeX = 0.4;
+    const es = o.eyeScale || 1, ez = (1 + es) / 2;
+    const eyeY = -0.06 - (es - 1) * 0.03, eyeX = 0.4 + (es - 1) * 0.03;
     for (const sx of [-1, 1]) {
       if (o.eyes === 'sleepy') {
-        k.onSurf('button', tor(0.16, 4, 10, PI), head, [sx * eyeX, eyeY, 1], [0.0075, 0.0075, 0.0075], { r: [0, 0, PI], sink: -0.1, c: '#2A2420' });
+        k.onSurf('button', tor(0.16, 4, 10, PI), head, [sx * eyeX, eyeY, 1], [0.0075 * es, 0.0075 * es, 0.0075 * ez], { r: [0, 0, PI], sink: -0.1, c: '#2A2420' });
       } else {
         const ec = o.eyeColor || (dark ? '#C2B04E' : null);
         if (ec) {
-          k.onSurf('button', sph(10, 6), head, [sx * eyeX, eyeY, 1], [0.0092, 0.0092, 0.0045], { c: ec, sink: 0.25 });
-          k.onSurf('button', sph(8, 6), head, [sx * eyeX, eyeY, 1], [0.0042, 0.0072, 0.0038], { c: '#1F1A17', sink: -0.55 });
+          k.onSurf('button', sph(10, 6), head, [sx * eyeX, eyeY, 1], [0.0092 * es, 0.0092 * es, 0.0045 * ez], { c: ec, sink: 0.25 });
+          k.onSurf('button', sph(8, 6), head, [sx * eyeX, eyeY, 1], [0.0042 * es, 0.0072 * es, 0.0038 * ez], { c: '#1F1A17', sink: -0.55 });
         } else {
-          k.onSurf('button', sph(10, 6), head, [sx * eyeX, eyeY, 1], [0.0078, 0.0078, 0.0045], { c: '#26201C', sink: 0.2 });
+          k.onSurf('button', sph(10, 6), head, [sx * eyeX, eyeY, 1], [0.0078 * es, 0.0078 * es, 0.0045 * ez], { c: '#26201C', sink: 0.2 });
         }
-        k.onSurf('button', sph(6, 4), head, [sx * eyeX - 0.08, eyeY + 0.09, 1], [0.0019, 0.0019, 0.0012], { c: '#FFFFFF', sink: -2.2 });
+        k.onSurf('button', sph(6, 4), head, [sx * eyeX - 0.08 * es, eyeY + 0.09 * es, 1], [0.0019 * es, 0.0019 * es, 0.0012 * ez], { c: '#FFFFFF', sink: -2.2 });
       }
       k.onSurf('felt', sph(10, 6), head, [sx * 0.72, -0.3, 0.72], [0.0105, 0.0072, 0.0025], { c: o.cheek || '#EFB0A3', sink: 0.2 });
     }
     if (muzzle) k.patch('knit', head, [0, -0.38, 1], 0.5, muzzle, { lift: 1.025, squash: [new THREE.Vector3(0, 1, 0), 0.72] });
     if (pts) k.patch('knit', head, [0, -0.3, 1], 0.4, T.mixHex(pts, body, 0.3), { lift: 1.025, squash: [new THREE.Vector3(0, 1, 0), 0.8] });
-    k.onSurf('felt', sph(10, 6), head, [0, -0.2, 1], [0.0064, 0.0047, 0.0045], { c: o.nose || '#D9958C', sink: 0.1 });
+    k.onSurf('felt', sph(10, 6), head, [0, -0.2 - (es - 1) * 0.04, 1], [0.0064 * ez, 0.0047 * ez, 0.0045], { c: o.nose || (es > 1 ? '#5A3A34' : '#D9958C'), sink: 0.1 });
     for (const sx of [-1, 1]) k.onSurf('button', tor(0.2, 4, 10, PI), head, [sx * 0.07, -0.33, 1], [0.0047, 0.0047, 0.0047], { r: [0, 0, PI], sink: -0.15, c: '#4A3A32' });
     // forehead stripes (tabby)
     if (o.stripes) {
@@ -476,7 +482,7 @@ export function makeProps(THREE = THREE_NS, T) {
   // CROCHET ANIMALS
   // =====================================================================================
   P.crochetAnimal = (kind = 'bunny', opts = {}) => {
-    const o = Object.assign({ size: 0.16 }, opts);
+    const o = Object.assign({ size: 0.16 }, eyeOpt(), opts);
     return cached(keyOf('animal:' + kind, o), () => buildAnimal(kind, o));
   };
   function animalBase(k, o, { body, belly, headR = [0.058, 0.052, 0.052], headY = 0.118, legs = true, arms = true, legCol = null, armCol = null }) {
@@ -494,15 +500,19 @@ export function makeProps(THREE = THREE_NS, T) {
     }
     return { head, bodyE };
   }
+  let faceES = 1;   // eye scale of the animal being built (buildAnimal sets it)
   function faceButtons(k, head, { eyeX = 0.38, eyeY = -0.04, cheek = '#EFB0A3', nose = null, noseDir = [0, -0.22, 1], noseS = [0.0062, 0.0046, 0.0045] } = {}) {
+    const es = faceES, ez = (1 + es) / 2;
+    if (es > 1) { eyeX += (es - 1) * 0.03; if (nose) { nose = '#4A3430'; noseS = noseS.map((v, i) => (i < 2 ? v * ez : v)); } }
     for (const sx of [-1, 1]) {
-      k.onSurf('button', sph(10, 6), head, [sx * eyeX, eyeY, 1], [0.0072, 0.0072, 0.0042], { c: '#26201C', sink: 0.2 });
-      k.onSurf('button', sph(6, 4), head, [sx * eyeX - 0.08, eyeY + 0.09, 1], [0.0018, 0.0018, 0.0012], { c: '#FFFFFF', sink: -2.2 });
+      k.onSurf('button', sph(10, 6), head, [sx * eyeX, eyeY, 1], [0.0072 * es, 0.0072 * es, 0.0042 * ez], { c: '#26201C', sink: 0.2 });
+      k.onSurf('button', sph(6, 4), head, [sx * eyeX - 0.08 * es, eyeY + 0.09 * es, 1], [0.0018 * es, 0.0018 * es, 0.0012 * ez], { c: '#FFFFFF', sink: -2.2 });
       if (cheek) k.onSurf('felt', sph(10, 6), head, [sx * 0.7, -0.3, 0.72], [0.0098, 0.0068, 0.0025], { c: cheek, sink: 0.2 });
     }
     if (nose) k.onSurf('felt', sph(10, 6), head, noseDir, noseS, { c: nose, sink: 0.1 });
   }
   function buildAnimal(kind, o) {
+    faceES = o.eyeScale || 1;
     const u = o.size / 0.16;
     const k = new Kit(u, 0.0062);
     if (kind === 'bunny') {
@@ -609,7 +619,7 @@ export function makeProps(THREE = THREE_NS, T) {
   // =====================================================================================
   const DOLL_DEF = { skin: '#F2D3BC', hair: '#8E6A52', hairStyle: 'short', dress: '#EFC5B9', hat: null, size: 0.24, outfit: 'dress' };
   P.crochetDoll = (opts = {}) => {
-    const o = Object.assign({}, DOLL_DEF, opts);
+    const o = Object.assign({}, DOLL_DEF, eyeOpt(), opts);
     return cached(keyOf('doll', o), () => buildDoll(o));
   };
   function buildDoll(o) {
@@ -619,9 +629,10 @@ export function makeProps(THREE = THREE_NS, T) {
     const head = { c: [0, 0.19, 0.0], r: [0.052, 0.05, 0.05] };
     k.add('knit', sph(18, 14), { p: head.c, s: head.r, c: skin, ao: 0.1 });
     // face
+    const des = o.eyeScale || 1, dez = (1 + des) / 2;
     for (const sx of [-1, 1]) {
-      k.onSurf('button', sph(10, 8), head, [sx * 0.36, -0.12, 1], [0.0052, 0.0052, 0.003], { c: '#2B231F', sink: 0.2 });
-      k.onSurf('button', sph(6, 4), head, [sx * 0.36 - 0.07, -0.04, 1], [0.0013, 0.0013, 0.0009], { c: '#FFFFFF', sink: -2.4 });
+      k.onSurf('button', sph(10, 8), head, [sx * 0.36, -0.12, 1], [0.0052 * des, 0.0052 * des, 0.003 * dez], { c: '#2B231F', sink: 0.2 });
+      k.onSurf('button', sph(6, 4), head, [sx * 0.36 - 0.07 * des, -0.04, 1], [0.0013 * des, 0.0013 * des, 0.0009 * dez], { c: '#FFFFFF', sink: -2.4 });
       k.onSurf('felt', sph(10, 6), head, [sx * 0.62, -0.36, 0.78], [0.0088, 0.006, 0.002], { c: '#EFAEA0', sink: 0.2 });
     }
     k.onSurf('knit', sph(8, 6), head, [0, -0.3, 1], [0.0048, 0.004, 0.004], { c: shadeHex(skin, -0.04), sink: 0.2 });

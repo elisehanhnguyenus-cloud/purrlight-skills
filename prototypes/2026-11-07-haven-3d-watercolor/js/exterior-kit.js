@@ -420,7 +420,7 @@ export function makeExtKit(THREE, P, T) {
       const g = geos.length === 1 ? geos[0] : mergeGeometries(geos, false);
       if (!g) { console.warn('[exterior] skin merge failed', material.name); continue; }
       g.boundingSphere = sphere.clone();
-      const sm = new THREE.SkinnedMesh(g, material);
+      const sm = new THREE.SkinnedMesh(g, skinMat(material));
       sm.name = `${name}:${material.name}`;
       sm.bind(skeleton, new THREE.Matrix4());
       sm.boundingSphere = sphere.clone();
@@ -430,6 +430,20 @@ export function makeExtKit(THREE, P, T) {
     }
     for (const b of bones) b.visible = false;   // the originals stay in the graph as bones (their matrices drive the skin)
     return { meshes, skeleton, sphere };
+  }
+
+  /* (fix v3, review #37) a skinned mesh gets its own copy of a shared material: with one material drawn both skinned and
+     plain in the same frame, three re-derived the program parameters on every switch (garbage every frame) */
+  const skinClones = new Map();
+  function skinMat(m) {
+    let c = skinClones.get(m);
+    if (!c) {
+      c = m.clone(); c.name = m.name; c.userData = Object.assign({}, m.userData);
+      if (m.onBeforeCompile) c.onBeforeCompile = m.onBeforeCompile;
+      if (m.customProgramCacheKey) c.customProgramCacheKey = m.customProgramCacheKey;
+      skinClones.set(m, c);
+    }
+    return c;
   }
 
   /* ---------------------------------------------------------------- matte paint (watercolour wants no gloss) */
@@ -527,10 +541,41 @@ export function makeExtKit(THREE, P, T) {
       g.moveTo(hx, hy + s * 0.9); g.bezierCurveTo(hx - s * 1.4, hy - s * 0.1, hx - s * 0.7, hy - s * 1.1, hx, hy - s * 0.35); g.bezierCurveTo(hx + s * 0.7, hy - s * 1.1, hx + s * 1.4, hy - s * 0.1, hx, hy + s * 0.9); g.fill();
       return toTex(c, { clamp: true });
     }),
-    /* 4×2 atlas of picture-book covers (pastel, simple illustrations, no text) */
+    /* big scalloped roof slates (v3, finding 15): 8 rows × 8 scallops per tile (tile 3.2 m → 0.4 m rows), each course
+       casting a dark soft shadow line on the one below and lighter at its rounded tip, so the paint keeps "indicated"
+       rows at first-view size. Warm rose-taupe tones (final colours: the material colour stays white). Canvas y grows
+       toward the eave (scallop tips point down the slope). */
+    slate: () => memo('tex:slate', () => {
+      const S = 512, cols = 8, rows = 8, w = S / cols, eh = S / rows, [c, g] = canvas(S, S), r = rng(43);
+      const tones = ['#B98D83', '#AF8379', '#C2978C', '#A97E75', '#BC9187', '#B2877E'];
+      g.fillStyle = '#7E5E58'; g.fillRect(0, 0, S, S);
+      const tone = []; for (let k = 0; k < rows * cols; k++) tone.push(tones[Math.floor(r() * tones.length)]);
+      for (let row = rows + 1; row >= -2; row--) {
+        const rr = ((row % rows) + rows) % rows, off = (rr % 2) * w / 2;
+        for (let k = -1; k <= cols; k++) {
+          const x = k * w + off, yT = row * eh - eh * 0.95, yB = row * eh + eh;
+          if (yB < -2 || yT > S + 2) continue;
+          const tn = tone[rr * cols + (((k % cols) + cols) % cols)];
+          // the course above throws a soft dark shadow onto this one (the row line)
+          g.fillStyle = 'rgba(70,40,36,0.5)';
+          g.beginPath(); g.moveTo(x, yT); g.lineTo(x + w, yT); g.lineTo(x + w, yB - w / 2 + 6); g.arc(x + w / 2, yB - w / 2 + 6, w / 2, 0, PI); g.closePath(); g.fill();
+          const gr = g.createLinearGradient(0, yT, 0, yB);
+          gr.addColorStop(0, T.shade(tn, -0.22)); gr.addColorStop(0.45, T.shade(tn, -0.04)); gr.addColorStop(0.85, T.shade(tn, 0.07)); gr.addColorStop(1, T.shade(tn, 0.02));
+          g.fillStyle = gr;
+          g.beginPath(); g.moveTo(x + 2, yT); g.lineTo(x + w - 2, yT); g.lineTo(x + w - 2, yB - w / 2); g.arc(x + w / 2, yB - w / 2, w / 2 - 2, 0, PI); g.closePath(); g.fill();
+          // a light rim along the rounded tip (catches the low sun)
+          g.strokeStyle = 'rgba(255,236,224,0.28)'; g.lineWidth = 3;
+          g.beginPath(); g.arc(x + w / 2, yB - w / 2, w / 2 - 5, 0.25, PI - 0.25); g.stroke();
+        }
+      }
+      for (let i = 0; i < 26; i++) blobS(g, S, S, r() * S, r() * S, 30 + r() * 70, r() < 0.5 ? '#A57A70' : '#D9B4A6', 0.08 + r() * 0.06, 0.7 + r() * 0.5);
+      return toTex(c);
+    }),
+    /* 4×2 atlas of picture-book covers (v3: saturated mid-dark boards with ivory / gold pictures, so the window display
+       reads as books from the street; no text) */
     covers: () => memo('tex:covers', () => {
       const S = 256, [c, g] = canvas(S * 4, S * 2), r = rng(9);
-      const bgs = ['#8FAE8C', '#E59E90', '#EBC56E', '#8FB1CC', '#B79FCB', '#E6A26E', '#9CC2A3', '#D98B97'];
+      const bgs = ['#44603F', '#8C3346', '#B8822A', '#435478', '#5E4A80', '#A8582A', '#356E52', '#94405A'];   // lit ×2–3 in the bay
       const ink = '#6B5A4E';
       for (let i = 0; i < 8; i++) {
         const ox = (i % 4) * S, oy = Math.floor(i / 4) * S;

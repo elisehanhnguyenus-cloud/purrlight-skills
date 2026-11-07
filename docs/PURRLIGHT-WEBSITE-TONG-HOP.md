@@ -1532,6 +1532,27 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   - `docs/HAVEN-BRAINSTORM-2026-11-06.md`, có bản mô tả cho họa sĩ và danh sách chụp kệ;
   - code: `prototypes/2026-11-06-haven-greybox/`.
 
+### Elise 06/11 tối – 07/11 — Haven 3D vẽ màu nước bằng Three.js (chưa lên web)
+- **06/11:** chị muốn "lên idea vẽ bằng code và Three.js". Bản đầu (căn nhà Colonial rộng 16 m) được chị nhận xét "to quá",
+  nên làm lại nhỏ một nửa (8,4 m), ấm cúng, retro, cửa sổ cà phê kiểu Pháp, vẽ kiểu **màu nước kỹ thuật số + chì màu**
+  (bộ lọc Kuwahara tự viết, vân giấy, nét chì "rung" 4 lần/giây). Logo thật và ảnh Merlin thật không bị phủ màu nước.
+  Mẫu phong cách nhỏ đã cho chị xem trong app Three.js.
+- **07/11 sáng:** thêm 9 loại cây chậu (xô thơm, rosemary, thyme, cúc tana, sơn trà, trà mi, cẩm tú cầu, monstera,
+  peony) ở ban công, patio, hiên.
+- **07/11 (v3):**
+  - Mặt tiền be · vàng hồng là mặc định; còn bản xanh xô thơm `?palette=sage` để so.
+  - Máy tính: camera đi chậm, lia quanh tiệm khoảng 15 giây.
+  - Điện thoại: đi thẳng qua cửa tới kệ tròn 3 tầng.
+  - Màn hình chờ là video logo của chị (cắt sát logo, không tiếng, khoảng 125 KB).
+  - Con trỏ là chú mèo trong icon chị gửi (chỉ tách nền trắng).
+  - Giao diện điện thoại làm lại.
+  - Sửa 15 điểm mỹ thuật.
+- **Đã làm:**
+  - bản xem thử (bản 9, thẻ đầu "Haven 3D · màu nước");
+  - video điện thoại và máy tính đã gửi chị;
+  - code: `prototypes/2026-11-07-haven-3d-watercolor/`, không có ảnh Merlin, video logo và icon mèo;
+  - phương án kế tiếp: `docs/HAVEN-3D-NEXT-STEPS-2026-11-07.md`.
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
@@ -1623,6 +1644,15 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
       - họa sĩ có vẽ chia lớp và đồng ý bằng văn bản cho dùng tranh không;
       - file logo gốc.
     - Chi tiết: `docs/HAVEN-BRAINSTORM-2026-11-06.md` mục 5–6.
+
+25. **Haven 3D màu nước (07/11):**
+    - Thử bản v3 trên iPhone thật: mượt hay giật, video chờ có tự chạy không.
+    - Duyệt chữ mới: nhãn "Close" cho nút đóng thẻ sản phẩm.
+    - Logo: bảng hiệu đổi sang logo chữ hồng bóng như cuối video không? Nếu có, gửi PNG nền trong suốt hoặc file vector.
+      Icon mèo chị gửi bị cắt sát mép phải; có bản đầy đủ thì gửi em.
+    - Có làm bước "chất liệu vẽ tay thật" (giấy và màu loang chụp thật) không, ai chụp.
+    - Máy tính bảng: giữ camera lia quanh như máy tính hay đi thẳng như điện thoại.
+    - Chi tiết: `docs/HAVEN-3D-NEXT-STEPS-2026-11-07.md`.
 
 ## 9. Link & tài nguyên
 

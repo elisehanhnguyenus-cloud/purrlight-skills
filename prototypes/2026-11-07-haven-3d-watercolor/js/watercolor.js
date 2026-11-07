@@ -17,7 +17,10 @@
                      hatching in deep shadow (high), deckled paper border
      4. pristine     layer-1 meshes (sign face, real Merlin photo) drawn crisp and unlit on top; each fragment is
                      discarded where the scene depth is nearer (depth test against the scene depth texture)
-   Paint res: high = about one paint pixel per CSS px (full res at dpr 1, half at dpr 2), low = half the drawing buffer.
+   Paint res: about one paint pixel per CSS px (high: full res at dpr 1, half at dpr 2; low: 0.5-0.7 of the buffer).
+   v3: HDR "hot" light (lit panes, lamps, fairy bulbs) stays amber through the prep and bleeds a few px in the composite;
+   coloured-pencil lines keep the local hue, vary in pressure and get a sketchy second stroke; the pristine layer stops
+   at the deckled border; setPreset('shelf' | 'default') for the destination look.
 
    Maths (own implementation from the papers): Kuwahara et al. 1976 (sector means, choose the calmest);
    Papari, Petkov & Campisi 2007 (generalised: N smooth overlapping sectors, weights 1 / (1 + sigma^q));
@@ -105,29 +108,36 @@ vec3 srgb(vec3 c) { return mix(c * 12.92, 1.055 * pow(max(c, vec3(1e-6)), vec3(1
 /* 1. prep: tone map once (filmic curve above; the sky backdrop is left as painted), encode sRGB, watercolour grading */
 const PREP_FRAG = /* glsl */`
 uniform sampler2D tScene, tDepth;
-uniform float uSat, uLift, uHi, uContrast, uBands, uBandAmt;
+uniform float uSat, uLift, uHi, uContrast, uBands, uBandAmt, uToe;
 uniform vec3 uShadowTint, uPaper, uWarm;
 varying vec2 vUv;
 ${COMMON}
 ${FILMIC}
 void main() {
   vec3 lin = texture2D(tScene, vUv).rgb;
+  bool skyPx = texture2D(tDepth, vUv).x > 0.999999;
+  /* lit panes, lamps, bulbs and halos (HDR well above the brightest lit wall, ~1.13): they stay warm amber light, never
+     paper, never banded (v3: the glow survives the paint) */
+  float hot = skyPx ? 0.0 : smoothstep(1.25, 2.4, max(lin.r, max(lin.g, lin.b)));
   /* the sky is a painted (sRGB) backdrop: like the plain renderer, it is not tone mapped */
-  vec3 c = srgb(texture2D(tDepth, vUv).x > 0.999999 ? lin : filmic(lin));
+  vec3 c = srgb(skyPx ? lin : filmic(lin));
   float l = luma(c);
   /* layered glazes: the value is pulled toward a few soft steps, so smooth CG shading becomes flat washes */
   float lb = l * uBands, lq = (floor(lb) + smoothstep(0.3, 0.7, fract(lb))) / uBands;
-  c *= mix(1.0, lq / max(l, 1e-3), uBandAmt * smoothstep(0.02, 0.12, l) * (1.0 - smoothstep(0.68, 0.84, l)));   /* lit areas keep their gradation */
+  c *= mix(1.0, lq / max(l, 1e-3), uBandAmt * (1.0 - hot) * smoothstep(0.02, 0.12, l) * (1.0 - smoothstep(0.68, 0.84, l)));   /* lit areas keep their gradation */
   l = luma(c);
   c = mix(vec3(l), c, mix(uSat, 1.0, smoothstep(0.7, 0.95, l)));   /* gentle desaturation (not in the lit, glowing parts) */
-  float deep = smoothstep(0.03, 0.22, l);                    /* near-black (black knit, ink) keeps most of its depth */
-  c = mix(c, vec3(1.0), (1.0 - uContrast) * (1.0 - l) * mix(0.45, 1.0, deep));   /* a little less contrast: darks lift, lights stay luminous */
+  float deep = smoothstep(0.0, 0.3, l);                      /* near-black (black knit, ink, dark joinery) keeps its depth */
+  c *= mix(uToe, 1.0, smoothstep(0.03, 0.3, l));              /* a soft toe: black knit reads black, shadows get depth */
+  c = mix(c, vec3(1.0), (1.0 - uContrast) * (1.0 - l) * mix(0.3, 1.0, deep));   /* a little less contrast: darks lift, lights stay luminous */
   float sh = 1.0 - smoothstep(0.0, 0.62, l);                  /* shadows: lifted toward a warm lavender, never grey */
-  c = mix(c, uShadowTint, sh * sh * uLift * mix(0.3, 1.0, deep));
+  c = mix(c, uShadowTint, sh * sh * uLift * mix(0.25, 1.0, deep));
   c *= mix(vec3(1.0), uWarm, smoothstep(0.15, 0.85, l));      /* warm the mid tones a touch */
   /* near-white, unsaturated highlights become the cream of the paper; warm lamp glows keep their colour */
   float chroma = max(c.r, max(c.g, c.b)) - min(c.r, min(c.g, c.b));
-  c = mix(c, uPaper, smoothstep(0.9, 1.02, l) * (1.0 - smoothstep(0.05, 0.16, chroma)) * uHi);
+  c = mix(c, uPaper, smoothstep(0.9, 1.02, l) * (1.0 - smoothstep(0.05, 0.16, chroma)) * uHi * (1.0 - hot));
+  /* glowing panes become amber light (not paper) */
+  c = mix(c, c * vec3(1.0, 0.84, 0.6) * 1.04, hot * 0.55);
   gl_FragColor = vec4(clamp(c, 0.0, 1.0), 1.0);
 }`;
 
@@ -192,7 +202,7 @@ uniform float uDpr;
 uniform vec2 uNF;            /* camera near, far */
 uniform vec4 uBoil;          /* xy: line jitter seed, zw: grain offset (both static under reduced motion) */
 uniform vec3 uPaper, uSepia;
-uniform float uWobble, uEdge, uGran, uTurb, uLine, uDeckle, uHatch, uLineDepth, uLineCol, uFar, uDetail;
+uniform float uWobble, uEdge, uGran, uTurb, uLine, uDeckle, uHatch, uLineDepth, uLineCol, uFar, uDetail, uGlowBleed, uSS;
 uniform vec2 uLineW;         /* tap offset (CSS px) near / far */
 uniform vec2 uDT, uCT;       /* depth-edge and colour-edge thresholds */
 uniform vec3 uPaintRes;      /* paint target size (px) and 1 when it is smaller than the drawing buffer (smooth upsample) */
@@ -216,8 +226,18 @@ vec4 paintAt(vec2 uv) {
 #define EMBOSS ${o.emboss}
 #define LUMA_LINES ${o.lumaLines}
 #define DETAIL ${o.detail}
+#define SS ${o.ss}
+#define STROKE2 ${o.stroke2}
+#define GLOW5 ${o.glow5}
 float lin(float d) { return uNF.x * uNF.y / (uNF.y - d * (uNF.y - uNF.x)); }
 float invz(vec2 uv) { return 1.0 / lin(texture2D(tDepth, uv).x); }
+/* Laplacian of 1/z (flat planes give none): creases and silhouettes, relative to the centre */
+float lapAt(vec2 p, vec2 o) {
+  float ic = invz(p);
+  return abs(invz(p + vec2(o.x, 0.0)) + invz(p - vec2(o.x, 0.0)) + invz(p + vec2(0.0, o.y)) + invz(p - vec2(0.0, o.y)) - 4.0 * ic) / ic;
+}
+/* HDR light above the brightest lit wall bleeds a little into the wash around it (lit panes, lamps, bulbs) */
+vec3 hotAt(vec2 p) { return max(texture2D(tScene, p).rgb - 1.35, 0.0); }
 ${FILMIC}
 void main() {
   vec2 px = gl_FragCoord.xy - uView.xy;
@@ -262,6 +282,16 @@ void main() {
 #endif
   vec3 paperC = uPaper * (0.992 + 0.01 * h + emb * mix(0.05, 0.11, smoothstep(0.55, 0.95, l)));
   vec3 col = C * paperC;
+  /* glow bleed (v3): the warm light of lit panes / lamps / fairy bulbs spreads a few px into the paper, screened on */
+  {
+    vec2 gk = 4.0 * uDpr / res, gu = uv + wob * 0.5;
+#if GLOW5
+    vec3 gl = hotAt(gu) * 0.4 + (hotAt(gu + gk) + hotAt(gu - gk) + hotAt(gu + vec2(gk.x, -gk.y)) + hotAt(gu + vec2(-gk.x, gk.y))) * 0.15;
+#else
+    vec3 gl = hotAt(gu) * 0.4 + (hotAt(gu + gk) + hotAt(gu - gk)) * 0.3;
+#endif
+    col = 1.0 - (1.0 - col) * (1.0 - clamp(gl * vec3(1.0, 0.8, 0.52) * uGlowBleed, 0.0, 1.0));
+  }
 #if DBG == 4
   col = paperC;
 #endif
@@ -273,9 +303,21 @@ void main() {
   float zc = lin(texture2D(tDepth, luv).x);
   float far = smoothstep(2.5, uFar, zc);
   vec2 o = vec2(mix(uLineW.x, uLineW.y, far) * uDpr) / res;
-  float ic = 1.0 / zc;
-  float lap = abs(invz(luv + vec2(o.x, 0.0)) + invz(luv - vec2(o.x, 0.0)) + invz(luv + vec2(0.0, o.y)) + invz(luv - vec2(0.0, o.y)) - 4.0 * ic) / ic;
+  float lap;
+#if SS
+  /* supersampled crease detector (two diagonal sub-pixel offsets): no stair-steps on rims when the drawing buffer is
+     coarse (phones below dpr 1.75); a uniform branch, so the extra taps cost nothing when it is off */
+  if (uSS > 0.5) { vec2 ssO = vec2(0.35, -0.35) / res; lap = 0.5 * (lapAt(luv + ssO, o) + lapAt(luv - ssO, o)); }
+  else lap = lapAt(luv, o);
+#else
+  lap = lapAt(luv, o);
+#endif
   float line = smoothstep(uDT.x, uDT.y, lap) * uLineDepth;
+#if STROKE2
+  /* a sketchy second stroke: the hand goes over the contour again, a little off the first one */
+  vec2 luv2 = luv + (jit.yx * 1.6 + 0.8) * uDpr / res;
+  line = max(line, smoothstep(uDT.x, uDT.y, lapAt(luv2, o)) * uLineDepth * 0.55);
+#endif
 #if LUMA_LINES
   vec2 oc = 1.3 * uDpr / res;
   vec2 g = vec2(luma(texture2D(tPaint, luv + vec2(oc.x, 0.0)).rgb) - luma(texture2D(tPaint, luv - vec2(oc.x, 0.0)).rgb),
@@ -287,7 +329,10 @@ void main() {
   float gaps = smoothstep(0.22, 0.62, texture2D(tNoise, css / 260.0 + uBoil.zw * 1.7 + vec2(0.5, 0.21)).a);
   line *= (0.42 + 0.58 * grain) * mix(0.3, 1.0, gaps) * (0.72 + 0.4 * h);
   line *= mix(1.0, 0.5, far);
-  vec3 lc = mix(c * c * 0.62, uSepia, 0.5);
+  line *= 0.7 + 0.6 * nL.b;                                         /* pressure: the hand presses harder in places */
+  /* coloured pencil: a darker tint of the local hue (blue on blue, red-brown on rose, ochre on honey), a touch of sepia */
+  vec3 lc = mix(c * c * 0.55, uSepia, 0.22);
+  lc = clamp(mix(vec3(luma(lc)), lc, 1.35), 0.0, 1.0);
 #if HATCH
   /* light hatching in the deepest shadows only */
   float dark = smoothstep(0.42, 0.16, l);
@@ -313,18 +358,28 @@ void main() {
 }`;
 
 /* ------------------------------------------------------------------ tiers */
+/* low (phones): the paint works at about one paint px per CSS px (half the buffer at dpr 2, two thirds at dpr 1.5), with
+   the detail restore (shelf legibility) and the supersampled crease detector (no stair-steps on rims) */
 const TIERS = {
-  high: { R: 4, scale: (dpr) => clamp(1.0 / dpr, 0.5, 1), hatch: 1, emboss: 1, lumaLines: 1, detail: 1 },
-  low: { R: 3, scale: () => 0.6, hatch: 0, emboss: 0, lumaLines: 1, detail: 0 },
+  high: { R: 4, scale: (dpr) => clamp(1.0 / dpr, 0.5, 1), hatch: 1, emboss: 1, lumaLines: 1, detail: 1, ss: 0, stroke2: 1, glow5: 1 },
+  low: { R: 3, scale: (dpr) => clamp(1.0 / dpr, 0.5, 0.7), hatch: 0, emboss: 0, lumaLines: 1, detail: 1, ss: 1, stroke2: 0, glow5: 0 },
 };
+const PAINT_PX_MAX = 1.3e6;
 const DEBUG_MODES = { off: 0, final: 0, raw: 1, kuwa: 2, lines: 3, paper: 4 };
 
-/* default look (tuned in _paint.html against the owner's watercolour café + coloured-pencil portrait) */
+/* default look (tuned in _paint.html against the owner's watercolour café + coloured-pencil portrait; v3: deeper value
+   structure — less lift, fewer highlights pulled to paper — so the beige / rose-gold façade and the lit windows read) */
 export const LOOK = {
-  exposure: 1.0, sat: 0.92, contrast: 0.88, lift: 0.3, hi: 0.25, bands: 6, bandAmt: 0.55,
+  exposure: 1.0, sat: 0.92, contrast: 0.94, lift: 0.2, hi: 0.15, bands: 6, bandAmt: 0.55, glowBleed: 0.7, toe: 0.8,
   shadowTint: '#8E7A92', paper: '#FEFBF5', warm: '#FFFDF8', sepia: '#5B3F35',
   sharp: 420, wobble: 3.6, edge: 3.0, gran: 0.45, turb: 0.7, line: 1.1, deckle: 9, detail: 0.25,
   hatch: 0.5, lineDepth: 1.0, lineCol: 0.95, glowGain: 5, lineW: [1.25, 0.8], dt: [0.03, 0.1], ct: [0.05, 0.16], far: 28,
+};
+/* presets main.js switches with wc.setPreset(name): 'shelf' at the destination (and the last ~1.2 s of the walk) keeps
+   the product surfaces (knit, calico patches, doll costumes) and sharper sector choice; 'default' restores LOOK */
+export const LOOK_PRESETS = {
+  default: { detail: LOOK.detail, sharp: LOOK.sharp, edge: LOOK.edge },
+  shelf: { detail: 0.55, sharp: 900, edge: 2.4 },
 };
 
 export function createWatercolor(renderer, opts = {}) {
@@ -368,7 +423,7 @@ export function createWatercolor(renderer, opts = {}) {
     uWobble: { value: look.wobble }, uEdge: { value: look.edge }, uGran: { value: look.gran }, uTurb: { value: look.turb }, uLine: { value: look.line },
     uDeckle: { value: look.deckle }, uHatch: { value: look.hatch }, uLineDepth: { value: look.lineDepth }, uLineCol: { value: look.lineCol },
     uDetail: { value: look.detail }, uLineW: { value: new THREE.Vector2(...look.lineW) }, uDT: { value: new THREE.Vector2(...look.dt) }, uCT: { value: new THREE.Vector2(...look.ct) }, uFar: { value: look.far },
-    uPaintRes: { value: new THREE.Vector3(1, 1, 0) },
+    uPaintRes: { value: new THREE.Vector3(1, 1, 0) }, uGlowBleed: { value: look.glowBleed }, uToe: { value: look.toe }, uSS: { value: 0 },
   };
   const prepMat = passMat(PREP_FRAG, U);
   let kuwaMat = null, compMat = null;
@@ -376,12 +431,12 @@ export function createWatercolor(renderer, opts = {}) {
     const t = TIERS[quality];
     if (kuwaMat) kuwaMat.dispose(); if (compMat) compMat.dispose();
     kuwaMat = passMat(KUWA_FRAG(t.R), U);
-    compMat = passMat(COMP_FRAG({ dbg, hatch: t.hatch, emboss: t.emboss, lumaLines: t.lumaLines, detail: t.detail }), U);
+    compMat = passMat(COMP_FRAG({ dbg, hatch: t.hatch, emboss: t.emboss, lumaLines: t.lumaLines, detail: t.detail, ss: t.ss, stroke2: t.stroke2, glow5: t.glow5 }), U);
   }
   buildPrograms();
 
   /* ---- pristine layer: meshes on layer 1 keep their exact pixels; depth-tested against the painted scene ---- */
-  const PU = { wcDepth: { value: depthTex }, wcView: U.uView, wcNF: U.uNF, wcOn: { value: 1 } };
+  const PU = { wcDepth: { value: depthTex }, wcView: U.uView, wcNF: U.uNF, wcOn: { value: 1 }, wcNoise: U.tNoise, wcDeckle: U.uDeckle, wcDpr: U.uDpr };
   const pristineCache = new Map();
   function pristineMaterial(src) {
     if (src.userData && src.userData.wcPristine) return src;
@@ -393,12 +448,20 @@ export function createWatercolor(renderer, opts = {}) {
     m.userData = { ...src.userData, wcPristine: true, wcSource: src };
     m.onBeforeCompile = (sh) => {
       Object.assign(sh.uniforms, PU);
-      sh.fragmentShader = sh.fragmentShader.replace('void main() {', `uniform sampler2D wcDepth; uniform vec4 wcView; uniform vec2 wcNF; uniform float wcOn;
+      sh.fragmentShader = sh.fragmentShader.replace('void main() {', `uniform sampler2D wcDepth, wcNoise; uniform vec4 wcView; uniform vec2 wcNF; uniform float wcOn, wcDeckle, wcDpr;
 float wcLin(float d) { return wcNF.x * wcNF.y / (wcNF.y - d * (wcNF.y - wcNF.x)); }
 void main() {
   if (wcOn > 0.5) {
-    float sz = wcLin(texture2D(wcDepth, (gl_FragCoord.xy - wcView.xy) / wcView.zw).x), fz = wcLin(gl_FragCoord.z);
+    vec2 wcPx = gl_FragCoord.xy - wcView.xy;
+    float sz = wcLin(texture2D(wcDepth, wcPx / wcView.zw).x), fz = wcLin(gl_FragCoord.z);
     if (sz < fz - max(0.006, fz * 0.0025)) discard;   /* something in the painted scene is in front */
+    /* the deckled paper border wins: the same torn edge as the composite (no sign / photo pixels on the bare margin) */
+    if (wcDeckle > 0.0) {
+      vec2 css = wcPx / wcDpr, cssRes = wcView.zw / wcDpr;
+      float ed = min(min(css.x, cssRes.x - css.x), min(css.y, cssRes.y - css.y));
+      float thr = wcDeckle * (0.45 + 1.1 * texture2D(wcNoise, css / 1500.0 + vec2(0.31, 0.17)).a) + (texture2D(wcNoise, css / 420.0).r - 0.5) * 2.2;
+      if (ed < thr + 1.0) discard;
+    }
   }`);
     };
     m.customProgramCacheKey = () => 'wc-pristine';
@@ -431,6 +494,10 @@ void main() {
   function refreshPristine(scene) {
     pristine = [];
     scene.traverse((o) => {
+      /* lights see both layers: the pristine pass (camera on layer 1) then collects the same lights as the scene pass, so
+         three's light-state hash does not flip 4 -> 0 -> 4 every frame (which re-derived every lit program each frame).
+         The pristine materials are MeshBasic (unlit) and the shadow map is not redrawn in that pass. */
+      if (o.isLight) o.layers.enable(1);
       if ((o.isMesh || o.isSprite || o.isPoints) && o.material) for (const m of [].concat(o.material)) patchGlow(m);
       if (!o.isMesh || !o.layers.isEnabled(1) || o.layers.isEnabled(0)) return;
       if (Array.isArray(o.material)) o.material = o.material.map(pristineMaterial);
@@ -446,10 +513,13 @@ void main() {
   function setSize(w, h, pr) {
     cssW = Math.max(1, w); cssH = Math.max(1, h); dpr = pr || renderer.getPixelRatio();
     bw = Math.max(1, Math.floor(cssW * dpr)); bh = Math.max(1, Math.floor(cssH * dpr));
-    const s = TIERS[quality].scale(dpr);
+    /* the paint resolution follows the tier, capped at about 1.3 Mpx (large desktops: 1920x1080 paints at 0.79, 2560x1440
+       at 0.6; the composite stays at full resolution) */
+    const s = Math.min(TIERS[quality].scale(dpr), Math.sqrt(PAINT_PX_MAX / (bw * bh)));
     kw = Math.max(1, Math.round(bw * s)); kh = Math.max(1, Math.round(bh * s));
     rtScene.setSize(bw, bh); rtPrep.setSize(kw, kh); rtPaint.setSize(kw, kh);
     U.uTexel.value.set(1 / kw, 1 / kh); U.uDpr.value = dpr;
+    U.uSS.value = TIERS[quality].ss && dpr < 1.75 ? 1 : 0;
     U.uPaintRes.value.set(kw, kh, kw < bw * 0.8 ? 1 : 0);
     U.uView.value.set(0, 0, bw, bh);
   }
@@ -516,7 +586,7 @@ void main() {
   }
   function setLook(o = {}) {
     Object.assign(look, o);
-    const set = { sat: 'uSat', lift: 'uLift', hi: 'uHi', contrast: 'uContrast', sharp: 'uSharp', wobble: 'uWobble', edge: 'uEdge', gran: 'uGran', turb: 'uTurb', line: 'uLine', deckle: 'uDeckle', hatch: 'uHatch', lineDepth: 'uLineDepth', lineCol: 'uLineCol', far: 'uFar', detail: 'uDetail', bands: 'uBands', bandAmt: 'uBandAmt' };
+    const set = { sat: 'uSat', lift: 'uLift', hi: 'uHi', contrast: 'uContrast', sharp: 'uSharp', wobble: 'uWobble', edge: 'uEdge', gran: 'uGran', turb: 'uTurb', line: 'uLine', deckle: 'uDeckle', hatch: 'uHatch', lineDepth: 'uLineDepth', lineCol: 'uLineCol', far: 'uFar', detail: 'uDetail', bands: 'uBands', bandAmt: 'uBandAmt', glowBleed: 'uGlowBleed', toe: 'uToe' };
     for (const k in set) if (k in o) U[set[k]].value = o[k];
     if ('glowGain' in o && enabled) GU.wcGlowGain.value = o.glowGain;
     for (const k of ['shadowTint', 'paper', 'warm', 'sepia']) if (k in o) U['u' + k[0].toUpperCase() + k.slice(1)].value.copy(disp(o[k]));
@@ -526,9 +596,10 @@ void main() {
   function info() {
     const t = TIERS[quality];
     let disc = 0; for (let j = -t.R; j <= t.R; j++) for (let i = -t.R; i <= t.R; i++) if (i * i + j * j <= t.R * t.R + 1) disc++;
-    /* composite: 3 noise + paint (4 when the paint is upsampled with the cubic B-spline) + 5 depth + 4 luma-line + 2 pencil
-       (+1 emboss, +1 detail on high) */
-    const compTaps = 3 + (U.uPaintRes.value.z > 0.5 ? 4 : 1) + 5 + (t.lumaLines ? 4 : 0) + 2 + (t.emboss ? 1 : 0) + (t.detail ? 1 : 0);
+    /* composite: 3 noise + 1 centre depth (zc) + paint (4 when the paint is upsampled with the cubic B-spline) + 5 depth (10
+       supersampled, low tier below dpr 1.75) + 5 second stroke (high) + 5 glow bleed (3 on low) + 4 luma-line + 2 pencil
+       (+1 emboss, +1 detail) */
+    const compTaps = 3 + 1 + (U.uPaintRes.value.z > 0.5 ? 4 : 1) + (U.uSS.value > 0.5 ? 10 : 5) + (t.stroke2 ? 5 : 0) + (t.glow5 ? 5 : 3) + (t.lumaLines ? 4 : 0) + 2 + (t.emboss ? 1 : 0) + (t.detail ? 1 : 0);
     const prepTaps = 2, area = (kw * kh) / (bw * bh);
     return {
       enabled, quality, debug: dbg, hdr: canHalf ? 'half-float' : 'rgba8',
@@ -546,8 +617,15 @@ void main() {
     for (const m of pristineCache.values()) m.dispose();
   }
   void gl;
+  /* named looks (LOOK_PRESETS): 'shelf' at the destination, 'default' elsewhere; base values follow opts.look / ?look */
+  const base = { ...look };
+  function setPreset(name) {
+    const p = LOOK_PRESETS[name] || LOOK_PRESETS.default;
+    const o = {}; for (const k in p) o[k] = name === 'default' || !LOOK_PRESETS[name] ? base[k] : p[k];
+    setLook(o);
+  }
   return {
-    render, setSize, setQuality, debug, setLook, refreshPristine, info, dispose,
+    render, setSize, setQuality, debug, setLook, setPreset, refreshPristine, info, dispose,
     setReduceMotion(b) { reduceMotion = !!b; },
     setEnabled(b) { enabled = !!b; },
     get enabled() { return enabled; }, get quality() { return quality; }, get look() { return { ...look }; },

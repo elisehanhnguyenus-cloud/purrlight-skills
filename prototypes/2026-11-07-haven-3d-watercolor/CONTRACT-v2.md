@@ -187,3 +187,74 @@ taller trà mi; monstera in the shaded porch corner by the display window or ins
 ≥ 10 px on a 390×844 phone in the first view.
 Ownership: the exterior builder adds them; if exterior.js does not have all 9 when the integrator starts, the INTEGRATOR
 adds them (helpers in js/exterior-kit.js). Reviewers check all 9 are present and recognisable.
+
+## OWNER REQUESTS 07/11 #2 (REQUIRED — v3 round)
+
+Verbatim: "Chọn mặt tiền màu be vàng hồng nhé. Nhưng bước vào thì camera sẽ lia xung quanh nhưng tốc độ chậm hơn để có thể
+nhìn rõ bên trong. ... chỉnh sửa lại trải nghiệm di động các nút bấm, giới thiệu, trang loading dùng video của Purrlight có
+chú mèo trong icon của logo đang chơi với cuộn len. Icon con trỏ chính là chú mèo trong logo, chứ không phải tạo thành 1
+kiểu mặt mèo. Trên mobile cũng theo cùng concept là Digital Watercolor nhưng chọn hướng theo kiểu cánh cửa đi vào đến thẳng
+cái quầy kệ. Sau đó là mở sách ra hoặc xem shop."
+
+1. **Façade = beige / rose-gold.** `palette=be` becomes the DEFAULT (oat-beige joinery, blush accents, rose-gold matte
+   hardware). Keep `?palette=sage` as the alternative. The beige version must look rich, not washed out under the paint
+   (value contrast between wall, joinery, glazing; the ivory sign still pops).
+2. **Desktop: slower look-around after entering.** After passing the door the camera slowly pans around the room so the
+   inside can be seen clearly: e.g. a calm pause, a slow pan left across the bookcases / vintage shelves / suitcase, a slow
+   pan right across the round café counter, a gentle look up at the lantern and fairy lights, then a glide to the round
+   display. Total walk ≈ 12–15 s, eased, no jerks, max turn rate ≈ 20°/s. Always skippable (tap/click/Esc + a visible small
+   skip control), keyboard focus lands on "Open the book" at the end; reduced motion = 0.25 s cut.
+3. **Mobile (coarse pointer or narrow portrait): "door" direction.** Same watercolour look, but the flow is: first view
+   framed on the shopfront door (sign + open doorway + cat + bowl), tap "Step inside" → the camera goes STRAIGHT through
+   the doorway to the round display (no glances, ≈ 4–5 s, a warm light bloom as it passes the threshold) → "Open the book"
+   or "Stroll the shop" (+ the product cards). Doors stay open (the owner's earlier rule "cửa luôn mở").
+4. **Mobile UX redo**: buttons (≥ 48 px, clear hierarchy: one berry primary, one ivory secondary, thumb-reachable),
+   the intro card (compact, watercolour-paper styled card with a soft deckled edge, never covering sign/door/cat), the
+   shelf bottom sheet (Open the book / Stroll the shop first, then the horizontally scrollable product cards), safe-area
+   insets, no overflow at 360 px, landscape handled.
+5. **Loading screen**: the CAT FROM THE LOGO playing with a yarn ball. Use ONLY `assets/logo-cat.png` (an exact-pixel cut
+   of the real logo's cat, 88×115 px, pink line art on transparent; produced by `haven3d-tools/logo-cat-crop.js`). Never
+   redraw, trace, recolour, outline or distort it; animate it only with transforms (translate/rotate/scale of the whole cat,
+   or of the tail section cut at the body join along a clean line) — e.g. the cat hops/leans toward a yarn ball that rolls
+   in, bats it (a lean + tilt), the ball rolls away trailing a strand, loop ≈ 2.4 s. The yarn ball and strand are drawn in
+   code (blush/rose wound strands, matching the brand pink). Cream watercolour-paper background; show it until the scene's
+   first painted frame is ready, then fade. Reduced motion: still cat + still yarn. Lightweight (CSS/canvas; no video file
+   needed — the owner said "video"; a looping animation counts; note in the report that a real video can replace it).
+   Must also work as the no-JS/no-WebGL first paint (no blank screen).
+6. **Pointer = the cat from the logo**, not a drawn cat face. On fine pointers, over links/buttons/pickables/the door, the
+   cursor shows `logo-cat.png` (scaled, exact pixels; a soft ivory halo behind it for contrast on berry buttons is OK) with a
+   tiny pointer tip at the hotspot so clicks stay precise (hotspot at the tip). The click "hop" also uses the logo cat. No
+   kitten-face drawing anywhere any more. Reduced motion: no hop.
+7. **New English copy** beyond the approved list must be minimal and reported as "pending owner approval" (e.g. a skip
+   label). Prefer icons + aria-labels.
+
+Also apply the art-direction review of v2 (all findings): `haven3d-tools/art-review-v2.txt` — glow/amber windows surviving
+the paint, a fuller amber display window, shelf framing tighter on the products, product legibility under the paint, bag
+charm colours, tuxedo black, phone stair-stepping, etc.
+
+## UPDATE 07/11 — the owner sent the official cat icon
+`assets/logo-cat.png` is NOW the owner's own cat icon (sent 07/11, `assets/logo-cat-src-owner.png`, 166×265 on white),
+with only the white background removed (colour-to-alpha against the stroke pink #CF4F7D; script
+`haven3d-tools/logo-cat-owner-c2a.js`), 171×224 px, transparent. It replaces the earlier cut from the 360 px logo (kept as
+`assets/logo-cat-from-logo.png`, do not use). Same rules: exact pixels, transforms only, no recolour/redraw/trace/stretch.
+Note: the owner's file is cropped flush at the right edge (right ear tip and right flank touch the border) — do not
+"repair" it; if a layout makes that flat edge noticeable, add a little space or turn the cat slightly, never redraw.
+Aspect 171:224 (≈0.763) — size by height, never set both width and height to other ratios.
+
+## UPDATE 07/11 — the owner sent her logo animation video → it IS the loading screen
+Source: `/root/.claude/uploads/91861a0f-a62b-5e76-86dc-b5cd4e6b7ac8/36ea64ff-logo_animation.mp4` (1280×720, 24 fps, 10 s,
+H.264 + AAC, 2.4 MB). It shows the Purrlight logo on light-grey paper: outline letters → glossy pink letters, the cat turns
+to the front, plays with the "i" dot like a yarn ball, winks, tail curls. Prepared loader files (cropped to the logo with
+its tail, silent, colours untouched): `assets/logo-anim.mp4` (720×300, 124 KB, faststart), `assets/logo-anim.webm`
+(VP9, 132 KB), `assets/logo-anim-poster.webp` (first frame), `assets/logo-anim-end.webp` (final frame: full glossy logo
+with the front-facing cat). Crop: `crop=960:400:160:172,scale=720:-2` of the source.
+Loader design (replaces the code-drawn cat + yarn animation; you may keep that only as a tiny fallback, or drop it):
+- `<video muted playsinline autoplay preload="auto">` with webm + mp4 sources and the poster; centred, width ≈ 86vw max 560px
+  on phones, ≈ 520px on desktop; the page background around it = the video's paper colour (sample its edge pixels, ≈ rgb
+  220,214,221) with the video edges feathered into it (CSS mask-image radial/linear gradient) so no rectangle shows. Do
+  not recolour the video (no filters, no blend modes on it).
+- First visit: show at least until the scene is ready AND ≥ 3.5 s; fade out at a pleasant moment (after the cat is
+  formed, ≈ 4–5 s, or at the end); if loading takes longer than the video, hold on `logo-anim-end.webp`. A tap anywhere (or
+  any key) skips once the scene is ready. Repeat visits in the same session (sessionStorage): ≤ 1.2 s or skip.
+- Reduced motion: show `logo-anim-end.webp` still image, no video. No JS / no WebGL: the still image + the buttons.
+- The 3D scene keeps loading underneath; the loader must not delay first paint (poster image shows immediately).

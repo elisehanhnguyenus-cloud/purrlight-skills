@@ -59,7 +59,8 @@ export function makeInteriorKit(THREE = THREE_NS, T, P) {
     rgSolid: () => std({ color: RGHEX, metalness: 0.22, roughness: 0.55, envMapIntensity: 0.8 }),
     satinMatte: () => std({ vertexColors: true, roughness: 0.62 }),
     glassWarm: () => std({ color: '#FFF4E6', roughness: 0.1, transparent: true, opacity: 0.16, depthWrite: false, envMapIntensity: 1.2 }),
-    bulb: () => new THREE.MeshBasicMaterial({ vertexColors: true, toneMapped: false }),
+    // bulbs are HDR-hot (×1.9) so the paint keeps them as amber sparkles and bleeds a little light around them (v3)
+    bulb: () => new THREE.MeshBasicMaterial({ vertexColors: true, toneMapped: false, color: new THREE.Color(1.9, 1.9, 1.9) }),
   };
   const customCache = new Map(), patched = new Map();
   K.isCustom = (k) => !!CUSTOM[k];
@@ -365,10 +366,15 @@ export function makeInteriorKit(THREE = THREE_NS, T, P) {
         if (!n) continue;
         const A = this.atlas, geo = this._geo(round), cells = new Float32Array(n * 2);
         const mesh = new THREE.InstancedMesh(geo, mat, n);
+        // (fix v3: about half of the bookcase spines take a mid-dark saturated tint — sage, berry, mustard, slate blue,
+        //  cocoa — so the bookcases read rich, not as pale blocks)
+        const TINT = [[0.55, 0.72, 0.53], [0.8, 0.4, 0.46], [1.0, 0.8, 0.42], [0.55, 0.62, 0.82], [0.72, 0.52, 0.42]];
         items.forEach(([mm, cell, tone], i) => {
           mesh.setMatrixAt(i, mm);
           cells[i * 2] = (cell % A.cols) / A.cols; cells[i * 2 + 1] = -Math.floor(cell / A.cols) / A.rows;
-          mesh.setColorAt(i, _c.setRGB(tone, tone * 0.985, tone * 0.965));
+          const h = ((i * 2654435761) >>> 0) % 100, t = !round && h < 48 ? TINT[h % 5] : null;
+          if (t) mesh.setColorAt(i, _c.setRGB(tone * t[0], tone * t[1], tone * t[2]));
+          else mesh.setColorAt(i, _c.setRGB(tone, tone * 0.985, tone * 0.965));
         });
         geo.setAttribute('aCell', new THREE.InstancedBufferAttribute(cells, 2));
         mesh.instanceMatrix.needsUpdate = true; if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
@@ -633,8 +639,8 @@ export function makeInteriorKit(THREE = THREE_NS, T, P) {
   function juteRugTex() {
     return M('jute', () => {
       const S = 1024, [c, g] = cv(S, S), cx = S / 2, k = (S / 2 - 4) / JUTE.R, rnd = mulberry32(31);
-      g.fillStyle = '#E0CBA4'; g.fillRect(0, 0, S, S);
-      let tones = ['#E5D2AE', '#DAC49C'];
+      g.fillStyle = '#C9A77C'; g.fillRect(0, 0, S, S);              // v3: darker than the honey floor (no pale disc)
+      let tones = ['#CDAB80', '#C19E73'];
       const coil = (x, y, r0, r1, step, seed) => {
         const rr = mulberry32(seed);
         for (let r = r0; r <= r1; r += step) {
@@ -654,10 +660,10 @@ export function makeInteriorKit(THREE = THREE_NS, T, P) {
       g.strokeStyle = 'rgba(176,132,86,0.32)'; g.lineWidth = 26; g.beginPath(); g.arc(cx, cx, JUTE.Rb * k * 0.72, 0, TAU); g.stroke();
       g.strokeStyle = 'rgba(226,160,146,0.42)'; g.lineWidth = 16; g.beginPath(); g.arc(cx, cx, JUTE.Rb * k * 0.84, 0, TAU); g.stroke();
       // the scalloped border: warmer, darker coils with a soft outline so the scallops read against the honey floor
-      tones = ['#D3B387', '#CBAA7D'];
+      tones = ['#A88259', '#9C774F'];
       for (let i = 0; i < JUTE.n; i++) {
         const a = i / JUTE.n * TAU, x = cx + Math.cos(a) * JUTE.Rb * k, y = cx + Math.sin(a) * JUTE.Rb * k;
-        g.fillStyle = '#CFAF83'; g.beginPath(); g.arc(x, y, JUTE.rs * k, 0, TAU); g.fill();
+        g.fillStyle = '#A88259'; g.beginPath(); g.arc(x, y, JUTE.rs * k, 0, TAU); g.fill();
         coil(x, y, 3, JUTE.rs * k - 4, 8, 100 + i);
         g.strokeStyle = 'rgba(122,86,52,0.2)'; g.lineWidth = 3; g.beginPath(); g.arc(x, y, JUTE.rs * k - 2, 0, TAU); g.stroke();
       }
@@ -724,9 +730,9 @@ export function makeInteriorKit(THREE = THREE_NS, T, P) {
     return M('runner', () => {
       const W = 256, H = 512, [c, g] = cv(W, H), rnd = mulberry32(57), fr = 22;
       g.clearRect(0, 0, W, H);
-      g.fillStyle = '#F4EADA'; g.fillRect(8, fr, W - 16, H - fr * 2);
-      // bands across the runner (symmetric), each a little uneven like hand-woven rag strips
-      const bands = [[0.07, 0.035, '#E7AFA2'], [0.115, 0.012, '#B9C8AE'], [0.15, 0.02, '#E7AFA2'], [0.3, 0.05, '#EFD3C3'], [0.5, 0.075, '#E9B8AA'], [0.5, 0.02, '#F7EFE2']];
+      g.fillStyle = '#E3D2BC'; g.fillRect(8, fr, W - 16, H - fr * 2);   // v3: oat, not a white rectangle
+      // bands across the runner (symmetric), each a little uneven like hand-woven rag strips (v3: stronger blush + sage)
+      const bands = [[0.07, 0.04, '#D98E80'], [0.12, 0.02, '#93AA87'], [0.16, 0.025, '#D98E80'], [0.3, 0.06, '#E3AE9C'], [0.4, 0.02, '#93AA87'], [0.5, 0.085, '#D69384'], [0.5, 0.02, '#F1E4D0']];
       for (const [t, h, col] of bands) for (const tt of t === 0.5 ? [0.5] : [t, 1 - t]) {
         const y = fr + tt * (H - fr * 2), hh = h * (H - fr * 2);
         g.fillStyle = col; g.beginPath(); g.moveTo(8, y - hh / 2);
@@ -735,7 +741,7 @@ export function makeInteriorKit(THREE = THREE_NS, T, P) {
         g.closePath(); g.fill();
       }
       // a sage-and-blush border stripe along both long edges
-      for (const x of [14, W - 22]) { g.fillStyle = '#C9D3BC'; g.fillRect(x, fr, 8, H - fr * 2); }
+      for (const x of [14, W - 22]) { g.fillStyle = '#9EB292'; g.fillRect(x, fr, 8, H - fr * 2); }
       weave(g, W, H, 58, 0.09);
       // fringe: little cotton tassels (alpha-tested) at both ends
       for (const [y0, dir] of [[fr, -1], [H - fr, 1]]) {
@@ -1024,8 +1030,10 @@ export function makeInteriorKit(THREE = THREE_NS, T, P) {
     const p = new THREE.Vector3();
     for (let i = 0; i <= nb; i++) {
       curve.getPointAt(i / nb, p);
-      B.add('bulb', K.octa(), { p: [p.x, p.y - 0.008, p.z], s: [0.012, 0.016, 0.012], c: i % 3 === 1 ? '#FFE3C2' : '#FFF3DC' });
-      if (i % (o.haloEvery || 2) === 0) halos.push({ p: new THREE.Vector3(p.x, p.y - 0.01, p.z), size: o.halo || 0.085, a: o.haloA || 0.55 });
+      // v3: bulbs ≈ 2× (they outlive the Kuwahara footprint) and every bulb gets its halo
+      // (fix v3: amber bulbs, not white; a halo only every o.haloEvery bulbs, so the swags read as bulbs, not tubes)
+      B.add('bulb', K.octa(), { p: [p.x, p.y - 0.01, p.z], s: [0.021, 0.027, 0.021], c: i % 3 === 1 ? '#FFB774' : '#FFC98A' });
+      if (i % (o.haloEvery || 1) === 0) halos.push({ p: new THREE.Vector3(p.x, p.y - 0.012, p.z), size: (o.halo || 0.085) * 1.2, a: o.haloA || 0.55 });
     }
     return curve;
   };

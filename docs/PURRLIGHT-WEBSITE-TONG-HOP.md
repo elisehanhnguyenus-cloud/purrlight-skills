@@ -1553,6 +1553,32 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   - code: `prototypes/2026-11-07-haven-3d-watercolor/`, không có ảnh Merlin, video logo và icon mèo;
   - phương án kế tiếp: `docs/HAVEN-3D-NEXT-STEPS-2026-11-07.md`.
 
+### Elise 10/11 – 11/11 — Haven 3D v4: bỏ màn mở đầu, 3D rõ nét làm mặc định (chưa lên web)
+- **Chị hỏi 10/11:**
+  - video logo mở đầu gần như không tải được và dài;
+  - máy tính bảng đi thẳng như điện thoại;
+  - nút che góc dưới nhiều quá;
+  - hình giật nhiều, 3D thay tranh vẽ có ổn hơn không.
+- **Đã làm (v4):**
+  - Bỏ màn mở đầu. Trang hiện ngay ảnh tĩnh của đúng khung đầu (mỗi kiểu màn hình một ảnh), 3D tải ngầm rồi thay vào.
+  - Video logo cũ giữ làm khung mẫu. Đã xuất 3 video cho Purrlight (9:16, 1:1, 16:9).
+  - Máy tính bảng đi thẳng như điện thoại.
+  - Nút và thẻ gọn hơn. Danh sách món ở kệ thu gọn sẵn.
+  - 3D rõ nét làm mặc định. Bản màu nước giữ ở `?look=paint`.
+  - Sửa nguyên nhân giật:
+    - dựng sẵn shader trước khung đầu;
+    - dựng cảnh từng phần nhỏ;
+    - không đổi chất lượng giữa lúc đi;
+    - không vẽ lại khi đứng yên;
+    - tắt nét chì rung.
+- **Đo trên máy giả lập yếu** (CPU chậm 4 lần, không GPU), v3 → v4:
+  - điện thoại thấy mặt tiền sau 24,6 s → 0,9 s;
+  - lần đơ dài nhất khi tải 9,8 s → dưới 1 s;
+  - đơ khi tới kệ 3,5–5,7 s → không còn.
+- **Chỗ lưu:**
+  - bản xem thử bản 11, thẻ đầu "Haven 3D · bản v4";
+  - code: `prototypes/2026-11-07-haven-3d-watercolor/` (v3 ở commit `cbd2ccf`).
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
@@ -1645,14 +1671,13 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
       - file logo gốc.
     - Chi tiết: `docs/HAVEN-BRAINSTORM-2026-11-06.md` mục 5–6.
 
-25. **Haven 3D màu nước (07/11):**
-    - Thử bản v3 trên iPhone thật: mượt hay giật, video chờ có tự chạy không.
+25. **Haven 3D (v4, 11/11):**
+    - Thử bản v4 trên iPhone thật: còn giật không.
+    - Chọn hướng: 3D rõ nét (mặc định) hay màu nước (`?look=paint`).
     - Duyệt chữ mới: nhãn "Close" cho nút đóng thẻ sản phẩm.
     - Logo: bảng hiệu đổi sang logo chữ hồng bóng như cuối video không? Nếu có, gửi PNG nền trong suốt hoặc file vector.
       Icon mèo chị gửi bị cắt sát mép phải; có bản đầy đủ thì gửi em.
-    - Có làm bước "chất liệu vẽ tay thật" (giấy và màu loang chụp thật) không, ai chụp.
-    - Máy tính bảng: giữ camera lia quanh như máy tính hay đi thẳng như điện thoại.
-    - Chi tiết: `docs/HAVEN-3D-NEXT-STEPS-2026-11-07.md`.
+    - Chi tiết: `docs/HAVEN-3D-NEXT-STEPS-2026-11-07.md`, `prototypes/2026-11-07-haven-3d-watercolor/README.md`.
 
 ## 9. Link & tài nguyên
 

@@ -1,11 +1,19 @@
 /* Haven 3D — watercolour + coloured-pencil post chain (v2 rendering style, PREVIEW 06/11, Purrlight Studio).
 
-   createWatercolor(renderer, { quality: 'high'|'low', reduceMotion }) -> {
+   createWatercolor(renderer, { quality: 'high'|'low', reduceMotion, enabled = true, boil = false }) -> {
      render(scene, camera, t, viewport?)   draw one painted frame to the canvas (viewport: [x, y, w, h] CSS px from the
                                            lower-left, optional; setSize must then be the viewport size)
      setSize(w, h, dpr)                    CSS size + pixel ratio of the canvas
-     setQuality(q), setReduceMotion(b), setEnabled(b), debug(mode), refreshPristine(scene), info(), dispose()
+     setQuality(q), setReduceMotion(b), setEnabled(b), setBoil(b), debug(mode), refreshPristine(scene), info(), dispose()
    }
+   v4 (owner 10/11: clean 3D is the default look, the paint is ?look=paint):
+   - setEnabled(false) (or opts.enabled = false) skips EVERY paint pass: render() is then one plain renderer.render() of
+     both layers straight to the canvas (tone mapping by the renderer, glow gain 1, pristine meshes drawn as ordinary
+     unlit meshes). Switching off at run time also frees the paint's render targets (they re-allocate on the next
+     painted frame). For look=3d, create the renderer with antialias (MSAA) and pass { enabled: false }.
+   - the pencil-line "boil" is OFF by default: the lines are static and nothing in the paint changes with time, so a
+     still camera gives identical frames (main can stop rendering when idle). setBoil(true) / opts.boil brings back the
+     hand-animated ~4 steps per second (never under reduced motion).
 
    Chain (all passes are one full-screen triangle):
      0. scene pass   -> half-float target + depth texture, full drawing-buffer resolution, layer 0 only, no MSAA
@@ -386,6 +394,7 @@ export function createWatercolor(renderer, opts = {}) {
   let quality = opts.quality === 'low' ? 'low' : 'high';
   let reduceMotion = !!opts.reduceMotion;
   let enabled = opts.enabled !== false;
+  let boil = !!opts.boil;                 /* v4: static pencil lines unless asked for */
   let dbg = 0;
   let cssW = 1, cssH = 1, dpr = 1, bw = 1, bh = 1, kw = 1, kh = 1;
   const look = { ...LOOK, ...(opts.look || {}) };
@@ -471,7 +480,7 @@ void main() {
   /* glows: additive, toneMapped:false materials (halos, light pools) are added in display space by the plain renderer;
      the paint adds them to linear light before the filmic curve, where the same value reads far weaker. A gain brings
      them back to about the plain look (warm window glows, lamp halos, light pools on the pavement). */
-  const GU = { wcGlowGain: { value: look.glowGain } };
+  const GU = { wcGlowGain: { value: enabled ? look.glowGain : 1 } };
   const glowPatched = new WeakSet();
   function patchGlow(m) {
     if (!m || glowPatched.has(m) || m.toneMapped !== false || m.blending !== THREE.AdditiveBlending || (m.userData && m.userData.wcPristine)) return;
@@ -543,7 +552,7 @@ void main() {
     /* uniforms for this frame */
     U.uExposure.value = renderer.toneMappingExposure;
     U.uNF.value.set(camera.near, camera.far);
-    const step = reduceMotion ? 0 : Math.floor(t * 4);       /* line boil: about 4 steps a second */
+    const step = boil && !reduceMotion ? Math.floor(t * 4) : 0;   /* line boil (opt-in): about 4 steps a second */
     const r1 = Math.sin(step * 12.9898) * 43758.5453, r2 = Math.sin(step * 78.233) * 12543.21;
     U.uBoil.value.set(step % 97, (step * 7) % 89, r1 - Math.floor(r1), r2 - Math.floor(r2));
     /* 1-2. paint res */
@@ -577,10 +586,17 @@ void main() {
     if (q === quality) return;
     quality = q; buildPrograms(); setSize(cssW, cssH, dpr);
   }
+  /* v4: on/off for the whole chain. Off = one plain render per frame (look=3d); the paint's targets are released */
+  function setEnabled(b) {
+    b = !!b;
+    if (b === enabled) return;
+    enabled = b; GU.wcGlowGain.value = b ? look.glowGain : 1;
+    if (!b) { rtScene.dispose(); rtPrep.dispose(); rtPaint.dispose(); }
+  }
   /* debug('0' | 'off') = plain render (no paint); 'raw' | 'kuwa' | 'lines' | 'paper' = one stage; 'final' = normal */
   function debug(mode) {
-    if (mode === 0 || mode === '0' || mode === 'off' || mode === false) { enabled = false; GU.wcGlowGain.value = 1; return; }
-    enabled = true; GU.wcGlowGain.value = look.glowGain;
+    if (mode === 0 || mode === '0' || mode === 'off' || mode === false) { setEnabled(false); return; }
+    setEnabled(true);
     const m = DEBUG_MODES[mode] ?? 0;
     if (m === dbg) return; dbg = m; buildPrograms();
   }
@@ -627,8 +643,9 @@ void main() {
   return {
     render, setSize, setQuality, debug, setLook, setPreset, refreshPristine, info, dispose,
     setReduceMotion(b) { reduceMotion = !!b; },
-    setEnabled(b) { enabled = !!b; },
-    get enabled() { return enabled; }, get quality() { return quality; }, get look() { return { ...look }; },
+    setBoil(b) { boil = !!b; },
+    setEnabled,
+    get enabled() { return enabled; }, get boil() { return boil; }, get quality() { return quality; }, get look() { return { ...look }; },
     targets: { scene: rtScene, prep: rtPrep, paint: rtPaint, depth: depthTex },
   };
 }

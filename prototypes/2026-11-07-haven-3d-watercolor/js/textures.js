@@ -633,10 +633,15 @@ export function makeTextures(THREE, renderer) {
     // satin stitches: alternating sheen + shadow lines
     lg.save(); lg.translate(W / 2, H / 2); lg.rotate(angle);
     const L = Math.hypot(W, H);
-    for (let x = -L; x < L; x += spacing) {
-      lg.fillStyle = 'rgba(255,248,238,0.26)'; lg.fillRect(x, -L, spacing * 0.42, L * 2);
-      lg.fillStyle = 'rgba(40,20,10,0.22)'; lg.fillRect(x + spacing * 0.72, -L, 0.9, L * 2);
+    /* v4 integrator: the same stripes as one pattern fill (a tile of 10 stripes, same phase from -L) instead of ~700
+       full-height rect pairs per shape: the cover drew in ~0.45 s of main thread, now a few ms */
+    const n = 10, tw = Math.round(spacing * n), [pc, pg] = cv(tw, 4);
+    for (let k = 0; k < n; k++) {
+      const x = k * tw / n;
+      pg.fillStyle = 'rgba(255,248,238,0.26)'; pg.fillRect(x, 0, tw / n * 0.42, 4);
+      pg.fillStyle = 'rgba(40,20,10,0.22)'; pg.fillRect(x + tw / n * 0.72, 0, 0.9, 4);
     }
+    lg.translate(-L, -L); lg.fillStyle = lg.createPattern(pc, 'repeat'); lg.fillRect(0, 0, L * 2, L * 2);
     lg.restore();
     // top-left light, bottom-right shade for a padded look
     const gr = lg.createLinearGradient(0, 0, W * 0.3, H);

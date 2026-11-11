@@ -8,157 +8,114 @@
 <meta name="theme-color" content="#FBF6EE">
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/png" sizes="32x32" href="../site/assets/brand/favicon-32.png">
-<link rel="preload" href="assets/logo-anim-poster.webp" as="image">
 <link rel="preload" href="../site/assets/fonts/fraunces-normal-600-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../site/assets/fonts/figtree-normal-500-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="modulepreload" href="vendor/three.module.min.js">
 <link rel="modulepreload" href="vendor/three.core.min.js">
-<link rel="modulepreload" href="js/watercolor.js">
 <link rel="modulepreload" href="vendor/RoomEnvironment.js">
-<style>
-  /* PREVIEW 07/11 — the loading screen is the owner's own logo animation (assets/logo-anim.webm / .mp4: the Purrlight
-     letters fill in, the cat from the logo turns to the front and plays with the dot of the "i" like a ball of yarn).
-     Cropped to the logo, silent, colours untouched: no filter or blend mode on the video, only its outer edges are
-     feathered (mask) into a page of the same paper grey, so no rectangle shows. The poster (its first frame) paints at
-     once; the 3D scene keeps loading underneath. First visit: shown until the scene is ready and the cat has settled
-     (>= 3.5 s, about 5 s into the video), then it fades; if loading outlasts the video it holds on the final frame
-     (assets/logo-anim-end.webp). Once the scene is ready, a tap or a key skips. Later visits in the same tab session,
-     reduced motion, no JavaScript and no WebGL: the final frame as a still image. */
-  html, body { margin: 0; height: 100%; background: #FBF6EE; }
-  /* the paper grey of the video's own edges (measured: 217 217 217); the fine grain darkens it by about 2, so the base is
-     2 lighter and the page reads the same as the video's paper right where its feathered edge fades out */
-  /* (fix v3, review #8) the video's paper has sparse dark fibres and is a touch lighter in its middle: the page gets the
-     same faint fibres and a soft lift round the film, so no box shows (the page stays the video's paper grey) */
-  .loader { --ld-paper: #DBDBDB; --ld-fw: min(86vw, 560px); position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; overflow: hidden;
-    background-color: var(--ld-paper);
-    background-image:
-      radial-gradient(ellipse calc(var(--ld-fw) * .62) calc(var(--ld-fw) * .36) at 50% 45%, rgba(255, 255, 255, .065), rgba(255, 255, 255, .03) 55%, rgba(255, 255, 255, 0) 100%),
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cg fill='%238E8A89'%3E%3Cellipse cx='108.6' cy='134.3' rx='0.71' ry='0.58' transform='rotate(106 108.6 134.3)' opacity='0.22'/%3E%3Cellipse cx='122.9' cy='151.2' rx='0.54' ry='0.51' transform='rotate(16 122.9 151.2)' opacity='0.37'/%3E%3Cellipse cx='166.4' cy='10.1' rx='0.93' ry='0.63' transform='rotate(111 166.4 10.1)' opacity='0.22'/%3E%3Cellipse cx='3.6' cy='126.8' rx='1.23' ry='0.34' transform='rotate(5 3.6 126.8)' opacity='0.29'/%3E%3Cellipse cx='105.7' cy='202.2' rx='0.79' ry='0.57' transform='rotate(119 105.7 202.2)' opacity='0.29'/%3E%3Cellipse cx='66.8' cy='239.4' rx='0.88' ry='0.65' transform='rotate(57 66.8 239.4)' opacity='0.24'/%3E%3Cellipse cx='69.4' cy='16.9' rx='0.68' ry='0.70' transform='rotate(70 69.4 16.9)' opacity='0.41'/%3E%3Cellipse cx='203.4' cy='0.1' rx='2.09' ry='0.37' transform='rotate(176 203.4 0.1)' opacity='0.28'/%3E%3Cellipse cx='17.5' cy='151.1' rx='0.62' ry='0.43' transform='rotate(60 17.5 151.1)' opacity='0.41'/%3E%3Cellipse cx='181.9' cy='28.3' rx='1.12' ry='0.31' transform='rotate(143 181.9 28.3)' opacity='0.22'/%3E%3Cellipse cx='134.2' cy='107.4' rx='1.88' ry='0.32' transform='rotate(116 134.2 107.4)' opacity='0.21'/%3E%3Cellipse cx='101.0' cy='51.1' rx='2.17' ry='0.42' transform='rotate(55 101.0 51.1)' opacity='0.39'/%3E%3Cellipse cx='50.6' cy='94.6' rx='0.79' ry='0.44' transform='rotate(178 50.6 94.6)' opacity='0.23'/%3E%3Cellipse cx='62.0' cy='185.4' rx='0.63' ry='0.43' transform='rotate(16 62.0 185.4)' opacity='0.32'/%3E%3Cellipse cx='58.3' cy='144.3' rx='0.70' ry='0.74' transform='rotate(87 58.3 144.3)' opacity='0.32'/%3E%3Cellipse cx='208.0' cy='43.9' rx='2.09' ry='0.42' transform='rotate(45 208.0 43.9)' opacity='0.23'/%3E%3Cellipse cx='177.5' cy='225.7' rx='2.14' ry='0.43' transform='rotate(109 177.5 225.7)' opacity='0.28'/%3E%3Cellipse cx='24.9' cy='9.3' rx='0.61' ry='0.65' transform='rotate(46 24.9 9.3)' opacity='0.38'/%3E%3Cellipse cx='143.2' cy='70.4' rx='1.86' ry='0.31' transform='rotate(41 143.2 70.4)' opacity='0.31'/%3E%3Cellipse cx='204.6' cy='147.4' rx='2.10' ry='0.33' transform='rotate(3 204.6 147.4)' opacity='0.24'/%3E%3Cellipse cx='107.0' cy='14.5' rx='1.44' ry='0.39' transform='rotate(24 107.0 14.5)' opacity='0.27'/%3E%3Cellipse cx='213.8' cy='235.3' rx='0.81' ry='0.60' transform='rotate(25 213.8 235.3)' opacity='0.19'/%3E%3Cellipse cx='4.3' cy='218.5' rx='0.93' ry='0.41' transform='rotate(115 4.3 218.5)' opacity='0.30'/%3E%3Cellipse cx='175.3' cy='76.5' rx='0.53' ry='0.59' transform='rotate(133 175.3 76.5)' opacity='0.40'/%3E%3Cellipse cx='176.9' cy='168.9' rx='0.91' ry='0.52' transform='rotate(123 176.9 168.9)' opacity='0.40'/%3E%3Cellipse cx='209.1' cy='100.1' rx='0.89' ry='0.60' transform='rotate(112 209.1 100.1)' opacity='0.27'/%3E%3C/g%3E%3C/svg%3E"),
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .45 0 0 0 0 .45 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E");
-    transition: opacity .7s cubic-bezier(.45, .05, .25, 1), visibility 0s linear .7s; }
-  .loader.done { opacity: 0; visibility: hidden; }
-  .ld-in { display: flex; flex-direction: column; align-items: center; gap: 10px; transform: translateY(-2vh); }
-  .ld-film { position: relative; width: min(86vw, 560px); aspect-ratio: 720 / 300; }
-  .ld-film video, .ld-film img { position: absolute; inset: 0; display: block; width: 100%; height: 100%;
-    /* feather only the outer paper margin: the logo's ink sits inside 4.3 %..95.6 % across and 10 %..90 % down */
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 3.9%, #000 96.1%, transparent), linear-gradient(180deg, transparent, #000 9%, #000 91%, transparent);
-    -webkit-mask-composite: source-in;
-    mask-image: linear-gradient(90deg, transparent, #000 3.9%, #000 96.1%, transparent), linear-gradient(180deg, transparent, #000 9%, #000 91%, transparent);
-    mask-composite: intersect; }
-  /* the video's paper is a touch lighter towards its centre (about +3): a faint glow behind it hides the box */
-  .ld-film::before { content: ""; position: absolute; inset: -16% -5%; background: radial-gradient(closest-side, rgba(255, 255, 255, .1), rgba(255, 255, 255, .05) 60%, rgba(255, 255, 255, 0)); }
-  .ld-still { opacity: 0; }
-  .ld-quick .ld-still, .ld-hold .ld-still { opacity: 1; }
-  .ld-quick .ld-film video, .ld-hold .ld-film video { visibility: hidden; }
-  .ld-cap { margin: 0; text-align: center; font: 600 19px/1.25 'Fraunces', 'Iowan Old Style', Georgia, serif; color: #4A423B; letter-spacing: -.005em; }
-  .ld-cap .ld-sep { display: block; height: 14px; font: 700 18px/14px Georgia, serif; color: #A86F5B; }
-  .ld-cap .ld-sub { display: block; font: 500 13.5px/1.35 'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif; color: #66524A; letter-spacing: .01em; }
-  @media (min-width: 900px) and (min-height: 600px) { .loader { --ld-fw: 540px; } .ld-film { width: 540px; } .ld-cap { font-size: 20px; } }
-  @media (max-height: 420px) { .loader { --ld-fw: 110vw; } .ld-in { flex-direction: row; gap: 18px; transform: none; } .ld-film { width: min(56vw, 520px, 80vh * 2.4); }
-    .ld-cap { text-align: left; } .ld-cap .ld-sep { display: none; } }
-</style>
+<!-- PREVIEW 10/11 (v4) — no intro any more (owner 10/11): the page opens straight on the shop façade. The first paint is
+     a still of the exact first view (rendered from the real scene with the real first camera, one per layout: desktop,
+     phone portrait, tablet portrait, touch landscape, phone landscape); the live 3D canvas cross-fades in over it when its
+     first frame is ready. The v3 logo-animation loader is archived (not loaded) in js/archive/ + css/archive/. -->
 <link rel="stylesheet" href="css/haven3d.css">
 <noscript><style>
-  /* no JavaScript: the loading screen becomes a still header (the final frame of the logo animation), the cards a plain
-     page of links */
+  /* no JavaScript: the poster of the shop becomes a header picture, the cards a plain page of links */
   html, body { height: auto; } body { overflow: auto; }
-  .loader { position: relative; inset: auto; min-height: 0; padding: 40px 16px 18px; }
-  .ld-film video { display: none; } .ld-still { opacity: 1; }
-  #scene, .snd, #go, #again, .tip, .pick, .skipwalk, .warmth, .veil, .row-wrap, .hint { display: none !important; }
+  .first { position: relative; inset: auto; height: min(62vh, 640px); }
+  .first img { position: static; width: 100%; height: 100%; object-fit: cover; transform: none; }
+  #scene, .snd, #go, .shelf-bar, .drawer, .tip, .pick, .skipwalk, .warmth, .veil, .nudge { display: none !important; }
   #ui { display: flex; flex-direction: column; gap: 18px; padding: 18px 16px 28px; max-width: 760px; margin: 0 auto; }
-  .ext, .shelf, .lay-sheet .ext, .lay-sheet .shelf, .lay-short .ext, .lay-short .shelf, .lay-wide .shelf {
-    position: relative; inset: auto; left: auto; right: auto; top: auto; bottom: auto; width: auto; margin: 0;
-    opacity: 1 !important; visibility: visible !important; transform: none !important; display: block; }
+  .ext, .shelf { position: relative !important; inset: auto !important; left: auto !important; right: auto !important; top: auto !important;
+    bottom: auto !important; width: auto !important; margin: 0 !important; opacity: 1 !important; visibility: visible !important;
+    transform: none !important; }
 </style></noscript>
 <script>
-  /* PREVIEW 07/11 — pick the overlay layout before first paint (main.js refines it once the camera is fitted). */
+  /* PREVIEW 10/11 — before first paint: the overlay layout, the look (?look=3d default | paint), reduced motion, and the
+     modules main.js will import (fetched in parallel now, not 2-3 round trips later). main.js refines the layout. */
   (function () {
-    var d = document.documentElement, w = innerWidth, h = innerHeight;
-    var sheet = w / h < 1 || (w < 760 && h >= 560);
-    if (sheet) d.classList.add("lay-sheet"); else if (h < 560) d.classList.add("lay-short");
-    else if (w >= 980 && w / h >= 1.2) d.classList.add("lay-wide");
+    var d = document.documentElement, w = innerWidth, h = innerHeight, q = location.search;
+    var coarse = matchMedia("(pointer: coarse)").matches;
+    var short = h < 560 && w / h >= 1, wide = !short && !coarse && w >= 1024 && w / h >= 1.2;
+    d.classList.add(short ? "lay-short" : wide ? "lay-wide" : "lay-sheet");
+    var lk = (/[?&]look=([^&]*)/.exec(q) || [])[1] || "", pt = (/[?&]paint=([^&]*)/.exec(q) || [])[1] || "";
+    var paint = lk === "paint" || lk.charAt(0) === "%" || lk.charAt(0) === "{" || (!lk && pt !== "" && pt !== "0" && pt !== "off");
+    d.setAttribute("data-look", paint ? "paint" : "3d");
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) d.classList.add("calm");
-    /* the loader: a still logo (no video) under reduced motion and on later visits in the same tab session */
-    var seen = false; try { seen = sessionStorage.getItem("haven3d.seen") === "1"; } catch (e) { /* storage blocked */ }
-    if (seen || d.classList.contains("calm")) d.classList.add("ld-quick");
-    /* the real logo for the sign face: fetched early, unless the 3D scene is off (?nogl=1 test hook) */
-    if (!/[?&]nogl=1/.test(location.search)) {
-      var l = document.createElement("link"); l.rel = "preload"; l.as = "image"; l.href = "../site/assets/brand/logo-flat.png"; document.head.appendChild(l);
-      /* the scene builders main.js imports once it runs: fetch them now, in parallel (not 2-3 round trips later) */
-      if (!/[?&]stub=/.test(location.search)) ["js/textures.js", "js/props.js", "js/exterior.js", "js/exterior-kit.js", "js/interior.js", "js/interior-kit.js",
-        "vendor/BufferGeometryUtils.js", "vendor/RoundedBoxGeometry.js"].forEach(function (h) { var m = document.createElement("link"); m.rel = "modulepreload"; m.href = h; document.head.appendChild(m); });
+    /* ?look=paint: the stills are in the 3D look, so the paint fades in from plain paper instead (no style jump) */
+    if (paint) d.classList.add("nopost");
+    if (!/[?&]nogl=1/.test(q)) {
+      /* the first view's still comes first: the same choice the <picture> makes (same media, same order), preloaded at high
+         priority; the builders' modules (about 1 MB of script) wait for it, so they never share the line with it. three,
+         main.js and RoomEnvironment (the <link>s above) are what main.js needs first and stay as they are. */
+      var mm = function (s) { return matchMedia(s).matches; };
+      var key = mm("(min-width: 1024px) and (pointer: fine) and (min-aspect-ratio: 1/1)") ? "d" : mm("(orientation: landscape) and (max-height: 559px)") ? "s"
+        : mm("(orientation: landscape)") ? "l" : mm("(min-width: 600px)") ? "t" : "m";
+      var mods = ["vendor/BufferGeometryUtils.js", "vendor/RoundedBoxGeometry.js"];
+      if (!/[?&]stub=/.test(q)) mods = mods.concat(["js/textures.js", "js/props.js", "js/exterior.js", "js/exterior-kit.js", "js/interior.js", "js/interior-kit.js"]);
+      if (paint) mods.push("js/watercolor.js");
+      var later = function () {
+        if (later.done) return; later.done = true;
+        var l = document.createElement("link"); l.rel = "preload"; l.as = "image"; l.href = "../site/assets/brand/logo-flat.png"; document.head.appendChild(l);
+        mods.forEach(function (m) { var e = document.createElement("link"); e.rel = "modulepreload"; e.href = m; document.head.appendChild(e); });
+      };
+      if (paint) later();
+      else {
+        var pl = document.createElement("link"); pl.rel = "preload"; pl.as = "image"; pl.href = "assets/poster-first-" + key + ".webp";
+        pl.setAttribute("fetchpriority", "high"); pl.onload = pl.onerror = later; document.head.appendChild(pl);
+        setTimeout(later, 1500);
+      }
     }
     d.classList.add("js");
+    /* if main.js never runs (a module failed to load, a blocker, a browser without modules), the page turns into the plain
+       one (the poster + the links) instead of buttons that do nothing; main.js calls havenBoot.alive() as it starts.
+       A slow line is not a failure: while main.js or three are still arriving the watchdog waits longer (up to 2 min),
+       and if main.js does start after the plain page was shown, the page simply becomes the live one again. */
+    var failed = false, ok = false, waited = 0, dog = setTimeout(check, 25000);
+    function arriving() {
+      try {
+        var need = ["js/main.js", "vendor/three.module.min.js", "vendor/three.core.min.js"], got = 0;
+        performance.getEntriesByType("resource").forEach(function (e) { for (var i = 0; i < need.length; i++) if (e.name.indexOf(need[i]) >= 0 && e.responseEnd > 0) { got++; break; } });
+        return got < need.length;
+      } catch (e) { return false; }
+    }
+    function check() { if (ok || failed) return; waited += 25000; if (arriving() && waited < 120000) { dog = setTimeout(check, 15000); return; } fail(); }
+    function fail() {
+      if (ok || failed) return; failed = true; clearTimeout(dog);
+      d.classList.add("no-webgl", "lay-sheet"); d.classList.remove("lay-wide", "lay-short");
+      if (document.body) document.body.setAttribute("data-state", "fallback");
+      else document.addEventListener("DOMContentLoaded", function () { document.body.setAttribute("data-state", "fallback"); });
+    }
+    window.addEventListener("error", function (e) { var t = e.target; if (t && t.tagName === "SCRIPT" && /js\/main\.js/.test(t.src || "")) fail(); }, true);
+    /* "Step inside" pressed before main.js runs: the small busy ring at once; main.js starts the walk when it is ready */
+    document.addEventListener("click", function (e) {
+      var b = !ok && !failed && e.target && e.target.closest ? e.target.closest("#go") : null;
+      if (!b) return;
+      window.havenBoot.go = true; b.classList.add("is-busy"); b.setAttribute("aria-busy", "true");
+    }, true);
+    window.havenBoot = {
+      go: false, fail: fail,
+      alive: function () {
+        clearTimeout(dog);
+        if (failed) { failed = false; d.classList.remove("no-webgl"); if (document.body) document.body.setAttribute("data-state", "loading"); try { scrollTo(0, 0); } catch (e) { /* old browser */ } }
+        ok = true; return true;
+      },
+    };
   })();
 </script>
 </head>
 <body data-state="loading">
-<div class="loader" id="loader" aria-hidden="true">
-  <div class="ld-in">
-    <div class="ld-film">
-      <img class="ld-still" src="assets/logo-anim-end.webp" width="720" height="300" alt="" decoding="async">
-      <video id="ld-vid" width="720" height="300" muted playsinline preload="none" disablepictureinpicture disableremoteplayback
-        poster="assets/logo-anim-poster.webp" tabindex="-1">
-        <source src="assets/logo-anim.webm" type="video/webm">
-        <source src="assets/logo-anim.mp4" type="video/mp4">
-      </video>
-    </div>
-    <p class="ld-cap">Merlin's Purrfect Haven <span class="ld-sep">·</span> <span class="ld-sub">a storybook by Purrlight Studio</span></p>
-  </div>
-</div>
-<script>
-  /* the loader's timing (plain ES5, runs before anything else loads). main.js calls havenLoader.ready() after the first
-     painted frame, havenLoader.still() for the no-WebGL page. */
-  (function () {
-    var d = document.documentElement, L = document.getElementById("loader"), v = document.getElementById("ld-vid");
-    var quick = d.classList.contains("ld-quick"), t0 = Date.now(), ready = false, gone = false, held = false;
-    var MIN = quick ? 0 : 3500, NICE = 5.0, MAX = 7500;   /* ms on screen; s into the video (the cat has turned and settled) */
-    function hold() { if (held) return; held = true; L.classList.add("ld-hold"); check(); }
-    if (v && quick) { v.removeAttribute("autoplay"); v.preload = "none"; v.parentNode.removeChild(v); v = null; }
-    if (v) {
-      v.muted = true; v.preload = "auto"; v.autoplay = true;   /* not in the markup: no-JS / still visits never fetch it */
-      v.addEventListener("ended", hold);
-      /* a failed source fires "error" on that <source>; only give up when none is left */
-      v.addEventListener("error", function () { setTimeout(function () { if (v.networkState === 3 || v.error) hold(); }, 0); }, true);
-      var p = v.play && v.play();
-      if (p && p.catch) p.catch(function (e) { if (!e || e.name !== "AbortError") hold(); });   /* autoplay refused */
-    }
-    function finish() {
-      if (gone) return; gone = true; L.classList.add("done");
-      try { sessionStorage.setItem("haven3d.seen", "1"); } catch (e) { /* storage blocked */ }
-      if (v) setTimeout(function () { if (gone) v.pause(); }, 800);
-    }
-    function check() {
-      if (gone || !ready) return;
-      var el = Date.now() - t0, vt = v && !held ? v.currentTime : 0;
-      if (el >= MIN && (quick || held || vt >= NICE || el >= MAX)) finish(); else setTimeout(check, 80);
-    }
-    function skip() { if (ready && !gone) finish(); }
-    L.addEventListener("pointerdown", skip);
-    document.addEventListener("keydown", skip);
-    /* if main.js never runs (a module failed to load, a blocker, a browser without modules), the page turns into the plain
-       one (still header + the links) instead of a loader with no way out; main.js calls alive() as it starts */
-    var failed = false, dog = setTimeout(fail, 30000);
-    function fail() {
-      if (ready || failed) return; failed = true; clearTimeout(dog);
-      d.classList.add("no-webgl", "lay-sheet"); d.classList.remove("lay-wide", "lay-short");
-      document.body.setAttribute("data-state", "fallback");
-      window.havenLoader.still();
-    }
-    window.addEventListener("error", function (e) { var t = e.target; if (t && t.tagName === "SCRIPT" && /js\/main\.js/.test(t.src || "")) fail(); }, true);
-    window.havenLoader = {
-      ready: function () { clearTimeout(dog); ready = true; check(); },
-      still: function () { clearTimeout(dog); ready = true; gone = true; held = true; L.classList.add("ld-hold", "ld-static"); if (v) v.pause(); },
-      alive: function () { clearTimeout(dog); return !failed; },
-      fail: fail,
-      skip: skip,
-      get video() { return v; },
-      get shown() { return !gone; }
-    };
-  })();
-</script>
+<!-- the first view, painted at once (fetched first, at high priority); main.js lines it up with the live camera and fades
+     the canvas in over it. Sources in the order main.js picks its layout: desktop (fine pointer, >= 1024 px, landscape),
+     phones on their side, touch landscape (tablets), tablets portrait, phones portrait. -->
+<picture class="first" id="first" aria-hidden="true">
+  <source media="(min-width: 1024px) and (pointer: fine) and (min-aspect-ratio: 1/1)" srcset="assets/poster-first-d.webp">
+  <source media="(orientation: landscape) and (max-height: 559px)" srcset="assets/poster-first-s.webp">
+  <source media="(orientation: landscape)" srcset="assets/poster-first-l.webp">
+  <source media="(min-width: 600px)" srcset="assets/poster-first-t.webp">
+  <img id="first-img" src="assets/poster-first-m.webp" alt="" fetchpriority="high" decoding="async">
+</picture>
 
-<!-- the soft deckled edge of the watercolour-paper cards (referenced from css/haven3d.css) -->
+<!-- the soft deckled edge of the watercolour-paper cards (only with ?look=paint; referenced from css/haven3d.css) -->
 <svg class="defs" width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
   <filter id="deckle" x="-4%" y="-6%" width="108%" height="112%" color-interpolation-filters="sRGB">
     <feTurbulence type="fractalNoise" baseFrequency="0.035 0.05" numOctaves="3" seed="7" result="t"/>
@@ -174,7 +131,7 @@
 <div class="warmth" id="warmth" aria-hidden="true"></div>
 <div class="veil" id="veil" aria-hidden="true"></div>
 
-<p class="chip" lang="vi">Bản xem ý tưởng · vẽ bằng code (Three.js) · chưa phải web thật</p>
+<p class="chip" lang="vi">Bản xem ý tưởng<span class="chip-long"> · vẽ bằng code (Three.js)</span> · chưa phải web thật</p>
 
 <button class="snd" id="snd" type="button">
   <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true" focusable="false"><path d="M10 2.6c-.6 0-1 .4-1 1v.5A5 5 0 0 0 5 9v3.3l-1.4 1.8c-.3.4 0 .9.5.9h11.8c.5 0 .8-.5.5-.9L15 12.3V9a5 5 0 0 0-4-4.9v-.5c0-.6-.4-1-1-1Z" fill="currentColor" opacity=".9"/><path d="M8.2 16.4a1.9 1.9 0 0 0 3.6 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -182,42 +139,51 @@
 </button>
 
 <main id="ui">
+  <!-- the street: one compact bar (phones, tablets) or a small card bottom-left (desktop) -->
   <section class="card ext" id="ext" aria-labelledby="ext-h">
-    <h1 class="ext-h" id="ext-h">Sketched by Merlin, <span class="stitch">stitched by us.</span></h1>
-    <p class="ext-cap">Merlin's Purrfect Haven · a storybook by Purrlight Studio</p>
+    <div class="ext-words">
+      <h1 class="ext-h" id="ext-h">Sketched by Merlin, <span class="stitch">stitched by us.</span></h1>
+      <p class="ext-cap">Merlin's Purrfect Haven · a storybook by Purrlight Studio</p>
+    </div>
     <div class="btns">
-      <button class="btn primary" id="go" type="button">Step inside</button>
+      <!-- pressed before the scene is ready: a small busy ring, then the walk starts by itself -->
+      <button class="btn primary" id="go" type="button"><span class="go-busy" aria-hidden="true"></span><span class="go-l">Step inside</span></button>
       <a class="btn secondary" id="skip" href="../site/shop.html?concept=off">Skip to the shop</a>
     </div>
   </section>
 
+  <!-- at the round display: Open the book / Stroll the shop, then "On this shelf" (a drawer on phones and tablets,
+       collapsed by default; a narrow panel on desktop) -->
   <section class="card shelf" id="shelf" aria-labelledby="shelf-h">
-    <div class="shelf-intro">
-      <div class="shelf-title">
-        <h2 id="shelf-h">On this shelf</h2>
-        <p class="hint">Tap a piece to meet it.</p>
-      </div>
-      <p class="made">Everything here is made by hand.</p>
-      <div class="btns">
-        <a class="btn primary" id="open" href="../site/index.html?concept=book&amp;intro=1">Open the book</a>
-        <a class="btn secondary" id="stroll" href="../site/shop.html?concept=off">Stroll the shop</a>
+    <div class="btns shelf-btns">
+      <a class="btn primary" id="open" href="../site/index.html?concept=book&amp;intro=1">Open the book</a>
+      <a class="btn secondary" id="stroll" href="../site/shop.html?concept=off">Stroll the shop</a>
+    </div>
+    <div class="shelf-bar">
+      <h2 class="shelf-h" id="shelf-h"><button class="drawer-handle" id="drawer-handle" type="button" aria-expanded="false" aria-controls="drawer">On this shelf<svg class="chev" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><path d="M3.5 10.2 8 5.8l4.5 4.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button></h2>
+      <button class="again" id="again" type="button" lang="vi"><span aria-hidden="true">↺</span> Xem lại từ đầu</button>
+    </div>
+    <div class="drawer" id="drawer">
+      <p class="drawer-note"><span class="hint">Tap a piece to meet it.</span> <span class="made">Everything here is made by hand.</span></p>
+      <div class="row-wrap">
+        <ul class="row" id="row" aria-labelledby="shelf-h"></ul>
       </div>
     </div>
-    <div class="row-wrap">
-      <ul class="row" id="row" aria-labelledby="shelf-h"></ul>
-    </div>
-    <button class="again" id="again" type="button" lang="vi"><span aria-hidden="true">↺</span> Xem lại từ đầu</button>
   </section>
 </main>
 
 <!-- during the walk in: skip to the display (tap/click anywhere or Esc does the same); the ring shows the walk's progress -->
 <button class="skipwalk" id="skipwalk" type="button" aria-label="Skip ahead" inert>
-  <svg viewBox="0 0 48 48" width="48" height="48" aria-hidden="true" focusable="false">
+  <svg viewBox="0 0 48 48" width="44" height="44" aria-hidden="true" focusable="false">
     <circle cx="24" cy="24" r="21.5" fill="none" stroke="rgba(201,147,126,.28)" stroke-width="2"/>
     <circle id="skipwalk-ring" cx="24" cy="24" r="21.5" fill="none" stroke="#B42249" stroke-width="2.2" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" transform="rotate(-90 24 24)"/>
     <path d="M17 17.2v13.6l9.2-6.8zM26.4 17.2v13.6l9.2-6.8z" fill="#4A423B" opacity=".86"/>
   </svg>
 </button>
+
+<!-- phones + tablets, on arriving at the display (once per visit): the pieces can be tapped. A visual cue only; the same
+     pieces are the links in the "On this shelf" drawer. -->
+<p class="nudge" id="nudge" aria-hidden="true" hidden>Tap a piece to meet it.</p>
 
 <div class="tip" id="tip" aria-hidden="true"><span class="tip-name" id="tip-name"></span><span class="tip-view" id="tip-view">View</span></div>
 
@@ -233,7 +199,7 @@
 <pre class="stats" id="stats" hidden></pre>
 
 <script src="js/cat-cursor.js"></script>
-<script nomodule>window.havenLoader && window.havenLoader.fail();</script>
+<script nomodule>window.havenBoot && window.havenBoot.fail();</script>
 <script type="module" src="js/main.js"></script>
 </body>
 </html>

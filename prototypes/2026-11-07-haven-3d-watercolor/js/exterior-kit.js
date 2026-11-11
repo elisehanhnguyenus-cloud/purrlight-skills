@@ -75,15 +75,20 @@ export function makeExtKit(THREE, P, T) {
   /* ---------------------------------------------------------------- shadow decals (one mesh, vertex alpha) */
   class Decals {
     constructor(texture, hex, name) {
-      this.pos = []; this.uv = []; this.col = []; this.idx = []; this.n = 0;
+      this.pos = []; this.uv = []; this.col = []; this.alt = null; this.idx = []; this.n = 0;
       this.mat = new THREE.MeshBasicMaterial({ color: hex, map: texture, transparent: true, depthWrite: false, vertexColors: true, toneMapped: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });
       this.mat.name = name || 'decals';
     }
-    quad(matrix, alpha, rgb = [1, 1, 1], uv = [0, 0, 1, 1]) {   // unit quad in XZ (like P.softShadow's plane), transformed
+    /* rgbAlt (v4): a second colour for the same quad, used by the other look (glows: `rgb` = the paint's value, which the
+       paint multiplies ×5; `rgbAlt` = the clean 3D value, added as is). build() keeps both; setLook() swaps them. */
+    quad(matrix, alpha, rgb = [1, 1, 1], uv = [0, 0, 1, 1], rgbAlt = null) {   // unit quad in XZ (like P.softShadow's plane), transformed
       const corners = [[-0.5, 0, 0.5, uv[0], uv[1]], [0.5, 0, 0.5, uv[2], uv[1]], [0.5, 0, -0.5, uv[2], uv[3]], [-0.5, 0, -0.5, uv[0], uv[3]]];
+      if (rgbAlt && !this.alt) this.alt = this.col.slice();
+      const ra = rgbAlt || rgb;
       for (const c of corners) {
         _v.set(c[0], c[1], c[2]).applyMatrix4(matrix);
         this.pos.push(_v.x, _v.y, _v.z); this.uv.push(c[3], c[4]); this.col.push(rgb[0], rgb[1], rgb[2], alpha);
+        if (this.alt) this.alt.push(ra[0], ra[1], ra[2], alpha);
       }
       const b = this.n; this.idx.push(b, b + 1, b + 2, b, b + 2, b + 3); this.n += 4;
     }
@@ -93,16 +98,28 @@ export function makeExtKit(THREE, P, T) {
       const op = m.material && m.material.opacity !== undefined ? m.material.opacity : 0.45;
       this.quad(m.matrixWorld, op);
     }
-    build(name) {
+    /* altName: the look the alternative colours belong to (e.g. '3d'); mesh.userData.setLook(name) picks a set */
+    build(name, altName = '3d', initial = null) {
       if (!this.n) return null;
       const g = new THREE.BufferGeometry();
       g.setAttribute('position', new THREE.Float32BufferAttribute(this.pos, 3));
       g.setAttribute('uv', new THREE.Float32BufferAttribute(this.uv, 2));
-      g.setAttribute('color', new THREE.Float32BufferAttribute(this.col, 4));
+      const main = new Float32Array(this.col), alt = this.alt ? new Float32Array(this.alt) : null;
+      const colAttr = new THREE.BufferAttribute(new Float32Array(main), 4);
+      g.setAttribute('color', colAttr);
       g.setAttribute('normal', new THREE.Float32BufferAttribute(new Float32Array(this.n * 3).map((_, i) => (i % 3 === 1 ? 1 : 0)), 3));
       g.setIndex(this.idx); g.computeBoundingSphere();
       const mesh = new THREE.Mesh(g, this.mat); mesh.name = name || this.mat.name; mesh.renderOrder = -1;
       mesh.castShadow = false; mesh.receiveShadow = false;
+      if (alt) {
+        let cur = null;
+        mesh.userData.setLook = (look) => {
+          const want = look === altName ? 'alt' : 'main';
+          if (want === cur) return;
+          cur = want; colAttr.array.set(want === 'alt' ? alt : main); colAttr.needsUpdate = true;
+        };
+        if (initial) mesh.userData.setLook(initial);
+      }
       return mesh;
     }
   }
@@ -151,6 +168,16 @@ export function makeExtKit(THREE, P, T) {
     }
     build(parent, prefix = 'ext') {
       const out = [];
+      /* v4 fixer (review #14): an InstancedMesh gets its own copy of a material that plain meshes also use (wash, clay,
+         terra on the roof): three re-derives the program each time one material alternates between instanced and plain
+         draws (several times a frame at the street). Same program key, so no new program. The paint/3D-switched matte
+         metal keeps the shared one (setLook updates it). */
+      const inst = (m) => {
+        if (/Matte$/.test(m.name || '')) return m;
+        let c = INST.get(m);
+        if (!c) { c = m.clone(); c.name = m.name; c.userData = m.userData; if (m.onBeforeCompile) c.onBeforeCompile = m.onBeforeCompile; if (m.customProgramCacheKey) c.customProgramCacheKey = m.customProgramCacheKey; INST.set(m, c); }
+        return c;
+      };
       for (const b of this.buckets.values()) {
         const g = b.geos.length === 1 ? b.geos[0] : mergeGeometries(b.geos, false);
         if (!g) { console.warn('[exterior] merge failed for', b.material.name); continue; }
@@ -158,7 +185,7 @@ export function makeExtKit(THREE, P, T) {
         g.computeBoundingSphere(); g.computeBoundingBox();
         let mesh;
         if (b.tag && b.tag.endsWith('I')) {      // single-instance InstancedMesh (same pixels, one draw call)
-          mesh = new THREE.InstancedMesh(g, b.material, 1); mesh.setMatrixAt(0, new THREE.Matrix4()); mesh.instanceMatrix.needsUpdate = true; mesh.computeBoundingSphere();
+          mesh = new THREE.InstancedMesh(g, inst(b.material), 1); mesh.setMatrixAt(0, new THREE.Matrix4()); mesh.instanceMatrix.needsUpdate = true; mesh.computeBoundingSphere();
         } else mesh = new THREE.Mesh(g, b.material);
         mesh.name = `${prefix}:${b.material.name || 'mat'}${b.tag ? ':' + b.tag : ''}`;
         mesh.castShadow = b.cast; mesh.receiveShadow = b.receive; mesh.renderOrder = b.renderOrder;
@@ -447,6 +474,7 @@ export function makeExtKit(THREE, P, T) {
   }
 
   /* ---------------------------------------------------------------- matte paint (watercolour wants no gloss) */
+  const INST = new Map();
   function matteMaterials() {
     return memo('matte', () => {
       const remap = new Map();

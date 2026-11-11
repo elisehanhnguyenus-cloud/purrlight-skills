@@ -20,9 +20,10 @@ import * as THREE_NS from '../vendor/three.module.min.js';
 import { makeInteriorKit, PICK_SLOTS } from './interior-kit.js';
 import { mulberry32 } from './textures.js';
 
-export function buildInterior(THREE = THREE_NS, ctx = {}) {
+function* interiorSteps(THREE = THREE_NS, ctx = {}) {
   const { T, P } = ctx;
   const K = makeInteriorKit(THREE, T, P);
+  yield 'kit';
   const g = K.g;
   const PI = Math.PI;
   const group = new THREE.Group(); group.name = 'interior';
@@ -87,6 +88,7 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
   const shadow = (x, y, z, w, d, op = 0.4) => { const s = P.softShadow(w, d, op >= 0.47 ? 0.5 : 0.4); s.position.set(x, y + (y < 0.01 ? 0.005 : 0.0015), z); B.absorb(s, { cast: false }); };
 
   // ===================================================================================== shell: floor, walls, wainscot, ceiling, beams
+  yield 'shell';
   B.tag = 'shell'; B.lod = 'room';
   {
     const fl = new THREE.PlaneGeometry(RW, RD, 40, 36).rotateX(-PI / 2).translate(0, FLOOR_Y, RZC);
@@ -280,6 +282,7 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
   }
 
   // ===================================================================================== left wall: honey bookcases
+  yield 'bookcases';
   B.tag = 'bookcases';
   {
     const H = 2.3, D = 0.38, levels = [0.1, 0.56, 1.02, 1.48, 1.94], z0 = -0.85, len = 4.4, nb = 4, bw = len / nb;
@@ -332,6 +335,7 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
   }
 
   // ===================================================================================== back wall: the arched built-in (cream, blush niches)
+  yield 'arches';
   B.tag = 'arches';
   {
     const W = new THREE.Matrix4().makeTranslation(0, 0, Z1 + 0.008);
@@ -390,10 +394,11 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
     // fairy lights tracing the centre arch just inside the bead
     const a0 = arches[0], pts = [];
     for (let i = 0; i <= 18; i++) { const t = i / 18, ang = PI * t; pts.push(V(a0.cx + Math.cos(ang) * (a0.w / 2 + 0.05), a0.ys + Math.sin(ang) * (a0.w / 2 + 0.05), zf + 0.03)); }
-    K.fairyLights(B, [V(a0.cx + a0.w / 2 + 0.05, a0.y0 + 0.4, zf + 0.03), ...pts, V(a0.cx - a0.w / 2 - 0.05, a0.y0 + 0.4, zf + 0.03)], halos, { step: 0.12 });
+    K.fairyLights(B, [V(a0.cx + a0.w / 2 + 0.05, a0.y0 + 0.4, zf + 0.03), ...pts, V(a0.cx - a0.w / 2 - 0.05, a0.y0 + 0.4, zf + 0.03)], halos, { step: 0.12, haloEvery: 2, haloA: 0.62 });   // v4: every other bulb (the overlapping halos summed to a white tube unpainted)
   }
 
   // ===================================================================================== back-right: white vintage shelves, garland, suitcase, baskets
+  yield 'vintage';
   B.tag = 'vintage';
   const decorAnimal = (kind, size, x, y, z, ry, o = {}) => {
     K.miniAnimal(B, at(x, y, z, ry), kind, { size, ...o });
@@ -437,6 +442,7 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
   }
 
   // ===================================================================================== right wall: bench with baskets, hoop, olive tree
+  yield 'right';
   B.tag = 'right';
   {
     // a low white bench along the right wall
@@ -464,6 +470,7 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
   }
 
   // ===================================================================================== the café (right, by the café window)
+  yield 'cafe';
   B.tag = 'cafe';
   {
     // back bar against the right wall: a cream cabinet with the little espresso machine, grinder, jars; shelves above
@@ -530,6 +537,7 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
   }
 
   // ===================================================================================== front-left: a little gift table by the display window
+  yield 'gifts';
   B.tag = 'gifts';
   {
     const gx = -2.05, gz = -1.55, W = at(gx, 0, gz, 0.3), h = 0.7, r = 0.42;
@@ -557,6 +565,7 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
   }
 
   // ===================================================================================== floor clutter beside the walkway (v3)
+  yield 'floorbits';
   B.tag = 'floorbits';
   {
     // a scalloped basket of yarn and a stack of picture books on the floor left of the display, a book stack on the right
@@ -571,6 +580,7 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
   }
 
   // ===================================================================================== back-left: the reading nook
+  yield 'nook';
   B.tag = 'nook';
   {
     const rug = new THREE.CircleGeometry(0.78, 40).rotateX(-PI / 2); rug.translate(-3.02, 0.006, -6.25);
@@ -589,6 +599,7 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
   }
 
   // ===================================================================================== ceiling: retro chandelier + fairy-light swags
+  yield 'ceiling';
   B.tag = 'ceiling';
   {
     K.chandelier(B, at(DC.x, 2.78, DC.z, 0.2), halos, { arms: 6, R: 0.36, drop: CEIL - 2.78 });
@@ -606,6 +617,7 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
   }
 
   // ===================================================================================== THE ROUND 3-TIER DISPLAY + products
+  yield 'display';
   B.tag = 'display'; B.lod = 'shelf';
   P.eyeScale = 1.7;   // review #6: big button eyes and dark noses that survive the paint (the real pieces have safety eyes)
   const charmBoxes = [];
@@ -659,7 +671,7 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
         pg.add(c);
       }
       group.add(pg); pickables.push(pg);
-      K.pickUniforms.uPiv.value[slot].set(x, y, z);
+      { const pv = K.pickUniforms.uPiv.value; pv[slot * 3] = x; pv[slot * 3 + 1] = y; pv[slot * 3 + 2] = z; }
       slots.push({ g: pg, slot, y0: y, s0: 1 });
       return pg;
     };
@@ -668,6 +680,7 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
 
     // TOP TIER — the fabric book facing the camera, the crochet tuxedo cat and the framed real Merlin photo
     {
+      T.embroideredCover(); yield 'cover';
       const bk = P.fabricBook({ w: 0.3, h: 0.3, d: 0.045, tilt: 0.16 });
       // the pristine cover: a separate unlit plane laid exactly on the cover face (the batch keeps the painted copy)
       let front = null; bk.traverse((m) => { if (m.isMesh && Array.isArray(m.material)) front = m; });   // (userData.cover points at the cached template)
@@ -679,18 +692,22 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
       }
       const pg = place('open-book', DC.x, yT, DC.z - 0.07, 0, 1, bk, { extract: (m) => m.name === 'pristineCover', layer1: true });
       void pg;
+      yield 'book';
       // integrator: a deeper black knit than the library default so the one tuxedo cat still reads black-and-white under the warm display light and the paint
       place('tuxedo-cat', DC.x - 0.19, yT, DC.z + 0.1, 0.38, 1, P.crochetCat({ tuxedo: true, size: 0.19, bow: null, body: '#141211' }));
+      yield 'tuxedo';
       place('merlin', DC.x + 0.19, yT, DC.z + 0.1, -0.38, 1, P.photoFrame(T.merlinPhoto(), 0.17, 0.215), {
         extract: (m) => !!(m.material && m.material.map && m.material.map.source === T.merlinPhoto().source), layer1: true,
       });
     }
+    yield 'top';
     // MIDDLE TIER — the four doll items round the front arc + two decor cats (pastel; not black-and-white)
     {
       const rM = 0.43;
-      [['george-washington-doll', -1.0], ['anne-shirley-set', -0.36], ['bennet-darcy-set', 0.34], ['dashwood-ferrars-set', 1.0]].forEach(([id, a]) => {
+      for (const [id, a] of [['george-washington-doll', -1.0], ['anne-shirley-set', -0.36], ['bennet-darcy-set', 0.34], ['dashwood-ferrars-set', 1.0]]) {
         place(id, DC.x + Math.sin(a) * rM, yM, DC.z + Math.cos(a) * rM, a * 0.55);
-      });
+        yield 'doll';
+      }
       for (const [a, o] of [[-1.62, { body: '#F3E7D6', ears: '#EFC5B9', pose: 'loaf', size: 0.13 }], [1.62, { body: '#EFC5B9', belly: '#FBF6EE', size: 0.14, bow: '#C5D3B8' }]]) {
         K.miniAnimal(B, at(DC.x + Math.sin(a) * 0.42, yM, DC.z + Math.cos(a) * 0.42, a * 0.7), 'cat', o);
         shadow(DC.x + Math.sin(a) * 0.42, yM, DC.z + Math.cos(a) * 0.42, 0.14, 0.14, 0.4);
@@ -706,7 +723,7 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
         ['siamese-cat', -0.218, 0.585], ['white-cat', 0.038, 0.71], ['british-shorthair-cat', 0.276, 0.585],
         ['knitted-sheep', 0.461, 0.71], ['knitted-daisy-duck', 0.887, 0.585], ['crochet-animal-friends-set', 1.113, 0.7],
       ];
-      for (const [id, a, rr] of rows) place(id, DC.x + Math.sin(a) * rr, yB, DC.z + Math.cos(a) * rr, a * 0.55);
+      for (const [id, a, rr] of rows) { place(id, DC.x + Math.sin(a) * rr, yB, DC.z + Math.cos(a) * rr, a * 0.55); yield 'animal'; }
       // decor round the back half: mini baskets with yarn, little stacks of books, a parcel
       for (const [a, kind] of [[1.95, 'basket'], [2.45, 'books'], [2.95, 'basket'], [-2.95, 'parcel'], [-2.45, 'books'], [-1.95, 'basket']]) {
         const x = DC.x + Math.sin(a) * 0.62, z = DC.z + Math.cos(a) * 0.62;
@@ -717,6 +734,7 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
       }
     }
 
+    yield 'bottom';
     // THE HOOK STAND — the two fabric dolls on backpacks, the quilted pouch, keychains
     {
       const Wh = at(HS.x, 0, HS.z, HS_RY);
@@ -741,24 +759,58 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
 
   P.eyeScale = 1;
   // ===================================================================================== build: merged meshes, books, halos, lights
+  yield 'stand';
   B.lod = null;
-  const meshes = B.build(group, 'interior', {
+  const meshes = yield* B.buildSteps(group, 'interior', {
     // display products: 8.5 mm clusters at the shelf view (≈ 3–4 px there, under the paint's 4 px Kuwahara), 10.5 mm from 3.3 m, 14 mm from 8 m
     // (integrator: far from 7 m and the extra-far level from 9.5 m, so the street-side walk frames stay under 250k with the plants outside)
     // (v3: far from 5.6 m — from the doorway the products are ~25 px tall, so 14 mm clusters + flat clay cost nothing visible
     //  and keep the door view under 250k with the fuller display window and niches)
-    shelf: { center: V(DC.x, 1.0, DC.z), dist: 5.6, cell: 0.014, nearCell: 0.0085, mid: { dist: 3.3, cell: 0.0105 }, mergeFar: true, xfar: { dist: 9.5, cell: 0.03 } },
+    // (v4, clean 3D: no 8.5 mm clusters at the shelf any more — the knit, felt and faces read crisply unpainted, +17k
+    //  triangles there; and no material merge in the far levels, so no LOD step changes a texture or a shine: the walk
+    //  in only sees the geometry get finer, never a pop. +7 draws in the street views, well inside the budget.)
+    // (v4: full detail from 4.0 m — 3.68 m on the way in with the 8 % hysteresis — so the phone's shelf frame, which
+    //  backs off to ≈ 3.2 m, rests on the near level instead of sitting on the 3.3 m switch)
+    shelf: { center: V(DC.x, 1.0, DC.z), dist: 5.6, cell: 0.014, mid: { dist: 4.0, cell: 0.0105 }, mergeFar: false, xfar: { dist: 9.5, cell: 0.03 } },
     // the room: full detail once a step inside, 8 mm clusters from the threshold out (≥ 3.35 m: ≤ 2 px under the paint's
     // 4 px smoothing — the doorway frame sees the street and the whole room at once), 10 mm once back on the street
     room: { center: V(0, 1.6, RZC), dist: 7.2, cell: 0.01, mid: { dist: 3.35, cell: 0.008 }, xfar: { dist: 11, cell: 0.022 } },
   });
+  yield 'merged';
   const bookMeshes = books.build(group);
   // a soft glow over the display (the brightest, most inviting thing in the room)
   // (v3: above the book, not in front of the top tier — an additive glow over the products washed the black crochet
   //  tuxedo cat to taupe under the paint's glow gain)
   halos.push({ p: V(DC.x, 2.3, DC.z - 0.25), size: 0.75, a: 0.1, color: '#FFD8B0' });
   const haloMesh = K.halos(halos, group);
-  if (haloMesh) haloMesh.material.uniforms.uGain.value = 0.85;
+  /* v4: two looks. The paint multiplies these glows by 1 + 4 × 0.3 (its glow gain, calmed for the room), so the clean
+     3D look (added as is) needs a stronger gain of its own; setLook() switches (one uniform, no new program). */
+  const HALO_GAIN = { paint: 0.85, '3d': 1.35 };
+  let look = (() => {
+    if (ctx.look === '3d' || ctx.look === 'paint') return ctx.look;
+    try {
+      const q = new URLSearchParams(location.search), l = (q.get('look') || '').trim(), pt = q.get('paint');
+      if (l === 'paint' || l === '3d') return l;
+      if (l.startsWith('{')) return 'paint';
+      if (pt === '0' || pt === 'off') return '3d';
+      if (pt) return 'paint';
+    } catch (e) { /* no location */ }
+    return '3d';
+  })();
+  function setLook(name) {
+    look = name === 'paint' ? 'paint' : '3d';
+    if (haloMesh) haloMesh.material.uniforms.uGain.value = HALO_GAIN[look];
+    // the fairy bulbs: HDR-hot under the paint (it keeps them amber), plain amber unpainted (×1.9 clipped to white)
+    K.mat('bulb').color.setScalar(look === 'paint' ? 1.9 : 1.12);
+    // rose-gold (v4 fixer, art review #11): real soft metal in 3D with the room's reflections at full strength (with
+    // envMap null three uses the scene's low environmentIntensity); the paint keeps the matte twins it was tuned with
+    for (const m of [K.mat('rgMatte'), K.mat('rgSolid')]) {
+      if (look === '3d') Object.assign(m, { metalness: 0.7, roughness: 0.3, envMap: ctx.env || null, envMapIntensity: 1.0 });
+      else Object.assign(m, { metalness: 0.22, roughness: 0.55, envMap: null, envMapIntensity: 0.8 });
+    }
+  }
+  if (haloMesh) haloMesh.material.userData.wcGlowK = 0.3;   // the paint's share of its glow gain (main used to set it)
+  setLook(look);
 
   // ≤ 2 PointLights: a warm key on the display and the café glow
   const keyLight = new THREE.PointLight('#FFC48A', 15, 5.2, 1.5);
@@ -771,12 +823,56 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
   // ===================================================================================== update: replay the hover lift on the merged products
   const { uAnim } = K.pickUniforms;
   function update() {
+    const a = uAnim.value;
     for (let i = 0; i < slots.length; i++) {
-      const s = slots[i], a = uAnim.value[s.slot];
-      a.x = s.g.position.y - s.y0; a.y = s.g.scale.x / s.s0;
+      const s = slots[i];
+      a[2 * s.slot] = s.g.position.y - s.y0; a[2 * s.slot + 1] = s.g.scale.x / s.s0;
     }
   }
   update();
+
+  // ===================================================================================== v4: LOD warm-up (no hitch on the walk)
+  // The first time a LOD level is drawn, its vertex buffers (room near level ≈ 6.7 MB, shelf near ≈ 2.4 MB) and any
+  // texture only it uses are uploaded — a frame-long stall in the middle of the walk. compile()/compileAsync() only
+  // build programs, so main calls warmup() once during load: every level of every LOD is drawn once into a 1×1
+  // viewport of the target the real frames use (null = the canvas for look=3d; the paint's scene target for
+  // look=paint), with culling off, so buffers + textures are resident before the camera moves. Shadow map untouched.
+  const lods = B.lods || [];
+  const warmCam = new THREE.PerspectiveCamera(100, 1, 0.05, 40);
+  warmCam.position.set(0, 1.6, -2.4); warmCam.lookAt(0, 1.2, -4.6); warmCam.updateMatrixWorld();
+  function warmup(renderer, scene, opts = {}) {
+    const target = opts.target || null, cam = opts.camera || warmCam;
+    // look=3d draws both layers in one pass (the sign face, the photo and the cover copy too); the paint's scene pass
+    // is layer 0 only (its pristine pass samples that target's depth, so it must not be drawn into it)
+    if (!opts.camera) { warmCam.layers.set(0); if (!target) warmCam.layers.enable(1); }
+    const levels = ['near', 'mid', 'far', 'xfar'];
+    const culled = [];
+    group.traverse((o) => { if (o.isMesh && o.frustumCulled) { culled.push(o); o.frustumCulled = false; } });
+    const prevT = renderer.getRenderTarget(), sm = renderer.shadowMap, nu = sm.needsUpdate, au = sm.autoUpdate;
+    sm.needsUpdate = false; sm.autoUpdate = false;
+    const vp = new THREE.Vector4(), sc = new THREE.Vector4(); let st = false, tvp = null, tsc = null, tst = false;
+    renderer.setRenderTarget(target);
+    if (target) { tvp = target.viewport.clone(); tsc = target.scissor.clone(); tst = target.scissorTest; target.viewport.set(0, 0, 1, 1); target.scissor.set(0, 0, 1, 1); target.scissorTest = true; renderer.setRenderTarget(target); }
+    else { renderer.getViewport(vp); renderer.getScissor(sc); st = renderer.getScissorTest(); renderer.setViewport(0, 0, 1, 1); renderer.setScissor(0, 0, 1, 1); renderer.setScissorTest(true); }
+    let frames = 0;
+    try {
+      for (const lv of levels) {
+        let any = false;
+        for (const L of lods) { L.autoUpdate = false; for (const l of L.levels) { const on = l.object.name === lv; l.object.visible = on; any = any || on; } }
+        if (!any) continue;
+        renderer.render(scene, cam); frames++;
+      }
+    } finally {
+      for (const L of lods) { L.autoUpdate = true; L.levels.forEach((l, i) => { l.object.visible = i === 0; }); }
+      for (const o of culled) o.frustumCulled = true;
+      if (target) { target.viewport.copy(tvp); target.scissor.copy(tsc); target.scissorTest = tst; }
+      else { renderer.setViewport(vp); renderer.setScissor(sc); renderer.setScissorTest(st); }
+      renderer.setRenderTarget(prevT); sm.needsUpdate = nu; sm.autoUpdate = au;
+    }
+    return frames;
+  }
+
+  group.userData.warmup = warmup; group.userData.setLook = (n) => setLook(n);   // also reachable from the scene graph (tests)
 
   const stats = { meshes: meshes.length, books: bookMeshes.reduce((a, m) => a + m.count, 0), halos: halos.length, pickables: pickables.length, pristine: pristineMeshes.length };
   group.userData.stats = stats; stats.tally = B.tally;
@@ -793,7 +889,10 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
   for (const b of charmBoxes) for (let i = 0; i < 8; i++) shelfFit.push(V(i & 1 ? b.max.x : b.min.x, i & 2 ? b.max.y : b.min.y, i & 4 ? b.max.z : b.min.z));
 
   return {
-    group, update, pickables, lights: [keyLight, cafeLight],
+    group, update, pickables, lights: [keyLight, cafeLight], setLook, get look() { return look; }, warmup, lods,
+    // v4: the room's light for the clean 3D look (main.js merges it over its ATMO.i for look=3d): less flat sky fill, the
+    // baked lamp pools + the two point lights carry the room, a warm exposure
+    atmo: { '3d': { i: { exposure: 1.0, hemi: 0.45, sun: 0.3, sky: '#FFD2A6', ground: '#D8B08A' } } },
     anchors: {
       shelfView: { pos: V(0.2, 1.62, -2.42), look: V(0.24, 1.0, -4.55) },
       cafeLook: V(CAFE.x - 0.3, 1.25, CAFE.z - 0.1),
@@ -802,4 +901,14 @@ export function buildInterior(THREE = THREE_NS, ctx = {}) {
       shelfFit,
     },
   };
+}
+
+// v4 integrator: the builder as steps. main.js drives buildInteriorSteps and gives the browser a turn between steps
+// (input, the poster) so no single load task is long; buildInterior runs the same steps in one go.
+export function* buildInteriorSteps(THREE = THREE_NS, ctx = {}) { return yield* interiorSteps(THREE, ctx); }
+export function buildInterior(THREE = THREE_NS, ctx = {}) {
+  const it = interiorSteps(THREE, ctx);
+  let r = it.next();
+  while (!r.done) r = it.next();
+  return r.value;
 }

@@ -24,8 +24,11 @@ export function makeInteriorKit(THREE = THREE_NS, T, P) {
   const _m = new THREE.Matrix4(), _q = new THREE.Quaternion(), _e = new THREE.Euler(), _v = new THREE.Vector3(), _s = new THREE.Vector3(), _c = new THREE.Color();
 
   // ===================================================================================== pick shader patch
-  const uPiv = { value: Array.from({ length: PICK_SLOTS }, () => new THREE.Vector3()) };
-  const uAnim = { value: Array.from({ length: PICK_SLOTS }, () => new THREE.Vector2(0, 1)) };
+  /* flat typed arrays (v4 fixer, review #15): three passes them straight to uniform3fv / uniform2fv; arrays of vectors
+     were flattened into new arrays on every draw that switched to a patched material. uPiv[3i..3i+2] = pivot of slot i,
+     uAnim[2i] = lift (m), uAnim[2i+1] = scale. */
+  const uPiv = { value: new Float32Array(PICK_SLOTS * 3) };
+  const uAnim = { value: (() => { const a = new Float32Array(PICK_SLOTS * 2); for (let i = 0; i < PICK_SLOTS; i++) a[2 * i + 1] = 1; return a; })() };
   K.pickUniforms = { uPiv, uAnim };
   function patch(m) {
     m.onBeforeCompile = (sh) => {
@@ -202,19 +205,26 @@ export function makeInteriorKit(THREE = THREE_NS, T, P) {
     // lodSpecs { key: {center, dist, cell, nearCell?, mid?: {dist, cell}} }: buckets added while `this.lod === key` go
     // into a THREE.LOD — the full meshes up close, optionally a lightly clustered middle level, and a vertex-clustered
     // copy with merged matte materials when the camera is farther than `dist` (all sub-pixel at their distances)
-    build(parent, name = 'batch', lodSpecs = {}) {
+    // v4 integrator: build() as steps (a yield after each merged bucket / clustered level) so the load can give the
+    // browser a turn; build() drains it in one go
+    build(parent, name = 'batch', lodSpecs = {}) { const it = this.buildSteps(parent, name, lodSpecs); let r = it.next(); while (!r.done) r = it.next(); return r.value; }
+    *buildSteps(parent, name = 'batch', lodSpecs = {}) {
       const out = [], lods = {};
       for (const [key, spec] of Object.entries(lodSpecs)) {
         const lod = new THREE.LOD(); lod.name = `${name}:lod:${key}`; lod.position.copy(spec.center);
         const near = new THREE.Group(); near.position.copy(spec.center).negate(); near.name = 'near';
         const far = new THREE.Group(); far.position.copy(spec.center).negate(); far.name = 'far';
-        lod.addLevel(near, 0);
+        // v4: hysteresis (spec.hy, a fraction of each switch distance): once a level shows, the camera has to come
+        // that much nearer before the finer one comes back, so a camera resting near a switch distance (the pause
+        // after the door, the idle drift at the display) never flickers between two levels
+        const hy = spec.hy === undefined ? 0.08 : spec.hy;
+        lod.addLevel(near, 0, hy);
         let mid = null;
-        if (spec.mid) { mid = new THREE.Group(); mid.position.copy(spec.center).negate(); mid.name = 'mid'; lod.addLevel(mid, spec.mid.dist); }
-        lod.addLevel(far, spec.dist);
+        if (spec.mid) { mid = new THREE.Group(); mid.position.copy(spec.center).negate(); mid.name = 'mid'; lod.addLevel(mid, spec.mid.dist, hy); }
+        lod.addLevel(far, spec.dist, hy);
         // optional extra-far level (seen from the street through the windows): the far copy clustered once more
         let xfar = null;
-        if (spec.xfar) { xfar = new THREE.Group(); xfar.position.copy(spec.center).negate(); xfar.name = 'xfar'; lod.addLevel(xfar, spec.xfar.dist); }
+        if (spec.xfar) { xfar = new THREE.Group(); xfar.position.copy(spec.center).negate(); xfar.name = 'xfar'; lod.addLevel(xfar, spec.xfar.dist, hy); }
         parent.add(lod); lods[key] = { lod, near, mid, far, xfar, spec };
       }
       const mk = (geo, b, tag) => {
@@ -256,6 +266,7 @@ export function makeInteriorKit(THREE = THREE_NS, T, P) {
         } else {
           const mesh = mk(geo, b, ''); parent.add(mesh); out.push(mesh);
         }
+        yield 'bucket';
       }
       for (const { b, L, geos } of farGroups.values()) {
         const geo = geos.length === 1 ? geos[0] : mergeGeometries(geos, false);
@@ -263,8 +274,10 @@ export function makeInteriorKit(THREE = THREE_NS, T, P) {
         const fg = big ? clusterGeometry(geo, L.spec.cell) : geo;
         L.far.add(mk(fg, b, ':far'));
         if (L.xfar) L.xfar.add(mk(fg.index.count > 300 && !b.mat.transparent ? clusterGeometry(fg, L.spec.xfar.cell) : fg, b, ':xfar'));
+        yield 'far';
       }
       this.buckets.clear();
+      this.lods = Object.values(lods).map((L) => L.lod);
       return out;
     }
   }
@@ -360,7 +373,11 @@ export function makeInteriorKit(THREE = THREE_NS, T, P) {
     }
     build(parent) {
       const out = [];
-      const tmp = P.bookRow(1, 0.05); const mat = tmp.material; tmp.geometry.dispose();
+      const tmp = P.bookRow(1, 0.05); tmp.geometry.dispose();
+      /* own copy of the atlas material for these instance-coloured rows (review #14): sharing it with the uncoloured book
+         rows made three re-derive the program at every switch */
+      const src = tmp.material, mat = src.clone(); mat.name = src.name; mat.userData = src.userData;
+      if (src.onBeforeCompile) mat.onBeforeCompile = src.onBeforeCompile; if (src.customProgramCacheKey) mat.customProgramCacheKey = src.customProgramCacheKey;
       for (const round of [false, true]) {
         const items = this.items.filter((it) => !!it[3] === round), n = items.length;
         if (!n) continue;
@@ -425,7 +442,7 @@ export function makeInteriorKit(THREE = THREE_NS, T, P) {
 
 
   // ===================================================================================== canvas textures (no words; no clip())
-  function cv(w, h) { const c = document.createElement('canvas'); c.width = w; c.height = h; return [c, c.getContext('2d')]; }
+  function cv(w, h) { const c = document.createElement('canvas'); c.width = w; c.height = h; return [c, c.getContext('2d', { willReadFrequently: true })]; }   // CPU-backed: these canvases are read back (getImageData) and only uploaded once
   function wrap(c, { repeat = true, srgb = true } = {}) {
     const t = new THREE.CanvasTexture(c);
     t.colorSpace = srgb ? THREE.SRGBColorSpace : THREE.NoColorSpace;
@@ -1026,13 +1043,15 @@ export function makeInteriorKit(THREE = THREE_NS, T, P) {
   K.fairyLights = (B, pts, halos, o = {}) => {
     const curve = new THREE.CatmullRomCurve3(pts.map((p) => (p.isVector3 ? p.clone() : new THREE.Vector3(...p))), false, 'centripetal');
     const len = curve.getLength(), step = o.step || 0.14, nb = Math.max(2, Math.floor(len / step));
-    B.raw('clay', paintGeo(new THREE.TubeGeometry(curve, Math.max(8, Math.round(len * 14)), o.r || 0.0032, 3, false), o.cord || '#8A7660'));
+    // (v4: a slightly thicker, lighter cord — unpainted, the 3.2 mm dark cord broke into dashes and crawled when moving)
+    B.raw('clay', paintGeo(new THREE.TubeGeometry(curve, Math.max(8, Math.round(len * 14)), o.r || 0.0044, 3, false), o.cord || '#9C876C'));
     const p = new THREE.Vector3();
     for (let i = 0; i <= nb; i++) {
       curve.getPointAt(i / nb, p);
       // v3: bulbs ≈ 2× (they outlive the Kuwahara footprint) and every bulb gets its halo
       // (fix v3: amber bulbs, not white; a halo only every o.haloEvery bulbs, so the swags read as bulbs, not tubes)
-      B.add('bulb', K.octa(), { p: [p.x, p.y - 0.01, p.z], s: [0.021, 0.027, 0.021], c: i % 3 === 1 ? '#FFB774' : '#FFC98A' });
+      // (v4: a 20-face bulb instead of the octahedron, which read as a little diamond once unpainted)
+      B.add('bulb', K.bulbGeo(), { p: [p.x, p.y - 0.01, p.z], s: [0.019, 0.024, 0.019], c: i % 3 === 1 ? '#FFB774' : '#FFC98A' });
       if (i % (o.haloEvery || 1) === 0) halos.push({ p: new THREE.Vector3(p.x, p.y - 0.012, p.z), size: (o.halo || 0.085) * 1.2, a: o.haloA || 0.55 });
     }
     return curve;
@@ -1129,11 +1148,11 @@ export function makeInteriorKit(THREE = THREE_NS, T, P) {
     const front = new THREE.Shape();
     front.moveTo(xa, 0); front.lineTo(xb, 0); front.lineTo(xb, H); front.lineTo(xa, H); front.lineTo(xa, 0);
     for (const a of o.arches) { const hole = new THREE.Path(); const s = archShape(a); hole.setFromPoints(s.getPoints(16)); front.holes.push(hole); }
-    const fg = new THREE.ShapeGeometry(front, 16); fg.translate(0, 0, D);
+    const fg = densify(new THREE.ShapeGeometry(front, 16), 0.28); fg.translate(0, 0, D);
     B.add('clay', tagG(fg, 'flat'), { c: face, uv: [1, 1], post: W });
     for (const a of o.arches) {
       const col = a.inside || inside;
-      const bg = new THREE.ShapeGeometry(archShape(a), 16); bg.translate(0, 0, 0.012);
+      const bg = densify(new THREE.ShapeGeometry(archShape(a), 16), 0.28); bg.translate(0, 0, 0.012);
       B.add('clay', tagG(bg, 'flat'), { c: K.shade(col, -0.04), post: W });
       // reveal: the extruded outline's side walls, turned to face into the niche
       const ex = new THREE.ExtrudeGeometry(archShape(a), { depth: D - 0.012, bevelEnabled: false, curveSegments: 16 });
@@ -1152,6 +1171,48 @@ export function makeInteriorKit(THREE = THREE_NS, T, P) {
     B.add('clay', g.box(), { p: [(xa + xb) / 2, 0.04, D + 0.01], s: [xb - xa, 0.08, 0.02], c: K.shade(face, -0.12), post: W });   // toe kick
     return { archShape };
   };
+  // v4: even out a flat triangulation (ShapeGeometry with holes = long slivers from the corners to the arch holes) so
+  // the baked light field, applied per vertex, interpolates smoothly: unpainted, the slivers showed as dark arcs on the
+  // built-in. Red-green refinement: every edge longer than maxEdge is split at its midpoint (the same split from both
+  // sides, so no T-junctions); repeated until none is. Keeps position / normal / uv; returns an indexed geometry.
+  function densify(geo, maxEdge = 0.3) {
+    const src = geo.index ? geo.toNonIndexed() : geo;
+    const names = ['position', 'normal', 'uv'].filter((n) => src.attributes[n]);
+    const read = (i) => names.map((n) => { const a = src.attributes[n]; return Array.from({ length: a.itemSize }, (_, k) => a.array[i * a.itemSize + k]); });
+    let tris = [];
+    for (let i = 0; i < src.attributes.position.count; i += 3) tris.push([read(i), read(i + 1), read(i + 2)]);
+    const mid = (u, v) => u.map((arr, k) => arr.map((x, j) => (x + v[k][j]) / 2));
+    const long = (u, v) => Math.hypot(u[0][0] - v[0][0], u[0][1] - v[0][1], u[0][2] - v[0][2]) > maxEdge;
+    for (let pass = 0; pass < 10; pass++) {
+      const out = []; let changed = false;
+      for (const t of tris) {
+        const L = [long(t[0], t[1]), long(t[1], t[2]), long(t[2], t[0])], n = L[0] + L[1] + L[2];
+        if (!n) { out.push(t); continue; }
+        changed = true;
+        if (n === 3) {
+          const [a, b, c] = t, ab = mid(a, b), bc = mid(b, c), ca = mid(c, a);
+          out.push([a, ab, ca], [ab, b, bc], [ca, bc, c], [ab, bc, ca]);
+        } else if (n === 1) {
+          const r = L.indexOf(true), a = t[r], b = t[(r + 1) % 3], c = t[(r + 2) % 3], m = mid(a, b);
+          out.push([a, m, c], [m, b, c]);
+        } else {
+          const r = (L.indexOf(false) + 1) % 3, a = t[r], b = t[(r + 1) % 3], c = t[(r + 2) % 3];   // short edge = c→a
+          const ab = mid(a, b), bc = mid(b, c);
+          out.push([a, ab, bc], [ab, b, bc], [a, bc, c]);
+        }
+      }
+      tris = out; if (!changed) break;
+    }
+    const g = new THREE.BufferGeometry(), n = tris.length * 3;
+    names.forEach((nm, k) => {
+      const size = src.attributes[nm].itemSize, arr = new Float32Array(n * size);
+      tris.forEach((t, ti) => t.forEach((v, vi) => arr.set(v[k], (ti * 3 + vi) * size)));
+      g.setAttribute(nm, new THREE.BufferAttribute(arr, size));
+    });
+    g.setIndex(Array.from({ length: n }, (_, i) => i));
+    g.userData = { ...geo.userData };
+    return g;
+  }
   // keep only the side walls of an ExtrudeGeometry (group 1), with the winding/normals flipped to face inward
   function sideOnly(ex) {
     const gr = ex.groups.find((q) => q.materialIndex === 1) || ex.groups[1];
@@ -1203,6 +1264,7 @@ export function makeInteriorKit(THREE = THREE_NS, T, P) {
     if (o.bow) for (const sx of [-1, 1]) add('felt', g.sph(6, 4), [sx * 0.06, headY - 0.28, fz - 0.08], [0.07, 0.045, 0.02], o.bow, { r: [0, 0, sx * 0.5] });
   };
   K.octa = () => G2('octa', () => tagG(new THREE.OctahedronGeometry(1, 0), 'sphere'));
+  K.bulbGeo = () => G2('bulbIco', () => tagG(new THREE.IcosahedronGeometry(1, 0), 'sphere'));
 
   // the jute scalloped rug geometry (flat on y = 0, centre origin), uv maps 2R onto the texture
   K.juteRug = () => G2('juteRug', () => {

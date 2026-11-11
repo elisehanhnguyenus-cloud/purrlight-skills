@@ -258,3 +258,49 @@ Loader design (replaces the code-drawn cat + yarn animation; you may keep that o
   any key) skips once the scene is ready. Repeat visits in the same session (sessionStorage): ≤ 1.2 s or skip.
 - Reduced motion: show `logo-anim-end.webp` still image, no video. No JS / no WebGL: the still image + the buttons.
 - The 3D scene keeps loading underneath; the loader must not delay first paint (poster image shows immediately).
+
+## OWNER REQUESTS 10/11 (REQUIRED — v4 round)
+
+Verbatim: "hiện tại video logo mở đầu nó gần như không load được, và có vẻ khá dài. Chị nghĩ là khi mở đầu cho nhảy thằng
+vào mặt tiền shop luôn. khỏi cần mở đầu nữa. cái khung mẫu đó lưu lại để trên video của Purrlight. ... Máy tính bảng đi
+thẳng như điện thoại nhé. và chị cần em điều chỉnh thêm về các nút. khi nó che 1 góc dưới quá nhiều. Ngoài ra tại sao
+hình ảnh nó lại có dấu hiệu bị giật ảnh quá nhiều vậy? Nếu giờ chị cho yêu cầu 3D thay cho tranh vẽ thì nó có ổn hơn
+không?"
+
+1. **No intro.** The page opens straight on the shop façade. First paint = a static poster of the exact first view
+   (rendered from the real scene + the real first-view camera, in the default look), as an `<img>`/CSS background with
+   high fetch priority, one per layout (desktop landscape, phone portrait, tablet portrait/landscape if framing differs);
+   small webp (≤ ~120 KB each). The live canvas cross-fades in (≤ 300 ms) when the first live frame is ready, with no
+   visible jump (same camera, same look). "Skip to the shop" works immediately; "Step inside" pressed before the scene is
+   ready shows a tiny busy state on the button and starts as soon as it is ready. Remove the logo-video loader from the
+   page completely (no download of logo-anim files); keep its markup/CSS/JS archived under `js/archive/` + `css/archive/`
+   (not loaded) as a template. The orchestrator separately exports the "khung mẫu" as video files for Purrlight's social
+   videos — not part of the page.
+2. **Tablets use the phone door-straight flow** (coarse pointer of any size, or viewport width < 1024).
+3. **Buttons cover too much of the lower corner.** Make all overlays more compact and let the scene use the freed space:
+   - exterior: desktop — a slimmer card or a small bottom bar (title one line, smaller), overlay area ≤ ~12% of the
+     viewport; phone/tablet — a compact bottom bar (two pill buttons + one short line), ≤ ~16% of the height.
+   - shelf: phone/tablet — a compact bar with Open the book / Stroll the shop and a small handle "On this shelf ▴" that
+     expands the product cards as a drawer (collapsed by default; collapsed bar ≤ ~18% of the height); desktop — a
+     narrower right panel or a bottom bar; the 3D framing (shift lens / free-area fit) must use the freed area so the
+     shop and the display are bigger on screen.
+   - keep ≥ 44–48 px targets, WCAG AA, safe areas, keyboard order.
+4. **Smoothness ("giật ảnh") + "3D instead of painting".** The owner asks whether real 3D (no painted look) would be
+   better. Answer in the build: YES — make **clean 3D the default look** (`?look=3d`, default) and keep the watercolour as
+   `?look=paint` for comparison. In 3D: no Kuwahara/composite passes, no line boil, MSAA on desktop (and on phones if
+   affordable, else FXAA/none at dpr ≥ 2), soft contact shadows, tuned golden-hour exterior + warm interior, lit windows
+   glowing (bloom-free; emissive + halos), logo and Merlin photo naturally crisp. Make it look finished and cozy, not
+   like a debug render (it was tuned for the paint until now: re-tune glow gains, exposure, materials, fog).
+   Fix the real causes of stutter in BOTH looks:
+   - precompile every material/shader (exterior, interior, all LOD levels, both palettes' variants in use) before the
+     canvas is revealed (`renderer.compileAsync` / a hidden warm-up render of the inside views), so the door crossing
+     never hitches;
+   - never change pixel ratio, quality tier or paint tier during a walk; adapt only while idle;
+   - LOD distances/hysteresis so nothing pops along both walk paths (or keep the near level for products during walks);
+   - render every frame at full rate while anything moves (walk, idle animals, hover); when fully idle, stop rendering —
+     never a visible 4 fps update; in paint mode the line boil is OFF by default;
+   - time-based camera with dt clamping/smoothing so one slow frame does not jump the camera;
+   - no GC spikes on the walk (pre-allocate); keep long tasks off the main thread during load (yield between texture,
+     exterior, interior and compile steps while the poster shows; input stays responsive);
+   - measure with CDP CPU throttling ×4 in headless: frame-time p50/p95/max and long-task count during load and during
+     the walk, before vs after, for phone 390×844 and desktop 1280×800, both looks. Report the numbers.

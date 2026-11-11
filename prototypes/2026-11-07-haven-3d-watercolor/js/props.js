@@ -674,7 +674,8 @@ export function makeProps(THREE = THREE_NS, T) {
     if (o.outfit === 'coat') {
       const coat = o.coat || '#44526B';
       k.add('knit', lathe([[0.0, 0.058], [0.035, 0.058], [0.034, 0.08], [0.031, 0.13], [0.026, 0.15], [0.0, 0.153]], 18, 'dollCoat'), { c: coat, ao: 0.2 });
-      k.add('knit', rbg(1, 1, 1, 0.3), { p: [0, 0.103, 0.03], s: [0.026, 0.05, 0.008], c: o.waistcoat || '#E2CDA8' });
+      // (v4: the panel sits proud of the coat and follows its taper, so it reads as a crisp sewn-on front unpainted)
+      k.add('knit', rbg(1, 1, 1, 0.3), { p: [0, 0.104, 0.0315], r: [-0.06, 0, 0], s: [0.024, 0.048, 0.007], c: o.waistcoat || '#E2CDA8' });
       for (const sx of [-1, 1]) {
         k.add('knit', sph(10, 6), { p: [sx * 0.016, 0.06, -0.03], r: [0.25, 0, 0], s: [0.014, 0.03, 0.006], c: coat });
         k.add('knit', sph(10, 6), { p: [sx * 0.03, 0.146, 0.0], r: [0, 0, -sx * 0.35], s: [0.014, 0.006, 0.014], c: o.epaulette || shadeHex(coat, 0.12) });
@@ -687,7 +688,8 @@ export function makeProps(THREE = THREE_NS, T) {
       k.add('knit', sph(10, 6), { p: [0, 0.145, 0.02], s: [0.022, 0.006, 0.01], c: '#FBF6EE' });
     } else {
       k.add('knit', lathe([[0, 0.045], [0.047, 0.045], [0.046, 0.05], [0.034, 0.1], [0.03, 0.13], [0.026, 0.15], [0.0, 0.152]], 18, 'dollDress'), { c: dress, ao: 0.22 });
-      if (o.pinafore) k.add('knit', rbg(1, 1, 1, 0.25), { p: [0, 0.085, 0.034], r: [-0.18, 0, 0], s: [0.04, 0.07, 0.008], c: o.pinafore });
+      // (v4: the pinafore was half buried in the dress cone — a blotch unpainted; now on the surface, along its slope)
+      if (o.pinafore) k.add('knit', rbg(1, 1, 1, 0.25), { p: [0, 0.083, 0.0405], r: [-0.24, 0, 0], s: [0.036, 0.066, 0.007], c: o.pinafore });
       k.add('knit', tor(0.3, 6, 20), { p: [0, 0.146, 0.002], r: [PI / 2, 0, 0], s: [0.022, 0.022, 0.018], c: o.collar || '#FBF6EE' });
     }
     // hats
@@ -1544,7 +1546,7 @@ export function makeProps(THREE = THREE_NS, T) {
       // lantern: 4 posts + roof + glow core
       const ly = H - 0.44;
       for (let i = 0; i < 4; i++) { const a = i / 4 * TAU + PI / 4; k.add('clay', box(), { p: [Math.cos(a) * 0.12, ly + 0.17, Math.sin(a) * 0.12], s: [0.018, 0.34, 0.018], c: pc }); }
-      k.add('glowVC', cyl(4, 1.12, 0.88), { p: [0, ly + 0.17, 0], r: [0, PI / 4, 0], s: [0.135, 0.32, 0.135], c: '#FFF0DC' });
+      k.add('glowVC', cyl(4, 1.12, 0.88), { p: [0, ly + 0.17, 0], r: [0, PI / 4, 0], s: [0.135, 0.32, 0.135], c: '#FFD3A0' });   // v4: warm glass (unpainted, the pale core + amber emissive clipped to white)
       k.add('clay', lathe([[0, 0], [0.2, 0], [0.19, 0.02], [0.06, 0.13], [0.03, 0.16], [0, 0.18]], 4, 'lampRoof'), { p: [0, ly + 0.34, 0], r: [0, PI / 4, 0], c: pc });
       k.add('metal', sph(10, 8), { p: [0, ly + 0.54, 0], s: 0.03, c: HEX.roseGold });
       k.add('clay', cyl(12), { p: [0, ly - 0.01, 0], s: [0.15, 0.025, 0.15], c: pc });

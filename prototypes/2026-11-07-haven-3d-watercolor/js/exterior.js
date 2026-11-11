@@ -11,7 +11,7 @@
 
 import { makeExtKit } from './exterior-kit.js';
 
-export function buildExterior(THREE, ctx) {
+function* exteriorSteps(THREE, ctx) {
   const { T, P } = ctx;
   const X = makeExtKit(THREE, P, T);
   const PI = Math.PI, TAU = PI * 2;
@@ -42,9 +42,35 @@ export function buildExterior(THREE, ctx) {
      lantern and rose-gold hardware — tuned for value contrast under the paint (wall ≈ light, joinery ≈ mid, shadows /
      lantern ≈ dark, glazing = lit amber). ?palette=sage keeps the sage of the reference shopfronts. Colours only; the
      geometry is identical (vertex colours are chosen here, before anything is built). */
+  /* v4 (owner 10/11): two looks. '3d' (the default) = the clean render, glows added as they are; 'paint' = the watercolour
+     pass, which multiplies every additive glow ×5 (its glow gain), so the paint keeps the v3 values. main.js may pass
+     ctx.look or call setLook() later; otherwise ?look=3d|paint (or the old ?paint=0 switch) decides. */
+  const LOOK0 = (() => {
+    if (ctx.look === '3d' || ctx.look === 'paint') return ctx.look;
+    try {
+      const q = new URLSearchParams(location.search), l = (q.get('look') || '').trim(), pt = q.get('paint');
+      if (l === 'paint' || l === '3d') return l;
+      if (l.startsWith('{')) return 'paint';                 // the paint's dev tuning hook (?look={json})
+      if (pt === '0' || pt === 'off') return '3d';
+      if (pt) return 'paint';
+    } catch (e) { /* no location */ }
+    return '3d';
+  })();
+  /* v4 fixer (art review #11): the rose-gold hardware in the clean 3D look is real soft metal (it read as matte salmon
+     plastic): metalness .7, roughness .3, and the environment at full strength (with envMap null, three uses the scene's
+     low environmentIntensity instead of the material's); the paint keeps the matte twin it was tuned with. Uniforms
+     only: the same program. */
+  const rgLook = (look) => {
+    if (look === '3d') Object.assign(MM.metal, { metalness: 0.7, roughness: 0.3, envMap: ctx.env || null, envMapIntensity: 1.0 });
+    else Object.assign(MM.metal, { metalness: 0.18, roughness: 0.62, envMap: null, envMapIntensity: 0.55 });
+  };
+  rgLook(LOOK0);
+  /* v4 fixer (art review #7, #12): the clean 3D look shows every facet the paint used to hide: rounder tree canopies and
+     far blobs, finer hydrangea mopheads and fuller peonies, 3D only (the paint keeps its v3 geometry and budget) */
+  const D3 = LOOK0 === '3d';
   const PALETTE = (() => { try { return (ctx.palette || new URLSearchParams(location.search).get('palette') || 'be').toLowerCase(); } catch (e) { return 'be'; } })() === 'sage' ? 'sage' : 'be';
   const J = PALETTE === 'be'
-    ? { body: '#D8B394', deep: '#A27A66', inset: '#EDB8A7', fascia: '#BA8A73', lantern: '#76574C', box: '#E0A999', bead: '#F6E7D6', bar: '#F6E7D6', reveal: '#A27A66', name: 'be' }
+    ? { body: '#D8B394', deep: '#A27A66', inset: '#EDB8A7', fascia: LOOK0 === '3d' ? '#C59C8C' : '#BA8A73', lantern: '#76574C', box: '#E0A999', bead: '#F6E7D6', bar: '#F6E7D6', reveal: '#A27A66', name: 'be' }
     : { body: C.sage, deep: '#6A836E', inset: '#A6BCA3', fascia: C.fascia, lantern: C.lantern, box: C.sage, bead: C.trim, bar: C.sage, reveal: C.sage, name: 'sage' };
   /* v3 fix (review #5): the beige shopfront read as one mid-tan block. Light ivory glazing bars (the window grid reads as
      a crisp frame over the lit glass), mid joinery, a deeper fascia under the ivory sign, a dark reveal round the open
@@ -87,11 +113,13 @@ export function buildExterior(THREE, ctx) {
   const blk = (x0, x1, y0, y1, z0, z1, c, o = {}) => clay(rb(x1 - x0, y1 - y0, z1 - z0, o.rad === undefined ? Math.min(0.03, (x1 - x0) / 3, (y1 - y0) / 3, (z1 - z0) / 3) : o.rad), [(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2], c, o);
   const put = (obj, x, y, z, ry = 0, s = 1) => { obj.position.set(x, y, z); obj.rotation.y = ry; if (s !== 1) obj.scale.setScalar(s); return obj; };
   const addProp = (obj, x, y, z, ry = 0, s = 1, o) => { const tmp = new THREE.Group(); tmp.add(put(obj, x, y, z, ry, s)); batch.obj(tmp, o); };
-  const halo = (x, y, z, w, h, k = 1, col = [1, 0.84, 0.64]) => halos.quad(X.mat4([x, y, z], [PI / 2, 0, 0], [w, 1, h]), 1, [col[0] * k, col[1] * k, col[2] * k]);
+  /* glows: k = the paint's strength (×5 under its glow gain), k3 = the clean 3D strength (added as is). v4: the clean
+     look keeps the pools and lit rooms calm and gives the lamps a real halo (the street lamp, the wall lantern). */
+  const halo = (x, y, z, w, h, k = 1, col = [1, 0.84, 0.64], k3 = k * 1.4) => halos.quad(X.mat4([x, y, z], [PI / 2, 0, 0], [w, 1, h]), 1, [col[0] * k, col[1] * k, col[2] * k], undefined, [col[0] * k3, col[1] * k3, col[2] * k3]);
   /* review #2: an amber "glaze" just inside a lit pane: the flat centre of the glow texture (soft edges, no hot spot), in
      the one halo batch (no extra draw). Under the paint the exterior glows take ×5, so k stays small. */
-  const glaze = (x, y, z, w, h, k) => halos.quad(X.mat4([x, y, z], [PI / 2, 0, 0], [w, 1, h]), 1, [k, 0.71 * k, 0.42 * k], [0.28, 0.28, 0.72, 0.72]);
-  const pool = (x, z, w, d, k = 1, ry = 0) => halos.quad(X.mat4([x, 0.008, z], [0, ry, 0], [w, 1, d]), 1, [0.55 * k, 0.36 * k, 0.2 * k]);
+  const glaze = (x, y, z, w, h, k, k3 = k) => halos.quad(X.mat4([x, y, z], [PI / 2, 0, 0], [w, 1, h]), 1, [k, 0.71 * k, 0.42 * k], [0.28, 0.28, 0.72, 0.72], [k3, 0.68 * k3, 0.38 * k3]);
+  const pool = (x, z, w, d, k = 1, ry = 0, k3 = k) => halos.quad(X.mat4([x, 0.008, z], [0, ry, 0], [w, 1, d]), 1, [0.55 * k, 0.36 * k, 0.2 * k], undefined, [0.55 * k3, 0.36 * k3, 0.2 * k3]);
   function bar(a, b, t, c, o = {}) {
     const d = V3(b[0] - a[0], b[1] - a[1], b[2] - a[2]); const L = d.length();
     const q = new THREE.Quaternion().setFromUnitVectors(V3(0, 1, 0), d.normalize());
@@ -130,9 +158,9 @@ export function buildExterior(THREE, ctx) {
       const a = i / 4 * TAU + r2() * 0.6, rr = i === 4 ? 0 : 0.26 * s, hx = x + Math.cos(a) * rr, hz = z + Math.sin(a) * rr * 0.85, hy = y + (i === 4 ? 0.5 : 0.38 + r2() * 0.08) * s;
       const col = cols[i % cols.length], R = (0.15 + r2() * 0.04) * s;
       K.add('felt', X.lumpy(seed % 40 + 150 + i, 0.14, 9, 8, 6), { p: [hx, hy, hz], s: [R, R * 0.85, R], c: col, ao: 0.3 });
-      for (let k = 0; k < 3; k++) {
+      for (let k = 0; k < (D3 ? 10 : 3); k++) {
         const u = V3(r2() - 0.5, 0.35 + r2() * 0.65, r2() - 0.5).normalize();
-        blooms.add(V3(hx + u.x * R * 0.95, hy + u.y * R * 0.82, hz + u.z * R * 0.95), new THREE.Quaternion().setFromUnitVectors(V3(0, 0, 1), u), R * 0.3, T.shade(col, 0.06));
+        blooms.add(V3(hx + u.x * R * 0.95, hy + u.y * R * 0.82, hz + u.z * R * 0.95), new THREE.Quaternion().setFromUnitVectors(V3(0, 0, 1), u), D3 ? R * 0.16 : R * 0.3, D3 ? T.shade(col, -0.03 - (k % 3) * 0.04) : T.shade(col, 0.06));
       }
     }
     if (decal) decals.at(x, y + 0.004, z, 1.1 * s, 1.0 * s, 0.32);
@@ -247,8 +275,14 @@ export function buildExterior(THREE, ctx) {
       const heads = [[0, 0.36, 0.02, 0.15], [-0.17, 0.27, 0.08, 0.13], [0.17, 0.28, 0.07, 0.135], [-0.06, 0.25, 0.2, 0.12], [0.1, 0.23, -0.14, 0.12], [-0.14, 0.3, -0.12, 0.12]];
       heads.forEach(([hx, hy, hz, hr], i) => {
         const c = V3(x + hx * s, top + hy * s, z + hz * s), R = hr * s, col = cols[i % cols.length];
-        K.add('felt', X.lumpy(seed % 30 + 1120 + i, 0.1, 8, 10, 8), { p: c.toArray(), s: [R, R * 0.9, R], c: col, ao: 0.25 });
-        for (let k = 0; k < 14; k++) { const n = outward(r2, -0.35); blooms.add(c.clone().add(V3(n.x * R, n.y * R * 0.9, n.z * R)), QZ(n), R * 0.3, T.shade(cols[(i + k) % cols.length], (k % 3 - 1) * 0.05)); }
+        if (D3) {
+          K.add('felt', X.lumpy(seed % 30 + 1120 + i, 0.06, 13, 13, 10), { p: c.toArray(), s: [R, R * 0.9, R], c: col, ao: 0.25 });
+          // (v4 fixer: 14 big pale florets read as stickers on a ball; ~30 small ones, street side only, a shade deeper)
+          for (let k = 0; k < 30; k++) { const n = outward(r2, -0.35); if (n.z < -0.2) continue; blooms.add(c.clone().add(V3(n.x * R * 1.01, n.y * R * 0.91, n.z * R * 1.01)), QZ(n), R * 0.16, T.shade(col, -0.03 - (k % 3) * 0.04)); }
+        } else {
+          K.add('felt', X.lumpy(seed % 30 + 1120 + i, 0.1, 8, 10, 8), { p: c.toArray(), s: [R, R * 0.9, R], c: col, ao: 0.25 });
+          for (let k = 0; k < 14; k++) { const n = outward(r2, -0.35); blooms.add(c.clone().add(V3(n.x * R, n.y * R * 0.9, n.z * R)), QZ(n), R * 0.3, T.shade(cols[(i + k) % cols.length], (k % 3 - 1) * 0.05)); }
+        }
       });
       return;
     }
@@ -294,7 +328,8 @@ export function buildExterior(THREE, ctx) {
       blooms6.forEach(([bx, by, bz], i) => {
         const p = V3(x + bx * s, top + by * s, z + bz * s), n = V3(bx * 1.6, 1.0, bz * 1.6 + 0.55).normalize();
         K.add('felt', X.rosetteGeo(), { p: p.toArray(), q: QZ(n), s: 0.12 * s, c: ['#F6D3D9', '#F2BCC6', '#F8DEE2'][i % 3] });
-        K.add('felt', X.lumpy(40 + i, 0.18, 7, 8, 6), { p: p.clone().addScaledVector(n, 0.025 * s).toArray(), s: [0.068 * s, 0.052 * s, 0.068 * s], c: ['#EFA8B5', '#E99AAA', '#F2B6C0'][i % 3] });
+        if (D3) K.add('felt', X.rosetteGeo(), { p: p.clone().addScaledVector(n, 0.012 * s).toArray(), q: new THREE.Quaternion().setFromAxisAngle(n, PI / 5).multiply(QZ(n)), s: 0.09 * s, c: ['#F2BCC6', '#EFB0BD', '#F4C6CE'][i % 3] });
+        K.add('felt', D3 ? X.lumpy(40 + i, 0.12, 9, 12, 9) : X.lumpy(40 + i, 0.18, 7, 8, 6), { p: p.clone().addScaledVector(n, 0.025 * s).toArray(), s: [0.068 * s, 0.052 * s, 0.068 * s], c: ['#EFA8B5', '#E99AAA', '#F2B6C0'][i % 3] });
       });
       for (const [bx, by, bz] of [[0.2, 0.46, -0.08], [-0.1, 0.5, 0.2], [-0.3, 0.38, 0.12]]) K.add('felt', sph(6, 5), { p: [x + bx * s, top + by * s, z + bz * s], s: 0.03 * s, c: '#E4A0AC' });
       return;
@@ -347,7 +382,9 @@ export function buildExterior(THREE, ctx) {
   const FD = { hw: 0.37, y0: 4.22, ys: 5.7 };                       // centre French door: rect to ys + half-round head
   const SAGE = J.body, TRIM = C.trim, BAR = J.bar;
   const GLZ = { dorm: 0.14, door: 0.12, disp: 0.07, cafe: 0.06 };   // lit-pane glaze strength (×5 under the paint)
+  const GLZ3 = { dorm: 0.05, door: 0.06, disp: 0.05, cafe: 0.05 };  // the same in the clean 3D look (no gain; v4 fixer: halved, they clipped)
 
+  yield 'ground';
   /* ================================================================== GROUND: lawn, flagstone pavement, kerb, cobbled lane */
   {
     const s = new THREE.Shape(); s.absarc(0, 0, 70, 0, TAU, false);
@@ -372,13 +409,17 @@ export function buildExterior(THREE, ctx) {
     for (const [dx, dz] of [[-0.065, -0.05], [-0.024, -0.083], [0.024, -0.083], [0.065, -0.05]]) K.add('felt', sph(8, 6), { p: [dx, 0.022, 0.83 + dz], s: [0.019, 0.006, 0.023], c: '#B88A7A' });
     small(false);
     // the door's warm spill and the windows' glow on the pavement
-    pool(0, 1.5, 2.2, 1.94, 1.0); pool(-2.4, 1.2, 3.0, 1.6, 0.55); pool(2.4, 1.15, 2.8, 1.3, 0.45);
+    pool(0, 1.5, 2.2, 1.94, 1.0, 0, 0.4); pool(-2.4, 1.2, 3.0, 1.6, 0.55, 0, 0.25); pool(2.4, 1.15, 2.8, 1.3, 0.45, 0, 0.22);   // 3D: a warm spill, not a spotlight
   }
 
+  yield 'house-shell';
   /* ================================================================== HOUSE SHELL: front wall (with dormer gables), sides, back */
   {
     const s = new THREE.Shape();
-    s.moveTo(-HW, 0); s.lineTo(-DOOR.hw, 0); s.lineTo(-DOOR.hw, DOOR.h); s.lineTo(DOOR.hw, DOOR.h); s.lineTo(DOOR.hw, 0); s.lineTo(HW, 0); s.lineTo(HW, WALL_TOP);
+    // (v4: the hole is 1.5 cm wider/taller than the clear opening, so the reveal linings — which keep |x| ≥ 0.7 — hide its
+    //  faces instead of sharing a plane with them: unpainted, the coplanar faces z-fought into a notched stripe)
+    const DH = DOOR.hw + 0.015, DY = DOOR.h + 0.015;
+    s.moveTo(-HW, 0); s.lineTo(-DH, 0); s.lineTo(-DH, DY); s.lineTo(DH, DY); s.lineTo(DH, 0); s.lineTo(HW, 0); s.lineTo(HW, WALL_TOP);
     for (const d of [...DORM].reverse()) {
       const td = 0.07 * Math.hypot(1, (d.yr - d.ye) / d.hw) + 0.01;
       s.lineTo(d.c + d.hw, WALL_TOP); s.lineTo(d.c + d.hw, d.ye - td); s.lineTo(d.c, d.yr - td); s.lineTo(d.c - d.hw, d.ye - td); s.lineTo(d.c - d.hw, WALL_TOP);
@@ -445,6 +486,7 @@ export function buildExterior(THREE, ctx) {
     brick(-1.6, 1.4, 1.2, 1.0, true, -1); brick(-4.6, 2.2, 1.1, 0.9, false, 1);
   }
 
+  yield 'roof';
   /* ================================================================== ROOF: steep scalloped slate, dormer notches, chimney */
   K = KR; batch.defaultTag = 'roofI';
   const roofPts = [];
@@ -551,6 +593,7 @@ export function buildExterior(THREE, ctx) {
   }
   K = KH; batch.defaultTag = '';
 
+  yield 'shopfront';
   /* ================================================================== SHOPFRONT: pilasters, fascia + sign, cornice */
   const signCenter = SIGN.clone();
   {
@@ -598,6 +641,7 @@ export function buildExterior(THREE, ctx) {
     small(false);
   }
 
+  yield 'door';
   /* ================================================================== DOOR: transom, garland, linings, open leaves */
   small(true);
   {
@@ -606,10 +650,11 @@ export function buildExterior(THREE, ctx) {
     blk(-DOOR.hw, DOOR.hw, yH, yH + 0.06, -0.02, 0.08, SAGE);
     { const g = new THREE.PlaneGeometry(DOOR.hw * 2, FAS.y0 - yH - 0.06); g.translate(0, (yH + 0.06 + FAS.y0) / 2, -0.1); batch.push(M.pane, g, { cast: false }); }
     for (const x of [-0.35, 0, 0.35]) bar([x, yH + 0.06, -0.08], [x, FAS.y0, -0.08], 0.03, BAR, { d: 0.04 });
-    halo(0, 2.68, 0.56, 1.5, 0.4, 0.28);
+    halo(0, 2.68, 0.56, 1.5, 0.4, 0.28, undefined, 0.42);
     // reveal linings (outside the clear opening |x| < 0.7)
-    for (const sx of [-1, 1]) blk(sx > 0 ? DOOR.hw : -DOOR.hw - 0.025, sx > 0 ? DOOR.hw + 0.025 : -DOOR.hw, 0, yH, -WT, 0, J.reveal);
-    blk(-DOOR.hw - 0.025, DOOR.hw + 0.025, yH, yH + 0.025, -WT, 0, J.reveal);
+    // (v4: 4 mm proud of both wall faces, so no face of the lining is coplanar with the wall)
+    for (const sx of [-1, 1]) blk(sx > 0 ? DOOR.hw : -DOOR.hw - 0.025, sx > 0 ? DOOR.hw + 0.025 : -DOOR.hw, 0, yH, -WT - 0.004, 0.004, J.reveal);
+    blk(-DOOR.hw - 0.025, DOOR.hw + 0.025, yH, yH + 0.025, -WT - 0.004, 0.004, J.reveal);
     // the double doors, open inward, lying along the inner wall (x ∈ ±[0.72, 1.42], z ≈ −0.42…−0.35)
     for (const sx of [-1, 1]) {
       const cx = sx * 1.07, z = -0.385;
@@ -659,6 +704,7 @@ export function buildExterior(THREE, ctx) {
   }
 
   small(false);
+  yield 'display-window';
   /* ================================================================== DISPLAY WINDOW (left): a shallow lit bay, cosy & cluttered */
   {
     const { x0, x1, zf } = DISP, xm = (x0 + x1) / 2, L = x1 - x0, yb = DISP.y0, yt = DISP.y1;
@@ -677,12 +723,13 @@ export function buildExterior(THREE, ctx) {
     bar([x0 - 0.05, yt + 0.02, zf + 0.065], [x1 + 0.05, yt + 0.02, zf + 0.065], 0.025, TRIM, { d: 0.012 });
     clay(rb(L + 0.2, 0.05, zf + 0.12, 0.02), [xm, FAS.y0 + 0.01, zf / 2 + 0.02], '#B7A094', { r: [0.18, 0, 0] });
     small(true);
+    yield 'disp-frame';
     // display bed (honey boards) and a warm lit soffit
     blk(x0, x1, yb - 0.08, yb, -WT - 0.02, zf - 0.04, C.honey);
     { const g = new THREE.PlaneGeometry(L, zf + WT); g.rotateX(PI / 2); g.translate(xm, yt - 0.005, (zf - WT) / 2); X.worldUV(g, 1.2); X.paintGeo(g, '#D99A6E'); batch.push(roomMat, g, { cast: false, receive: false }); }
     // amber wash over the bay: kept low (the paint's glow gain ×5 would turn it into a haze that pastels the covers);
     // the warmth comes from the hot bulbs, the lamp and the amber soffit
-    halo(xm, 1.55, zf + 0.05, 3.4, 2.4, 0.1, [1, 0.6, 0.3]);
+    halo(xm, 1.55, zf + 0.05, 3.4, 2.4, 0.1, [1, 0.6, 0.3], 0.05);
 
     // a deep terracotta-rose café curtain on a little rail behind the goods: a warm, darker backdrop the lit books and
     // cats read against (finding 2); the shop still shows above it
@@ -690,22 +737,25 @@ export function buildExterior(THREE, ctx) {
     { const n = 34, pts = [], idx = [], col = [];
       // linear ≈ sRGB #A2665A (deep terracotta-rose) at the bottom; the top 40 % is lamp-lit: ×1.45 and warmer (review #2)
       const rows = [[yb + 0.01, 1], [yb + 0.6 * (1.8 - yb), 1.05], [1.8, 1.45]];
-      for (let i = 0; i <= n; i++) { const t = i / n, x = x0 + 0.06 + t * (L - 0.12), z = -0.25 + Math.sin(t * PI * 16) * 0.025; for (const [y, h] of rows) { pts.push(x, y, z); const k = (0.9 + 0.1 * Math.sin(t * PI * 16)) * h, w = h > 1.2 ? 1.2 : 1; col.push(0.36 * k * w, 0.13 * k, 0.09 * k / w); } }
+      for (let i = 0; i <= n; i++) { const t = i / n, x = x0 + 0.06 + t * (L - 0.12), z = -0.25 + Math.sin(t * PI * 16) * 0.025; for (const [y, h] of rows) { pts.push(x, y, z); const k = (0.9 + 0.1 * Math.sin(t * PI * 16)) * h, w = h > 1.2 ? 1.2 : 1; if (LOOK0 === '3d') col.push(0.30 * k * w, 0.10 * k, 0.12 * k / w); else col.push(0.36 * k * w, 0.13 * k, 0.09 * k / w); } }
       for (let i = 0; i < n; i++) for (let r = 0; r < 2; r++) { const a = i * 3 + r; idx.push(a, a + 3, a + 1, a + 1, a + 3, a + 4); }
       const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3)); g.setIndex(idx); g.computeVertexNormals();
       X.worldUV(g, 0.3); batch.push(P.mat('linenVC'), g, { cast: false }); }
     // hanging lamp inside the bay
     addProp(P.pendantLamp({ shade: 'dome', hex: '#F1E3D3', cord: 0.25, r: 0.13 }), xm + 0.1, 2.25, 0.02, 0);
-    halo(xm + 0.1, 2.2, 0.3, 1.4, 1.2, 0.3);
+    halo(xm + 0.1, 2.2, 0.3, 1.4, 1.2, 0.3, undefined, 0.42);
+    yield 'disp-curtain';
     // fairy lights: a swag across the top of the window and a string along the moss on the sill
     const bulbs = [];
     for (let i = 0; i <= 22; i++) { const t = i / 22, x = x0 + 0.1 + t * (L - 0.2); bulbs.push([x, 2.42 - Math.abs(Math.sin(t * PI * 3)) * 0.13, zf - 0.12]); }
     for (let i = 0; i <= 26; i++) { const t = i / 26, x = x0 + 0.08 + t * (L - 0.16); bulbs.push([x, yb + 0.05 + Math.sin(t * 19) * 0.015, zf - 0.1 + Math.sin(t * 7) * 0.03]); }
-    tube(bulbs.slice(0, 23), 0.004, '#8C7A62', { radial: 3, cast: false });
+    tube(bulbs.slice(0, 23), 0.0055, '#B09678', { radial: 3, cast: false });   // v4: a touch thicker + lighter: an 8 mm dark cord over the lit glass broke into crawling dashes unpainted
     // bulbs big enough (≈ 0.026 m) to outlive the 9 px Kuwahara footprint, each with its own halo: sparkles, not dust
-    bulbs.forEach(([x, y, z]) => { K.add('glowVC', sph(5, 4), { p: [x, y, z], s: 0.026, c: '#FFF2D8' }); halo(x, y, z + 0.03, 0.2, 0.2, 0.5); });
+    // (v4 fixer: in 3D a halo on every other bulb only, so the 12 cm-spaced swag reads as bulbs, not one glowing tube)
+    bulbs.forEach(([x, y, z], i) => { K.add('glowVC', sph(8, 6), { p: [x, y, z], s: 0.024, c: '#FFE9C8' }); halo(x, y, z + 0.03, 0.2, 0.2, 0.5, [1, 0.8, 0.55], i % 2 ? 0 : 0.6); });   // round bulbs (v4: the 5×4 sphere read as a diamond unpainted)
     // moss along the front of the sill
     for (let i = 0; i < 9; i++) { const x = x0 + 0.15 + i * (L - 0.3) / 8; K.add('leaf', X.lumpy(800 + i, 0.18, 7, 10, 6), { p: [x, yb + 0.02, zf - 0.12], s: [0.2, 0.05, 0.08], c: i % 2 ? '#8EA685' : '#9DB38F', ao: 0.3 }); }
+    yield 'disp-lights';
     // picture books on little easels and crates (covers: pastel illustrations, no words)
     const coverBook = (x, y, z, w, h, cell, ry = 0, lean = 0.12, col = '#E9DCCB') => {
       const m = X.mat4([x, y, z], [-lean, ry, 0]);
@@ -753,11 +803,13 @@ export function buildExterior(THREE, ctx) {
     { let y = yb + 0.36; const tw = [[0.34, 0.05, '#8E3346'], [0.31, 0.045, '#B8862F'], [0.33, 0.05, '#43547A'], [0.29, 0.045, '#46623F'], [0.3, 0.05, '#A85A2C']];
       tw.forEach(([w, t, c], i) => { blk(xm - 0.3 - w / 2, xm - 0.3 + w / 2, y, y + t, 0.03 - 0.12 + (i % 2) * 0.012, 0.03 + 0.12 - (i % 2) * 0.01, c, { rad: 0.008, r: [0, (i % 2 ? 0.08 : -0.06), 0] }); blk(xm - 0.3 - w / 2 + 0.012, xm - 0.3 + w / 2 - 0.006, y + 0.006, y + t - 0.006, -0.08, 0.14, '#F6EEDF', { rad: 0.004 }); y += t; });
       coverBook(xm - 0.3, y, 0.0, 0.34, 0.4, 0, -0.05, 0.16, '#5E4A7A'); }
+    yield 'disp-books';
     // a stepped riser with the crochet cats (ginger on top, white below; no tuxedo cat in the window)
     blk(xm + 0.02, xm + 0.6, yb, yb + 0.22, -0.18, 0.22, '#F1D9CF', { ao: 0.25 });
     blk(xm + 0.08, xm + 0.54, yb + 0.22, yb + 0.4, -0.18, 0.06, '#DCE3D2', { ao: 0.25 });
     addProp(P.crochetCat({ body: '#E3A673', belly: '#F7EADA', stripes: '#C98557', muzzle: '#F7EADA', size: 0.3 }), xm + 0.31, yb + 0.4, -0.06, 0.15);
     addProp(P.crochetCat({ body: '#F7F1E8', belly: '#FFFFFF', ears: '#EFC5B9', size: 0.24 }), xm + 0.2, yb + 0.22, 0.13, -0.2);
+    yield 'disp-cats';
     // a little red-braid doll, yarn basket, parcels with twine, stacks of books lying flat
     addProp(P.crochetDoll({ skin: '#F4DCC9', hair: '#C9724E', hairStyle: 'braids', dress: '#A9BCA0', pinafore: '#FBF6EE', hat: 'straw', ribbon: '#EFC5B9', size: 0.3 }), x0 + 0.85, yb, 0.3, 0.3);
     basket(x1 - 0.95, yb, 0.33, 0.13, 0.1, ['#EFC5B9', '#A9BCA0', '#F3DCC9']);
@@ -779,6 +831,7 @@ export function buildExterior(THREE, ctx) {
   }
 
   small(false);
+  yield 'caf-window';
   /* ================================================================== CAFÉ WINDOW (right): counter ledge, transom, awning */
   {
     const { x0, x1 } = CAFE, xm = (x0 + x1) / 2, L = x1 - x0;
@@ -793,7 +846,7 @@ export function buildExterior(THREE, ctx) {
     bar([x0, 2.12, -0.06], [x1, 2.12, -0.06], 0.05, BAR, { d: 0.08 });
     { const g = new THREE.PlaneGeometry(L, CAFE.y1 - 2.15); g.translate(xm, (2.15 + CAFE.y1) / 2, -0.09); batch.push(M.pane, g, { cast: false }); }
     for (let k = 1; k < 6; k++) { const x = x0 + k * L / 6; bar([x, 2.14, -0.07], [x, CAFE.y1, -0.07], 0.026, BAR, { d: 0.03 }); }
-    halo(xm, 1.75, 0.15, 3.2, 1.8, 0.18, [1, 0.68, 0.38]);
+    halo(xm, 1.75, 0.15, 3.2, 1.8, 0.18, [1, 0.68, 0.38], 0.2);
     small(true);
     // on the ledge: pastry dome, cups, teapot, herb pots, a little bell
     cakeDome(xm + 0.2, CAFE.y0, 0.1, 1.1);
@@ -844,15 +897,16 @@ export function buildExterior(THREE, ctx) {
       bar([lx, ly + 0.36, 0.1], [lx, ly + 0.36, lz], 0.02, J.lantern);
       K.add('clay', new THREE.TorusGeometry(0.06, 0.01, 4, 10, PI), { p: [lx, ly + 0.3, 0.16], r: [0, PI / 2, 0], c: J.lantern });
       for (let i = 0; i < 4; i++) { const a = i / 4 * TAU + PI / 4; bar([lx + Math.cos(a) * 0.075, ly, lz + Math.sin(a) * 0.075], [lx + Math.cos(a) * 0.075, ly + 0.24, lz + Math.sin(a) * 0.075], 0.014, J.lantern); }
-      K.add('glowVC', new THREE.CylinderGeometry(0.068, 0.06, 0.22, 4), { p: [lx, ly + 0.12, lz], r: [0, PI / 4, 0], c: '#FFEFD6' });
+      K.add('glowVC', new THREE.CylinderGeometry(0.068, 0.06, 0.22, 4), { p: [lx, ly + 0.12, lz], r: [0, PI / 4, 0], c: '#FFD3A0' });   // v4: warm glass
       K.add('clay', new THREE.ConeGeometry(0.12, 0.1, 4), { p: [lx, ly + 0.29, lz], r: [0, PI / 4, 0], c: J.lantern });
       K.add('clay', cyl(8), { p: [lx, ly - 0.01, lz], s: [0.09, 0.025, 0.09], c: J.lantern });
       K.add('metal', sph(8, 6), { p: [lx, ly + 0.36, lz], s: 0.022, c: C.rose });
-      halo(lx, ly + 0.12, 0.52, 0.9, 0.9, 0.85);
+      halo(lx, ly + 0.12, 0.52, 0.9, 0.9, 0.85, [1, 0.8, 0.56], 1.5);
     }
   }
 
   small(true);
+  yield 'floor-2';
   /* ================================================================== FLOOR 2: dormer windows, heart shutters, flower boxes, balcony */
   {
     for (const d of DORM) {
@@ -866,7 +920,7 @@ export function buildExterior(THREE, ctx) {
       for (const y of [WIN2.y0 + (WIN2.y1 - WIN2.y0) / 3, WIN2.y0 + (WIN2.y1 - WIN2.y0) * 2 / 3]) bar([x0, y, zG], [x1, y, zG], 0.03, TRIM, { d: 0.03 });
       bar([x0, WIN2.y0 + 0.03, zG], [x1, WIN2.y0 + 0.03, zG], 0.05, TRIM, { d: 0.05 });
       { const g = new THREE.PlaneGeometry(WIN2.hw * 2, WIN2.y1 - WIN2.y0); g.translate(c, ym, zG + 0.03); batch.push(M.glassSoft, g, { cast: false }); }
-      halo(c, ym, 0.05, 1.5, 1.8, 0.018);   // calm (×5 under the paint's glow gain): the lit diorama reads through the glass
+      halo(c, ym, 0.05, 1.5, 1.8, 0.018, undefined, 0.03);   // calm (×5 under the paint's glow gain): the lit diorama reads through the glass
       // blush shutters with a little heart cut-out, rose-gold holdbacks
       for (const sx of [-1, 1]) {
         const xs = c + sx * (WIN2.hw + 0.27);
@@ -900,7 +954,7 @@ export function buildExterior(THREE, ctx) {
       for (let k = 1; k <= 3; k++) { const y = FD.y0 + (FD.ys - FD.y0) * k / 4; bar([-FD.hw, y, zG], [FD.hw, y, zG], 0.026, TRIM, { d: 0.03 }); }
       for (let k = 1; k < 4; k++) { const a = k / 4 * PI; bar([0, FD.ys, zG], [Math.cos(a) * FD.hw, FD.ys + Math.sin(a) * FD.hw, zG], 0.022, TRIM, { d: 0.03 }); }
       bar([-FD.hw, FD.ys, zG], [FD.hw, FD.ys, zG], 0.04, TRIM, { d: 0.05 });
-      halo(0, 5.3, 0.05, 1.4, 2.0, 0.025);
+      halo(0, 5.3, 0.05, 1.4, 2.0, 0.025, undefined, 0.04);
       // balcony: ivory floor on the cornice, matte rose-gold railing with bellied balusters
       const by = CORN, bz = 0.42, bw = 0.62;
       blk(-bw - 0.06, bw + 0.06, by - 0.02, by + 0.05, -0.02, bz + 0.04, TRIM, { ao: 0.15 });
@@ -915,6 +969,7 @@ export function buildExterior(THREE, ctx) {
     }
   }
 
+  yield 'floor-2-dioramas';
   /* ================================================================== FLOOR-2 DIORAMAS (seen through the dormer windows) */
   {
     // a deeper warm back wall and darker sides (unlit vertex colours) so the lit props read as bold silhouettes (finding 12)
@@ -956,11 +1011,11 @@ export function buildExterior(THREE, ctx) {
       tube([[lx, ly, lz], [lx - 0.02, ly + 0.22, lz], [lx - 0.1, ly + 0.36, lz + 0.04], [lx - 0.2, ly + 0.38, lz + 0.08]], 0.011, C.rose, { mat: MM.metal });
       K.add('metal', new THREE.ConeGeometry(0.09, 0.12, 12, 1, true), { p: [lx - 0.24, ly + 0.36, lz + 0.1], r: [0.2, 0, 0.5], c: C.rose });
       K.add('glowVC', sph(8, 6), { p: [lx - 0.26, ly + 0.32, lz + 0.11], s: 0.03, c: '#FFF4E6' });
-      halo(lx - 0.22, ly + 0.28, -0.4, 0.75, 0.75, 0.13); }   // a warm pool round the lamp, not a haze over the room
+      halo(lx - 0.22, ly + 0.28, -0.4, 0.75, 0.75, 0.13, [1, 0.78, 0.5], 0.1); }   // a warm pool round the lamp, not a haze over the room
     basket(-2.72, 4.97, -0.62, 0.12, 0.08, ['#B4566E', '#D3A24A', '#B4566E']);         // berry + mustard yarn on the desk
     yarn(-2.48, 4.97, -0.58, 0.06, '#D3A24A');
     basket(-2.95, 4.15, -0.55, 0.17, 0.15, ['#C9B6D8', '#EFC5B9', '#E8C9A0']);
-    halo(-2.5, 5.6, -0.5, 1.2, 1.0, 0.015);
+    halo(-2.5, 5.6, -0.5, 1.2, 1.0, 0.015, undefined, 0.02);
     // a yarn ball on the outer sill of the workroom window, its strand falling into the flower box
     yarn(-2.5 + 0.22, WIN2.y0, 0.08, 0.096, '#B4566E');          // berry: reads against the flower box
     tube([[-2.28, WIN2.y0 + 0.03, 0.15], [-2.26, WIN2.y0 - 0.04, 0.24], [-2.32, WIN2.y0 - 0.18, 0.28]], 0.006, '#B4566E', { cast: false });
@@ -977,19 +1032,20 @@ export function buildExterior(THREE, ctx) {
     for (const [dx, dy] of [[-0.095, 0.078], [-0.034, 0.128], [0.034, 0.128], [0.095, 0.078]]) K.add('felt', sph(8, 6), { p: [2.36 + dx, 5.36 + dy, Z + 0.044], s: [0.028, 0.036, 0.008], c: '#8E5A4E' });
     K.add('metal', new THREE.TorusGeometry(0.028, 0.008, 4, 10, PI), { p: [2.9, 5.6, Z + 0.04], r: [0, 0, PI], c: C.rose });
     tube([[2.9, 5.57, Z + 0.05], [2.83, 5.32, Z + 0.07], [2.9, 5.1, Z + 0.08], [2.97, 5.32, Z + 0.07], [2.9, 5.57, Z + 0.05]], 0.011, '#C9937E', { cast: false });
-    halo(2.5, 5.6, -0.5, 1.2, 1.0, 0.015);
+    halo(2.5, 5.6, -0.5, 1.2, 1.0, 0.015, undefined, 0.02);
     // --- centre landing: a fern on a stand under a paper lantern
     blk(-0.16, 0.16, 4.15, 4.75, -0.82, -0.5, C.oat);
     addProp(P.plant('fern', 0.5, { pot: 'cream', seed: 12 }), 0, 4.75, -0.66, 0);
     { const g = new THREE.SphereGeometry(0.1, 12, 8); g.scale(1, 1.25, 1); g.translate(0, 5.82, -0.7); batch.push(P.mat('lantern'), g, { cast: false }); }
-    halo(0, 5.8, -0.4, 0.9, 0.9, 0.14);
+    halo(0, 5.8, -0.4, 0.9, 0.9, 0.14, undefined, 0.2);
     // the lit panes (review #2): the floor-2 windows and the balcony door glow amber from the street
-    for (const d of DORM) if (d.kind === 'win') glaze(d.c, (WIN2.y0 + WIN2.y1) / 2, -0.17, WIN2.hw * 2.3, (WIN2.y1 - WIN2.y0) * 1.15, GLZ.dorm);
-    glaze(0, (FD.y0 + FD.ys + FD.hw) / 2, -0.17, FD.hw * 2.3, (FD.ys + FD.hw - FD.y0) * 1.1, GLZ.door);
-    glaze((DISP.x0 + DISP.x1) / 2, (DISP.y0 + DISP.y1) / 2, DISP.zf - 0.07, (DISP.x1 - DISP.x0) * 1.08, (DISP.y1 - DISP.y0) * 1.1, GLZ.disp);
-    glaze((CAFE.x0 + CAFE.x1) / 2, (CAFE.y0 + CAFE.y1) / 2 + 0.05, -0.12, (CAFE.x1 - CAFE.x0) * 1.06, (CAFE.y1 - CAFE.y0) * 1.15, GLZ.cafe);
+    for (const d of DORM) if (d.kind === 'win') glaze(d.c, (WIN2.y0 + WIN2.y1) / 2, -0.17, WIN2.hw * 2.3, (WIN2.y1 - WIN2.y0) * 1.15, GLZ.dorm, GLZ3.dorm);
+    glaze(0, (FD.y0 + FD.ys + FD.hw) / 2, -0.17, FD.hw * 2.3, (FD.ys + FD.hw - FD.y0) * 1.1, GLZ.door, GLZ3.door);
+    glaze((DISP.x0 + DISP.x1) / 2, (DISP.y0 + DISP.y1) / 2, DISP.zf - 0.07, (DISP.x1 - DISP.x0) * 1.08, (DISP.y1 - DISP.y0) * 1.1, GLZ.disp, GLZ3.disp);
+    glaze((CAFE.x0 + CAFE.x1) / 2, (CAFE.y0 + CAFE.y1) / 2 + 0.05, -0.12, (CAFE.x1 - CAFE.x0) * 1.06, (CAFE.y1 - CAFE.y0) * 1.15, GLZ.cafe, GLZ3.cafe);
   }
 
+  yield 'vines';
   /* ================================================================== VINES: up the pilasters, over the cornice, round the door */
   {
     // climbing roses from the big pots at the pilaster feet, up the pilasters, over the consoles, onto the upper wall
@@ -1006,6 +1062,7 @@ export function buildExterior(THREE, ctx) {
     X.vine(batch, leaves, blooms, [[0.86, 0.2, 0.16], [0.9, 0.9, 0.14], [0.84, 1.6, 0.14], [0.9, 2.3, 0.15], [0.8, 2.66, 0.2], [0.4, 2.78, 0.21], [-0.05, 2.79, 0.21], [-0.5, 2.76, 0.2], [-0.86, 2.6, 0.17], [-0.9, 2.35, 0.15]], { leaf: 0.075, density: 1.35, flowers: 0.1, flowerColors: ['#FBF6EE', '#F2C4B8'], seed: 31 });
   }
 
+  yield 'front';
   /* ================================================================== FRONT: bench, chalkboard, door pots, street lamp */
   {
     // a little backless bench under the display window with a gingham cushion, books and a basket
@@ -1039,10 +1096,11 @@ export function buildExterior(THREE, ctx) {
     plant('japonica', 4.58, 0, 0.86, 1.05, 76, { potR: 0.2, potH: 0.32 });
     // street lamp on the pavement by the left corner, with a hanging flower basket
     addProp(P.streetLamp({ h: 3.3, basket: true }), -4.95, 0, 1.05, PI * 0.15);
-    halo(-4.95, 3.03, 1.1, 1.2, 1.2, 0.85);
+    halo(-4.95, 3.03, 1.1, 1.2, 1.2, 0.85, [1, 0.8, 0.56], 1.7);
   }
 
   small(false);
+  yield 'garden';
   /* ================================================================== GARDEN: picket fence, beds, rounded trees */
   K = KG; leaves = leavesG; batch.defaultTag = 'garden';
   {
@@ -1073,11 +1131,12 @@ export function buildExterior(THREE, ctx) {
       const blobs = [[0, 0.7, 0, 0.27], [0.17, 0.6, 0.06, 0.2], [-0.16, 0.62, 0.04, 0.21], [0.05, 0.86, -0.05, 0.19], [0.02, 0.6, 0.16, 0.18]];
       blobs.forEach(([bx, by, bz, br], i) => {
         const R = br * h, cx = x + bx * h, cy = by * h, cz = z + bz * h;
-        const g = X.lumpy(seed * 10 + i, 0.11, 4, 10, 8).clone();
+        const g = (D3 ? X.lumpy(seed * 10 + i, 0.11, 4, 15, 11) : X.lumpy(seed * 10 + i, 0.11, 4, 10, 8)).clone();   // (v4 fixer: 10x8 showed every facet unpainted)
         g.scale(R, R * 0.92, R); g.translate(cx, cy, cz);
         X.paintGeo(g, o.dark || '#7F9A7A', { top: o.light || '#C5D3B8', topPow: 1.3, ao: 0.25 });
         batch.push(M.clay, g, { cast: true });
-        X.sprinkle(leaves, [cx, cy, cz], [R, R * 0.93, R], Math.round(R * R * 6), { seed: seed * 7 + i, size: 0.2, yMin: -0.1 });
+        if (D3) X.sprinkle(leaves, [cx, cy, cz], [R * 0.95, R * 0.88, R * 0.95], Math.round(R * R * 10), { seed: seed * 7 + i, size: 0.14, yMin: -0.1 });   // on the lumpy surface, not floating off it
+        else X.sprinkle(leaves, [cx, cy, cz], [R, R * 0.93, R], Math.round(R * R * 6), { seed: seed * 7 + i, size: 0.2, yMin: -0.1 });
       });
       decals.at(x, 0.004, z, h * 0.7, h * 0.7, 0.4);
     };
@@ -1085,6 +1144,7 @@ export function buildExterior(THREE, ctx) {
   }
   K = KH; leaves = leavesH; batch.defaultTag = '';
 
+  yield 'far';
   /* ================================================================== FAR: soft neighbouring cottages + tree line (no shadows) */
   const far = new X.Batch(null), farBack = new X.Batch(null);
   {
@@ -1109,27 +1169,32 @@ export function buildExterior(THREE, ctx) {
     cottage(-2.6, 15.5, 4.6, 4, 3.4, PI + 0.06, '#EFE4D6', '#C2A196', true); cottage(4.6, 17, 4.2, 4, 3.3, PI - 0.1, '#E9DED1', '#B8A096');
     for (let i = 0; i < 9; i++) { const x = -9 + i * 2.2 + r2() * 0.4; blob(x, 11.2, 1.1 + r2() * 0.3, 0.75 + r2() * 0.2, '#8FA68A', '#BFCCB3', 650 + i, 8, 5, 0.06); }
     // tree line behind the houses (hazy sage), and a soft one across the street (seen when looking back)
-    for (let i = 0; i < 18; i++) { const side = i % 2 ? 1 : -1, x = side * (7 + r2() * 20), z = -11 - r2() * 14; blob(x, z, 1.8 + r2() * 1.5, 2.6 + r2() * 2.4, '#9AAD94', '#CAD5BE', 300 + i); }
-    for (let i = 0; i < 16; i++) { const x = -48 + i * 6.2 + r2() * 3, z = -28 - r2() * 6; blob(x, z, 3 + r2() * 1.8, 3.4 + r2() * 2.2, '#B3BFAE', '#DADFD0', 400 + i); }
+    for (let i = 0; i < 18; i++) { const side = i % 2 ? 1 : -1, x = side * (7 + r2() * 20), z = -11 - r2() * 14; blob(x, z, 1.8 + r2() * 1.5, 2.6 + r2() * 2.4, '#9AAD94', '#CAD5BE', 300 + i, D3 ? 12 : 8, D3 ? 8 : 6); }
+    for (let i = 0; i < 16; i++) { const x = -48 + i * 6.2 + r2() * 3, z = -28 - r2() * 6; blob(x, z, 3 + r2() * 1.8, 3.4 + r2() * 2.2, '#B3BFAE', '#DADFD0', 400 + i, D3 ? 12 : 8, D3 ? 8 : 6); }
     for (let i = 0; i < 14; i++) { const x = -44 + i * 6.6 + r2() * 3, z = 30 + r2() * 8; if (Math.abs(x) < 4) continue; blob(x, z, 2.8 + r2() * 1.6, 3.2 + r2() * 2, '#A3B39E', '#D0D9C6', 600 + i); }
     // distant hills: broad, low, lavender-grey haze
     for (let i = 0; i < 6; i++) { const x = -75 + i * 30 + r2() * 8, z = -60 - r2() * 10; const g = new THREE.SphereGeometry(1, 16, 8, 0, TAU, 0, PI / 2); g.scale(24 + r2() * 8, 5 + r2() * 3, 14); g.translate(x, -0.5, z); X.paintGeo(g, '#C9C3CC', { top: '#E4DCDD', topPow: 1.1 }); far.push(M.clay, g, { cast: false }); }
   }
 
+  yield 'the-cast';
   /* ================================================================== THE CAST: Maine Coon, café guests, golden dog (animated) */
   const tableX = 2.55, tableZ = 1.75;
   const cast = new THREE.Group(); cast.name = 'ext:cast'; group.add(cast);
   // (fix v3: a touch bigger and forward on the threshold stone, in front of the dark plinth of the door post)
   const coon = P.maineCoon({ size: 1.4 }); put(coon.group, -1.12, 0, 0.7, 0.22); cast.add(coon.group);
+  yield 'coon';
   const chairs = [[tableX - 0.64, tableZ - 0.12, 1.1], [tableX + 0.64, tableZ - 0.12, -1.1]];
   const people = [
     P.person({ coat: '#9FB09A', scarf: '#EFC5B9', hair: '#6B5444', skin: '#EBC9AE', trousers: '#7D7068', hairStyle: 'bun', phase: 1, lookYaw: 0.25 }),
     P.person({ coat: '#D59A86', scarf: '#F4EADB', hair: '#3F342D', skin: '#D9AE90', trousers: '#8F8378', hairStyle: 'short', hat: 'beret', hatColor: '#E9DCCB', phase: 2, lookYaw: -0.2 }),
   ];
   people.forEach((p, i) => { put(p.group, chairs[i][0], 0, chairs[i][1], chairs[i][2]); cast.add(p.group); });
+  yield 'people';
   // the golden dog lies along x at the guests' feet, head toward the door (stays inside the first frame; finding 13)
   const dog = P.dog({ coat: 'golden', size: 1 }); put(dog.group, tableX + 0.08, 0, tableZ + 0.42, -PI / 2 + 0.12); cast.add(dog.group);
+  yield 'dog';
   X.skinCharacters([coon.group, ...people.map((p) => p.group), dog.group], group, decals, 'ext:cast');
+  yield 'skin';
   small(true);
   // café furniture: marble-topped bistro table, rattan chairs with gingham cushions, cups + a bud vase
   addProp(P.bistroTable({ top: '#F7F1E8' }), tableX, 0, tableZ, 0);
@@ -1156,18 +1221,19 @@ export function buildExterior(THREE, ctx) {
   }
   small(false);
 
+  yield 'build';
   /* ================================================================== BUILD: merge, instanced leaves, decals */
-  batch.obj(KH.build('ext-parts'));
-  batch.obj(KR.build('ext-roof'), { tag: 'roofI' });
-  batch.obj(KG.build('ext-garden'), { tag: 'garden' });
-  batch.obj(KS.build('ext-small'), { tag: 'small', cast: false });
-  batch.build(group, 'ext');
+  batch.obj(KH.build('ext-parts')); yield 'kh';
+  batch.obj(KR.build('ext-roof'), { tag: 'roofI' }); yield 'kr';
+  batch.obj(KG.build('ext-garden'), { tag: 'garden' }); yield 'kg';
+  batch.obj(KS.build('ext-small'), { tag: 'small', cast: false }); yield 'ks';
+  batch.build(group, 'ext'); yield 'batch';
   far.build(group, 'ext-far').forEach((m) => { m.castShadow = false; m.receiveShadow = false; });
-  farBack.build(group, 'ext-farBack').forEach((m) => { m.castShadow = false; m.receiveShadow = false; });
+  farBack.build(group, 'ext-farBack').forEach((m) => { m.castShadow = false; m.receiveShadow = false; }); yield 'far';
   for (const sc of [leavesH, leavesG]) { const lv = sc.build({ cast: false }); if (lv) group.add(lv); }
   const bl = blooms.build({ cast: false }); if (bl) group.add(bl);
-  const sh = decals.build('ext:shadows'); if (sh) group.add(sh);
-  const hl = halos.build('ext:halos'); if (hl) { hl.renderOrder = 3; group.add(hl); }
+  const sh = decals.build('ext:shadows'); if (sh) group.add(sh); yield 'decals';
+  const hl = halos.build('ext:halos', '3d', LOOK0); if (hl) { hl.renderOrder = 3; group.add(hl); }
   /* shadow budget: only big shapes cast (house shell, roof, shopfront parts, trees, the cast, the café furniture) */
   group.traverse((o) => { if (o.isMesh && (/:small$|ext:leaves|ext:blossoms|bookRow|^ext:felt|^ext:satin|ext:knit|ext:yarn|ext-far|ext:glowVC|ext:linenVC|ext:weave|ext:paperVC|ext:leaf|ext:terra|ext:metal|ext:cast:/.test(o.name || o.type))) o.castShadow = false; });
 
@@ -1196,6 +1262,8 @@ export function buildExterior(THREE, ctx) {
     };
   }
 
+  const setLook = (look) => { if (hl && hl.userData.setLook) hl.userData.setLook(look === 'paint' ? 'paint' : '3d'); rgLook(look === 'paint' ? 'paint' : '3d'); };
+  group.userData.setLook = setLook;   // also reachable from the scene graph (tests)
   return {
     group,
     update(t /* , dt */) {
@@ -1211,5 +1279,23 @@ export function buildExterior(THREE, ctx) {
       keepPts: [V3(tableX + 0.9, 0, tableZ + 0.3), V3(tableX - 0.9, 0, tableZ + 0.3), V3(tableX, 0, tableZ + 0.62), V3(-1.12, 0, 0.82), V3(0.86, 0, 0.8), V3(-HW, 0, 0.1), V3(HW, 0, 0.1)],
     },
     lights: [],
+    /* v4: '3d' | 'paint' — swaps the glow strengths (one attribute re-upload, no new programs) */
+    setLook,
+    get look() { return LOOK0; },
+    /* v4: the street's light for the clean 3D look (main.js merges this over its ATMO for look=3d; the paint keeps its
+       own): a lower, warmer, more raking golden-hour sun with less flat fill, so the dormers, sills, awning and roof
+       scallops model with real shadows and the lit windows and lamps glow against a lilac shade. sunDir = the direction
+       TO the sun (main's default is (-0.56, 0.47, 0.68)); fog as main has it. */
+    atmo: { '3d': { o: { exposure: 0.9, hemi: 0.9, sun: 2.5, sunColor: '#FFAE6C', sky: '#D6C8EA', ground: '#E8C29E', sunDir: [-0.7, 0.36, 0.62] }, env: 0.18 } },
   };
+}
+
+// v4 integrator: the builder as steps. main.js drives buildExteriorSteps and gives the browser a turn between steps
+// (input, the poster) so no single load task is long; buildExterior runs the same steps in one go.
+export function* buildExteriorSteps(THREE, ctx) { return yield* exteriorSteps(THREE, ctx); }
+export function buildExterior(THREE, ctx) {
+  const it = exteriorSteps(THREE, ctx);
+  let r = it.next();
+  while (!r.done) r = it.next();
+  return r.value;
 }

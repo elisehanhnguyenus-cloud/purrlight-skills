@@ -37,7 +37,7 @@
     /* 34 css px: room for the cat and its halo (nothing clipped at the canvas edge); 68 device px at 2x (cursors <= 128) */
     var S = 34, c = document.createElement("canvas");
     c.width = c.height = Math.round(S * k);
-    var g = c.getContext("2d");
+    var g = c.getContext("2d", { willReadFrequently: true });   /* CPU-backed: read back once by toDataURL (no GPU readback stall) */
     if (!g) return null;
     g.scale(k, k);
     /* the logo cat right at the tip, so the cat itself is the pointer: 22 x 28.8 css px (aspect 171:224 kept exactly) */

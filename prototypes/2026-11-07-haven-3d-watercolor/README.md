@@ -79,7 +79,7 @@ Other checks:
   |---|---|---|
   | Desktop exterior | 123 | 214k |
   | Desktop shelf | 63 | 193k |
-  | Walk, worst frame | ≤ 107 | ≤ 248k |
+  | Walk, worst frame | ≤ 107 | ≤ 250k (tightest: phone landscape 844×390, 249.7k) |
 
 - On-screen logo width: 266 CSS px on desktop, 250 on a 390×844 phone.
 - Not yet checked:

@@ -1591,6 +1591,15 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   - lên web sau 02/01.
 - **Kế hoạch và bản mô tả cho họa sĩ (cập nhật v4):** `docs/HAVEN-TRANH-THAT-PLAN-2026-11-12.md`.
 
+- **Chiều 12/11, chị chọn AI thay họa sĩ:** Gemini và Muse làm tranh phối cảnh, nhân vật, video như game hay phim
+  hoạt hình ngắn màu nước.
+  - Nhân vật: 2 người ở góc cà phê là chị và anh (đã có hình vẽ), Maine Coon theo ảnh mèo thật khách gửi.
+  - Quy trình nối với code: bảng cảnh, khung bố cục từ 3D v4, tệp cảnh `scenes.json`, thư mục Drive chung.
+  - Chi tiết: `docs/HAVEN-AI-ART-PIPELINE-2026-11-12.md`.
+  - **Đổi luật nhà (chờ chị xác nhận):** AI được dùng cho tranh cảnh, video và nhân vật; không bao giờ cho Merlin,
+    logo, chữ và món hàng.
+  - Ảnh mèo của khách cần khách đồng ý bằng văn bản.
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
@@ -1690,6 +1699,8 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
     - Logo: bảng hiệu đổi sang logo chữ hồng bóng như cuối video không? Nếu có, gửi PNG nền trong suốt hoặc file vector.
       Icon mèo chị gửi bị cắt sát mép phải; có bản đầy đủ thì gửi em.
     - Chi tiết: `docs/HAVEN-3D-NEXT-STEPS-2026-11-07.md`, `prototypes/2026-11-07-haven-3d-watercolor/README.md`.
+27. **Haven tranh AI (12/11 chiều):** trả lời 5 câu ở mục 10 của `docs/HAVEN-AI-ART-PIPELINE-2026-11-12.md`: đổi
+    luật nhà, hình vẽ chị và anh (ai vẽ), Maine Coon (khách đồng ý hay dùng món len), chú chó, tạo thư mục Drive.
 26. **Haven tranh thật (12/11):**
     - Trả lời 6 câu ở mục 6 của `docs/HAVEN-TRANH-THAT-PLAN-2026-11-12.md`: ai vẽ và khi nào, cách chụp kệ, chú mèo
       và chú chó thật hay món len, có vẽ người không, số phận bản 3D v4, nói "chạy" cho phần đang giữ.

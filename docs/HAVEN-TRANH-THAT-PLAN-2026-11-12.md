@@ -1,5 +1,9 @@
 # Haven bằng tranh màu nước thật, món thật, Merlin thật: kế hoạch (12/11/2026)
 
+> **Cập nhật 12/11 chiều:** chị chọn làm tranh, nhân vật và video bằng AI (Gemini, Muse) thay cho họa sĩ. Quy trình
+> mới: `docs/HAVEN-AI-ART-PIPELINE-2026-11-12.md`. Hai phần của kế hoạch này vẫn giữ: kệ chụp thật có Merlin thật, và
+> khung trên tường chứa ảnh listing.
+
 Chị hỏi 12/11: "giờ chị muốn có đồ họa và art màu nước thật với hình ảnh sản phẩm trên kệ, trên tường là sản phẩm thật
 của chị lấy từ món đồ đang bán trên shop online và có chú mèo Merlin hình thật, chú mèo, chú chó... thì có ổn hay
 không? Chị cần planning làm như thế nào nữa?"

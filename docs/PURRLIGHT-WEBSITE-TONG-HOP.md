@@ -1579,6 +1579,18 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   - bản xem thử bản 11, thẻ đầu "Haven 3D · bản v4";
   - code: `prototypes/2026-11-07-haven-3d-watercolor/` (v3 ở commit `cbd2ccf`).
 
+### Elise 12/11 — Haven bằng tranh màu nước thật, món thật, Merlin thật (kế hoạch, chưa làm)
+- **Chị nhắn "Đổi trên web đi"**, rồi dặn **khoan chạy**. Phần đang giữ trong `DEPLOY-HOLD` (trang chủ 25/10,
+  7 phương án 27/10, trang Shipping & returns) chị **duyệt đưa lên**, nhưng chờ chị nói "chạy". Chưa deploy gì.
+- **Chị hỏi thêm:** muốn tranh màu nước thật, sản phẩm thật trên kệ và trên tường lấy từ shop, Merlin, chú mèo, chú
+  chó là hình thật.
+- **Em trả lời: ổn, nên làm.** Đây là hướng "bìa tranh vẽ, kệ hàng thật" ngày 06/11, theo bố cục tiệm nhỏ v4:
+  - tranh vẽ tay chia lớp, kiểu sách pop-up, mượt hơn 3D;
+  - kệ chính là ảnh chụp kệ thật có Merlin;
+  - tường là khung tranh chứa ảnh listing đang bán, tự cập nhật theo shop;
+  - lên web sau 02/01.
+- **Kế hoạch và bản mô tả cho họa sĩ (cập nhật v4):** `docs/HAVEN-TRANH-THAT-PLAN-2026-11-12.md`.
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
@@ -1678,6 +1690,9 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
     - Logo: bảng hiệu đổi sang logo chữ hồng bóng như cuối video không? Nếu có, gửi PNG nền trong suốt hoặc file vector.
       Icon mèo chị gửi bị cắt sát mép phải; có bản đầy đủ thì gửi em.
     - Chi tiết: `docs/HAVEN-3D-NEXT-STEPS-2026-11-07.md`, `prototypes/2026-11-07-haven-3d-watercolor/README.md`.
+26. **Haven tranh thật (12/11):**
+    - Trả lời 6 câu ở mục 6 của `docs/HAVEN-TRANH-THAT-PLAN-2026-11-12.md`: ai vẽ và khi nào, cách chụp kệ, chú mèo
+      và chú chó thật hay món len, có vẽ người không, số phận bản 3D v4, nói "chạy" cho phần đang giữ.
 
 ## 9. Link & tài nguyên
 

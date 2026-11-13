@@ -1716,11 +1716,11 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
     - Logo: bảng hiệu đổi sang logo chữ hồng bóng như cuối video không? Nếu có, gửi PNG nền trong suốt hoặc file vector.
       Icon mèo chị gửi bị cắt sát mép phải; có bản đầy đủ thì gửi em.
     - Chi tiết: `docs/HAVEN-3D-NEXT-STEPS-2026-11-07.md`, `prototypes/2026-11-07-haven-3d-watercolor/README.md`.
-27. **Haven tranh AI (13/11):**
-    - xin khách gửi ảnh Maine Coon đồng ý bằng văn bản;
-    - chọn trang phục Merlin: mèo thật không phụ kiện, hay mũ beret, yếm, ba lô của thương hiệu;
-    - chọn trang phục trong cảnh: chị váy kem hay áo dài đỏ; anh polo đỏ hay đỏ gạch dịu;
-    - làm tranh S01 theo `prototypes/2026-11-13-haven-scenes/ART-BIBLE.md`.
+27. **Haven tranh AI (13/11):** đã chốt Merlin mèo thật không phụ kiện; chị váy kem; anh polo đỏ gạch dịu, cầm cốc
+    cờ Anh; Maine Coon theo tranh mèo khách (lông dài tam thể, mắt xanh). Còn:
+    - xin khách gửi mèo Maine Coon đồng ý bằng văn bản;
+    - chọn cách chạy Gemini: chị chạy tay, hay tạo khóa API Google AI Studio để em chạy và đưa thẳng vào Drive;
+    - cho em biết "Muse" là ứng dụng nào (link), để xem có kết nối được không.
 26. **Haven tranh thật (12/11):**
     - Trả lời 6 câu ở mục 6 của `docs/HAVEN-TRANH-THAT-PLAN-2026-11-12.md`: ai vẽ và khi nào, cách chụp kệ, chú mèo
       và chú chó thật hay món len, có vẽ người không, số phận bản 3D v4, nói "chạy" cho phần đang giữ.

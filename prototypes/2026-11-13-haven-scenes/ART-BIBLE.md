@@ -40,10 +40,10 @@ Mẫu nét chì là tranh minh họa sách cổ điển (Winnie-the-Pooh). Chỉ
 
 | Nhân vật | Tham khảo | Ghi chú |
 |---|---|---|
-| **Merlin** | Ảnh thật Merlin (thư mục Drive `01-tham-khao`) | Mèo tuxedo: lưng đen; ngực, mõm, bàn chân trắng; vệt trắng giữa trán; mắt xanh lục; mũi hồng. Mặc định không đeo nơ Giáng sinh. Chị chọn: mèo thật không phụ kiện, hay bộ đồ thương hiệu (mũ beret vàng nghệ có ngôi sao khâu, yếm xanh xô thơm, ba lô màu ô liu, "the cat who takes notes"). Làm một bản thiết kế nhân vật Merlin trước, cùng phong cách, rồi dùng nó cho mọi cảnh |
-| **Anh** | Bản thiết kế nhân vật chị gửi (Drive, không lưu trên GitHub) | Bản hiện tại vẽ kiểu bán tả thực. Vẽ lại một bản theo phong cách mục 2 để hợp với chị. Áo polo đỏ: em gợi ý đỏ gạch dịu cho hợp bảng màu; chị quyết |
-| **Chị** | Bản thiết kế nhân vật chị gửi (Drive, không lưu trên GitHub) | Bản váy kem hợp bảng màu nhất (em đề xuất làm mặc định). Áo dài đỏ để dành cho bản Tết. Tóc bob |
-| **Maine Coon** | Ảnh mèo thật khách gửi | **Cần khách đồng ý bằng văn bản trước khi lên web.** Tốt nhất xin trước khi đưa ảnh vào Gemini hoặc Muse |
+| **Merlin** | Ảnh thật Merlin (thư mục Drive `01-tham-khao`) | Mèo tuxedo: lưng đen; ngực, mõm, bàn chân trắng; vệt trắng giữa trán; mắt xanh lục; mũi hồng. **Mèo thật, không phụ kiện** (chị chốt 13/11). Phụ kiện chỉ dành cho mèo len. Làm một bản thiết kế nhân vật Merlin trước, cùng phong cách, rồi dùng nó cho mọi cảnh |
+| **Anh** | Bản thiết kế nhân vật chị gửi (Drive, không lưu trên GitHub) | Bản hiện tại vẽ kiểu bán tả thực. Vẽ lại một bản theo phong cách mục 2 để hợp với chị. **Áo polo đỏ gạch dịu, cầm một chiếc cốc in hình cờ Anh** (chị chốt 13/11) |
+| **Chị** | Bản thiết kế nhân vật chị gửi (Drive, không lưu trên GitHub) | **Váy kem làm mặc định** (chị chốt 13/11). Áo dài đỏ để dành cho bản Tết. Tóc bob |
+| **Maine Coon** | Tranh mèo khách chị gửi 13/11 (Drive) | Lông dài, màu tam thể: mảng cam, đen và trắng; mõm và ngực trắng; mắt xanh dương; mũi hồng; đuôi xù. **Cần khách đồng ý bằng văn bản trước khi lên web.** Tốt nhất xin trước khi đưa ảnh vào Gemini hoặc Muse |
 | **Chú chó** | Không theo con chó thật nào | Chó nhỏ lông kem, nằm cạnh bàn cà phê |
 
 ## 4. Luật cho mọi tranh và video
@@ -77,14 +77,14 @@ Mẫu nét chì là tranh minh họa sách cổ điển (Winnie-the-Pooh). Chỉ
 
 > [style block] Character sheet of one tuxedo cat named Merlin, matching the attached photos exactly: black back and
 > head, white chest, white muzzle and white paws, a white blaze between the eyes, green eyes, pink nose. No collar, no
-> bow. [Or, for the brand outfit: wearing a turmeric-gold beret with a small stitched star, a sage-green bib and a
-> little olive backpack.] Front, three-quarter, side and back views, sitting, walking and curled up, plus five facial expressions. Plain
+> bow, no accessories. Front, three-quarter, side and back views, sitting, walking and curled up, plus five facial expressions. Plain
 > cream background, no text.
 
 **Anh và chị, vẽ lại theo phong cách** (đính kèm bản thiết kế đã cắt hết chữ):
 
-> [style block] Redraw the attached character exactly (same face, glasses, hairstyle, body shape and outfit) in this
-> style. Full-body turnaround (front, three-quarter, side, back) and sitting at a small café table. Plain cream
+> [style block] Redraw the attached character exactly (same face, glasses, hairstyle and body shape) in this style.
+> Man: a soft brick-red polo shirt and grey-beige trousers, holding a mug with a Union Jack design. Woman: a cream blouse
+> and a long cream skirt, bob haircut. Full-body turnaround (front, three-quarter, side, back) and sitting at a small café table. Plain cream
 > background, no text.
 
 **S01 mặt tiền** (đính kèm `S01_mattien_16x9_KHUNG.jpg`; làm thêm một bản 9:16 với khung 9:16):
@@ -94,8 +94,10 @@ Mẫu nét chì là tranh minh họa sách cổ điển (Winnie-the-Pooh). Chỉ
 > small arched balcony with climbing vines. A blank cream signboard above the open front door (leave the board
 > completely empty). Through the open door, a warm interior with an empty round three-tier display. A bay
 > display window with books and fairy lights only. A French café corner under a blush striped awning: a small round
-> table, two chairs, two teacups with rising steam; the attached man and woman sit there; a small cream dog lies by the
-> table. A Maine Coon cat sits on the doorstep licking a paw (match the attached cat photo). Potted sage, rosemary,
+> table, two chairs, two teacups with rising steam; the attached man (soft brick-red polo, holding a mug with a Union
+> Jack design) and woman (cream blouse and skirt) sit there; a small cream dog lies by the table. A long-haired calico
+> Maine Coon (orange, black and white patches, white muzzle and chest, blue eyes) sits on the doorstep licking a paw
+> (match the attached cat painting). Potted sage, rosemary,
 > thyme, feverfew daisies, a sasanqua camellia with single pink flowers, a japonica camellia with double blush flowers,
 > hydrangeas, a monstera and peonies on the balcony, the window boxes and by the steps. Cobblestones, a vintage street
 > lamp, a white picket fence, soft trees behind.

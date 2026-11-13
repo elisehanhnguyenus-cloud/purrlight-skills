@@ -16,18 +16,22 @@
  "characters": {
   "merlin": {
    "source": "AI (Elise đồng ý 13/11), theo ảnh thật Merlin",
-   "ref": "01-tham-khao/MERLIN-anh-that-*"
+   "ref": "01-tham-khao/MERLIN-anh-that-*",
+   "look": "mèo thật, không phụ kiện (13/11)"
   },
   "anh": {
-   "source": "AI, theo bản thiết kế nhân vật chị gửi 13/11 (không lưu trên GitHub)"
+   "source": "AI, theo bản thiết kế nhân vật chị gửi 13/11 (không lưu trên GitHub)",
+   "look": "polo đỏ gạch dịu, cầm cốc in cờ Anh (13/11)"
   },
   "chi": {
-   "source": "AI, theo bản thiết kế nhân vật chị gửi 13/11 (không lưu trên GitHub)"
+   "source": "AI, theo bản thiết kế nhân vật chị gửi 13/11 (không lưu trên GitHub)",
+   "look": "váy kem; áo dài đỏ cho bản Tết (13/11)"
   },
   "maine-coon": {
    "source": "AI, theo ảnh mèo thật khách gửi",
    "consent": "cần khách đồng ý bằng văn bản trước khi lên web",
-   "consentOk": false
+   "consentOk": false,
+   "look": "lông dài tam thể (cam, đen, trắng), mõm và ngực trắng, mắt xanh dương"
   },
   "cho": {
    "source": "AI, chú chó chung (không theo con chó thật nào)"

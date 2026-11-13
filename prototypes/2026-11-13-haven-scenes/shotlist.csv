@@ -1,10 +1,11 @@
 Mã,Cảnh,Khung,Cỡ tối thiểu (px),Khung bố cục,Loại,Lớp,Chuyển động,Chỗ để trống,Nhân vật,Trạng thái,Ghi chú
 S01,Mở trang: mặt tiền tiệm,16:9,2560×1440,S01_mattien_16x9_KHUNG.jpg,tranh tĩnh nhiều lớp,L1-troi · L2-cay-xa · L3-mat-nha · L4-hien · L5-truoc,"lá và dây leo lay nhẹ · hơi trà bốc lên từ 2 tách · đèn dây lấp lánh · Maine Coon liếm chân, đuôi phẩy · chú chó thở, vẫy đuôi","logo, ke-mon","anh, chị, chú chó, Maine Coon",chờ tranh,
 S01,Mở trang: mặt tiền tiệm,9:16,1440×2560,S01_mattien_9x16_KHUNG.jpg,tranh tĩnh nhiều lớp,L1-troi · L2-cay-xa · L3-mat-nha · L4-hien · L5-truoc,"lá và dây leo lay nhẹ · hơi trà bốc lên từ 2 tách · đèn dây lấp lánh · Maine Coon liếm chân, đuôi phẩy · chú chó thở, vẫy đuôi","logo, ke-mon",Maine Coon,chờ tranh,
-S02,"Bấm ""Step inside"": đi qua cửa",16:9,2560×1440,S02_quacua_16x9_KHUNG.jpg,video 3 giây,,,"logo, ke-mon","anh, chị, Maine Coon",chờ tranh,Dự phòng: phóng to và mờ dần (code)
+S02,"Bấm ""Step inside"": đi qua cửa",16:9,2560×1440,S02_quacua_16x9_KHUNG.jpg,video 3 giây,,,,,chờ tranh,Khung đầu: tranh S01 16:9 đã duyệt. Khung cuối: tranh S03 32:9 (phần giữa). Khung bố cục S02 là vị trí giữa đường. Dự phòng: phóng to và mờ dần (code).
+S02,"Bấm ""Step inside"": đi qua cửa",9:16,1080×1920,,video 3 giây,,,,,chờ tranh,Khung đầu: tranh S01 9:16 đã duyệt. Khung cuối: tranh S04 9:16. Dự phòng: phóng to và mờ dần (code).
 S03,"Nội thất: máy tính lia ngang, điện thoại thấy phần giữa",32:9,5120×1440,S03_noithat_32x9_KHUNG.jpg,tranh tĩnh nhiều lớp,L1-sau · L2-giua · L3-truoc,đèn dây lấp lánh · hơi cà phê ở quầy,"ke-mon, sach, tuong-trai, tuong-phai",Merlin,chờ tranh,
 S03,"Nội thất: máy tính lia ngang, điện thoại thấy phần giữa",9:16,1440×2560,S03_noithat_9x16_KHUNG.jpg,tranh tĩnh nhiều lớp,L1-sau · L3-truoc,đèn dây lấp lánh,"ke-mon, sach",Merlin,chờ tranh,
-S04,"Dừng ở kệ: Open the book / Stroll the shop, chạm từng món",16:9,2560×1440,S04_ketron_16x9_KHUNG.jpg,tranh tĩnh nhiều lớp,L1-vom · L3-truoc,"Merlin chớp mắt, phẩy đuôi","ke-mon, sach",Merlin,chờ tranh,
-S04,"Dừng ở kệ: Open the book / Stroll the shop, chạm từng món",9:16,1440×2560,S04_ketron_9x16_KHUNG.jpg,tranh tĩnh nhiều lớp,L1-vom · L3-truoc,"Merlin chớp mắt, phẩy đuôi","ke-mon, sach",Merlin,chờ tranh,
-S05,"Bấm ""Open the book"": cuốn sách mở ra",16:9,1920×1080,chưa có,video 4 giây,,,,,chờ tranh,"Chưa có khung bố cục: bản 3D chưa có cảnh này. Trang sách để trống, chữ do code đặt."
-S05,"Bấm ""Open the book"": cuốn sách mở ra",9:16,1080×1920,chưa có,video 4 giây,,,,,chờ tranh,"Chưa có khung bố cục: bản 3D chưa có cảnh này. Trang sách để trống, chữ do code đặt."
+S04,"Dừng ở kệ: Open the book / Stroll the shop, chạm từng món",16:9,2560×1440,S04_ke_16x9_KHUNG.jpg,tranh tĩnh nhiều lớp,L1-vom · L3-truoc,"Merlin chớp mắt, phẩy đuôi","ke-mon, sach",Merlin,chờ tranh,
+S04,"Dừng ở kệ: Open the book / Stroll the shop, chạm từng món",9:16,1440×2560,S04_ke_9x16_KHUNG.jpg,tranh tĩnh nhiều lớp,L1-vom · L3-truoc,"Merlin chớp mắt, phẩy đuôi","ke-mon, sach",Merlin,chờ tranh,
+S05,"Bấm ""Open the book"": cuốn sách mở ra",16:9,1920×1080,,video 4 giây,,,,,chờ tranh,"Chưa có khung bố cục (bản 3D chưa có cảnh này). Trang sách để trống, chữ do code đặt."
+S05,"Bấm ""Open the book"": cuốn sách mở ra",9:16,1080×1920,,video 4 giây,,,,,chờ tranh,"Chưa có khung bố cục (bản 3D chưa có cảnh này). Trang sách để trống, chữ do code đặt."

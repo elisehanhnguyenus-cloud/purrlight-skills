@@ -1,0 +1,766 @@
+{
+ "version": 1,
+ "updated": "2026-11-13",
+ "about": "Tệp cảnh Haven. Code đọc tệp này: file nào, lớp nào, chỗ trống nào. Thay tranh hay video chỉ cần thả file mới cùng tên vào art/04-web/ và ghi tên vào \"file\". Toạ độ rect = [x, y, rộng, cao], tính theo phần của khung (0–1).",
+ "paths": {
+  "art": "art/04-web/",
+  "guides": "guides/",
+  "site": "../../website/"
+ },
+ "real": {
+  "logo": "assets/brand/logo-flat.png",
+  "shelfPhoto": null,
+  "listingPhotos": "assets/img/products/{id}-600.webp",
+  "listings": "js/products.js"
+ },
+ "characters": {
+  "merlin": {
+   "source": "AI (Elise đồng ý 13/11), theo ảnh thật Merlin",
+   "ref": "01-tham-khao/MERLIN-anh-that-*"
+  },
+  "anh": {
+   "source": "AI, theo bản thiết kế nhân vật chị gửi 13/11 (không lưu trên GitHub)"
+  },
+  "chi": {
+   "source": "AI, theo bản thiết kế nhân vật chị gửi 13/11 (không lưu trên GitHub)"
+  },
+  "maine-coon": {
+   "source": "AI, theo ảnh mèo thật khách gửi",
+   "consent": "cần khách đồng ý bằng văn bản trước khi lên web",
+   "consentOk": false
+  },
+  "cho": {
+   "source": "AI, chú chó chung (không theo con chó thật nào)"
+  }
+ },
+ "scenes": [
+  {
+   "id": "S01",
+   "name": "mat-tien",
+   "role": "Mở trang: mặt tiền tiệm",
+   "frames": {
+    "16x9": {
+     "guide": "guides/S01_mattien_16x9.jpg",
+     "size": [
+      2560,
+      1440
+     ],
+     "camera": {
+      "pos": [
+       0,
+       2.2,
+       11
+      ],
+      "fov": 36.99
+     },
+     "layers": [
+      {
+       "id": "L1-troi",
+       "depth": 0.05,
+       "file": null,
+       "note": "trời chiều"
+      },
+      {
+       "id": "L2-cay-xa",
+       "depth": 0.15,
+       "file": null,
+       "note": "cây, đồi phía sau"
+      },
+      {
+       "id": "L3-mat-nha",
+       "depth": 0.35,
+       "file": null,
+       "note": "mặt tiền, bảng hiệu trống, cửa mở thấy bên trong"
+      },
+      {
+       "id": "L4-hien",
+       "depth": 0.5,
+       "file": null,
+       "note": "hiên, góc cà phê, anh và chị, chú chó, Maine Coon"
+      },
+      {
+       "id": "L5-truoc",
+       "depth": 0.8,
+       "file": null,
+       "note": "cây chậu, dây leo, hàng rào phía trước"
+      }
+     ],
+     "loops": [
+      {
+       "id": "V-la",
+       "file": null,
+       "seconds": 4,
+       "note": "lá và dây leo lay nhẹ"
+      },
+      {
+       "id": "V-hoi-tra",
+       "file": null,
+       "seconds": 4,
+       "note": "hơi trà bốc lên từ 2 tách"
+      },
+      {
+       "id": "V-den",
+       "file": null,
+       "seconds": 4,
+       "note": "đèn dây lấp lánh"
+      },
+      {
+       "id": "V-maine-coon",
+       "file": null,
+       "seconds": 6,
+       "note": "Maine Coon liếm chân, đuôi phẩy"
+      },
+      {
+       "id": "V-cho",
+       "file": null,
+       "seconds": 6,
+       "note": "chú chó thở, vẫy đuôi"
+      }
+     ],
+     "slots": [
+      {
+       "id": "logo",
+       "kind": "logo",
+       "rect": [
+        0.4434,
+        0.3979,
+        0.2613,
+        0.1528
+       ],
+       "note": "Bảng hiệu để trống. Code đặt logo thật (../site/assets/brand/logo-flat.png)."
+      },
+      {
+       "id": "ke-mon",
+       "kind": "real-photo",
+       "rect": [
+        0.5285,
+        0.6917,
+        0.1168,
+        0.0965
+       ],
+       "source": "shelf-photo",
+       "note": "Ảnh chụp kệ thật. AI không vẽ món hàng ở đây."
+      },
+      {
+       "id": "anh-chi",
+       "kind": "character",
+       "rect": [
+        0.7195,
+        0.7778,
+        0.1777,
+        0.2222
+       ],
+       "characters": [
+        "anh",
+        "chi"
+       ],
+       "note": "Anh và chị ngồi góc cà phê."
+      },
+      {
+       "id": "cho",
+       "kind": "character",
+       "rect": [
+        0.7758,
+        0.9556,
+        0.1145,
+        0.0444
+       ],
+       "characters": [
+        "cho"
+       ],
+       "note": "Chú chó nằm cạnh bàn cà phê."
+      },
+      {
+       "id": "maine-coon",
+       "kind": "character",
+       "rect": [
+        0.4562,
+        0.8361,
+        0.0676,
+        0.1403
+       ],
+       "characters": [
+        "maine-coon"
+       ],
+       "note": "Maine Coon ở bậc cửa (theo ảnh khách gửi; cần khách đồng ý trước khi lên web)."
+      }
+     ]
+    },
+    "9x16": {
+     "guide": "guides/S01_mattien_9x16.jpg",
+     "size": [
+      1440,
+      2560
+     ],
+     "camera": {
+      "pos": [
+       0,
+       1.72,
+       7.4
+      ],
+      "fov": 53.85
+     },
+     "layers": [
+      {
+       "id": "L1-troi",
+       "depth": 0.05,
+       "file": null,
+       "note": "trời chiều"
+      },
+      {
+       "id": "L2-cay-xa",
+       "depth": 0.15,
+       "file": null,
+       "note": "cây, đồi phía sau"
+      },
+      {
+       "id": "L3-mat-nha",
+       "depth": 0.35,
+       "file": null,
+       "note": "mặt tiền, bảng hiệu trống, cửa mở thấy bên trong"
+      },
+      {
+       "id": "L4-hien",
+       "depth": 0.5,
+       "file": null,
+       "note": "hiên, góc cà phê, anh và chị, chú chó, Maine Coon"
+      },
+      {
+       "id": "L5-truoc",
+       "depth": 0.8,
+       "file": null,
+       "note": "cây chậu, dây leo, hàng rào phía trước"
+      }
+     ],
+     "loops": [
+      {
+       "id": "V-la",
+       "file": null,
+       "seconds": 4,
+       "note": "lá và dây leo lay nhẹ"
+      },
+      {
+       "id": "V-hoi-tra",
+       "file": null,
+       "seconds": 4,
+       "note": "hơi trà bốc lên từ 2 tách"
+      },
+      {
+       "id": "V-den",
+       "file": null,
+       "seconds": 4,
+       "note": "đèn dây lấp lánh"
+      },
+      {
+       "id": "V-maine-coon",
+       "file": null,
+       "seconds": 6,
+       "note": "Maine Coon liếm chân, đuôi phẩy"
+      },
+      {
+       "id": "V-cho",
+       "file": null,
+       "seconds": 6,
+       "note": "chú chó thở, vẫy đuôi"
+      }
+     ],
+     "slots": [
+      {
+       "id": "logo",
+       "kind": "logo",
+       "rect": [
+        0.0972,
+        0.3342,
+        0.8056,
+        0.1482
+       ],
+       "note": "Bảng hiệu để trống. Code đặt logo thật (../site/assets/brand/logo-flat.png)."
+      },
+      {
+       "id": "ke-mon",
+       "kind": "real-photo",
+       "rect": [
+        0.3812,
+        0.6403,
+        0.3056,
+        0.0766
+       ],
+       "source": "shelf-photo",
+       "note": "Ảnh chụp kệ thật. AI không vẽ món hàng ở đây."
+      },
+      {
+       "id": "maine-coon",
+       "kind": "character",
+       "rect": [
+        0.1319,
+        0.7643,
+        0.2049,
+        0.1368
+       ],
+       "characters": [
+        "maine-coon"
+       ],
+       "note": "Maine Coon ở bậc cửa (theo ảnh khách gửi; cần khách đồng ý trước khi lên web)."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "S02",
+   "name": "qua-cua",
+   "role": "Bấm \"Step inside\": đi qua cửa",
+   "video": {
+    "16x9": null,
+    "9x16": null,
+    "seconds": 3,
+    "from": "S01",
+    "to": "S03 (máy tính) / S04 (điện thoại)"
+   },
+   "fallback": "phóng to và mờ dần (code)",
+   "frames": {
+    "16x9": {
+     "guide": "guides/S02_quacua_16x9.jpg",
+     "size": [
+      2560,
+      1440
+     ],
+     "camera": {
+      "pos": [
+       0,
+       1.907,
+       7.074
+      ],
+      "fov": 40.72
+     },
+     "layers": [],
+     "loops": [],
+     "slots": [
+      {
+       "id": "logo",
+       "kind": "logo",
+       "rect": [
+        0.3414,
+        0.1979,
+        0.3656,
+        0.2125
+       ],
+       "note": "Bảng hiệu để trống. Code đặt logo thật (../site/assets/brand/logo-flat.png)."
+      },
+      {
+       "id": "ke-mon",
+       "kind": "real-photo",
+       "rect": [
+        0.4699,
+        0.6201,
+        0.1383,
+        0.1139
+       ],
+       "source": "shelf-photo",
+       "note": "Ảnh chụp kệ thật. AI không vẽ món hàng ở đây."
+      },
+      {
+       "id": "anh-chi",
+       "kind": "character",
+       "rect": [
+        0.7539,
+        0.7361,
+        0.2461,
+        0.2639
+       ],
+       "characters": [
+        "anh",
+        "chi"
+       ],
+       "note": "Anh và chị ngồi góc cà phê."
+      },
+      {
+       "id": "maine-coon",
+       "kind": "character",
+       "rect": [
+        0.3551,
+        0.8187,
+        0.093,
+        0.1812
+       ],
+       "characters": [
+        "maine-coon"
+       ],
+       "note": "Maine Coon ở bậc cửa (theo ảnh khách gửi; cần khách đồng ý trước khi lên web)."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "S03",
+   "name": "noi-that",
+   "role": "Nội thất: máy tính lia ngang, điện thoại thấy phần giữa",
+   "frames": {
+    "32x9": {
+     "guide": "guides/S03_noithat_32x9.jpg",
+     "size": [
+      5120,
+      1440
+     ],
+     "camera": {
+      "pos": [
+       0,
+       1.6,
+       -0.35
+      ],
+      "fov": 44
+     },
+     "layers": [
+      {
+       "id": "L1-sau",
+       "depth": 0.1,
+       "file": null,
+       "note": "tường, vòm, kệ sách trong hốc"
+      },
+      {
+       "id": "L2-giua",
+       "depth": 0.35,
+       "file": null,
+       "note": "tủ sách, ghế bành, quầy cà phê"
+      },
+      {
+       "id": "L3-truoc",
+       "depth": 0.7,
+       "file": null,
+       "note": "đèn chùm, đèn dây, cây phía trước"
+      }
+     ],
+     "loops": [
+      {
+       "id": "V-den-day",
+       "file": null,
+       "seconds": 4,
+       "note": "đèn dây lấp lánh"
+      },
+      {
+       "id": "V-hoi-cafe",
+       "file": null,
+       "seconds": 4,
+       "note": "hơi cà phê ở quầy"
+      }
+     ],
+     "slots": [
+      {
+       "id": "ke-mon",
+       "kind": "real-photo",
+       "rect": [
+        0.433,
+        0.4847,
+        0.1627,
+        0.2861
+       ],
+       "source": "shelf-photo",
+       "note": "Ảnh chụp kệ thật. AI không vẽ món hàng ở đây."
+      },
+      {
+       "id": "merlin",
+       "kind": "character",
+       "rect": [
+        0.5053,
+        0.4785,
+        0.0211,
+        0.0868
+       ],
+       "characters": [
+        "merlin"
+       ],
+       "note": "Merlin ngồi tầng trên cùng, cạnh cuốn sách (AI vẽ được)."
+      },
+      {
+       "id": "sach",
+       "kind": "hotspot",
+       "rect": [
+        0.4855,
+        0.4549,
+        0.0287,
+        0.1097
+       ],
+       "action": "open-book",
+       "note": "Cuốn sách bìa vải: bấm để \"Open the book\". Chữ trên bìa do code đặt."
+      },
+      {
+       "id": "tuong-trai",
+       "kind": "listing-frames",
+       "count": 4,
+       "rect": [
+        0.255,
+        0.17,
+        0.12,
+        0.38
+       ],
+       "note": "4 khung tranh trống; code đặt ảnh listing đang bán."
+      },
+      {
+       "id": "tuong-phai",
+       "kind": "listing-frames",
+       "count": 4,
+       "rect": [
+        0.705,
+        0.17,
+        0.1,
+        0.38
+       ],
+       "note": "4 khung tranh trống; code đặt ảnh listing đang bán."
+      }
+     ]
+    },
+    "9x16": {
+     "guide": "guides/S03_noithat_9x16.jpg",
+     "size": [
+      1440,
+      2560
+     ],
+     "camera": {
+      "pos": [
+       0.05,
+       1.55,
+       -0.6
+      ],
+      "fov": 62
+     },
+     "layers": [
+      {
+       "id": "L1-sau",
+       "depth": 0.1,
+       "file": null,
+       "note": "tường, vòm"
+      },
+      {
+       "id": "L3-truoc",
+       "depth": 0.7,
+       "file": null,
+       "note": "đèn chùm, đèn dây"
+      }
+     ],
+     "loops": [
+      {
+       "id": "V-den-day",
+       "file": null,
+       "seconds": 4,
+       "note": "đèn dây lấp lánh"
+      }
+     ],
+     "slots": [
+      {
+       "id": "ke-mon",
+       "kind": "real-photo",
+       "rect": [
+        0.1792,
+        0.459,
+        0.7306,
+        0.2017
+       ],
+       "source": "shelf-photo",
+       "note": "Ảnh chụp kệ thật. AI không vẽ món hàng ở đây."
+      },
+      {
+       "id": "merlin",
+       "kind": "character",
+       "rect": [
+        0.5104,
+        0.4566,
+        0.0847,
+        0.0555
+       ],
+       "characters": [
+        "merlin"
+       ],
+       "note": "Merlin ngồi tầng trên cùng, cạnh cuốn sách (AI vẽ được)."
+      },
+      {
+       "id": "sach",
+       "kind": "hotspot",
+       "rect": [
+        0.4181,
+        0.4371,
+        0.1264,
+        0.077
+       ],
+       "action": "open-book",
+       "note": "Cuốn sách bìa vải: bấm để \"Open the book\". Chữ trên bìa do code đặt."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "S04",
+   "name": "ke-tron",
+   "role": "Dừng ở kệ: Open the book / Stroll the shop, chạm từng món",
+   "frames": {
+    "16x9": {
+     "guide": "guides/S04_ke_16x9.jpg",
+     "size": [
+      2560,
+      1440
+     ],
+     "camera": {
+      "pos": [
+       0.2,
+       1.62,
+       -2.42
+      ],
+      "fov": 45
+     },
+     "layers": [
+      {
+       "id": "L1-vom",
+       "depth": 0.1,
+       "file": null,
+       "note": "vòm và hốc sách"
+      },
+      {
+       "id": "L3-truoc",
+       "depth": 0.6,
+       "file": null,
+       "note": "đèn, cây phía trước"
+      }
+     ],
+     "loops": [
+      {
+       "id": "V-merlin",
+       "file": null,
+       "seconds": 6,
+       "note": "Merlin chớp mắt, phẩy đuôi"
+      }
+     ],
+     "slots": [
+      {
+       "id": "ke-mon",
+       "kind": "real-photo",
+       "rect": [
+        0.0754,
+        0.1826,
+        0.6062,
+        0.6292
+       ],
+       "source": "shelf-photo",
+       "note": "Ảnh chụp kệ thật. AI không vẽ món hàng ở đây."
+      },
+      {
+       "id": "merlin",
+       "kind": "character",
+       "rect": [
+        0.3695,
+        0.1847,
+        0.0602,
+        0.1333
+       ],
+       "characters": [
+        "merlin"
+       ],
+       "note": "Merlin ngồi tầng trên cùng, cạnh cuốn sách (AI vẽ được)."
+      },
+      {
+       "id": "sach",
+       "kind": "hotspot",
+       "rect": [
+        0.2836,
+        0.1187,
+        0.1098,
+        0.2069
+       ],
+       "action": "open-book",
+       "note": "Cuốn sách bìa vải: bấm để \"Open the book\". Chữ trên bìa do code đặt."
+      }
+     ]
+    },
+    "9x16": {
+     "guide": "guides/S04_ke_9x16.jpg",
+     "size": [
+      1440,
+      2560
+     ],
+     "camera": {
+      "pos": [
+       0.2,
+       1.62,
+       -2.42
+      ],
+      "fov": 77.51
+     },
+     "layers": [
+      {
+       "id": "L1-vom",
+       "depth": 0.1,
+       "file": null,
+       "note": "vòm và hốc sách"
+      },
+      {
+       "id": "L3-truoc",
+       "depth": 0.6,
+       "file": null,
+       "note": "đèn, cây phía trước"
+      }
+     ],
+     "loops": [
+      {
+       "id": "V-merlin",
+       "file": null,
+       "seconds": 6,
+       "note": "Merlin chớp mắt, phẩy đuôi"
+      }
+     ],
+     "slots": [
+      {
+       "id": "ke-mon",
+       "kind": "real-photo",
+       "rect": [
+        0.0049,
+        0.371,
+        0.9903,
+        0.3256
+       ],
+       "source": "shelf-photo",
+       "note": "Ảnh chụp kệ thật. AI không vẽ món hàng ở đây."
+      },
+      {
+       "id": "merlin",
+       "kind": "character",
+       "rect": [
+        0.484,
+        0.3714,
+        0.1007,
+        0.0708
+       ],
+       "characters": [
+        "merlin"
+       ],
+       "note": "Merlin ngồi tầng trên cùng, cạnh cuốn sách (AI vẽ được)."
+      },
+      {
+       "id": "sach",
+       "kind": "hotspot",
+       "rect": [
+        0.3451,
+        0.3382,
+        0.1792,
+        0.1071
+       ],
+       "action": "open-book",
+       "note": "Cuốn sách bìa vải: bấm để \"Open the book\". Chữ trên bìa do code đặt."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "S05",
+   "name": "mo-sach",
+   "role": "Bấm \"Open the book\": cuốn sách mở ra",
+   "video": {
+    "16x9": null,
+    "9x16": null,
+    "seconds": 4
+   },
+   "frames": {},
+   "note": "Chưa có khung bố cục: bản 3D chưa có cảnh này. Trang sách để trống, chữ do code đặt."
+  }
+ ]
+}

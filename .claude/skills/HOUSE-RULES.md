@@ -20,7 +20,10 @@ choose.
 1. **Merlin and the logo.**
    - Merlin is the curious tuxedo cat: beret in turmeric gold `#CA8D41` with a stitched star, sage bib, olive
      backpack, "the cat who takes notes". He is never a wizard.
-   - Merlin's photos, video and the logo image are Elise's. Never redraw, recolour, generate or replace them.
+   - Merlin's real photos and video, and the logo image, are Elise's. Never alter, recolour or replace them.
+   - **Elise, 13/11/2026:** "chị đồng ý có Merlin là ảnh render AI - logo và chữ không đổi, món hàng ảnh thật." An
+     AI-rendered Merlin is allowed in the Haven scene art, drawn from a character sheet based on the real photos. The
+     logo and all text stay real and are placed by code.
 2. **Base colours.** The cream ground (`#FBF6EE`) and the warm peach "purr light" (`#E8A87C`) stay the base of the
    site, with beret gold and berry (`#B42249`) as the signature accents. Everything else around them is open: new
    accents, tints, contrast, dark or coloured sections, gradients.
@@ -58,8 +61,12 @@ choose.
      taste-skill image downloader (`assets.mjs`) is not installed.
    - **Image generation costs Elise's credits.** Never call an image-generation tool (Canva, Figma, Higgsfield,
      Gamma or any other) without her OK for that exact call: which tool, how many images, what it costs.
-   - AI images appear only in previews, labelled "AI mock-up, not a product". They never show Merlin or the logo,
-     and they never go into `website/`.
+   - **Elise, 12–13/11/2026: AI art may go into `website/` for the Haven scenes** (made by Elise with Gemini or
+     Muse): scene paintings, characters (Merlin, Elise and her husband, the customer's Maine Coon, the dog) and video.
+     - Never AI: products (always Elise's own photos), the logo, any text.
+     - Never call this art "hand-painted": the Custom Orders page sells portraits painted from customers' photos.
+     - A customer's pet photo needs that customer's written OK before it is used on the site.
+     - Everywhere else, AI images stay in previews, labelled "AI mock-up, not a product".
 6. **Accessibility floor.** This is the legal minimum, not taste:
    - text contrast at WCAG AA, with visible keyboard focus;
    - `prefers-reduced-motion` turns motion off or down;

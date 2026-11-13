@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Soát tranh Haven</title>
+<link rel="icon" href="data:,">
+<style>
+  :root { --bg:#f6f1ea; --ink:#2f2622; --muted:#7a6a62; --card:#fffaf4; --line:#e3d6c9; --accent:#b8576f; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#1f1a18; --ink:#f3e9e1; --muted:#b9a79c; --card:#2a2321; --line:#463a35; --accent:#e58ba2; } }
+  :root[data-theme="dark"] { --bg:#1f1a18; --ink:#f3e9e1; --muted:#b9a79c; --card:#2a2321; --line:#463a35; --accent:#e58ba2; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  header { padding:16px; border-bottom:1px solid var(--line); }
+  h1 { margin:0 0 4px; font-size:20px; }
+  header p { margin:0; color:var(--muted); font-size:14px; }
+  main { padding:16px; max-width:1500px; margin:0 auto; }
+  .row { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:12px; }
+  button, label.btn { font:inherit; border:1px solid var(--line); background:var(--card); color:var(--ink); border-radius:999px; padding:6px 14px; cursor:pointer; min-height:36px; }
+  button[aria-pressed="true"] { background:var(--accent); border-color:var(--accent); color:#fff; }
+  input[type=file] { display:none; }
+  .stage-wrap { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px; }
+  .stage { position:relative; margin:0 auto; max-width:100%; background:#ddd center/contain no-repeat; }
+  .stage img { position:absolute; inset:0; width:100%; height:100%; object-fit:fill; }
+  .stage .guide { pointer-events:none; }
+  .slot { position:absolute; border:3px solid var(--c, #d62828); border-radius:4px; pointer-events:none; }
+  .slot span { position:absolute; left:-3px; top:-3px; transform:translateY(-100%); background:var(--c, #d62828); color:#fff; font-size:12px; padding:1px 6px; border-radius:4px 4px 0 0; white-space:nowrap; }
+  .hide-slots .slot { display:none; }
+  .drop { outline:3px dashed var(--accent); outline-offset:4px; }
+  .info { margin-top:10px; font-size:14px; color:var(--muted); }
+  .info b { color:var(--ink); }
+  .warn { color:#b45309; }
+  .ok { color:#047857; }
+  ul.slots { margin:10px 0 0; padding-left:18px; font-size:14px; }
+  .range { display:flex; align-items:center; gap:8px; font-size:14px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Soát tranh Haven</h1>
+  <p>Chọn cảnh, rồi kéo tranh từ Gemini hoặc Muse vào khung (hoặc bấm "Chọn tranh"). Tranh chỉ mở trên máy chị, không tải lên đâu. Khung màu là chỗ code đặt logo, ảnh thật và nhân vật.</p>
+</header>
+<main>
+  <div class="row" id="scenes" aria-label="Cảnh"></div>
+  <div class="row" id="frames" aria-label="Khung hình"></div>
+  <div class="row">
+    <label class="btn" for="file">Chọn tranh…</label><input type="file" id="file" accept="image/*">
+    <button type="button" id="clear">Bỏ tranh</button>
+    <button type="button" id="toggle" aria-pressed="true">Hiện chỗ trống</button>
+    <span class="range"><label for="op">Khung bố cục chồng lên</label><input type="range" id="op" min="0" max="100" value="0"></span>
+  </div>
+  <div class="stage-wrap"><div class="stage" id="stage"></div>
+    <div class="info" id="info"></div>
+    <ul class="slots" id="slotlist"></ul>
+  </div>
+</main>
+<script>
+(function () {
+  var COLORS = { logo: '#d62828', 'real-photo': '#047857', character: '#1d4ed8', 'listing-frames': '#ca8a04', hotspot: '#0e7490' };
+  var data, scene, frameKey, art = {}, stage = document.getElementById('stage');
+  function el(t, a, txt) { var e = document.createElement(t); for (var k in a) e.setAttribute(k, a[k]); if (txt) e.textContent = txt; return e; }
+  function framesOf(s) { return Object.keys(s.frames || {}); }
+  function pick(sid, fk) {
+    scene = data.scenes.filter(function (s) { return s.id === sid; })[0];
+    var fks = framesOf(scene); frameKey = fk && fks.indexOf(fk) >= 0 ? fk : fks[0];
+    render();
+  }
+  function buttons() {
+    var box = document.getElementById('scenes'); box.innerHTML = '';
+    data.scenes.forEach(function (s) {
+      var b = el('button', { type: 'button', 'aria-pressed': String(scene && s.id === scene.id) }, s.id + ' · ' + s.role.split(':')[0]);
+      b.onclick = function () { pick(s.id); }; box.appendChild(b);
+    });
+    var fb = document.getElementById('frames'); fb.innerHTML = '';
+    framesOf(scene).forEach(function (k) {
+      var b = el('button', { type: 'button', 'aria-pressed': String(k === frameKey) }, k.replace('x', ':'));
+      b.onclick = function () { pick(scene.id, k); }; fb.appendChild(b);
+    });
+  }
+  function render() {
+    buttons();
+    var info = document.getElementById('info'), list = document.getElementById('slotlist');
+    stage.innerHTML = ''; list.innerHTML = '';
+    if (!frameKey) { stage.style.aspectRatio = '16/9'; info.textContent = scene.note || 'Cảnh này chưa có khung bố cục.'; return; }
+    var f = scene.frames[frameKey], W = f.size[0], H = f.size[1], key = scene.id + '/' + frameKey;
+    stage.style.aspectRatio = W + '/' + H;
+    stage.style.width = Math.min(100, 100 * (window.innerHeight * 0.7) / (stage.parentNode.clientWidth * H / W)) + '%';
+    var a = art[key];
+    var base = el('img', { src: a ? a.url : f.guide, alt: a ? 'Tranh đang soát' : 'Khung bố cục từ bản 3D' }); stage.appendChild(base);
+    if (a) { var g = el('img', { src: f.guide, alt: '', class: 'guide' }); g.style.opacity = document.getElementById('op').value / 100; stage.appendChild(g); }
+    f.slots.forEach(function (s) {
+      var r = s.rect, d = el('div', { class: 'slot' }); d.style.setProperty('--c', COLORS[s.kind] || '#555');
+      d.style.left = r[0] * 100 + '%'; d.style.top = r[1] * 100 + '%'; d.style.width = r[2] * 100 + '%'; d.style.height = r[3] * 100 + '%';
+      d.appendChild(el('span', {}, s.id)); stage.appendChild(d);
+      list.appendChild(el('li', {}, s.id + ': ' + s.note));
+    });
+    var html = '<b>' + scene.id + ' ' + scene.role + '</b> · khung ' + frameKey.replace('x', ':') + ' · cần tối thiểu ' + W + '×' + H + ' px.';
+    if (a) {
+      var want = W / H, got = a.w / a.h, diff = Math.abs(got - want) / want;
+      html += ' Tranh: ' + a.w + '×' + a.h + ' px. ' + (diff > 0.02 ? '<span class="warn">Tỉ lệ khác khung ' + Math.round(diff * 100) + '%: cắt hoặc mở rộng lại cho đúng ' + frameKey.replace('x', ':') + '.</span>' : '<span class="ok">Đúng tỉ lệ.</span>') +
+        (a.w < W * 0.98 ? ' <span class="warn">Nhỏ hơn cỡ tối thiểu.</span>' : ' <span class="ok">Đủ cỡ.</span>');
+    } else html += ' Đang hiện khung bố cục. Kéo tranh vào để soát.';
+    info.innerHTML = html;
+  }
+  function load(file) {
+    if (!file || !/^image\//.test(file.type)) return;
+    var url = URL.createObjectURL(file), img = new Image();
+    img.onload = function () { art[scene.id + '/' + frameKey] = { url: url, w: img.naturalWidth, h: img.naturalHeight }; render(); };
+    img.src = url;
+  }
+  document.getElementById('file').onchange = function (e) { load(e.target.files[0]); e.target.value = ''; };
+  document.getElementById('clear').onclick = function () { delete art[scene.id + '/' + frameKey]; render(); };
+  document.getElementById('toggle').onclick = function () { var on = this.getAttribute('aria-pressed') !== 'true'; this.setAttribute('aria-pressed', String(on)); stage.classList.toggle('hide-slots', !on); };
+  document.getElementById('op').oninput = function () { var g = stage.querySelector('.guide'); if (g) g.style.opacity = this.value / 100; };
+  ['dragenter', 'dragover'].forEach(function (t) { stage.addEventListener(t, function (e) { e.preventDefault(); stage.classList.add('drop'); }); });
+  ['dragleave', 'drop'].forEach(function (t) { stage.addEventListener(t, function (e) { e.preventDefault(); stage.classList.remove('drop'); }); });
+  stage.addEventListener('drop', function (e) { load(e.dataTransfer.files[0]); });
+  window.addEventListener('resize', function () { if (scene) render(); });
+  fetch('scenes.json').then(function (r) { return r.json(); }).then(function (j) { data = j; pick(j.scenes[0].id); })
+    .catch(function () { document.getElementById('info').textContent = 'Không đọc được scenes.json. Mở trang này qua máy chủ (không mở thẳng file).'; });
+})();
+</script>
+</body>
+</html>

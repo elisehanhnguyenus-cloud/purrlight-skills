@@ -1600,6 +1600,23 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
     logo, chữ và món hàng.
   - Ảnh mèo của khách cần khách đồng ý bằng văn bản.
 
+### Elise 13/11 — Haven tranh AI: chốt luật, khung bố cục, tệp cảnh (chưa lên web)
+- **Chị quyết:**
+  - đồng ý đổi luật nhà: AI làm tranh cảnh, nhân vật và video cho Haven;
+  - **Merlin được là ảnh render AI**; logo và chữ giữ thật; món hàng là ảnh thật;
+  - Maine Coon theo ảnh khách gửi (cần khách đồng ý bằng văn bản trước khi lên web);
+  - giữ chú chó ở góc cà phê.
+- **Chị gửi:** 4 bản thiết kế nhân vật (anh và chị) và một mẫu tranh nét chì làm phong cách. Các file này chỉ lưu
+  trong Drive riêng, không lên GitHub.
+- **Đã làm:**
+  - `.claude/skills/HOUSE-RULES.md` (mục 1 và 5) theo quyết định trên;
+  - khung bố cục 7 khung (S01–S04, 16:9, 9:16 và 32:9), chụp từ bản 3D v4 đúng góc máy của web, có bản ghi chú
+    chỗ trống;
+  - tệp cảnh `scenes.json` (26 chỗ trống), bảng cảnh, art bible có prompt;
+  - trang "Soát tranh Haven" (`viewer.html`): kéo tranh AI vào là thấy chỗ trống có khớp không;
+  - code: `prototypes/2026-11-13-haven-scenes/`;
+  - thư mục Drive "Haven-art".
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
@@ -1699,8 +1716,11 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
     - Logo: bảng hiệu đổi sang logo chữ hồng bóng như cuối video không? Nếu có, gửi PNG nền trong suốt hoặc file vector.
       Icon mèo chị gửi bị cắt sát mép phải; có bản đầy đủ thì gửi em.
     - Chi tiết: `docs/HAVEN-3D-NEXT-STEPS-2026-11-07.md`, `prototypes/2026-11-07-haven-3d-watercolor/README.md`.
-27. **Haven tranh AI (12/11 chiều):** trả lời 5 câu ở mục 10 của `docs/HAVEN-AI-ART-PIPELINE-2026-11-12.md`: đổi
-    luật nhà, hình vẽ chị và anh (ai vẽ), Maine Coon (khách đồng ý hay dùng món len), chú chó, tạo thư mục Drive.
+27. **Haven tranh AI (13/11):**
+    - xin khách gửi ảnh Maine Coon đồng ý bằng văn bản;
+    - chọn trang phục Merlin: mèo thật không phụ kiện, hay mũ beret, yếm, ba lô của thương hiệu;
+    - chọn trang phục trong cảnh: chị váy kem hay áo dài đỏ; anh polo đỏ hay đỏ gạch dịu;
+    - làm tranh S01 theo `prototypes/2026-11-13-haven-scenes/ART-BIBLE.md`.
 26. **Haven tranh thật (12/11):**
     - Trả lời 6 câu ở mục 6 của `docs/HAVEN-TRANH-THAT-PLAN-2026-11-12.md`: ai vẽ và khi nào, cách chụp kệ, chú mèo
       và chú chó thật hay món len, có vẽ người không, số phận bản 3D v4, nói "chạy" cho phần đang giữ.

@@ -9,6 +9,18 @@ rồi có thể thay thế được."
 Tài liệu này thay phần "họa sĩ" trong `docs/HAVEN-TRANH-THAT-PLAN-2026-11-12.md`. Hai phần giữ nguyên ở bản kế hoạch
 đó: kệ chụp thật có Merlin, và khung trên tường chứa ảnh listing.
 
+## Chị quyết ngày 13/11
+
+| Câu | Chị quyết |
+|---|---|
+| Đổi luật nhà | Đồng ý. Thêm: **Merlin được là ảnh render AI**. Logo và chữ giữ thật, món hàng là ảnh thật. Đã ghi vào `.claude/skills/HOUSE-RULES.md` |
+| Maine Coon | Theo ảnh mèo thật khách gửi. Vẫn cần khách đồng ý bằng văn bản trước khi lên web |
+| Chú chó ở góc cà phê | Giữ |
+| Anh và chị | Chị gửi 4 bản thiết kế nhân vật (bản của chị: áo dài đỏ và váy kem; bản của anh: 2 bản polo đỏ), cùng một mẫu tranh nét chì làm phong cách |
+| Thư mục Drive, bảng cảnh, khung bố cục, tệp cảnh | Làm luôn. Xem `prototypes/2026-11-13-haven-scenes/` |
+
+Mục 1 và mục 2 dưới đây là đề xuất ngày 12/11. Chỗ nào khác với quyết định trên thì theo bảng này.
+
 ## Trả lời ngắn
 
 **Được, và nối linh hoạt được.** Chị và em chỉ cần thống nhất 3 thứ; khi đó chị làm tranh bằng công cụ nào cũng được,

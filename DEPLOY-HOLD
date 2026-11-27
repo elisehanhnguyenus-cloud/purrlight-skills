@@ -11,3 +11,5 @@ xoá file này và deploy (trước khóa web 15/11).
 27/11/2026: sửa bảo mật trang xác nhận booth (confirm.html, js/event-desk.js) — Elise bảo sửa, CHƯA đưa lên. Dòng chữ
 mới cho khách dưới phần tiền (DESK_CONFIG.recordLine): Elise ĐÃ DUYỆT chữ 27/11 và dặn "chưa đưa lên".
 Web đang khóa mùa lễ đến 02/01; muốn lên sớm vì là sửa bảo mật thì Elise phải nói "chạy".
+27/11/2026 (tin sau): Elise quyết MỞ KHÓA WEB THẬT SỚM 1 TUẦN: khóa mùa lễ còn tới 25/12, được đưa lên từ 26/12 khi
+Elise nói "chạy". Kế hoạch launch (Stripe, Cloudflare): docs/LAUNCH-PLAN-2026-11-27.md.

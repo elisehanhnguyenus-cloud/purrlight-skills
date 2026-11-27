@@ -1686,6 +1686,15 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   giỏ hàng, thanh toán, tồn kho và dashboard; Cloudflare đặt web. Thử trên một địa chỉ thử riêng khoảng 1 tuần trước
   ngày launch, web thật vẫn khóa đến lúc đó. Chờ chị quyết ("Còn chờ chị" 29).
 
+### Elise 27/11 (tin sau nữa) — chốt Stripe, mở khóa 26/12, Cloudflare
+- **Chị quyết:** dựng giỏ hàng và thanh toán bằng Stripe; mở khóa web thật sớm 1 tuần (từ 26/12); đặt web ở
+  Cloudflare; tên miền chưa mua. Chị hỏi nên để AI Sales Agent hay em dựng.
+- **Em thấy trên GitHub:** repo `purrlight-web` có nhánh `claude/journal-blog` và PR nháp số 1 của một phiên khác
+  (Journal, bài đầu, `sitemap.xml`, `robots.txt`), chờ chị duyệt. Chưa có code giỏ hàng hay thanh toán nào.
+- **Em đề xuất:** em dựng phần code tiền (giỏ hàng, thanh toán, tồn kho, dashboard, bảo mật); AI Sales Agent lo phía
+  tài khoản Stripe, bản nháp 3 trang chính sách và nội dung bán hàng; `purrlight-web` là bản chính từ nay. Kế hoạch
+  và lịch tới 26/12: `docs/LAUNCH-PLAN-2026-11-27.md`. Chờ chị xác nhận và trả lời 4 câu ở mục 6 của file đó.
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
@@ -1790,11 +1799,11 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
     - xin khách gửi mèo Maine Coon đồng ý bằng văn bản;
     - chọn cách chạy Gemini: chị chạy tay, hay tạo khóa API Google AI Studio để em chạy và đưa thẳng vào Drive;
     - cho em biết "Muse" là ứng dụng nào (link), để xem có kết nối được không.
-29. **Trước launch (27/11):**
-    - Giỏ hàng, thanh toán, tồn kho, dashboard: dùng Shopify (em đề xuất) hay tự dựng bằng Stripe? Ai làm: em hay
-      AI Sales Agent (một bên, không hai bên cùng làm)?
-    - Ngày launch là ngày nào? "Lên sớm 1 tuần" là một địa chỉ thử riêng, hay mở khóa web thật sớm 1 tuần?
-    - Tên miền đã mua chưa? Đặt web ở Cloudflare (đề xuất 27/10) hay Hostinger?
+29. **Trước launch (27/11)** — đã chốt Stripe, mở khóa 26/12, Cloudflare. Còn:
+    - Xác nhận em dựng phần code tiền và `purrlight-web` là bản chính (`docs/LAUNCH-PLAN-2026-11-27.md`).
+    - Trả lời 4 câu ở mục 6 của file đó: món nào bán trên web, tồn kho với Etsy, phí ship, thuế.
+    - Tạo tài khoản Cloudflare và Stripe, mua tên miền, đăng nhập connector Cloudflare trong cài đặt claude.ai.
+    - Duyệt hoặc trả lại PR nháp số 1 (Journal) trên `purrlight-web`.
 28. **Bảo mật và giỏ hàng (27/11):**
     - Bản sửa trang xác nhận booth lên web sau 02/01, hay chị cho ngoại lệ lên sớm (nói "chạy")?
     - Website Next.js mà AI Sales Agent nhắc tới nằm ở đâu? Giỏ hàng và thanh toán gắn vào website nào?

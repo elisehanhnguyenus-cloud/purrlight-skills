@@ -1635,7 +1635,7 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   - ô "Paid ·" chỉ nhận 4 cách của booth; số bị ép kiểu và chặn trên; chữ có giới hạn độ dài; bỏ ký tự ẩn và ký tự
     đảo chiều;
   - thêm 1 dòng cố định dưới phần tiền (`DESK_CONFIG.recordLine`): trang này chỉ là bản ghi, không nhận tiền và
-    không bao giờ chỉ chỗ gửi tiền. **Bản nháp, chờ chị duyệt chữ** (xem "Còn chờ chị" 28);
+    không bao giờ chỉ chỗ gửi tiền. **Chị đã duyệt chữ 27/11**, dặn chưa đưa lên;
   - máy booth: không cho lưu khi tên, tên món gõ tay, tên thú cưng hay tên sự kiện có thông tin liên lạc hoặc thanh
     toán; ghi chú có thì vẫn lưu, vẫn nằm trong email và tin nhắn, và máy báo rõ trang link của khách sẽ không hiện.
   - Thử: 34 link thật hiện y như cũ (chỉ thêm dòng mới); 29 link giả bị vô hiệu; 122 chuỗi mẫu, 0 báo nhầm.
@@ -1750,9 +1750,6 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
     - chọn cách chạy Gemini: chị chạy tay, hay tạo khóa API Google AI Studio để em chạy và đưa thẳng vào Drive;
     - cho em biết "Muse" là ứng dụng nào (link), để xem có kết nối được không.
 28. **Bảo mật và giỏ hàng (27/11):**
-    - Duyệt dòng chữ mới trên trang xác nhận booth: *"This page is only a written record from our booth. It can't
-      take a payment and never tells you where to send one. If anyone asks you to pay somewhere unfamiliar, write to
-      us first at purrlightstudiollc@gmail.com."*
     - Bản sửa trang xác nhận booth lên web sau 02/01, hay chị cho ngoại lệ lên sớm (nói "chạy")?
     - Website Next.js mà AI Sales Agent nhắc tới nằm ở đâu? Giỏ hàng và thanh toán gắn vào website nào?
     - Việc chị tự làm: bật 2FA cho GitHub, Etsy, Square, Stripe, Gmail, Tally, Supabase; bật "Keep my email addresses

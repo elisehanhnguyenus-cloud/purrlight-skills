@@ -171,7 +171,7 @@ var DESK_CONFIG = {
   /* Said on every customer page (confirm.html), under the amounts: what the page is. Anyone can write a link that looks
      like ours (see "the customer link is public text" below), so the page itself says it never asks for a payment.
      {email} becomes the studio address, as a link. Blank = no line.
-     DRAFT 27/11/2026 (security review) — customer wording, waits for Elise's OK before it goes live (DEPLOY-HOLD). */
+     Wording approved by Elise 27/11/2026 (security review). */
   recordLine: "This page is only a written record from our booth. It can't take a payment and never tells you where to send one. If anyone asks you to pay somewhere unfamiliar, write to us first at {email}.",
 
   signName: "Elise",

@@ -501,11 +501,13 @@ var DESK_CONFIG = {
      - everyday characters only: Latin letters (English, Vietnamese, Spanish…), digits, common punctuation and plain
        emoji. No "@", no look-alike alphabets, no boxed, circled or keycap letters and digits, nothing invisible;
      - at most LINK_DIGITS digits in one text (a phone number needs 10), counting O, I and l written as digits;
-     - no words joined by a dot (any web address, whatever it ends in), no "$name", no long code, no address spelled
-       out ("name at mail dot com"), no name of a way to pay that the booth does not take (CFG.payMethods).
+     - no words joined by a dot, a middle dot or a bullet (any web address, whatever it ends in), no "$name", no long
+       code, no address spelled out ("name at mail dot com"), no name of a way to pay that the booth does not take
+       (CFG.payMethods).
      normalizePayload: a label that is not plain (piece, event, city, pet name) becomes a plain word or is left out; a
-     personal line that is not plain is left out; the first name is letters only; the order number has the desk's own
-     shape; "Paid · …" shows only one of CFG.payMethods; amounts are whole cents within a real order's range.
+     personal line that is not plain is left out; the first name is letters of one alphabet, with a dot only after an
+     initial ("J.R."); the order number has the desk's own shape; "Paid · …" shows only one of CFG.payMethods; amounts
+     are whole cents within a real order's range.
      What is checked is exactly what is printed. The studio's own address on that page comes from CFG, never from the
      link, and the page says what it is (CFG.recordLine).
      Known limits: a number spelled out in words, a 7-digit number, a destination cut across two rows. Closing those
@@ -532,8 +534,12 @@ var DESK_CONFIG = {
   /* a cut that never splits an emoji in two */
   function cut(s, n) { s = String(s); return s.length > n ? s.slice(0, /[\uD800-\uDBFF]/.test(s.charAt(n - 1)) ? n - 1 : n) : s; }
   /* a first name: letters of one alphabet, with ' - . (any alphabet where the browser can tell; Latin otherwise) */
-  var NAME_OK = /^[A-Za-z\u00C0-\u024F\u0300-\u036F\u1E00-\u1EFF'\u2019.\-]+$/;
-  try { NAME_OK = new RegExp("^[\\p{L}\\p{M}'\\u2019.\\-]+$", "u"); } catch (e) { /* older browsers: Latin names only */ }
+  var NAME_OK = /^[A-Za-z\u00C0-\u024F\u0300-\u036F\u1E00-\u1EFF'\u2019.\-]+$/, A_LETTER = /[A-Za-z\u00C0-\u024F\u1E00-\u1EFF]/,
+    ONE_LETTER = /^[A-Za-z\u00C0-\u024F\u1E00-\u1EFF][\u0300-\u036F]*$/;
+  try {
+    var uName = new RegExp("^[\\p{L}\\p{M}'\\u2019.\\-]+$", "u"), uLetter = new RegExp("\\p{L}", "u"), uOne = new RegExp("^\\p{L}\\p{M}*$", "u");
+    NAME_OK = uName; A_LETTER = uLetter; ONE_LETTER = uOne;
+  } catch (e) { /* older browsers: Latin names only */ }
   var LATIN = /[A-Za-z\u00C0-\u024F\u1E00-\u1EFF]/, NOT_LATIN_NAME = /[^A-Za-z\u00C0-\u024F\u0300-\u036F\u1E00-\u1EFF'\u2019.\-]/;
   /* how a reader takes a word in: no accents, no emoji joiners, lower case */
   function fold(s) {
@@ -550,8 +556,9 @@ var DESK_CONFIG = {
     return new RegExp("(^|[^a-z0-9])" + body + "(?![a-z0-9])");
   }
   var TAKEN = fold((CFG.payMethods || []).join(" "));
-  var PAY_RULES = ["zelle", "venmo", "cash app", "paypal", "apple cash", "western union", "moneygram", "bitcoin", "btc", "usdt", "ethereum",
-    "crypto", "cryptocurrency", "wire transfer", "bank transfer", "bank account", "routing number", "account number"]
+  var PAY_RULES = ["zelle", "venmo", "cash app", "paypal", "apple cash", "western union", "moneygram", "bitcoin", "btc", "usdt", "usdc", "xrp",
+    "ethereum", "dogecoin", "litecoin", "monero", "crypto", "cryptocurrency", "coinbase", "binance", "revolut", "monzo", "remitly", "skrill",
+    "payoneer", "alipay", "wechat", "popmoney", "interac", "wire transfer", "bank transfer", "bank account", "routing number", "account number"]
     .filter(function (w) { return TAKEN.indexOf(w) === -1; })
     .map(function (w) { return { word: w, rule: nameRule(w) }; });
   /* the desk's own order numbers: E<yymmdd>-<device>-<seq> (nextId), with a real month and day */
@@ -575,8 +582,11 @@ var DESK_CONFIG = {
     if (t.length > 600) return "a very long text";
     if (kind === "name") {
       var bare = t.replace(EMOJI, "");
-      if (!bare || !NAME_OK.test(bare)) return "something that is not a letter";
+      if (!bare || !NAME_OK.test(bare) || !A_LETTER.test(bare)) return "something that is not a letter";
       if (LATIN.test(bare) && NOT_LATIN_NAME.test(bare)) return "two alphabets in one name";
+      /* a dot only after a single letter ("J.R."): letters of any alphabet joined by a dot would read as a web address */
+      var parts = bare.split(".");
+      for (var k = 0; parts.length > 1 && k < parts.length; k++) if (parts[k] && !ONE_LETTER.test(parts[k])) return "a dot inside the name";
       t = bare;
     } else {
       var odd = t.replace(OK_CHARS, "");
@@ -586,7 +596,7 @@ var DESK_CONFIG = {
     if (f.indexOf("@") > -1) return "the @ sign";
     if (/\$[a-z]/.test(f)) return "a $ name";
     if (/:\/\/|(^|[^a-z0-9])www\./.test(f)) return "a web address";
-    m = f.match(/[a-z0-9]{2,}\.[a-z]{2,}/);
+    m = f.match(/[a-z0-9]{2,}[.\u00B7\u2022][a-z]{2,}/);
     if (m) return "a web address (" + m[0] + ")";
     if (/\bdot\s*(com|net|org)\b|[a-z0-9]\s+\.\s*(com|net|org)\b|[\u00B7\u2022]\s*(com|net|org)\b/.test(f)) return "a web address";
     if (/(\bat\b|\(at\))\s*[a-z0-9-]{2,}\s*(\bdot\b|\(dot\))\s*[a-z]{2,}/.test(f)) return "an address spelled out";

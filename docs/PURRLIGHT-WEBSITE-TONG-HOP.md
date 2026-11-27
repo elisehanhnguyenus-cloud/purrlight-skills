@@ -1645,7 +1645,10 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
     có báo lý do; ghi chú không đạt vẫn lưu, vẫn nằm trong email, và máy báo rõ trang link của khách không hiện.
     Đơn cũ có tên không đạt: máy không đưa link hay QR nữa;
   - `tools/check-site.js` có thêm chốt: tên món hay add-on nào không đạt thì dừng deploy.
-  - Thử: 232 phép thử của em (34 link thật hiện y như cũ, 51 link giả bị vô hiệu, 196 chuỗi mẫu không báo nhầm); bộ
+  - **Vòng kiểm tra thứ hai** trên bản viết lại: mọi cách lách của vòng một đều bị chặn; còn 2 khe, đã vá: tên khách
+    viết bằng chữ giả dạng kèm dấu chấm (thành địa chỉ web trong lời chào), và dấu chấm giữa `·` thay dấu chấm. Thêm
+    16 tên ví điện tử và tiền số vào danh sách không hiện.
+  - Thử: 254 phép thử của em (34 link thật hiện y như cũ, 57 link giả bị vô hiệu, 211 chuỗi mẫu không báo nhầm); bộ
     so sánh của bên kiểm tra: 270/270 link thật khớp bản cũ, chỉ thêm dòng mới.
   - Giới hạn: số đọc bằng chữ, số 7 chữ số, hoặc địa chỉ bị cắt ra hai dòng vẫn lọt. Muốn chặn hẳn thì máy booth
     phải ký số từng link; việc đó để sau, khi chị cần.

@@ -116,11 +116,12 @@ link trông giống của shop. Vì vậy trang chỉ in chữ lấy từ link k
 - chỉ ký tự thường ngày: chữ Latin (Anh, Việt, Tây Ban Nha…), số, dấu câu thông dụng, emoji thường. Không có `@`,
   không bảng chữ cái giả dạng, không chữ hay số đóng khung, không ký tự ẩn;
 - tối đa 9 chữ số trong một đoạn (số điện thoại cần 10);
-- không có hai từ nối bằng dấu chấm (mọi địa chỉ web), không `$tên`, không mã dài, không tên cách trả tiền mà booth
-  không nhận (lấy theo `DESK_CONFIG.payMethods`).
+- không có hai từ nối bằng dấu chấm, dấu chấm giữa `·` hay dấu `•` (mọi địa chỉ web), không `$tên`, không mã dài,
+  không tên cách trả tiền mà booth không nhận (lấy theo `DESK_CONFIG.payMethods`).
 
 Nhãn không đạt (tên món, sự kiện, thành phố, tên thú cưng) thì thay bằng chữ trung tính hoặc bỏ; ghi chú không đạt thì
-ẩn; tên khách chỉ gồm chữ cái; mã đơn phải đúng dạng của máy booth; ô "Paid ·" chỉ nhận một trong `payMethods`; số
+ẩn; tên khách chỉ gồm chữ cái của một bảng chữ (dấu chấm chỉ sau chữ viết tắt, ví dụ "J.R."); mã đơn phải đúng dạng
+của máy booth; ô "Paid ·" chỉ nhận một trong `payMethods`; số
 tiền là số cent nguyên trong khoảng của một đơn thật. Dưới phần tiền có dòng cố định `DESK_CONFIG.recordLine`.
 
 Máy booth chạy cùng phép kiểm: không cho lưu tên khách, nhãn món, tên sự kiện hay thành phố không đạt (báo lý do);

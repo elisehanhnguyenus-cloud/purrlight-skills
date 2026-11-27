@@ -1648,8 +1648,15 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   - **Vòng kiểm tra thứ hai** trên bản viết lại: mọi cách lách của vòng một đều bị chặn; còn 2 khe, đã vá: tên khách
     viết bằng chữ giả dạng kèm dấu chấm (thành địa chỉ web trong lời chào), và dấu chấm giữa `·` thay dấu chấm. Thêm
     16 tên ví điện tử và tiền số vào danh sách không hiện.
-  - Thử: 254 phép thử của em (34 link thật hiện y như cũ, 57 link giả bị vô hiệu, 211 chuỗi mẫu không báo nhầm); bộ
-    so sánh của bên kiểm tra: 270/270 link thật khớp bản cũ, chỉ thêm dòng mới.
+  - Bên soát lỗi phụ, vòng hai: không có lỗi nặng; chỉ ra mấy chỗ chặn nhầm chữ bình thường, đã sửa: "I'll" và các
+    từ tiếng Việt như "ơi", "lời" bị đếm thành chữ số; tên "Mrs.", "Dr."; "we chat" bị đọc thành WeChat; biểu tượng
+    ⭐ và mèo đen 🐈‍⬛. Link cũ có tên dạng "Smith," hay "Sarah/Tom" vẫn mở (lấy "Smith", "Sarah"). Dòng giảm giá gõ
+    giá âm vẫn hiện dấu trừ.
+  - Thử: 284 phép thử của em (34 link thật hiện y như cũ, 65 link giả bị vô hiệu, 235 chuỗi mẫu không báo nhầm); bộ
+    của bên kiểm tra: 270/270 link thật khớp bản cũ, chỉ thêm dòng mới; 553 thao tác booth trên điện thoại đều qua.
+  - Chữ bình thường mà trang link vẫn không nhận (máy booth báo lý do): tên sự kiện có từ 10 chữ số trở lên (ví dụ
+    "Pearland Market Nov 28–29 2026, Booth 12" — bỏ bớt năm hoặc số gian); dấu `@` kiểu "Fest @ NRG" (viết "at");
+    hai từ viết liền qua dấu chấm như "St.Louis" (thêm dấu cách); ký tự `|`, `_`, ½, ™.
   - Giới hạn: số đọc bằng chữ, số 7 chữ số, hoặc địa chỉ bị cắt ra hai dòng vẫn lọt. Muốn chặn hẳn thì máy booth
     phải ký số từng link; việc đó để sau, khi chị cần.
   - Link đã gửi khách từ sự kiện trước: nếu ghi chú hay tên món không đạt thì phần đó không còn hiện; nếu tên khách

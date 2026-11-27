@@ -177,7 +177,7 @@ if (pr && pr.out.PRICES) {
 
 /* ---------- the customer's link page prints only plain text (security review 27/11/2026) ----------
    confirm.html leaves out any piece label that js/event-desk.js reachIn() does not find plain (an "@", a web address,
-   more than 8 digits, an odd character…): a catalog name like that would show as "Piece" on a customer's
+   more than 9 digits, an odd character…): a catalog name like that would show as "Piece" on a customer's
    confirmation. Every piece name, add-on label, booth extra and custom-grid word is checked here, as the link
    carries it. */
 if (cat && Array.isArray(cat.out.PRODUCTS)) {
@@ -559,4 +559,4 @@ if (errors.length) {
   process.exit(1);
 }
 console.log("check-site: OK — " + counts.js + " file JS, " + (counts.products || 0) + " món, " + (counts.sales || 0) + " sale, " +
-  (counts.prices || 0) + " giá Custom Orders, " + counts.json + " file JSON, " + counts.refs + " đường dẫn file.");
+  (counts.prices || 0) + " giá Custom Orders, " + counts.json + " file JSON, " + counts.refs + " đường dẫn file, " + (counts.linkLabels || 0) + " nhãn trang xác nhận.");

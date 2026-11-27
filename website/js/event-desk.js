@@ -521,26 +521,29 @@ var DESK_CONFIG = {
     s = String(s == null ? "" : s).replace(/[\u0000-\u001F\u007F-\u009F\u2028\u2029]/g, " ")
       .replace(/[\u00AD\u034F\u061C\u115F\u1160\u17B4\u17B5\u180B-\u180F\u200B\u200C\u200E\u200F\u202A-\u202E\u2060-\u206F\u3164\uFEFF\uFFA0\uFFF0-\uFFFB]/g, "")
       .replace(/\s+/g, " ").trim();
-    return max && s.length > max ? s.slice(0, max - 1).replace(/\s+\S*$/, "") + "\u2026" : s;
+    return max && s.length > max ? cut(s, max - 1).replace(/\s+\S*$/, "") + "\u2026" : s;
   }
   /* the characters a link's text may use (everything else is refused, never shown) */
   var OK_CHARS = new RegExp("[ !\"#%&'()*+,\\-./:;<=>?~$0-9A-Za-z" +
     "\\u00A1\\u00AB\\u00B0\\u00B7\\u00BB\\u00BF\\u00C0-\\u024F\\u0300-\\u036F\\u1E00-\\u1EFF" +
     "\\u2010-\\u2015\\u2018-\\u201F\\u2022\\u2026\\u2032\\u2033\\u200D\\uFE0F" +
-    "\\u2600-\\u26FF\\u2700-\\u2775\\u2794-\\u27BF]" +
-    "|\\uD83C[\\uDDE6-\\uDDFF\\uDF00-\\uDFFF]|\\uD83D[\\uDC00-\\uDE4F\\uDE80-\\uDEFF]|\\uD83E[\\uDD00-\\uDDFF\\uDE70-\\uDEFF]", "g");
+    "\\u203C\\u2049\\u231A\\u231B\\u23E9-\\u23F3\\u2600-\\u26FF\\u2700-\\u2775\\u2794-\\u27BF\\u2B05-\\u2B07\\u2B1B\\u2B1C\\u2B50\\u2B55]" +
+    "|\\uD83C[\\uDDE6-\\uDDFF\\uDF00-\\uDFFF]|\\uD83D[\\uDC00-\\uDE4F\\uDE80-\\uDEFF\\uDFE0-\\uDFEB]|\\uD83E[\\uDD00-\\uDDFF\\uDE70-\\uDEFF]", "g");
   /* the emoji among them: a first name may carry one ("Mia🐱") */
-  var EMOJI = /[\u2600-\u26FF\u2700-\u2775\u2794-\u27BF\u200D\uFE0F]|\uD83C[\uDDE6-\uDDFF\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F\uDE80-\uDEFF]|\uD83E[\uDD00-\uDDFF\uDE70-\uDEFF]/g;
+  var EMOJI = /[\u203C\u2049\u231A\u231B\u23E9-\u23F3\u2600-\u26FF\u2700-\u2775\u2794-\u27BF\u2B05-\u2B07\u2B1B\u2B1C\u2B50\u2B55\u200D\uFE0F]|\uD83C[\uDDE6-\uDDFF\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F\uDE80-\uDEFF\uDFE0-\uDFEB]|\uD83E[\uDD00-\uDDFF\uDE70-\uDEFF]/g;
+  /* the first name as the customer's page greets it: the first word, without a closing comma or a second person
+     ("Smith, John" -> "Smith", "Sarah/Tom" -> "Sarah"); it must still pass reachIn(…, "name") */
+  function linkName(raw) { return cut(firstName(plain(raw)).split(/[\/&+]/)[0].replace(/[,;:!?]+$/, ""), 40); }
   /* a cut that never splits an emoji in two */
   function cut(s, n) { s = String(s); return s.length > n ? s.slice(0, /[\uD800-\uDBFF]/.test(s.charAt(n - 1)) ? n - 1 : n) : s; }
   /* a first name: letters of one alphabet, with ' - . (any alphabet where the browser can tell; Latin otherwise) */
-  var NAME_OK = /^[A-Za-z\u00C0-\u024F\u0300-\u036F\u1E00-\u1EFF'\u2019.\-]+$/, A_LETTER = /[A-Za-z\u00C0-\u024F\u1E00-\u1EFF]/,
+  var NAME_OK = /^[A-Za-z\u00C0-\u024F\u0300-\u036F\u1E00-\u1EFF'\u2018\u2019\u02BB\u02BC.\-]+$/, A_LETTER = /[A-Za-z\u00C0-\u024F\u1E00-\u1EFF]/,
     ONE_LETTER = /^[A-Za-z\u00C0-\u024F\u1E00-\u1EFF][\u0300-\u036F]*$/;
   try {
-    var uName = new RegExp("^[\\p{L}\\p{M}'\\u2019.\\-]+$", "u"), uLetter = new RegExp("\\p{L}", "u"), uOne = new RegExp("^\\p{L}\\p{M}*$", "u");
+    var uName = new RegExp("^[\\p{L}\\p{M}'\\u2018\\u2019.\\-]+$", "u"), uLetter = new RegExp("\\p{L}", "u"), uOne = new RegExp("^\\p{L}\\p{M}*$", "u");
     NAME_OK = uName; A_LETTER = uLetter; ONE_LETTER = uOne;
   } catch (e) { /* older browsers: Latin names only */ }
-  var LATIN = /[A-Za-z\u00C0-\u024F\u1E00-\u1EFF]/, NOT_LATIN_NAME = /[^A-Za-z\u00C0-\u024F\u0300-\u036F\u1E00-\u1EFF'\u2019.\-]/;
+  var LATIN = /[A-Za-z\u00C0-\u024F\u1E00-\u1EFF]/, NOT_LATIN_NAME = /[^A-Za-z\u00C0-\u024F\u0300-\u036F\u1E00-\u1EFF'\u2018\u2019\u02BB\u02BC.\-]/;
   /* how a reader takes a word in: no accents, no emoji joiners, lower case */
   function fold(s) {
     var t = String(s);
@@ -555,22 +558,27 @@ var DESK_CONFIG = {
     var body = letters.length < 5 ? letters.join("") : letters.map(function (c) { return LOOKS[c] || c; }).join("[^a-z0-9]{0,3}");
     return new RegExp("(^|[^a-z0-9])" + body + "(?![a-z0-9])");
   }
-  var TAKEN = fold((CFG.payMethods || []).join(" "));
+  var PAY_METHODS = Object.prototype.toString.call(CFG.payMethods) === "[object Array]" ? CFG.payMethods : [];
+  var TAKEN = fold(PAY_METHODS.join(" "));
   var PAY_RULES = ["zelle", "venmo", "cash app", "paypal", "apple cash", "western union", "moneygram", "bitcoin", "btc", "usdt", "usdc", "xrp",
     "ethereum", "dogecoin", "litecoin", "monero", "crypto", "cryptocurrency", "coinbase", "binance", "revolut", "monzo", "remitly", "skrill",
-    "payoneer", "alipay", "wechat", "popmoney", "interac", "wire transfer", "bank transfer", "bank account", "routing number", "account number"]
+    "payoneer", "alipay", "interac", "wire transfer", "bank transfer", "bank account", "routing number", "account number"]
     .filter(function (w) { return TAKEN.indexOf(w) === -1; })
     .map(function (w) { return { word: w, rule: nameRule(w) }; });
   /* the desk's own order numbers: E<yymmdd>-<device>-<seq> (nextId), with a real month and day */
   var DESK_ID = /^E\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])-[A-Z0-9]{1,4}-\d{1,4}$/;
   var DESK_ID_IN_TEXT = /(^|[^a-z0-9])e\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])-[a-z0-9]{1,4}-\d{1,4}(?![a-z0-9])/g;
-  /* digits a reader would see: also O, I, l, S, B, Z inside a number ("O1OO"), and words made only of o, i, l */
+  /* digits a reader would see: also O, I, l, S, B, Z inside a number ("O1OO"), and a word made only of o, i, l when it
+     sits next to a number ("555 OIOO") — on its own, "I'll" or "ơi" is just a word */
   function digitCount(t) {
-    var n = 0, tokens = t.split(/[^a-z0-9]+/);
-    for (var i = 0; i < tokens.length; i++) {
-      var k = tokens[i];
-      if (/[0-9]/.test(k)) n += (k.match(/[0-9oilsbz]/g) || []).length;
-      else if (/^[oil]{2,}$/.test(k)) n += k.length;
+    var n = 0, tokens = t.split(/[^a-z0-9]+/), num = [], i;
+    for (i = 0; i < tokens.length; i++) num[i] = /[0-9]/.test(tokens[i]);
+    var oil = function (j) { return !num[j] && /^[oil]+$/.test(tokens[j] || ""); };
+    for (i = 1; i < tokens.length; i++) if (oil(i) && num[i - 1]) num[i] = "oil";
+    for (i = tokens.length - 2; i >= 0; i--) if (oil(i) && num[i + 1]) num[i] = "oil";
+    for (i = 0; i < tokens.length; i++) {
+      if (num[i] === true) n += (tokens[i].match(/[0-9oilsbz]/g) || []).length;
+      else if (num[i] === "oil") n += tokens[i].length;
     }
     return n;
   }
@@ -585,22 +593,21 @@ var DESK_CONFIG = {
       if (!bare || !NAME_OK.test(bare) || !A_LETTER.test(bare)) return "something that is not a letter";
       if (LATIN.test(bare) && NOT_LATIN_NAME.test(bare)) return "two alphabets in one name";
       /* a dot only after a single letter ("J.R."): letters of any alphabet joined by a dot would read as a web address */
-      var parts = bare.split(".");
-      for (var k = 0; parts.length > 1 && k < parts.length; k++) if (parts[k] && !ONE_LETTER.test(parts[k])) return "a dot inside the name";
+      var parts = bare.replace(/\.$/, "").split(".");
+      for (var k = 0; parts.length > 1 && k < parts.length; k++) if (parts[k] && !ONE_LETTER.test(parts[k].replace(/^-/, ""))) return "a dot inside the name";
       t = bare;
     } else {
       var odd = t.replace(OK_CHARS, "");
       if (odd) return "the character " + JSON.stringify(/^[\uD800-\uDBFF][\uDC00-\uDFFF]/.test(odd) ? odd.slice(0, 2) : odd.charAt(0));
     }
     var f = fold(t);
-    if (f.indexOf("@") > -1) return "the @ sign";
-    if (/\$[a-z]/.test(f)) return "a $ name";
+    if (/\$[a-z]/.test(f)) return "a $ in front of a name";
     if (/:\/\/|(^|[^a-z0-9])www\./.test(f)) return "a web address";
     m = f.match(/[a-z0-9]{2,}[.\u00B7\u2022][a-z]{2,}/);
-    if (m) return "a web address (" + m[0] + ")";
+    if (m) return "a web address, " + JSON.stringify(m[0]);
     if (/\bdot\s*(com|net|org)\b|[a-z0-9]\s+\.\s*(com|net|org)\b|[\u00B7\u2022]\s*(com|net|org)\b/.test(f)) return "a web address";
     if (/(\bat\b|\(at\))\s*[a-z0-9-]{2,}\s*(\bdot\b|\(dot\))\s*[a-z]{2,}/.test(f)) return "an address spelled out";
-    for (var i = 0; i < PAY_RULES.length; i++) if (PAY_RULES[i].rule.test(f)) return "a way to pay we don't take (" + PAY_RULES[i].word + ")";
+    for (var i = 0; i < PAY_RULES.length; i++) if (PAY_RULES[i].rule.test(f)) return "a way to pay we don't take, " + JSON.stringify(PAY_RULES[i].word);
     var words = f.split(/[^a-z0-9]+/);
     for (var j = 0; j < words.length; j++) if (words[j].length >= 24 && /[0-9]/.test(words[j])) return "a long code";
     if (digitCount(f.replace(DESK_ID_IN_TEXT, "$1order")) > LINK_DIGITS) return "more than " + LINK_DIGITS + " digits";
@@ -647,11 +654,12 @@ var DESK_CONFIG = {
     p.it = (Array.isArray(p.it) ? p.it : []).slice(0, 60).map(function (i) {
       var qty = Number(i && i[1]);
       if (!(qty >= 1 && qty <= 999 && Math.floor(qty) === qty)) throw new Error("bad payload");   /* whole pieces only */
-      return [label(i && i[0], 140, "Piece", "a piece name") || "Piece", qty, cash(i && i[2])];
+      var unit = Math.round(Number(i && i[2]));   /* a price each may be below zero: a discount typed as its own line */
+      return [label(i && i[0], 140, "Piece", "a piece name") || "Piece", qty, isFinite(unit) ? Math.max(-MAXC, Math.min(MAXC, unit)) : 0];
     });
     /* a first name, as the desk writes it: one word of letters */
     var rawName = plain(p.n);
-    p.n = rawName ? cut(firstName(rawName), 40) : "";
+    p.n = rawName ? linkName(rawName) : "";
     if (!p.n || reachIn(p.n, "name")) throw new Error("bad payload");
     /* an order number: only the desk's own shape */
     p.id = plain(p.id);
@@ -661,7 +669,7 @@ var DESK_CONFIG = {
     p.sh = label(p.sh, 60, "", "the city");
     p.d = /^\d{4}-\d{2}-\d{2}$/.test(String(p.d == null ? "" : p.d)) ? String(p.d) : "";
     p.tl = plain(p.tl, 12);
-    p.pm = (CFG.payMethods || []).indexOf(p.pm) > -1 ? p.pm : "";   /* only a way the booth takes — never free text */
+    p.pm = PAY_METHODS.indexOf(p.pm) > -1 ? p.pm : "";   /* only a way the booth takes — never free text */
     var note = plain(p.nt), whyNote = note ? (note.length > 400 ? "longer than 400 characters" : reachIn(note)) : "";
     if (whyNote) { left.push("the personal line (" + whyNote + ")"); note = ""; }
     p.nt = note;
@@ -1094,14 +1102,14 @@ var DESK_CONFIG = {
     if (badLine) { toast("A piece name or pet name contains \"" + badLine + "\" — that can't go to a customer."); ok = false; }
     /* what goes on the customer's link page must be plain (reachIn): the first name, every piece label as the link
        will carry it (name, pet name, yarn code), the city */
-    var whyName = f.name.trim() ? reachIn(cut(firstName(plain(f.name)), 40), "name") : "";
+    var whyName = f.name.trim() ? (reachIn(linkName(f.name), "name") || (linkName(f.name) ? "" : "something that is not a letter")) : "";
     if (whyName) { setErr(el.name, "A first name only, please: " + whyName + " can't go on the customer's link page."); ok = false; firstBad = firstBad || el.name; }
     var whyPiece = "", whichPiece = "";
     items.forEach(function (i) {
       var w = reachIn(plain(i.name + (i.addon ? " \u2014 " + i.addon : ""), 140));
-      if (w && !whyPiece) { whyPiece = w; whichPiece = i.name; }
+      if (w && !whyPiece) { whyPiece = w; whichPiece = i.addon ? plain(i.name, 18) + " \u2014 " + plain(i.addon, 44) : plain(i.name, 60); }
     });
-    if (whyPiece && !badLine) { toast("\u201C" + plain(whichPiece, 30) + "\u201D: " + whyPiece + " can't go on the customer's link page."); ok = false; }
+    if (whyPiece && !badLine) { toast("\u201C" + whichPiece + "\u201D: " + whyPiece + " can't go on the customer's link page."); ok = false; }
     var whyCity = mode === "order" ? reachIn(plain([f.shCity.trim(), f.shState.trim().toUpperCase()].filter(Boolean).join(", "), 60)) : "";
     if (whyCity) { toast("City: " + whyCity + " can't go on the customer's link page."); ok = false; firstBad = firstBad || el.shCity; }
     var badShip = lintText(f.shName);
@@ -1204,7 +1212,7 @@ var DESK_CONFIG = {
        The address is percent-encoded (RFC 6068) so a stray # or ? can never swallow the body. */
     var mailHref = "mailto:" + encodeURIComponent(email || "") + "?cc=" + encodeURIComponent(CFG.studioEmail) + "&subject=" + encodeURIComponent(msg.subject) + "&body=" + encodeURIComponent(msg.body.replace(/\n/g, "\r\n"));
     var smsHref = "sms:" + (phone || "") + "?&body=" + encodeURIComponent(sms);
-    var leftNote = leftOut.length ? '<p class="out-note"><strong>Not on the customer\'s link page:</strong> ' + esc(leftOut.join("; ")) + '. The email and the printout still have it.</p>' : '';
+    var leftNote = leftOut.length ? '<p class="out-note"><strong>Not on the customer\'s link page:</strong> ' + esc(leftOut.join("; ")) + '. The email and the printout still have ' + (leftOut.length > 1 ? 'them' : 'it') + '.</p>' : '';
     var st = o.status === "paid" ? '<span class="status-pill">paid in full</span>' : (o.status === "deposit" ? '<span class="status-pill owe">balance ' + money(o.totals.balance) + '</span>' : '<span class="status-pill owe">unpaid</span>');
     /* CS Hard Rule 1: event orders of more than 5 pieces go to Elise before anything is promised */
     var big = qtyTotal(o) > 5;

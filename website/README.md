@@ -110,6 +110,14 @@ KHÔNG tự gửi) hoặc **Copy** / **Print**. Khi site đã online, có thêm 
 để khách quét mở bản của mình (`confirm.html#…`, không chứa email/phone/địa
 chỉ đường).
 
+**Link của khách là chữ công khai (27/11/2026).** `confirm.html` vẽ mọi thứ từ đường link, và ai cũng viết được một
+link trông giống của shop. Vì vậy trang không bao giờ hiện thông tin liên lạc hay thanh toán lấy từ link: email, link,
+số điện thoại hay số tài khoản, @tên, $tag, mã dài, tên app trả tiền (`reachIn` và `normalizePayload` trong
+`js/event-desk.js`). Ô "Paid ·" chỉ nhận một trong `DESK_CONFIG.payMethods`. Dưới phần tiền có dòng cố định
+`DESK_CONFIG.recordLine`. Máy booth không cho lưu tên, tên món gõ tay, tên thú cưng hay tên sự kiện có các thứ đó;
+ghi chú có thì vẫn nằm trong email và tin nhắn, nhưng trang link của khách bỏ ghi chú đó (máy báo ngay sau khi lưu).
+Thêm cách trả tiền ở booth: sửa `payMethods`, không cần sửa gì khác.
+
 **Cấu hình** — tất cả ở đầu `js/event-desk.js` (`DESK_CONFIG`) và trong nút
 ⚙ trên trang (tên sự kiện, tên người đứng booth, mã máy, chế độ thuế). Mỗi con
 số/câu chữ đều có chú thích nguồn ngay cạnh: bảng giá custom (Elise duyệt

@@ -168,6 +168,12 @@ var DESK_CONFIG = {
   careLine: "Handmade things like gentle care: spot clean with a damp cloth and keep keepsakes out of direct sun.",
   safetyLine: "Handmade decorative keepsake for adults and collectors. Not a toy and not tested as a children's product. Keep away from young children and open flame. Spot clean only.",
 
+  /* Said on every customer page (confirm.html), under the amounts: what the page is. Anyone can write a link that looks
+     like ours (see "the customer link is public text" below), so the page itself says it never asks for a payment.
+     {email} becomes the studio address, as a link. Blank = no line.
+     DRAFT 27/11/2026 (security review) — customer wording, waits for Elise's OK before it goes live (DEPLOY-HOLD). */
+  recordLine: "This page is only a written record from our booth. It can't take a payment and never tells you where to send one. If anyone asks you to pay somewhere unfamiliar, write to us first at {email}.",
+
   signName: "Elise",
   tagline: "Made by hand. Made to be kept."
 };
@@ -488,6 +494,58 @@ var DESK_CONFIG = {
     return "";
   }
 
+  /* ---------- the customer link is public text (security review 27/11/2026) ----------
+     confirm.html draws whatever its link carries, and anyone can write a link that looks like ours. So no text from a
+     link may tell the reader where to send money or whom to contact:
+     - reachIn finds an email, a web address, a phone or account number, an @handle or $tag, a long code, or the name
+       of a payment app or transfer (in a personal line also a gift card or a money order);
+     - normalizePayload: a label that has one (piece name, event, city, pet name) becomes a plain word or is left out;
+       a personal line that has one is left out; the name and the order number must look like ours, or the link does
+       not open; "Paid · …" shows only one of CFG.payMethods; every text has a length the page can hold.
+     The studio's own address on that page comes from CFG, never from the link. No filter catches every wording, so
+     the page also says what it is (CFG.recordLine). The desk runs the same check: a label is refused at save, and a
+     personal line with contact or payment details stays in the email and text only (showOrder says so). */
+  var HIDDEN_ALL = /[\u0000-\u001F\u007F-\u009F\u00AD\u034F\u061C\u115F\u1160\u17B4\u17B5\u180B-\u180E\u200B-\u200F\u2028-\u202F\u205F-\u206F\u3164\uFE00-\uFE0F\uFEFF\uFFA0]/g;
+  /* shown text: one line, none of the characters that hide, reorder or glue text (emoji joiners stay), a length cap */
+  function plain(s, max) {
+    s = String(s == null ? "" : s).replace(/[\u0000-\u001F\u007F-\u009F\u2028\u2029]/g, " ")
+      .replace(/[\u00AD\u034F\u061C\u115F\u1160\u17B4\u17B5\u180B-\u180E\u200B\u200C\u200E\u200F\u202A-\u202E\u2060-\u206F\u3164\uFEFF\uFFA0]/g, "")
+      .replace(/\s+/g, " ").trim();
+    return max && s.length > max ? s.slice(0, max - 1).replace(/\s+\S*$/, "") + "\u2026" : s;
+  }
+  var PAY_NAMES = ["zelle", "venmo", "cash app", "paypal", "apple pay", "apple cash", "google pay", "western union", "moneygram",
+    "bitcoin", "btc", "usdt", "ethereum", "crypto", "cryptocurrency", "wire transfer", "bank transfer", "bank account", "routing number", "account number"];
+  var PAY_NAMES_NOTE = ["gift card", "gift cards", "money order"];
+  /* a name with up to 3 stray characters between its letters ("z e l l e", "pay-pal"), as a whole word ("gazelle" is fine) */
+  function spacedWord(w) {
+    return new RegExp("(^|[^a-z0-9])" + w.replace(/[^a-z0-9]/g, "").split("").join("[^a-z0-9]{0,3}") + "(?![a-z0-9])", "i");
+  }
+  var REACH = [
+    /[^\s@]+@[^\s@]+\.[a-z]{2,}/i,                                                               /* an email */
+    /[a-z0-9._%+-]+\s*(\(at\)|\[at\]|\bat\b)\s*[a-z0-9-]+\s*(\(dot\)|\[dot\]|\bdot\b)\s*[a-z]{2,}/i,   /* "name at mail dot com" */
+    /(https?:\/\/|www\.)\S+/i,                                                                   /* a link */
+    /(^|[^a-z0-9@])[a-z0-9-]+\.(com|net|org|me|io|co|us|app|link|shop|store|info|biz|xyz|site|online|page|ly|gg|to|cc|tv)(?![a-z0-9])/i,   /* a web address */
+    /(^|[^a-z0-9])@[a-z0-9_.]{2,}/i,                                                             /* an @handle */
+    /(^|[^a-z0-9])\$[a-z][a-z0-9_-]+/i,                                                          /* a $tag ("$45" is an amount) */
+    /(\d[\s().+-]*){9,}/,                                                                        /* a phone or account number */
+    /(^|[^0-9])\d{3}[\s.-]\d{4}(?![0-9])/,                                                       /* a local phone number */
+    /(?=[a-z0-9]*\d)(?=[a-z0-9]*[a-z])[a-z0-9]{24,}/i,                                           /* a wallet address or a key */
+    /[a-z][\u0370-\u03FF\u0400-\u04FF]|[\u0370-\u03FF\u0400-\u04FF][a-z]/i                       /* look-alike letters inside a word */
+  ].concat(PAY_NAMES.map(spacedWord));
+  var REACH_NOTE = PAY_NAMES_NOTE.map(spacedWord);
+  /* "" when the text is fine; otherwise the part that cannot go on the customer page */
+  function reachIn(s, isNote) {
+    if (!s) return "";
+    var t = String(s);
+    try { t = t.normalize("NFKC"); } catch (e) { /* old browsers: checked as typed */ }
+    t = t.replace(HIDDEN_ALL, "").replace(DESK_ID_IN_TEXT, "order");   /* our own order numbers are not phone numbers */
+    var rules = isNote ? REACH.concat(REACH_NOTE) : REACH;
+    for (var i = 0; i < rules.length; i++) { var m = t.match(rules[i]); if (m) return m[0].replace(/^[^a-z0-9@$+(]+/i, "").trim() || m[0]; }
+    return "";
+  }
+  /* the desk's own order numbers: E<yymmdd>-<device>-<seq> (nextId) */
+  var DESK_ID = /^E\d{6}-[A-Z0-9]{1,4}-\d{1,6}$/, DESK_ID_IN_TEXT = /\bE\d{6}-[A-Z0-9]{1,4}-\d{1,6}\b/g;
+
   /* what goes into the customer link: no email, no phone, no street address.
      Kept compact on purpose — every byte makes the QR denser. */
   function payloadFor(o) {
@@ -502,21 +560,51 @@ var DESK_CONFIG = {
       k: hasKeepsake(o) ? 1 : 0, s: needsSafety(o) ? 1 : 0
     };
   }
-  /* normalize any payload version into what renderConfirm reads */
+  /* normalize any payload version into what renderConfirm reads. The link is text anyone can write: numbers are
+     coerced, and every text passes plain() and reachIn() ("the customer link is public text", above). p.left lists what
+     was left out — the desk shows it to the person at the booth; the customer page does not. */
   function normalizePayload(p) {
     if (!p || typeof p !== "object") throw new Error("bad payload");
-    var num = function (x) { var n = Number(x); return isFinite(n) ? n : 0; };
+    var MAX = 1e9;   /* cents or pieces: far above any real order, small enough to print */
+    var num = function (x) { var n = Number(x); return isFinite(n) ? Math.max(-MAX, Math.min(MAX, n)) : 0; };
     if (p.v === 2) {
-      var m = p.m || [];
+      var m = Array.isArray(p.m) ? p.m : [];
       p.t = p.t === "o" ? "order" : "thanks";
       p.tt = { subtotal: num(m[0]), discount: num(m[1]), tax: num(m[2]), total: num(m[3]), paid: num(m[4]), balance: num(m[5]), taxMode: m[6] === "i" ? "included" : (m[6] === "a" ? "added" : "none") };
     }
-    /* everything numeric is coerced — the hash is attacker-controlled text, never trusted markup */
-    p.it = (p.it || []).map(function (i) { return [String((i && i[0]) || ""), num(i && i[1]), num(i && i[2])]; });
-    if (!p.tt || typeof p.tt.total !== "number") throw new Error("bad payload");
-    if (!p.n || !Array.isArray(p.it) || !p.it.length || (p.t === "order" && !p.id)) throw new Error("bad payload");
-    ["n", "id", "ev", "d", "pm", "sh", "tl", "nt"].forEach(function (k) { p[k] = p[k] == null ? "" : String(p[k]); });
-    if (typeof p.cu !== "number") p.cu = p.cu ? String(p.cu) : 0;
+    if (!p.tt || typeof p.tt !== "object" || typeof p.tt.total !== "number") throw new Error("bad payload");
+    var tt = p.tt;
+    p.tt = { subtotal: num(tt.subtotal), discount: num(tt.discount), tax: num(tt.tax), total: num(tt.total), paid: num(tt.paid), balance: num(tt.balance),
+      taxMode: tt.taxMode === "included" || tt.taxMode === "added" ? tt.taxMode : "none" };
+    p.t = p.t === "order" ? "order" : "thanks";
+    var left = [];
+    var label = function (v, max, fallback, what) {
+      var s = plain(v, max);
+      if (s && reachIn(s)) { if (left.indexOf(what) === -1) left.push(what); return fallback; }
+      return s;
+    };
+    p.it = (Array.isArray(p.it) ? p.it : []).slice(0, 60).map(function (i) {
+      return [label(i && i[0], 140, "Piece", "a piece name") || "Piece", num(i && i[1]), num(i && i[2])];
+    });
+    /* a first name, as the desk writes it: one word, nothing that reaches anyone */
+    var rawName = plain(p.n);
+    p.n = rawName ? plain(firstName(rawName), 40) : "";
+    if (!p.n || reachIn(p.n)) throw new Error("bad payload");
+    /* an order number: the desk's own shape, or a short plain code */
+    p.id = plain(p.id);
+    if (p.id && !DESK_ID.test(p.id) && (!/^[A-Za-z0-9][A-Za-z0-9-]{0,23}$/.test(p.id) || reachIn(p.id))) p.id = "";
+    if (!p.it.length || (p.t === "order" && !p.id)) throw new Error("bad payload");
+    p.ev = label(p.ev, 60, "", "the event name");
+    p.sh = label(p.sh, 60, "", "the city");
+    p.d = /^\d{4}-\d{2}-\d{2}$/.test(String(p.d == null ? "" : p.d)) ? String(p.d) : "";
+    p.tl = plain(p.tl, 12);
+    p.pm = (CFG.payMethods || []).indexOf(p.pm) > -1 ? p.pm : "";   /* only a way the booth takes — never free text */
+    var note = plain(p.nt);
+    if (note && (note.length > 400 || reachIn(note, true))) { left.push("the personal line"); note = ""; }
+    p.nt = note;
+    if (typeof p.cu === "number") p.cu = p.cu ? 1 : 0;
+    else p.cu = p.cu ? (label(p.cu, 80, "", "a pet's name") || 1) : 0;
+    p.left = left;
     return p;
   }
   function baseUrl() {
@@ -545,7 +633,7 @@ var DESK_CONFIG = {
       '<p class="confirm-kicker">' + esc(CFG.studioName) + (p.ev ? ' · ' + esc(p.ev) : '') + '</p>' +
       '<h1>' + (isOrder ? 'Your order is in, ' : 'Thank you, ') + esc(p.n) + '.</h1>' +
       '<p class="lede">' + (isOrder ? "Here's everything we agreed on at the booth — so you have it in writing." : "A little note from our booth, so you have it in writing.") + '</p>' +
-      '<p class="oid">' + (isOrder ? 'Order <strong>' + esc(p.id) + '</strong> · ' : '') + esc(fmtDate(p.d)) + '</p>' +
+      '<p class="oid">' + [isOrder ? 'Order <strong>' + esc(p.id) + '</strong>' : '', p.d ? esc(fmtDate(p.d)) : ''].filter(Boolean).join(' · ') + '</p>' +
       '<table class="confirm-items"><thead><tr><th>Piece</th><th>Amount</th></tr></thead><tbody>' +
       (p.it || []).map(function (i) {
         var qty = Number(i[1]) || 0, unit = Number(i[2]) || 0;
@@ -558,7 +646,9 @@ var DESK_CONFIG = {
       '<div class="row total"><span>Total' + (t.taxMode === "included" ? ' <small>(Texas sales tax included)</small>' : '') + '</span><span>' + money(t.total) + '</span></div>' +
       '<div class="row' + (t.balance > 0 ? '' : ' paid-full') + '"><span>Paid' + (p.pm ? ' · ' + esc(p.pm) : '') + '</span><span>' + money(t.paid) + '</span></div>' +
       (t.balance > 0 ? '<div class="row balance"><span>Balance</span><span>' + money(t.balance) + '</span></div>' : '') +
-      '</div>';
+      '</div>' +
+      /* what this page is — said next to the amounts, where a forged link would put its own story */
+      (CFG.recordLine ? '<p class="confirm-record">' + esc(CFG.recordLine).replace("{email}", '<a href="mailto:' + esc(CFG.studioEmail) + '">' + esc(CFG.studioEmail) + '</a>') + '</p>' : '');
     if (isOrder) {
       var tl = timelineFor(p.tl);
       html += '<div class="confirm-section"><h2>What happens next</h2><p>' + esc(timelineText(tl, p.d)) + '</p>' +
@@ -580,7 +670,7 @@ var DESK_CONFIG = {
     document.title = (isOrder ? "Order " + p.id : "Thank you, " + p.n) + " — " + CFG.studioName;
   }
 
-  window.PurrlightDesk = { renderConfirm: renderConfirm, decodePayload: decodePayload, encodePayload: encodePayload, payloadFor: payloadFor, normalizePayload: normalizePayload, buildThanks: buildThanks, buildOrder: buildOrder, computeTotals: computeTotals, validOrder: validOrder, lintText: lintText };
+  window.PurrlightDesk = { renderConfirm: renderConfirm, decodePayload: decodePayload, encodePayload: encodePayload, payloadFor: payloadFor, normalizePayload: normalizePayload, buildThanks: buildThanks, buildOrder: buildOrder, computeTotals: computeTotals, validOrder: validOrder, lintText: lintText, reachIn: reachIn };
 
   var confirmRoot = $("[data-confirm]");
   if (confirmRoot) {
@@ -939,6 +1029,15 @@ var DESK_CONFIG = {
       texts.forEach(function (s) { var b = lintText(s); if (b && !badLine) badLine = b; });
     });
     if (badLine) { toast("A piece name or pet name contains \"" + badLine + "\" — that can't go to a customer."); ok = false; }
+    /* the customer's page never shows contact or payment details (reachIn): the name and the labels must be free of them */
+    var reachName = f.name.trim() ? reachIn(firstName(f.name)) : "";
+    if (reachName) { setErr(el.name, "A first name only, please — it goes on the customer's page."); ok = false; firstBad = firstBad || el.name; }
+    var reachLine = "";
+    lines.forEach(function (l) {
+      var texts = l.kind === "other" ? [l.name] : (l.custom ? [l.custom.pet] : []);
+      texts.forEach(function (s) { var r = reachIn(s); if (r && !reachLine) reachLine = r; });
+    });
+    if (reachLine && !badLine) { toast("A piece name or pet name has contact or payment details (\"" + reachLine + "\") — the customer's page can't show those."); ok = false; }
     var badShip = lintText(f.shName);
     if (badShip) { setErr(el.shName, "That can't go to a customer (" + badShip + ")."); ok = false; firstBad = firstBad || el.shName; } else setErr(el.shName, "");
     /* THANKS = took it home = paid in full. A balance means it is an ORDER. */
@@ -1035,6 +1134,12 @@ var DESK_CONFIG = {
        The address is percent-encoded (RFC 6068) so a stray # or ? can never swallow the body. */
     var mailHref = "mailto:" + encodeURIComponent(email || "") + "?cc=" + encodeURIComponent(CFG.studioEmail) + "&subject=" + encodeURIComponent(msg.subject) + "&body=" + encodeURIComponent(msg.body.replace(/\n/g, "\r\n"));
     var smsHref = "sms:" + (phone || "") + "?&body=" + encodeURIComponent(sms);
+    /* what the customer's link page will not show (normalizePayload): told here, so nobody learns it from the customer */
+    var leftOut = [], linkDead = false;
+    if (link) { try { leftOut = normalizePayload(JSON.parse(JSON.stringify(payloadFor(o)))).left || []; } catch (errLink) { linkDead = true; } }
+    var leftNote = linkDead
+      ? '<p class="out-note"><strong>The link and QR won\'t open for this order</strong> — its name or order number has contact details, which the customer\'s page never shows. Use Email, Text or Print, or edit the order.</p>'
+      : (leftOut.length ? '<p class="out-note"><strong>Not on the customer\'s link page:</strong> ' + esc(leftOut.join(", ")) + '. That page never shows contact or payment details. The email and text still carry them.</p>' : '');
     var st = o.status === "paid" ? '<span class="status-pill">paid in full</span>' : (o.status === "deposit" ? '<span class="status-pill owe">balance ' + money(o.totals.balance) + '</span>' : '<span class="status-pill owe">unpaid</span>');
     /* CS Hard Rule 1: event orders of more than 5 pieces go to Elise before anything is promised */
     var big = qtyTotal(o) > 5;
@@ -1056,6 +1161,7 @@ var DESK_CONFIG = {
       (link
         ? '<div class="qr-wrap"><div data-qr></div><p>Customer scans to open their copy — no typing.<br><a href="' + esc(link) + '" target="_blank" rel="noopener">open link</a> · <button type="button" class="btn btn-ghost btn-small" data-copy-link>copy link</button></p></div>'
         : '<p class="out-note">Link + QR appear once the site is live (or set publicBaseUrl in event-desk.js).</p>') +
+      leftNote +
       (msg.body.length > (CFG.mailtoSoftLimit || 1900) ? '<p class="out-note"><strong>Long message</strong> — if your Mail app cuts it off, tap Copy and paste it in instead.</p>' : '') +
       '<p class="out-note">Email and Text open your phone\'s own app with the message filled in — read it once, then send. Nothing is sent automatically.</p>' +
       '<p class="out-note" data-sent-marks>' + sentMarks(o) + '</p>' +
@@ -1283,6 +1389,8 @@ var DESK_CONFIG = {
   $("[data-save-settings]", panel).addEventListener("click", function () {
     var ev = $("#st-event", panel).value.trim(), badEv = lintText(ev);
     if (badEv) { toast("The event name goes into every message — \"" + badEv + "\" can't be in it."); $("#st-event", panel).focus(); return; }
+    var reachEv = reachIn(ev);
+    if (reachEv) { toast("The event name goes on the customer's page — it can't carry contact or payment details (\"" + reachEv + "\")."); $("#st-event", panel).focus(); return; }
     settings.event = ev;
     settings.staff = $("#st-staff", panel).value.trim();
     var dev = $("#st-device", panel).value.trim().toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 4);

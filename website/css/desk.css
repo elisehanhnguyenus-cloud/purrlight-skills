@@ -374,6 +374,9 @@ body.dialog-open { position: fixed; width: 100%; overflow: hidden; }
 .confirm-rows .row.total { font-size: 18px; font-weight: 600; color: var(--ink); padding-top: 8px; }
 .confirm-rows .row.balance { color: var(--purr-berry); font-weight: 600; }
 .confirm-rows .row.paid-full { color: #4E6346; font-weight: 600; }
+/* what the page is, right under the amounts (event-desk.js CFG.recordLine) */
+.confirm-record { margin-top: 14px; font-size: 13.5px; line-height: 1.5; color: var(--ink-soft); }
+.confirm-record a { color: var(--purr-berry); text-decoration: underline; text-underline-offset: 2px; overflow-wrap: anywhere; }
 .confirm-section { margin-top: 24px; }
 .confirm-section h2 { font-size: 15px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; font-family: var(--font-body); color: var(--accent-text); margin-bottom: 8px; }
 .confirm-section p { color: var(--ink-soft); font-size: 15.5px; }

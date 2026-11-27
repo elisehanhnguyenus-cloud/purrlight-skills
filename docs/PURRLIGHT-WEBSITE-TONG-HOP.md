@@ -1617,6 +1617,34 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   - code: `prototypes/2026-11-13-haven-scenes/`;
   - thư mục Drive "Haven-art".
 
+### Elise 27/11 — rà toàn bộ code và bảo mật; sửa trang xác nhận booth (chưa lên web)
+- **Rà soát (chỉ đọc, không sửa):** không có lỗ hổng nghiêm trọng hay mức cao.
+  - Lịch sử git (198 commit, mọi nhánh): không có khóa API, mật khẩu hay token. 231 ảnh và video không dính GPS hay
+    thông tin máy chụp. File riêng tư (bản thiết kế nhân vật, tranh mèo của khách, mẫu nét chì) không có trong kho.
+  - Supabase: 11 bảng `vietdelight` đều bật RLS, người ngoài không đọc được; khóa Etsy chỉ máy chủ lấy được; link kết
+    nối Etsy có mã dùng một lần, PKCE, và kiểm đúng chủ shop.
+  - Chạy thử 18 trang trên điện thoại và máy tính: không lỗi JavaScript, 254 link không hỏng, không tràn ngang.
+  - Việc nhỏ còn lại: Sveltia CMS đang ở bản 0.233.0 (cũ, chưa có lỗ hổng công bố; nâng sau 02/01); web chưa có CSP;
+    email Gmail riêng của chị hiện trên các commit; điện thoại booth lưu thông tin khách (đặt mật khẩu, "Clear all"
+    sau mỗi sự kiện).
+- **Lỗ hổng mức trung bình, đã sửa trong code:** `confirm.html` vẽ mọi thứ từ đường link, nên ai cũng tạo được link
+  giả hiện "còn nợ $X, chuyển Zelle vào…" trên địa chỉ web của shop. Sửa trong `js/event-desk.js`:
+  - chữ lấy từ link không được chứa email, link, số điện thoại hay số tài khoản, @tên, $tag, mã dài, tên app trả tiền
+    (`reachIn`). Nhãn dính thì thay bằng chữ trung tính hoặc bỏ; ghi chú dính thì ẩn; tên và mã đơn sai dạng thì link
+    không mở;
+  - ô "Paid ·" chỉ nhận 4 cách của booth; số bị ép kiểu và chặn trên; chữ có giới hạn độ dài; bỏ ký tự ẩn và ký tự
+    đảo chiều;
+  - thêm 1 dòng cố định dưới phần tiền (`DESK_CONFIG.recordLine`): trang này chỉ là bản ghi, không nhận tiền và
+    không bao giờ chỉ chỗ gửi tiền. **Bản nháp, chờ chị duyệt chữ** (xem "Còn chờ chị" 28);
+  - máy booth: không cho lưu khi tên, tên món gõ tay, tên thú cưng hay tên sự kiện có thông tin liên lạc hoặc thanh
+    toán; ghi chú có thì vẫn lưu, vẫn nằm trong email và tin nhắn, và máy báo rõ trang link của khách sẽ không hiện.
+  - Thử: 34 link thật hiện y như cũ (chỉ thêm dòng mới); 29 link giả bị vô hiệu; 122 chuỗi mẫu, 0 báo nhầm.
+  - Giới hạn: bộ lọc không chặn được mọi cách viết (ví dụ số đọc bằng chữ). Muốn chặn hẳn thì máy booth phải "đóng
+    dấu" (ký số) từng link; việc đó để sau, khi chị cần.
+- **AI Sales Agent (giỏ hàng, thanh toán):** phiên "AI sales agent with Claude Code MCP" hỏi về một website Purrlight
+  viết bằng Next.js (~90%). Kho này không có bộ code đó: website ở đây là site tĩnh. Chờ chị xác nhận giỏ hàng gắn
+  vào website nào ("Còn chờ chị" 28).
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
@@ -1721,6 +1749,14 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
     - xin khách gửi mèo Maine Coon đồng ý bằng văn bản;
     - chọn cách chạy Gemini: chị chạy tay, hay tạo khóa API Google AI Studio để em chạy và đưa thẳng vào Drive;
     - cho em biết "Muse" là ứng dụng nào (link), để xem có kết nối được không.
+28. **Bảo mật và giỏ hàng (27/11):**
+    - Duyệt dòng chữ mới trên trang xác nhận booth: *"This page is only a written record from our booth. It can't
+      take a payment and never tells you where to send one. If anyone asks you to pay somewhere unfamiliar, write to
+      us first at purrlightstudiollc@gmail.com."*
+    - Bản sửa trang xác nhận booth lên web sau 02/01, hay chị cho ngoại lệ lên sớm (nói "chạy")?
+    - Website Next.js mà AI Sales Agent nhắc tới nằm ở đâu? Giỏ hàng và thanh toán gắn vào website nào?
+    - Việc chị tự làm: bật 2FA cho GitHub, Etsy, Square, Stripe, Gmail, Tally, Supabase; bật "Keep my email addresses
+      private" trên GitHub; chìa khóa GitHub cho admin chỉ cấp quyền vào đúng kho này, hạn ngắn.
 26. **Haven tranh thật (12/11):**
     - Trả lời 6 câu ở mục 6 của `docs/HAVEN-TRANH-THAT-PLAN-2026-11-12.md`: ai vẽ và khi nào, cách chụp kệ, chú mèo
       và chú chó thật hay món len, có vẽ người không, số phận bản 3D v4, nói "chạy" cho phần đang giữ.

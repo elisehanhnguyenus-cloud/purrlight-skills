@@ -8,3 +8,6 @@ lại — chờ Elise duyệt chữ mới (TONG-HOP, "Còn chờ chị" 20).
 Khi Elise duyệt: xoá file này, commit, chạy bash website/deploy-pages.sh.
 12/11/2026: Elise duyệt phần đang giữ ở trên ("Đưa lên luôn"), nhưng dặn "khoan chạy" — chờ chị nói chạy rồi mới
 xoá file này và deploy (trước khóa web 15/11).
+27/11/2026: sửa bảo mật trang xác nhận booth (confirm.html, js/event-desk.js) — Elise bảo sửa, CHƯA đưa lên. Có 1 dòng
+chữ mới cho khách dưới phần tiền (DESK_CONFIG.recordLine, bản nháp tiếng Anh): chờ Elise duyệt chữ rồi mới được lên web.
+Web đang khóa mùa lễ đến 02/01; muốn lên sớm vì là sửa bảo mật thì Elise phải nói "chạy".

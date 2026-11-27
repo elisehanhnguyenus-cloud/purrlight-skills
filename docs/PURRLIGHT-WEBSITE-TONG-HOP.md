@@ -1644,6 +1644,10 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 - **AI Sales Agent (giỏ hàng, thanh toán):** phiên "AI sales agent with Claude Code MCP" hỏi về một website Purrlight
   viết bằng Next.js (~90%). Kho này không có bộ code đó: website ở đây là site tĩnh. Chờ chị xác nhận giỏ hàng gắn
   vào website nào ("Còn chờ chị" 28).
+- **Repo riêng cho code web (chị yêu cầu 27/11):** `elisehanhnguyenus-cloud/purrlight-web`, private, nhánh `main`.
+  Là bản sao thư mục `website/` kèm lịch sử (119 lần lưu), file web nằm ở gốc repo, khớp `website/` tại commit
+  `9fbcfc7`. Web đang chạy vẫn đưa lên từ kho `purrlight-skills`; `deploy-pages.sh` trong repo mới không chạy được
+  nguyên trạng. Chưa chọn nơi nào là bản chính ("Còn chờ chị" 28).
 
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
@@ -1752,6 +1756,7 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 28. **Bảo mật và giỏ hàng (27/11):**
     - Bản sửa trang xác nhận booth lên web sau 02/01, hay chị cho ngoại lệ lên sớm (nói "chạy")?
     - Website Next.js mà AI Sales Agent nhắc tới nằm ở đâu? Giỏ hàng và thanh toán gắn vào website nào?
+    - Chọn bản chính cho code web: `purrlight-skills/website` (đang đưa lên web) hay `purrlight-web` (repo mới)?
     - Việc chị tự làm: bật 2FA cho GitHub, Etsy, Square, Stripe, Gmail, Tally, Supabase; bật "Keep my email addresses
       private" trên GitHub; chìa khóa GitHub cho admin chỉ cấp quyền vào đúng kho này, hạn ngắn.
 26. **Haven tranh thật (12/11):**

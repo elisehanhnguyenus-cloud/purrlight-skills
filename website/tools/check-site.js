@@ -175,6 +175,41 @@ if (pr && pr.out.PRICES) {
   }
 }
 
+/* ---------- the customer's link page prints only plain text (security review 27/11/2026) ----------
+   confirm.html leaves out any piece label that js/event-desk.js reachIn() does not find plain (an "@", a web address,
+   more than 8 digits, an odd character…): a catalog name like that would show as "Piece" on a customer's
+   confirmation. Every piece name, add-on label, booth extra and custom-grid word is checked here, as the link
+   carries it. */
+if (cat && Array.isArray(cat.out.PRODUCTS)) {
+  var deskApi = null;
+  try {
+    var deskDoc = { querySelector: function () { return null; }, querySelectorAll: function () { return []; }, title: "" };
+    var deskBox = { console: { log: function () {}, warn: function () {}, error: function () {} }, setTimeout: function () {}, clearTimeout: function () {},
+      Date: Date, Math: Math, JSON: JSON, document: deskDoc, location: { protocol: "https:", href: "https://example.invalid/", hash: "" }, PRODUCTS: cat.out.PRODUCTS };
+    deskBox.window = deskBox;
+    vm.runInNewContext(readText(path.join(ROOT, "js/event-desk.js")) + "\n;this.__cfg = DESK_CONFIG;", deskBox, { filename: "js/event-desk.js" });
+    deskApi = { reachIn: deskBox.PurrlightDesk && deskBox.PurrlightDesk.reachIn, cfg: deskBox.__cfg };
+  } catch (e) { fail("js/event-desk.js", "không chạy được để kiểm chữ trên trang link của khách: " + e.message); }
+  if (deskApi && typeof deskApi.reachIn !== "function") fail("js/event-desk.js", "không thấy PurrlightDesk.reachIn (kiểm chữ trên trang link của khách)");
+  else if (deskApi) {
+    var plainCheck = function (label, where) {
+      var why = deskApi.reachIn(label);
+      if (why) fail(where, "\"" + label + "\" sẽ không hiện trên trang xác nhận của khách (" + why + ") — đổi tên, hoặc xem reachIn trong js/event-desk.js");
+      counts.linkLabels = (counts.linkLabels || 0) + 1;
+    };
+    cat.out.PRODUCTS.forEach(function (p) {
+      plainCheck(String(p.name), "js/products.js " + p.id);
+      (p.addons || []).forEach(function (a) { plainCheck(p.name + " \u2014 " + a.label, "js/products.js " + p.id + " (add-on)"); });
+    });
+    var dc = deskApi.cfg || {}, cgw = dc.customGrid || {};
+    (dc.extraItems || []).forEach(function (x) { plainCheck(String(x), "js/event-desk.js extraItems"); });
+    (dc.payMethods || []).forEach(function (x) { plainCheck(String(x), "js/event-desk.js payMethods"); });
+    [].concat(cgw.sizes || [], cgw.poses || [], cgw.eyes || [], cgw.petTypes || [], (cgw.yarns || []).map(function (y) { return y.label; }))
+      .forEach(function (x) { plainCheck("Custom cat \u00B7 " + x, "js/event-desk.js customGrid"); });
+    if (dc.recordLine && !/\{email\}/.test(dc.recordLine)) fail("js/event-desk.js recordLine", "thiếu {email} (địa chỉ studio trên trang xác nhận)");
+  }
+}
+
 /* ---------- deposit: PAY (prices.js) = the #pay cards in custom-orders/index.html (plan 21/10/2026) ---------- */
 if (pr && pr.out.PAY) {
   var PAYX = pr.out.PAY, coHtml = readText(path.join(ROOT, "custom-orders/index.html")), WAYS = ["zelle", "venmo", "square", "stripe"];

@@ -111,12 +111,25 @@ KHÔNG tự gửi) hoặc **Copy** / **Print**. Khi site đã online, có thêm 
 chỉ đường).
 
 **Link của khách là chữ công khai (27/11/2026).** `confirm.html` vẽ mọi thứ từ đường link, và ai cũng viết được một
-link trông giống của shop. Vì vậy trang không bao giờ hiện thông tin liên lạc hay thanh toán lấy từ link: email, link,
-số điện thoại hay số tài khoản, @tên, $tag, mã dài, tên app trả tiền (`reachIn` và `normalizePayload` trong
-`js/event-desk.js`). Ô "Paid ·" chỉ nhận một trong `DESK_CONFIG.payMethods`. Dưới phần tiền có dòng cố định
-`DESK_CONFIG.recordLine`. Máy booth không cho lưu tên, tên món gõ tay, tên thú cưng hay tên sự kiện có các thứ đó;
-ghi chú có thì vẫn nằm trong email và tin nhắn, nhưng trang link của khách bỏ ghi chú đó (máy báo ngay sau khi lưu).
-Thêm cách trả tiền ở booth: sửa `payMethods`, không cần sửa gì khác.
+link trông giống của shop. Vì vậy trang chỉ in chữ lấy từ link khi chữ đó **bình thường** (`reachIn` và
+`normalizePayload` trong `js/event-desk.js`):
+- chỉ ký tự thường ngày: chữ Latin (Anh, Việt, Tây Ban Nha…), số, dấu câu thông dụng, emoji thường. Không có `@`,
+  không bảng chữ cái giả dạng, không chữ hay số đóng khung, không ký tự ẩn;
+- tối đa 9 chữ số trong một đoạn (số điện thoại cần 10);
+- không có hai từ nối bằng dấu chấm (mọi địa chỉ web), không `$tên`, không mã dài, không tên cách trả tiền mà booth
+  không nhận (lấy theo `DESK_CONFIG.payMethods`).
+
+Nhãn không đạt (tên món, sự kiện, thành phố, tên thú cưng) thì thay bằng chữ trung tính hoặc bỏ; ghi chú không đạt thì
+ẩn; tên khách chỉ gồm chữ cái; mã đơn phải đúng dạng của máy booth; ô "Paid ·" chỉ nhận một trong `payMethods`; số
+tiền là số cent nguyên trong khoảng của một đơn thật. Dưới phần tiền có dòng cố định `DESK_CONFIG.recordLine`.
+
+Máy booth chạy cùng phép kiểm: không cho lưu tên khách, nhãn món, tên sự kiện hay thành phố không đạt (báo lý do);
+ghi chú không đạt vẫn lưu và vẫn nằm trong email, nhưng trang link của khách bỏ nó (máy báo ngay sau khi lưu).
+`tools/check-site.js` dừng deploy nếu tên món hay tên add-on trong `products.js` không đạt. Thêm cách trả tiền ở
+booth: sửa `payMethods`, không cần sửa gì khác.
+
+Giới hạn đã biết: số đọc bằng chữ, số 7 chữ số, hoặc một địa chỉ bị cắt ra hai dòng vẫn lọt. Muốn chặn hẳn thì máy
+booth phải ký số từng link và trang kiểm chữ ký; phần đó chưa làm.
 
 **Cấu hình** — tất cả ở đầu `js/event-desk.js` (`DESK_CONFIG`) và trong nút
 ⚙ trên trang (tên sự kiện, tên người đứng booth, mã máy, chế độ thuế). Mỗi con

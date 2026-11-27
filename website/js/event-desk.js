@@ -495,56 +495,107 @@ var DESK_CONFIG = {
   }
 
   /* ---------- the customer link is public text (security review 27/11/2026) ----------
-     confirm.html draws whatever its link carries, and anyone can write a link that looks like ours. So no text from a
-     link may tell the reader where to send money or whom to contact:
-     - reachIn finds an email, a web address, a phone or account number, an @handle or $tag, a long code, or the name
-       of a payment app or transfer (in a personal line also a gift card or a money order);
-     - normalizePayload: a label that has one (piece name, event, city, pet name) becomes a plain word or is left out;
-       a personal line that has one is left out; the name and the order number must look like ours, or the link does
-       not open; "Paid · …" shows only one of CFG.payMethods; every text has a length the page can hold.
-     The studio's own address on that page comes from CFG, never from the link. No filter catches every wording, so
-     the page also says what it is (CFG.recordLine). The desk runs the same check: a label is refused at save, and a
-     personal line with contact or payment details stays in the email and text only (showOrder says so). */
-  var HIDDEN_ALL = /[\u0000-\u001F\u007F-\u009F\u00AD\u034F\u061C\u115F\u1160\u17B4\u17B5\u180B-\u180E\u200B-\u200F\u2028-\u202F\u205F-\u206F\u3164\uFE00-\uFE0F\uFEFF\uFFA0]/g;
-  /* shown text: one line, none of the characters that hide, reorder or glue text (emoji joiners stay), a length cap */
+     confirm.html draws whatever its link carries, and anyone can write a link that looks like ours. A list of bad
+     things to look for cannot keep up with every way to write a phone number or a web address, so the page works the
+     other way round: text from a link is printed only when it is PLAIN (reachIn says why it is not):
+     - everyday characters only: Latin letters (English, Vietnamese, Spanish…), digits, common punctuation and plain
+       emoji. No "@", no look-alike alphabets, no boxed, circled or keycap letters and digits, nothing invisible;
+     - at most LINK_DIGITS digits in one text (a phone number needs 10), counting O, I and l written as digits;
+     - no words joined by a dot (any web address, whatever it ends in), no "$name", no long code, no address spelled
+       out ("name at mail dot com"), no name of a way to pay that the booth does not take (CFG.payMethods).
+     normalizePayload: a label that is not plain (piece, event, city, pet name) becomes a plain word or is left out; a
+     personal line that is not plain is left out; the first name is letters only; the order number has the desk's own
+     shape; "Paid · …" shows only one of CFG.payMethods; amounts are whole cents within a real order's range.
+     What is checked is exactly what is printed. The studio's own address on that page comes from CFG, never from the
+     link, and the page says what it is (CFG.recordLine).
+     Known limits: a number spelled out in words, a 7-digit number, a destination cut across two rows. Closing those
+     takes signed links (the desk signs, the page verifies) — not built.
+     The desk runs the same check: a first name, piece label, event name or city that is not plain is refused at save;
+     a personal line that is not plain is saved for the email only, and showOrder says so.
+     tools/check-site.js stops a deploy when a piece or add-on name in products.js is not plain. */
+  var LINK_DIGITS = 9;
+  /* shown text: one line, without the characters that hide or reorder text, and a length cap */
   function plain(s, max) {
     s = String(s == null ? "" : s).replace(/[\u0000-\u001F\u007F-\u009F\u2028\u2029]/g, " ")
-      .replace(/[\u00AD\u034F\u061C\u115F\u1160\u17B4\u17B5\u180B-\u180E\u200B\u200C\u200E\u200F\u202A-\u202E\u2060-\u206F\u3164\uFEFF\uFFA0]/g, "")
+      .replace(/[\u00AD\u034F\u061C\u115F\u1160\u17B4\u17B5\u180B-\u180F\u200B\u200C\u200E\u200F\u202A-\u202E\u2060-\u206F\u3164\uFEFF\uFFA0\uFFF0-\uFFFB]/g, "")
       .replace(/\s+/g, " ").trim();
     return max && s.length > max ? s.slice(0, max - 1).replace(/\s+\S*$/, "") + "\u2026" : s;
   }
-  var PAY_NAMES = ["zelle", "venmo", "cash app", "paypal", "apple pay", "apple cash", "google pay", "western union", "moneygram",
-    "bitcoin", "btc", "usdt", "ethereum", "crypto", "cryptocurrency", "wire transfer", "bank transfer", "bank account", "routing number", "account number"];
-  var PAY_NAMES_NOTE = ["gift card", "gift cards", "money order"];
-  /* a name with up to 3 stray characters between its letters ("z e l l e", "pay-pal"), as a whole word ("gazelle" is fine) */
-  function spacedWord(w) {
-    return new RegExp("(^|[^a-z0-9])" + w.replace(/[^a-z0-9]/g, "").split("").join("[^a-z0-9]{0,3}") + "(?![a-z0-9])", "i");
-  }
-  var REACH = [
-    /[^\s@]+@[^\s@]+\.[a-z]{2,}/i,                                                               /* an email */
-    /[a-z0-9._%+-]+\s*(\(at\)|\[at\]|\bat\b)\s*[a-z0-9-]+\s*(\(dot\)|\[dot\]|\bdot\b)\s*[a-z]{2,}/i,   /* "name at mail dot com" */
-    /(https?:\/\/|www\.)\S+/i,                                                                   /* a link */
-    /(^|[^a-z0-9@])[a-z0-9-]+\.(com|net|org|me|io|co|us|app|link|shop|store|info|biz|xyz|site|online|page|ly|gg|to|cc|tv)(?![a-z0-9])/i,   /* a web address */
-    /(^|[^a-z0-9])@[a-z0-9_.]{2,}/i,                                                             /* an @handle */
-    /(^|[^a-z0-9])\$[a-z][a-z0-9_-]+/i,                                                          /* a $tag ("$45" is an amount) */
-    /(\d[\s().+-]*){9,}/,                                                                        /* a phone or account number */
-    /(^|[^0-9])\d{3}[\s.-]\d{4}(?![0-9])/,                                                       /* a local phone number */
-    /(?=[a-z0-9]*\d)(?=[a-z0-9]*[a-z])[a-z0-9]{24,}/i,                                           /* a wallet address or a key */
-    /[a-z][\u0370-\u03FF\u0400-\u04FF]|[\u0370-\u03FF\u0400-\u04FF][a-z]/i                       /* look-alike letters inside a word */
-  ].concat(PAY_NAMES.map(spacedWord));
-  var REACH_NOTE = PAY_NAMES_NOTE.map(spacedWord);
-  /* "" when the text is fine; otherwise the part that cannot go on the customer page */
-  function reachIn(s, isNote) {
-    if (!s) return "";
+  /* the characters a link's text may use (everything else is refused, never shown) */
+  var OK_CHARS = new RegExp("[ !\"#%&'()*+,\\-./:;<=>?~$0-9A-Za-z" +
+    "\\u00A1\\u00AB\\u00B0\\u00B7\\u00BB\\u00BF\\u00C0-\\u024F\\u0300-\\u036F\\u1E00-\\u1EFF" +
+    "\\u2010-\\u2015\\u2018-\\u201F\\u2022\\u2026\\u2032\\u2033\\u200D\\uFE0F" +
+    "\\u2600-\\u26FF\\u2700-\\u2775\\u2794-\\u27BF]" +
+    "|\\uD83C[\\uDDE6-\\uDDFF\\uDF00-\\uDFFF]|\\uD83D[\\uDC00-\\uDE4F\\uDE80-\\uDEFF]|\\uD83E[\\uDD00-\\uDDFF\\uDE70-\\uDEFF]", "g");
+  /* the emoji among them: a first name may carry one ("Mia🐱") */
+  var EMOJI = /[\u2600-\u26FF\u2700-\u2775\u2794-\u27BF\u200D\uFE0F]|\uD83C[\uDDE6-\uDDFF\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F\uDE80-\uDEFF]|\uD83E[\uDD00-\uDDFF\uDE70-\uDEFF]/g;
+  /* a cut that never splits an emoji in two */
+  function cut(s, n) { s = String(s); return s.length > n ? s.slice(0, /[\uD800-\uDBFF]/.test(s.charAt(n - 1)) ? n - 1 : n) : s; }
+  /* a first name: letters of one alphabet, with ' - . (any alphabet where the browser can tell; Latin otherwise) */
+  var NAME_OK = /^[A-Za-z\u00C0-\u024F\u0300-\u036F\u1E00-\u1EFF'\u2019.\-]+$/;
+  try { NAME_OK = new RegExp("^[\\p{L}\\p{M}'\\u2019.\\-]+$", "u"); } catch (e) { /* older browsers: Latin names only */ }
+  var LATIN = /[A-Za-z\u00C0-\u024F\u1E00-\u1EFF]/, NOT_LATIN_NAME = /[^A-Za-z\u00C0-\u024F\u0300-\u036F\u1E00-\u1EFF'\u2019.\-]/;
+  /* how a reader takes a word in: no accents, no emoji joiners, lower case */
+  function fold(s) {
     var t = String(s);
-    try { t = t.normalize("NFKC"); } catch (e) { /* old browsers: checked as typed */ }
-    t = t.replace(HIDDEN_ALL, "").replace(DESK_ID_IN_TEXT, "order");   /* our own order numbers are not phone numbers */
-    var rules = isNote ? REACH.concat(REACH_NOTE) : REACH;
-    for (var i = 0; i < rules.length; i++) { var m = t.match(rules[i]); if (m) return m[0].replace(/^[^a-z0-9@$+(]+/i, "").trim() || m[0]; }
+    try { t = t.normalize("NFD"); } catch (e) { /* older browsers: as typed */ }
+    return t.replace(/[\u0300-\u036F\u200D\uFE0F]/g, "").replace(/[\u0110\u0111]/g, "d").toLowerCase();
+  }
+  /* names of ways to pay that the booth does not take: as a whole word, also with stray characters between the
+     letters or look-alike letters ("pay-pal", "venrno", "c4sh app"); "gazelle" and "bé Tí cười" are fine */
+  var LOOKS = { a: "[a4]", b: "[b8]", e: "[e3]", g: "[g9]", i: "[i1l!]", l: "[l1i]", o: "[o0]", s: "[s5]", t: "[t7]", z: "[z2]", m: "(?:m|rn)", w: "(?:w|vv)" };
+  function nameRule(w) {
+    var letters = w.replace(/[^a-z0-9]/g, "").split("");
+    var body = letters.length < 5 ? letters.join("") : letters.map(function (c) { return LOOKS[c] || c; }).join("[^a-z0-9]{0,3}");
+    return new RegExp("(^|[^a-z0-9])" + body + "(?![a-z0-9])");
+  }
+  var TAKEN = fold((CFG.payMethods || []).join(" "));
+  var PAY_RULES = ["zelle", "venmo", "cash app", "paypal", "apple cash", "western union", "moneygram", "bitcoin", "btc", "usdt", "ethereum",
+    "crypto", "cryptocurrency", "wire transfer", "bank transfer", "bank account", "routing number", "account number"]
+    .filter(function (w) { return TAKEN.indexOf(w) === -1; })
+    .map(function (w) { return { word: w, rule: nameRule(w) }; });
+  /* the desk's own order numbers: E<yymmdd>-<device>-<seq> (nextId), with a real month and day */
+  var DESK_ID = /^E\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])-[A-Z0-9]{1,4}-\d{1,4}$/;
+  var DESK_ID_IN_TEXT = /(^|[^a-z0-9])e\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])-[a-z0-9]{1,4}-\d{1,4}(?![a-z0-9])/g;
+  /* digits a reader would see: also O, I, l, S, B, Z inside a number ("O1OO"), and words made only of o, i, l */
+  function digitCount(t) {
+    var n = 0, tokens = t.split(/[^a-z0-9]+/);
+    for (var i = 0; i < tokens.length; i++) {
+      var k = tokens[i];
+      if (/[0-9]/.test(k)) n += (k.match(/[0-9oilsbz]/g) || []).length;
+      else if (/^[oil]{2,}$/.test(k)) n += k.length;
+    }
+    return n;
+  }
+  /* "" when the text is plain; otherwise a few words on what keeps it off the customer's link page.
+     kind "name" = a first name; anything else = a label or a personal line */
+  function reachIn(s, kind) {
+    if (!s) return "";
+    var t = String(s), m;
+    if (t.length > 600) return "a very long text";
+    if (kind === "name") {
+      var bare = t.replace(EMOJI, "");
+      if (!bare || !NAME_OK.test(bare)) return "something that is not a letter";
+      if (LATIN.test(bare) && NOT_LATIN_NAME.test(bare)) return "two alphabets in one name";
+      t = bare;
+    } else {
+      var odd = t.replace(OK_CHARS, "");
+      if (odd) return "the character " + JSON.stringify(/^[\uD800-\uDBFF][\uDC00-\uDFFF]/.test(odd) ? odd.slice(0, 2) : odd.charAt(0));
+    }
+    var f = fold(t);
+    if (f.indexOf("@") > -1) return "the @ sign";
+    if (/\$[a-z]/.test(f)) return "a $ name";
+    if (/:\/\/|(^|[^a-z0-9])www\./.test(f)) return "a web address";
+    m = f.match(/[a-z0-9]{2,}\.[a-z]{2,}/);
+    if (m) return "a web address (" + m[0] + ")";
+    if (/\bdot\s*(com|net|org)\b|[a-z0-9]\s+\.\s*(com|net|org)\b|[\u00B7\u2022]\s*(com|net|org)\b/.test(f)) return "a web address";
+    if (/(\bat\b|\(at\))\s*[a-z0-9-]{2,}\s*(\bdot\b|\(dot\))\s*[a-z]{2,}/.test(f)) return "an address spelled out";
+    for (var i = 0; i < PAY_RULES.length; i++) if (PAY_RULES[i].rule.test(f)) return "a way to pay we don't take (" + PAY_RULES[i].word + ")";
+    var words = f.split(/[^a-z0-9]+/);
+    for (var j = 0; j < words.length; j++) if (words[j].length >= 24 && /[0-9]/.test(words[j])) return "a long code";
+    if (digitCount(f.replace(DESK_ID_IN_TEXT, "$1order")) > LINK_DIGITS) return "more than " + LINK_DIGITS + " digits";
     return "";
   }
-  /* the desk's own order numbers: E<yymmdd>-<device>-<seq> (nextId) */
-  var DESK_ID = /^E\d{6}-[A-Z0-9]{1,4}-\d{1,6}$/, DESK_ID_IN_TEXT = /\bE\d{6}-[A-Z0-9]{1,4}-\d{1,6}\b/g;
 
   /* what goes into the customer link: no email, no phone, no street address.
      Kept compact on purpose — every byte makes the QR denser. */
@@ -560,47 +611,49 @@ var DESK_CONFIG = {
       k: hasKeepsake(o) ? 1 : 0, s: needsSafety(o) ? 1 : 0
     };
   }
-  /* normalize any payload version into what renderConfirm reads. The link is text anyone can write: numbers are
-     coerced, and every text passes plain() and reachIn() ("the customer link is public text", above). p.left lists what
-     was left out — the desk shows it to the person at the booth; the customer page does not. */
+  /* normalize any payload version into what renderConfirm reads. The link is text anyone can write: amounts become
+     whole cents in a real order's range, and every text must be plain ("the customer link is public text", above).
+     p.left lists what was left out and why — the desk shows it to the person at the booth; the customer page does not. */
   function normalizePayload(p) {
     if (!p || typeof p !== "object") throw new Error("bad payload");
-    var MAX = 1e9;   /* cents or pieces: far above any real order, small enough to print */
-    var num = function (x) { var n = Number(x); return isFinite(n) ? Math.max(-MAX, Math.min(MAX, n)) : 0; };
+    var MAXC = 1e7;   /* $100,000 — far above any booth order */
+    var cash = function (x) { var n = Math.round(Number(x)); return isFinite(n) ? Math.max(0, Math.min(MAXC, n)) : 0; };
     if (p.v === 2) {
       var m = Array.isArray(p.m) ? p.m : [];
       p.t = p.t === "o" ? "order" : "thanks";
-      p.tt = { subtotal: num(m[0]), discount: num(m[1]), tax: num(m[2]), total: num(m[3]), paid: num(m[4]), balance: num(m[5]), taxMode: m[6] === "i" ? "included" : (m[6] === "a" ? "added" : "none") };
+      p.tt = { subtotal: cash(m[0]), discount: cash(m[1]), tax: cash(m[2]), total: cash(m[3]), paid: cash(m[4]), balance: cash(m[5]), taxMode: m[6] === "i" ? "included" : (m[6] === "a" ? "added" : "none") };
     }
     if (!p.tt || typeof p.tt !== "object" || typeof p.tt.total !== "number") throw new Error("bad payload");
     var tt = p.tt;
-    p.tt = { subtotal: num(tt.subtotal), discount: num(tt.discount), tax: num(tt.tax), total: num(tt.total), paid: num(tt.paid), balance: num(tt.balance),
+    p.tt = { subtotal: cash(tt.subtotal), discount: cash(tt.discount), tax: cash(tt.tax), total: cash(tt.total), paid: cash(tt.paid), balance: cash(tt.balance),
       taxMode: tt.taxMode === "included" || tt.taxMode === "added" ? tt.taxMode : "none" };
     p.t = p.t === "order" ? "order" : "thanks";
     var left = [];
     var label = function (v, max, fallback, what) {
-      var s = plain(v, max);
-      if (s && reachIn(s)) { if (left.indexOf(what) === -1) left.push(what); return fallback; }
+      var s = plain(v, max), why = s ? reachIn(s) : "";
+      if (why) { left.push(what + " (" + why + ")"); return fallback; }
       return s;
     };
     p.it = (Array.isArray(p.it) ? p.it : []).slice(0, 60).map(function (i) {
-      return [label(i && i[0], 140, "Piece", "a piece name") || "Piece", num(i && i[1]), num(i && i[2])];
+      var qty = Number(i && i[1]);
+      if (!(qty >= 1 && qty <= 999 && Math.floor(qty) === qty)) throw new Error("bad payload");   /* whole pieces only */
+      return [label(i && i[0], 140, "Piece", "a piece name") || "Piece", qty, cash(i && i[2])];
     });
-    /* a first name, as the desk writes it: one word, nothing that reaches anyone */
+    /* a first name, as the desk writes it: one word of letters */
     var rawName = plain(p.n);
-    p.n = rawName ? plain(firstName(rawName), 40) : "";
-    if (!p.n || reachIn(p.n)) throw new Error("bad payload");
-    /* an order number: the desk's own shape, or a short plain code */
+    p.n = rawName ? cut(firstName(rawName), 40) : "";
+    if (!p.n || reachIn(p.n, "name")) throw new Error("bad payload");
+    /* an order number: only the desk's own shape */
     p.id = plain(p.id);
-    if (p.id && !DESK_ID.test(p.id) && (!/^[A-Za-z0-9][A-Za-z0-9-]{0,23}$/.test(p.id) || reachIn(p.id))) p.id = "";
+    if (!DESK_ID.test(p.id)) p.id = "";
     if (!p.it.length || (p.t === "order" && !p.id)) throw new Error("bad payload");
-    p.ev = label(p.ev, 60, "", "the event name");
+    p.ev = label(p.ev, 80, "", "the event name");
     p.sh = label(p.sh, 60, "", "the city");
     p.d = /^\d{4}-\d{2}-\d{2}$/.test(String(p.d == null ? "" : p.d)) ? String(p.d) : "";
     p.tl = plain(p.tl, 12);
     p.pm = (CFG.payMethods || []).indexOf(p.pm) > -1 ? p.pm : "";   /* only a way the booth takes — never free text */
-    var note = plain(p.nt);
-    if (note && (note.length > 400 || reachIn(note, true))) { left.push("the personal line"); note = ""; }
+    var note = plain(p.nt), whyNote = note ? (note.length > 400 ? "longer than 400 characters" : reachIn(note)) : "";
+    if (whyNote) { left.push("the personal line (" + whyNote + ")"); note = ""; }
     p.nt = note;
     if (typeof p.cu === "number") p.cu = p.cu ? 1 : 0;
     else p.cu = p.cu ? (label(p.cu, 80, "", "a pet's name") || 1) : 0;
@@ -1029,15 +1082,18 @@ var DESK_CONFIG = {
       texts.forEach(function (s) { var b = lintText(s); if (b && !badLine) badLine = b; });
     });
     if (badLine) { toast("A piece name or pet name contains \"" + badLine + "\" — that can't go to a customer."); ok = false; }
-    /* the customer's page never shows contact or payment details (reachIn): the name and the labels must be free of them */
-    var reachName = f.name.trim() ? reachIn(firstName(f.name)) : "";
-    if (reachName) { setErr(el.name, "A first name only, please — it goes on the customer's page."); ok = false; firstBad = firstBad || el.name; }
-    var reachLine = "";
-    lines.forEach(function (l) {
-      var texts = l.kind === "other" ? [l.name] : (l.custom ? [l.custom.pet] : []);
-      texts.forEach(function (s) { var r = reachIn(s); if (r && !reachLine) reachLine = r; });
+    /* what goes on the customer's link page must be plain (reachIn): the first name, every piece label as the link
+       will carry it (name, pet name, yarn code), the city */
+    var whyName = f.name.trim() ? reachIn(cut(firstName(plain(f.name)), 40), "name") : "";
+    if (whyName) { setErr(el.name, "A first name only, please: " + whyName + " can't go on the customer's link page."); ok = false; firstBad = firstBad || el.name; }
+    var whyPiece = "", whichPiece = "";
+    items.forEach(function (i) {
+      var w = reachIn(plain(i.name + (i.addon ? " \u2014 " + i.addon : ""), 140));
+      if (w && !whyPiece) { whyPiece = w; whichPiece = i.name; }
     });
-    if (reachLine && !badLine) { toast("A piece name or pet name has contact or payment details (\"" + reachLine + "\") — the customer's page can't show those."); ok = false; }
+    if (whyPiece && !badLine) { toast("\u201C" + plain(whichPiece, 30) + "\u201D: " + whyPiece + " can't go on the customer's link page."); ok = false; }
+    var whyCity = mode === "order" ? reachIn(plain([f.shCity.trim(), f.shState.trim().toUpperCase()].filter(Boolean).join(", "), 60)) : "";
+    if (whyCity) { toast("City: " + whyCity + " can't go on the customer's link page."); ok = false; firstBad = firstBad || el.shCity; }
     var badShip = lintText(f.shName);
     if (badShip) { setErr(el.shName, "That can't go to a customer (" + badShip + ")."); ok = false; firstBad = firstBad || el.shName; } else setErr(el.shName, "");
     /* THANKS = took it home = paid in full. A balance means it is an ORDER. */
@@ -1127,6 +1183,10 @@ var DESK_CONFIG = {
     current = o;
     var msg = o.type === "order" ? buildOrder(o) : buildThanks(o);
     var link = linkFor(o);
+    /* what the customer's link page will not show (normalizePayload) is told here, so nobody learns it from the
+       customer. A link that would not open is not offered at all: no QR, and the text goes out without it. */
+    var leftOut = [], linkDead = false;
+    if (link) { try { leftOut = normalizePayload(JSON.parse(JSON.stringify(payloadFor(o)))).left || []; } catch (errLink) { linkDead = true; link = ""; } }
     var sms = buildSms(o, link);
     var email = o.customer.email;
     var phone = digits(o.customer.phone);
@@ -1134,12 +1194,7 @@ var DESK_CONFIG = {
        The address is percent-encoded (RFC 6068) so a stray # or ? can never swallow the body. */
     var mailHref = "mailto:" + encodeURIComponent(email || "") + "?cc=" + encodeURIComponent(CFG.studioEmail) + "&subject=" + encodeURIComponent(msg.subject) + "&body=" + encodeURIComponent(msg.body.replace(/\n/g, "\r\n"));
     var smsHref = "sms:" + (phone || "") + "?&body=" + encodeURIComponent(sms);
-    /* what the customer's link page will not show (normalizePayload): told here, so nobody learns it from the customer */
-    var leftOut = [], linkDead = false;
-    if (link) { try { leftOut = normalizePayload(JSON.parse(JSON.stringify(payloadFor(o)))).left || []; } catch (errLink) { linkDead = true; } }
-    var leftNote = linkDead
-      ? '<p class="out-note"><strong>The link and QR won\'t open for this order</strong> — its name or order number has contact details, which the customer\'s page never shows. Use Email, Text or Print, or edit the order.</p>'
-      : (leftOut.length ? '<p class="out-note"><strong>Not on the customer\'s link page:</strong> ' + esc(leftOut.join(", ")) + '. That page never shows contact or payment details. The email and text still carry them.</p>' : '');
+    var leftNote = leftOut.length ? '<p class="out-note"><strong>Not on the customer\'s link page:</strong> ' + esc(leftOut.join("; ")) + '. The email and the printout still have it.</p>' : '';
     var st = o.status === "paid" ? '<span class="status-pill">paid in full</span>' : (o.status === "deposit" ? '<span class="status-pill owe">balance ' + money(o.totals.balance) + '</span>' : '<span class="status-pill owe">unpaid</span>');
     /* CS Hard Rule 1: event orders of more than 5 pieces go to Elise before anything is promised */
     var big = qtyTotal(o) > 5;
@@ -1160,7 +1215,9 @@ var DESK_CONFIG = {
       (phone ? ' · <span class="sel">' + esc(o.customer.phone) + '</span> <button type="button" class="btn btn-ghost btn-small" data-copy-to="' + esc(phone) + '">copy</button>' : '') + '</p>' +
       (link
         ? '<div class="qr-wrap"><div data-qr></div><p>Customer scans to open their copy — no typing.<br><a href="' + esc(link) + '" target="_blank" rel="noopener">open link</a> · <button type="button" class="btn btn-ghost btn-small" data-copy-link>copy link</button></p></div>'
-        : '<p class="out-note">Link + QR appear once the site is live (or set publicBaseUrl in event-desk.js).</p>') +
+        : (linkDead
+          ? '<p class="out-note"><strong>No link or QR for this order</strong> \u2014 its first name or order number can\'t go on the customer\'s link page. Email, Text and Print still work; edit the order to fix the name.</p>'
+          : '<p class="out-note">Link + QR appear once the site is live (or set publicBaseUrl in event-desk.js).</p>')) +
       leftNote +
       (msg.body.length > (CFG.mailtoSoftLimit || 1900) ? '<p class="out-note"><strong>Long message</strong> — if your Mail app cuts it off, tap Copy and paste it in instead.</p>' : '') +
       '<p class="out-note">Email and Text open your phone\'s own app with the message filled in — read it once, then send. Nothing is sent automatically.</p>' +
@@ -1389,8 +1446,8 @@ var DESK_CONFIG = {
   $("[data-save-settings]", panel).addEventListener("click", function () {
     var ev = $("#st-event", panel).value.trim(), badEv = lintText(ev);
     if (badEv) { toast("The event name goes into every message — \"" + badEv + "\" can't be in it."); $("#st-event", panel).focus(); return; }
-    var reachEv = reachIn(ev);
-    if (reachEv) { toast("The event name goes on the customer's page — it can't carry contact or payment details (\"" + reachEv + "\")."); $("#st-event", panel).focus(); return; }
+    var whyEv = reachIn(plain(ev, 80));
+    if (whyEv) { toast("Event name: " + whyEv + " can't go on the customer's link page."); $("#st-event", panel).focus(); return; }
     settings.event = ev;
     settings.staff = $("#st-staff", panel).value.trim();
     var dev = $("#st-device", panel).value.trim().toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 4);
@@ -1440,7 +1497,7 @@ var DESK_CONFIG = {
   var toastTimer = null;
   function toast(msg) {
     el.toast.textContent = msg; el.toast.classList.add("show");
-    clearTimeout(toastTimer); toastTimer = setTimeout(function () { el.toast.classList.remove("show"); }, 2600);
+    clearTimeout(toastTimer); toastTimer = setTimeout(function () { el.toast.classList.remove("show"); }, Math.max(2600, 1200 + String(msg).length * 45));
   }
   $$("[data-scroll-log]").forEach(function (b) { b.addEventListener("click", function () { $("[data-log]").scrollIntoView({ behavior: "smooth" }); }); });
 

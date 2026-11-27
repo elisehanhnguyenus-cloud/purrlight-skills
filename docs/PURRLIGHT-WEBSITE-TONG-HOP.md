@@ -1629,18 +1629,28 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
     sau mỗi sự kiện).
 - **Lỗ hổng mức trung bình, đã sửa trong code:** `confirm.html` vẽ mọi thứ từ đường link, nên ai cũng tạo được link
   giả hiện "còn nợ $X, chuyển Zelle vào…" trên địa chỉ web của shop. Sửa trong `js/event-desk.js`:
-  - chữ lấy từ link không được chứa email, link, số điện thoại hay số tài khoản, @tên, $tag, mã dài, tên app trả tiền
-    (`reachIn`). Nhãn dính thì thay bằng chữ trung tính hoặc bỏ; ghi chú dính thì ẩn; tên và mã đơn sai dạng thì link
-    không mở;
-  - ô "Paid ·" chỉ nhận 4 cách của booth; số bị ép kiểu và chặn trên; chữ có giới hạn độ dài; bỏ ký tự ẩn và ký tự
-    đảo chiều;
+  - **Bản đầu** đi chặn từng kiểu xấu (email, số điện thoại, tên miền…). Kiểm tra độc lập tìm ra nhiều cách lách:
+    số điện thoại viết bằng gạch dài hay dấu gạch chéo, tên miền lạ (`.studio`), mã đơn giả dạng số điện thoại, chữ
+    và số giả dạng, ký tự ẩn.
+  - **Bản viết lại** làm ngược lại: chữ lấy từ link chỉ được in khi **bình thường** (`reachIn`). Chỉ ký tự thường
+    ngày (chữ Latin gồm tiếng Việt, số, dấu câu, emoji thường); tối đa 9 chữ số một đoạn; không `@`; không hai từ nối
+    bằng dấu chấm; không tên cách trả tiền mà booth không nhận. Nhãn không đạt thì thay hoặc bỏ; ghi chú không đạt
+    thì ẩn; tên khách chỉ gồm chữ cái; mã đơn đúng dạng máy booth, nếu sai thì link không mở;
+  - ô "Paid ·" chỉ nhận 4 cách của booth; số tiền là cent nguyên, từ 0 đến $100,000; số lượng là số nguyên 1–999;
+  - từ "Zelle" (cách booth có nhận) được phép, vì ghi chú thật hay nhắc tới và một cái tên không kèm địa chỉ thì
+    không chuyển hướng tiền được; "gift card" cũng được phép (món Linen Pocket Doll có thiệp tặng);
   - thêm 1 dòng cố định dưới phần tiền (`DESK_CONFIG.recordLine`): trang này chỉ là bản ghi, không nhận tiền và
     không bao giờ chỉ chỗ gửi tiền. **Chị đã duyệt chữ 27/11**, dặn chưa đưa lên;
-  - máy booth: không cho lưu khi tên, tên món gõ tay, tên thú cưng hay tên sự kiện có thông tin liên lạc hoặc thanh
-    toán; ghi chú có thì vẫn lưu, vẫn nằm trong email và tin nhắn, và máy báo rõ trang link của khách sẽ không hiện.
-  - Thử: 34 link thật hiện y như cũ (chỉ thêm dòng mới); 29 link giả bị vô hiệu; 122 chuỗi mẫu, 0 báo nhầm.
-  - Giới hạn: bộ lọc không chặn được mọi cách viết (ví dụ số đọc bằng chữ). Muốn chặn hẳn thì máy booth phải "đóng
-    dấu" (ký số) từng link; việc đó để sau, khi chị cần.
+  - máy booth: không cho lưu tên khách, nhãn món (gồm tên thú cưng và mã len), tên sự kiện hay thành phố không đạt,
+    có báo lý do; ghi chú không đạt vẫn lưu, vẫn nằm trong email, và máy báo rõ trang link của khách không hiện.
+    Đơn cũ có tên không đạt: máy không đưa link hay QR nữa;
+  - `tools/check-site.js` có thêm chốt: tên món hay add-on nào không đạt thì dừng deploy.
+  - Thử: 232 phép thử của em (34 link thật hiện y như cũ, 51 link giả bị vô hiệu, 196 chuỗi mẫu không báo nhầm); bộ
+    so sánh của bên kiểm tra: 270/270 link thật khớp bản cũ, chỉ thêm dòng mới.
+  - Giới hạn: số đọc bằng chữ, số 7 chữ số, hoặc địa chỉ bị cắt ra hai dòng vẫn lọt. Muốn chặn hẳn thì máy booth
+    phải ký số từng link; việc đó để sau, khi chị cần.
+  - Link đã gửi khách từ sự kiện trước: nếu ghi chú hay tên món không đạt thì phần đó không còn hiện; nếu tên khách
+    không đạt thì link không mở. Mở từng đơn trong sổ trên máy booth sẽ thấy máy báo đơn nào bị ảnh hưởng.
 - **AI Sales Agent (giỏ hàng, thanh toán):** phiên "AI sales agent with Claude Code MCP" hỏi về một website Purrlight
   viết bằng Next.js (~90%). Kho này không có bộ code đó: website ở đây là site tĩnh. Chờ chị xác nhận giỏ hàng gắn
   vào website nào ("Còn chờ chị" 28).

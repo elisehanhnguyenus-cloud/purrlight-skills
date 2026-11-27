@@ -1669,6 +1669,23 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   `9fbcfc7`. Web đang chạy vẫn đưa lên từ kho `purrlight-skills`; `deploy-pages.sh` trong repo mới không chạy được
   nguyên trạng. Chưa chọn nơi nào là bản chính ("Còn chờ chị" 28).
 
+### Elise 27/11 (tin sau) — "tất cả hoàn thiện trước khi nối domain, hosting và launch"
+- **Chị muốn:** lên sớm 1 tuần để thử và tìm lỗi; trước khi nối tên miền và hosting thì code, web, bảo mật, dashboard
+  quản lý, tồn kho, thanh toán, giỏ hàng, banner, SEO đều phải xong.
+- **Hiện trạng (em soát 27/11):**
+  - Mặt tiền web và bảo mật: gần xong; các bản đã duyệt và bản sửa trang xác nhận booth chờ lên.
+  - SEO: 7 trang khách đủ tiêu đề, mô tả, ảnh chia sẻ, mô tả ảnh; trang nội bộ đã chặn Google. Thiếu `sitemap.xml`,
+    `robots.txt`; 31 món dùng chung `product.html?id=` (không có trang riêng từng món); địa chỉ chuẩn (canonical) còn
+    trỏ `github.io`. Chưa đo tốc độ.
+  - Banner: dải chữ đầu trang viết cứng trong code, chị chưa tự đổi được.
+  - Dashboard: admin Sveltia là bản thử, chỉ sửa dải ảnh cuối trang (27/10 đã đề xuất dừng).
+  - Tồn kho, giỏ hàng, thanh toán trên web: chưa có. Nút mua sang Etsy; Custom Orders qua Tally, Zelle, Square.
+  - Shopify: connector đang nối một cửa hàng dùng thử tên "My Store" (`khdfwe-ju.myshopify.com`), chưa nâng gói.
+  - Tên miền `purrlight.studio`: theo ghi chú 16/10 là chưa đăng ký; web còn ở GitHub Pages.
+- **Em đề xuất:** giữ hướng 27/10 (`docs/PLATFORM-DECISION-2026-10-27.md`): web hiện tại làm mặt tiền; Shopify làm
+  giỏ hàng, thanh toán, tồn kho và dashboard; Cloudflare đặt web. Thử trên một địa chỉ thử riêng khoảng 1 tuần trước
+  ngày launch, web thật vẫn khóa đến lúc đó. Chờ chị quyết ("Còn chờ chị" 29).
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
@@ -1773,6 +1790,11 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
     - xin khách gửi mèo Maine Coon đồng ý bằng văn bản;
     - chọn cách chạy Gemini: chị chạy tay, hay tạo khóa API Google AI Studio để em chạy và đưa thẳng vào Drive;
     - cho em biết "Muse" là ứng dụng nào (link), để xem có kết nối được không.
+29. **Trước launch (27/11):**
+    - Giỏ hàng, thanh toán, tồn kho, dashboard: dùng Shopify (em đề xuất) hay tự dựng bằng Stripe? Ai làm: em hay
+      AI Sales Agent (một bên, không hai bên cùng làm)?
+    - Ngày launch là ngày nào? "Lên sớm 1 tuần" là một địa chỉ thử riêng, hay mở khóa web thật sớm 1 tuần?
+    - Tên miền đã mua chưa? Đặt web ở Cloudflare (đề xuất 27/10) hay Hostinger?
 28. **Bảo mật và giỏ hàng (27/11):**
     - Bản sửa trang xác nhận booth lên web sau 02/01, hay chị cho ngoại lệ lên sớm (nói "chạy")?
     - Website Next.js mà AI Sales Agent nhắc tới nằm ở đâu? Giỏ hàng và thanh toán gắn vào website nào?

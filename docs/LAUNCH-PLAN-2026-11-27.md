@@ -8,7 +8,7 @@ Agent, phiên viết Journal), để không ai làm trùng hay lệch nhau.
 
 | Việc | Ai |
 |---|---|
-| Code giỏ hàng, thanh toán, tồn kho, dashboard; bảo mật; chuyển web sang Cloudflare | Phiên website (phiên này), **chờ chị xác nhận** |
+| Code giỏ hàng, thanh toán, tồn kho, dashboard; bảo mật; chuyển web sang Cloudflare | Phiên website (phiên này), **chị xác nhận 28/11** |
 | Phía tài khoản Stripe (hồ sơ doanh nghiệp, thuế, phí ship, thử thanh toán), bản nháp 3 trang chính sách, nội dung bán hàng | AI Sales Agent |
 | Journal (blog), sitemap, robots: PR nháp số 1 trên `purrlight-web` | Phiên viết Journal |
 | Duyệt chữ cho khách, nói "chạy", tạo tài khoản, nhập khóa bí mật | Chị Elise |
@@ -64,10 +64,34 @@ phẩm, `tools/check-site.js`); hai bên cùng sửa thì dễ lệch giá hoặ
 | 26/12–01/01 | Trực sửa lỗi trong tuần chạy thật | Dùng thử, báo lỗi |
 | 02/01 | Launch | |
 
-## 6. Chị cần trả lời để em dựng đúng
+## 6. Chị trả lời ngày 28/11
 
-1. **Món nào bán trên web?** Tất cả 31 món, hay chỉ món có sẵn ở Pearland? Món làm theo đơn có cho đặt trên web không?
-2. **Tồn kho với Etsy:** món trên web có phải cùng một món đang bán trên Etsy không? Nếu cùng, bán trên web xong chị
-   tự giảm số trên Etsy, hay em xin thêm quyền để hệ thống tự giảm?
-3. **Phí ship** cho đơn web: miễn phí như Etsy, hay tính theo mức nào?
-4. **Thuế:** chỉ thu 8,25% với khách ở Texas, đúng không?
+- **Em dựng** phần code tiền; chốt phương án ở file này.
+- **Món:** cả 34 món đều có sẵn ở shop Pearland; có món nhỏ mới về, chưa đăng Etsy. Web hiện có 31 món.
+- **Tồn kho:** hệ thống tự giảm và tăng theo tồn kho, và phải đồng bộ được từ nhiều sàn; hiện mới nối Etsy.
+- **Phí ship:** đơn web từ $55 trở lên miễn phí ship.
+- **Thuế:** theo tiểu bang của người mua, người mua trả.
+
+### Em làm theo các mặc định sau (chị sửa nếu khác)
+
+- **Bản đầu (tuần này):** 20 món có một giá vào giỏ hàng được. 7 món có nhiều lựa chọn giá (bộ 3 hay 6, một búp bê
+  hay một đôi…) tạm giữ nút "Buy on Etsy" cho tới khi em đọc được các lựa chọn từ Etsy (tuần sau). 4 món làm theo
+  ảnh khách gửi vẫn đi qua trang Custom Orders. Mẫu PDF vẫn bán qua Etsy vì Etsy tự gửi file.
+- **Thuế:** bật tính thuế tự động của Stripe (Stripe Tax); Stripe chỉ thu ở tiểu bang chị đã đăng ký, hiện là
+  Texas. Em không tư vấn thuế; khi bán nhiều ra ngoài Texas chị nên hỏi kế toán.
+- **Ship:** chỉ giao trong nước Mỹ ở bản đầu.
+- **Tồn kho hai chiều với Etsy:** Etsy bán thì web tự giảm (đồng bộ thường xuyên thay vì mỗi đêm); web bán thì hệ
+  thống giảm số trên Etsy. Chiều thứ hai cần chị bấm "Allow" lại với quyền sửa listing; em gửi link khi tới bước đó.
+- **Dữ liệu khách:** tên, email, địa chỉ nằm ở Stripe; cơ sở dữ liệu của mình không lưu.
+
+### Còn cần chị
+
+1. Đơn dưới $55 thì phí ship bao nhiêu?
+2. Các món mới chưa có trên web (34 so với 31): tên, giá, ảnh, số lượng từng món.
+3. Số lượng tồn của món chưa đăng Etsy (món đã đăng thì em lấy số từ Etsy).
+
+## 7. Giao kèo kỹ thuật
+
+`server/CONTRACT.md` trên nhánh `claude/cart-checkout` của `purrlight-web`: các địa chỉ máy chủ, dữ liệu qua lại, luật
+không đổi (giá chỉ tính ở máy chủ, không khóa bí mật trong repo, trang trả tiền là của Stripe, không lưu dữ liệu
+khách), món nào vào giỏ được ở bản đầu.

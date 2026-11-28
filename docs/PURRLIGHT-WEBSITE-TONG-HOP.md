@@ -1695,6 +1695,13 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   tài khoản Stripe, bản nháp 3 trang chính sách và nội dung bán hàng; `purrlight-web` là bản chính từ nay. Kế hoạch
   và lịch tới 26/12: `docs/LAUNCH-PLAN-2026-11-27.md`. Chờ chị xác nhận và trả lời 4 câu ở mục 6 của file đó.
 
+### Elise 28/11 — xác nhận em dựng; bắt đầu giỏ hàng và thanh toán Stripe (chưa lên web)
+- **Chị quyết:** em dựng phần code tiền; cả 34 món có sẵn ở Pearland (có món mới chưa đăng Etsy); tồn kho tự tăng
+  giảm và đồng bộ nhiều sàn; đơn từ $55 miễn phí ship; thuế theo tiểu bang, người mua trả.
+- **Đã làm:** giao kèo kỹ thuật `server/CONTRACT.md` trên nhánh `claude/cart-checkout` của `purrlight-web`; hai
+  agent đang dựng máy chủ (Stripe, tồn kho) và giỏ hàng trên web ở chế độ thử; tin nhắn cho AI Sales Agent (chị
+  chuyển). Mặc định và việc còn cần chị: mục 6 của `docs/LAUNCH-PLAN-2026-11-27.md`.
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
@@ -1800,8 +1807,8 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
     - chọn cách chạy Gemini: chị chạy tay, hay tạo khóa API Google AI Studio để em chạy và đưa thẳng vào Drive;
     - cho em biết "Muse" là ứng dụng nào (link), để xem có kết nối được không.
 29. **Trước launch (27/11)** — đã chốt Stripe, mở khóa 26/12, Cloudflare. Còn:
-    - Xác nhận em dựng phần code tiền và `purrlight-web` là bản chính (`docs/LAUNCH-PLAN-2026-11-27.md`).
-    - Trả lời 4 câu ở mục 6 của file đó: món nào bán trên web, tồn kho với Etsy, phí ship, thuế.
+    - Phí ship cho đơn dưới $55; tên, giá, ảnh và số lượng của các món mới (34 so với 31 trên web).
+    - Chuyển tin nhắn cho AI Sales Agent; duyệt chữ mới của giỏ hàng khi em gửi.
     - Tạo tài khoản Cloudflare và Stripe, mua tên miền, đăng nhập connector Cloudflare trong cài đặt claude.ai.
     - Duyệt hoặc trả lại PR nháp số 1 (Journal) trên `purrlight-web`.
 28. **Bảo mật và giỏ hàng (27/11):**

@@ -1702,6 +1702,26 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   agent đang dựng máy chủ (Stripe, tồn kho) và giỏ hàng trên web ở chế độ thử; tin nhắn cho AI Sales Agent (chị
   chuyển). Mặc định và việc còn cần chị: mục 6 của `docs/LAUNCH-PLAN-2026-11-27.md`.
 
+### Elise 28/11 (tin sau) — ship $5.99, kéo dữ liệu món từ Etsy (chưa lên web)
+- **Chị quyết:** đơn dưới $55 phí ship $5.99; thông tin món kéo từ Etsy (chị nhập tay đầy đủ trên đó); tồn mỗi món
+  20–200.
+- **Đã làm:** hàm `etsy-catalog` trên Supabase đọc toàn bộ listing đang bán (ảnh, mô tả, lựa chọn kèm giá và số
+  lượng, cá nhân hóa) vào bảng `vietdelight.listing_details`; chỉ dữ liệu món, không có dữ liệu khách; chỉ đọc Etsy.
+  Mã nguồn và 2 migration lưu ở `purrlight-web`, nhánh `claude/cart-checkout`, thư mục `server/supabase/`.
+- **Etsy đang có:** 34 listing = 33 món + 1 listing "International shipping service" (phí ship, không phải món). 2 món
+  chưa có trên web: búp bê thánh kèm hộp quà tràng hạt (`4586213623`, $47, 8 vị thánh) và vòng len gắn ảnh
+  (`4623608345`, $11).
+- **Phát hiện đổi cách dựng:** gần như món nào trên Etsy cũng có lựa chọn với giá riêng (ví dụ mèo Tuxedo: chỉ thân
+  $57, kèm phụ kiện $71). Giỏ hàng vì vậy có lựa chọn ngay từ bản đầu; giao kèo lên bản v1.1.
+- **Giá web đang cũ hơn Etsy ở 13 món** (web → Etsy thấp nhất): áo rửa tội 89 → 91; Maine Coon, Tuxedo, Calico, Ginger
+  55 → 57; búp bê linen 22 → 26; Anne 35 → 37; tràng hạt 25 → 27; Woodland 16 → 18; túi chần mèo 28 → 30; túi ruy băng
+  55 → 57; thiên thần 79 → 80; elf 45 → 47; thú cưng Grand: web 150, Etsy từ 120 đến 180 tùy màu và loại len.
+- **Số tồn trên Etsy thấp hơn "20–200" ở vài món:** Woodland mỗi loại 1; cừu mỗi màu 1; hươu, ngựa, vịt còn 2; túi ruy
+  băng 3; elf 6; túi chần mèo 9. Web lấy số theo Etsy.
+- **Lựa chọn không phải món:** "Tipping" $7 trong listing Dashwood (tiền tip) và các lựa chọn chị đã tắt trên Etsy:
+  web ẩn. Tên lựa chọn trên Etsy gõ tay, có chỗ sai chính tả ("Broccolli", "Pineable", "+ accessories"): web cần
+  nhãn sạch, chị duyệt.
+
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung
@@ -1807,8 +1827,12 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
     - chọn cách chạy Gemini: chị chạy tay, hay tạo khóa API Google AI Studio để em chạy và đưa thẳng vào Drive;
     - cho em biết "Muse" là ứng dụng nào (link), để xem có kết nối được không.
 29. **Trước launch (27/11)** — đã chốt Stripe, mở khóa 26/12, Cloudflare. Còn:
-    - Phí ship cho đơn dưới $55; tên, giá, ảnh và số lượng của các món mới (34 so với 31 trên web).
-    - Chuyển tin nhắn cho AI Sales Agent; duyệt chữ mới của giỏ hàng khi em gửi.
+    - (Xong 28/11: phí ship $5.99; dữ liệu món kéo từ Etsy.)
+    - Giá web: lấy đúng giá Etsy, hay web có giá riêng? Giá cũ trên web hiện tại (13 món): sửa ngay hay chờ 26/12?
+    - Số tồn trên Etsy của vài món chỉ 1–3: nếu ở Pearland có nhiều hơn, chị sửa số trên Etsy.
+    - 2 món mới (búp bê thánh kèm hộp quà, vòng len gắn ảnh): có đưa lên web không?
+    - Duyệt nhãn lựa chọn (em gửi bảng) và chữ mới của giỏ hàng khi em gửi.
+    - Chuyển tin nhắn cho AI Sales Agent.
     - Tạo tài khoản Cloudflare và Stripe, mua tên miền, đăng nhập connector Cloudflare trong cài đặt claude.ai.
     - Duyệt hoặc trả lại PR nháp số 1 (Journal) trên `purrlight-web`.
 28. **Bảo mật và giỏ hàng (27/11):**

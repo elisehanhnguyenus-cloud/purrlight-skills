@@ -72,11 +72,18 @@ phẩm, `tools/check-site.js`); hai bên cùng sửa thì dễ lệch giá hoặ
 - **Phí ship:** đơn web từ $55 trở lên miễn phí ship.
 - **Thuế:** theo tiểu bang của người mua, người mua trả.
 
+### Chị trả lời thêm ngày 28/11 (tin sau)
+
+- **Phí ship:** đơn dưới $55 là $5.99; từ $55 miễn phí.
+- **Dữ liệu món:** kéo từ Etsy (chị nhập tay đầy đủ trên đó). Tồn mỗi món 20–200.
+
 ### Em làm theo các mặc định sau (chị sửa nếu khác)
 
-- **Bản đầu (tuần này):** 20 món có một giá vào giỏ hàng được. 7 món có nhiều lựa chọn giá (bộ 3 hay 6, một búp bê
-  hay một đôi…) tạm giữ nút "Buy on Etsy" cho tới khi em đọc được các lựa chọn từ Etsy (tuần sau). 4 món làm theo
-  ảnh khách gửi vẫn đi qua trang Custom Orders. Mẫu PDF vẫn bán qua Etsy vì Etsy tự gửi file.
+- **Bản đầu (tuần này):** món nào cũng vào giỏ hàng được kèm lựa chọn (cỡ, màu, bộ 3 hay 6…), giá và số tồn lấy từ
+  Etsy. 4 món làm theo ảnh khách gửi vẫn đi qua trang Custom Orders. Mẫu PDF vẫn bán qua Etsy vì Etsy tự gửi file.
+- **Giá web = giá Etsy** của đúng lựa chọn đó, cho tới khi chị nói web có giá riêng.
+- **Lựa chọn không phải món** ("Tipping", lựa chọn chị đã tắt trên Etsy): web không hiện.
+- **Cá nhân hóa** (tên thêu, ghi chú): khách gõ ở trang trả tiền của Stripe, một ô, không bắt buộc.
 - **Thuế:** bật tính thuế tự động của Stripe (Stripe Tax); Stripe chỉ thu ở tiểu bang chị đã đăng ký, hiện là
   Texas. Em không tư vấn thuế; khi bán nhiều ra ngoài Texas chị nên hỏi kế toán.
 - **Ship:** chỉ giao trong nước Mỹ ở bản đầu.
@@ -86,12 +93,17 @@ phẩm, `tools/check-site.js`); hai bên cùng sửa thì dễ lệch giá hoặ
 
 ### Còn cần chị
 
-1. Đơn dưới $55 thì phí ship bao nhiêu?
-2. Các món mới chưa có trên web (34 so với 31): tên, giá, ảnh, số lượng từng món.
-3. Số lượng tồn của món chưa đăng Etsy (món đã đăng thì em lấy số từ Etsy).
+1. Giá web: lấy đúng giá Etsy, hay web có giá riêng? 13 món trên web đang hiện giá cũ hơn Etsy (bảng ở
+   `docs/PURRLIGHT-WEBSITE-TONG-HOP.md`, mục 28/11 tin sau): sửa ngay hay chờ 26/12?
+2. Số tồn trên Etsy của vài món chỉ 1–3 (Woodland, cừu, hươu, ngựa, vịt, túi ruy băng): nếu Pearland có nhiều hơn,
+   chị sửa số trên Etsy, web tự theo.
+3. 2 món có trên Etsy, chưa có trên web (búp bê thánh kèm hộp quà tràng hạt; vòng len gắn ảnh): có đưa lên web không?
+4. Món nhỏ mới về, chưa đăng Etsy: chị đăng Etsy trước (web kéo về), hay cần bán trên web trước?
+5. Duyệt nhãn lựa chọn (em gửi bảng) và chữ mới của giỏ hàng.
 
 ## 7. Giao kèo kỹ thuật
 
-`server/CONTRACT.md` trên nhánh `claude/cart-checkout` của `purrlight-web`: các địa chỉ máy chủ, dữ liệu qua lại, luật
-không đổi (giá chỉ tính ở máy chủ, không khóa bí mật trong repo, trang trả tiền là của Stripe, không lưu dữ liệu
-khách), món nào vào giỏ được ở bản đầu.
+`server/CONTRACT.md` (bản v1.1, 28/11) trên nhánh `claude/cart-checkout` của `purrlight-web`: các địa chỉ máy chủ, dữ
+liệu qua lại, luật không đổi (giá chỉ tính ở máy chủ, không khóa bí mật trong repo, trang trả tiền là của Stripe,
+không lưu dữ liệu khách), món và lựa chọn nào vào giỏ được, đơn vị tồn kho theo Etsy. Cùng nhánh:
+`server/supabase/functions/etsy-catalog/` (hàm kéo dữ liệu món từ Etsy, đã chạy trên Supabase).

@@ -51,4 +51,9 @@ Cập nhật: 27/11/2026 23:30 giờ Texas (lượt có chị). Kế hoạch: `d
 - Sveltia CMS của trang admin ghim 0.233.0 (chưa thấy cảnh báo bảo mật).
 
 ## Lịch tự động (bắn vào chính cuộc trò chuyện này)
-- (điền mã lịch sau khi tạo)
+- trig_014hhZnxwbDv7DSSDrLgcGCg ca đêm 03:07 rạng sáng thứ Hai, Ba, Sáu, Bảy (lần đầu 28/11)
+- trig_01NCH3gkDjDrfEDkr8vE8Yrd soát bảo mật 03:07 rạng sáng thứ Năm (lần đầu 03/12)
+- trig_01LTe1ppfw8xwwkeRvvWdmTV báo cáo tuần 06:47 sáng thứ Hai (lần đầu 30/11)
+- trig_018aryJjVv3DESTfr5jiVYog một lần 19/12 06:45 · trig_01RFVy2sQdW3GmtEfVZhJHu9 một lần 26/12 06:45
+- trig_01LWkQan85V8dUWaxCFVpeDh một lần 02/01/2027 06:45
+- Lượt tự động: Supabase chỉ đọc, không đưa gì lên, không đụng main. Chị nhắn "tạm dừng lịch đêm" để dừng.

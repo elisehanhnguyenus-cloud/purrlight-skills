@@ -1727,6 +1727,16 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
   charm của tràng hạt (cần ảnh khách); kiểu A/B/C của búp bê linen và túi ruy băng (cần ảnh hoặc tên từng kiểu); tên
   nhân vật ở bộ Red-Braid; ba bản Standard/Regular/Deluxe của Saint Joan; "Rough" và "Sample 5 dolls" ở Americana.
 
+
+### Elise 27/11 tối — lịch tự động cho website (6 lịch, bắn vào chính cuộc trò chuyện này)
+- **Ca đêm** 03:07 giờ Texas rạng sáng thứ Hai, Ba, Sáu, Bảy: làm tiếp một việc theo kế hoạch, soát độc lập phần
+  đụng tiền, lưu lên nhánh, báo tối đa 8 dòng. **Soát bảo mật** 03:07 rạng sáng thứ Năm. **Báo cáo tuần** 06:47 sáng
+  thứ Hai (nơi gom việc chờ chị). **Ba mốc chạy một lần:** 19/12, 26/12, 02/01/2027 lúc 06:45.
+- Luật cứng chung: lượt tự động không bao giờ đưa gì lên web (kể cả sau 26/12), không push main, chỉ ĐỌC Supabase,
+  không gửi tin, không chi tiền, không đổi lịch. Đã qua một vòng soát độc lập 3 góc nhìn (an toàn, hữu ích, chạy
+  được) trước khi tạo. Sổ bàn giao: `docs/WEB-AUTO-STATE.md`; chữ chờ duyệt: `docs/CHU-CHO-DUYET.md`.
+- Phần shop (28/11): máy chủ xong (81 + 78 test), giỏ hàng xong (129/129 test trên điện thoại và máy tính); cả hai
+  đã lên GitHub ở nhánh riêng; chưa soát độc lập, chưa đưa lên Supabase.
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
    "Iceblue mix" (= "Ice blue mix"?), V-38 "Snowball · Speckled white", V-39 "Chim Ruyi · White pink" (bỏ tên nhà cung

@@ -1721,6 +1721,11 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 - **Lựa chọn không phải món:** "Tipping" $7 trong listing Dashwood (tiền tip) và các lựa chọn chị đã tắt trên Etsy:
   web ẩn. Tên lựa chọn trên Etsy gõ tay, có chỗ sai chính tả ("Broccolli", "Pineable", "+ accessories"): web cần
   nhãn sạch, chị duyệt.
+- **Bảng duyệt cho chị** (34 listing: 17 món chỉ cần duyệt nhãn, 11 món cần chị quyết, 6 không vào giỏ):
+  https://claude.ai/artifact/Sa9hA7gWVE4D5msHwxUJZ2 · dữ liệu nháp: `server/catalog/options-review.json` trên nhánh
+  `claude/cart-checkout` của `purrlight-web`. Các câu cần chị quyết: Tuxedo "From Your Photo" có vào giỏ không; photo
+  charm của tràng hạt (cần ảnh khách); kiểu A/B/C của búp bê linen và túi ruy băng (cần ảnh hoặc tên từng kiểu); tên
+  nhân vật ở bộ Red-Braid; ba bản Standard/Regular/Deluxe của Saint Joan; "Rough" và "Sample 5 dolls" ở Americana.
 
 ### Còn chờ chị
 1. Tên mới cho màu len **V-03** (velvet, hồng nhạt — tên cũ "Baby pink" có từ cấm). Các tên chị xem lại: V-26
@@ -1856,6 +1861,7 @@ chốt. Chuông lắc khi chính chuông hiện đủ; bóng xanh đổi sang m�
 - **Event Desk (hosted, dùng tại booth):** https://claude.ai/artifact/JDd4fYwxtDvRmpf1UGs5rW
 - **Etsy — bản viết lại 27 listing (trang có nút Copy):** https://claude.ai/artifact/HsfFfFa2GYAy9ayFnvJYJg
 - **Kế hoạch Admin Dashboard:** https://claude.ai/artifact/TPZPTAWaqUuyCNgTfWfQbm
+- **Lựa chọn từng món (Etsy → web, bảng duyệt 28/11):** https://claude.ai/artifact/Sa9hA7gWVE4D5msHwxUJZ2
 - **Event Desk — hướng dẫn cho nhân sự (Notion):** https://app.notion.com/p/3ea8ed608af981fca71ee10c1128a543
 - **README kỹ thuật:** `website/README.md`
 - Tài liệu này: `docs/PURRLIGHT-WEBSITE-TONG-HOP.md` (bản Notion đồng bộ
